@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import org.hibernate.Session;
 
+
 public class DataInitializer {
 
     public static void initializeData(Session session) {

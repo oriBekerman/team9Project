@@ -26,6 +26,7 @@ public class MenuItem {
     @Lob
     private byte[] picture;
 
+
     // Getters and Setters
     public int getItemID() {
         return itemID;
