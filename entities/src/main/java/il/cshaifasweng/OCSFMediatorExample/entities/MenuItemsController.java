@@ -5,9 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import java.util.List;
 import org.hibernate.Session;
 
-import java.util.List;
+
 
 public class MenuItemsController {
 
