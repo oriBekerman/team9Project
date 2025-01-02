@@ -26,6 +26,19 @@ public class MenuItem {
     @Lob
     private byte[] picture;
 
+    // Constructor with all fields except itemID (auto-generated)
+    public MenuItem(String name, double price, String ingredients, String preference, byte[] picture) {
+        this.name = name;
+        this.price = price;
+        this.ingredients = ingredients;
+        this.preference = preference;
+        this.picture = picture;
+    }
+
+    public MenuItem() {
+        // בנאי ריק נדרש על ידי Hibernate
+    }
+
 
     // Getters and Setters
     public int getItemID() {
