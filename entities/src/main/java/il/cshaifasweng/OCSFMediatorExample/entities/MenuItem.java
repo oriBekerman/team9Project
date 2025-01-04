@@ -2,10 +2,11 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "MenuItems")
-public class MenuItem {
+public class MenuItem implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,6 +88,13 @@ public class MenuItem {
 
     public void setPicture(byte[] picture) {
         this.picture = picture;
+    }
+    public void printMenuIteam(){
+        System.out.println(this.name+
+        this.price+
+        this.ingredients+
+        this.preference+
+        this.picture);
     }
 }
 

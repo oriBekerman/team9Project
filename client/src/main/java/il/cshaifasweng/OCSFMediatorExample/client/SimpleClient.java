@@ -1,10 +1,15 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.util.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 import org.greenrobot.eventbus.EventBus;
 
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
-
+import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
+import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
+import javax.swing.event.MenuEvent;
+import java.io.IOException;
 public class SimpleClient extends AbstractClient {
 	
 	private static SimpleClient client = null;
@@ -15,13 +20,18 @@ public class SimpleClient extends AbstractClient {
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
+
 		if (msg.getClass().equals(Warning.class)) {
-			EventBus.getDefault().post(new WarningEvent((Warning) msg));
-		}
-		else{
 			String message = msg.toString();
 			System.out.println(message);
+			EventBus.getDefault().post(new WarningEvent((Warning) msg));
 		}
+
+		if (msg.getClass().equals(Menu.class)) {
+			System.out.println("menu received");
+			((Menu) msg).printMenu();
+		}
+
 	}
 	
 	public static SimpleClient getClient() {
@@ -29,6 +39,10 @@ public class SimpleClient extends AbstractClient {
 			client = new SimpleClient("localhost", 3000);
 		}
 		return client;
+	}
+
+	public void displayMenu() throws IOException {
+		client.sendToServer("#display menu");
 	}
 
 }
