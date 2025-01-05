@@ -74,7 +74,7 @@ public class SimpleServer extends AbstractServer {
 			} catch (NumberFormatException e) {
 				System.out.println("Error: One of the parts is not a valid integer.");
 			} catch (ArrayIndexOutOfBoundsException e) {
-				System.out.println("Error: The input string does not have enough parts.");
+				System.out.println("Error: The input string does not have enough parts.!");
 			}
 			updateDish(itemId,price);
 			MenuItem item2 = new MenuItem(

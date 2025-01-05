@@ -20,7 +20,7 @@ public class Menu implements Serializable {
 
     public void printMenu(){
         for(int i=0; i<=this.menuItems.size(); i++){
-            menuItems.get(i).printMenuIteam();
+            menuItems.get(i).printMenuItem();
         }
     }
 }
