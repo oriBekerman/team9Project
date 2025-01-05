@@ -39,10 +39,5 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>il.cshaifasweng.OCSFMediatorExample</groupId>
-      <artifactId>entities</artifactId>
-      <version>${project.version}</version>
-    </dependency>
   </dependencies>
 </project>
