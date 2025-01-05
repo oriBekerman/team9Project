@@ -18,10 +18,10 @@ public class DataInitializer {
     );
 
     MenuItem item2 = new MenuItem(
-            "Pizza",
+            "Pizza ",
             55.00,
-            "Mushrooms, onions, tomatoes",
-            "Includes vegan option",
+            " Mushrooms, onions, tomatoes",
+            " Includes vegan option ",
             null
     );
 

@@ -26,8 +26,7 @@ public class PrimaryController {
 	private Label WelcomeLabel;
 
 	@FXML
-
-	void displayMenuFunc(ActionEvent event) throws IOException{
+	void displayMenuFunc(ActionEvent event) throws IOException {
 		try {
 			App.setRoot("secondary");
 			System.out.println("here!!!!!!!");
@@ -45,9 +44,9 @@ public class PrimaryController {
 //	}
 
 	@FXML
-	void initialize(){
+	void initialize() {
 		assert HomePageLabel != null : "fx:id=\"HomePageLabel\" was not injected: check your FXML file 'primary.fxml'.";
-		assert MenutBtn != null : "fx:id=\"MentBtn\" was not injected: check your FXML file 'primary.fxml'.";
+		assert MenutBtn != null : "fx:id=\"MenutBtn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert WelcomeLabel != null : "fx:id=\"WelcomeLabel\" was not injected: check your FXML file 'primary.fxml'.";
 		try {
 			SimpleClient.getClient().sendToServer("add client");
@@ -56,4 +55,5 @@ public class PrimaryController {
 			e.printStackTrace();
 		}
 
+	}
 }

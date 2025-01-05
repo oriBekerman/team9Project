@@ -35,7 +35,8 @@ public class SecondaryController {
     }
 
     @FXML
-    void UpdateTheMenu(ActionEvent event) {
+    void UpdateTheMenu(ActionEvent event)
+    {
 
     }
 

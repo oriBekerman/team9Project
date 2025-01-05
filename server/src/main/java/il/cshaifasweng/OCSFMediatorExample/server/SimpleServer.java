@@ -10,6 +10,12 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SubscribedClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 
+import java.util.List;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+
+
 
 public class SimpleServer extends AbstractServer {
 	private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
@@ -46,10 +52,10 @@ public class SimpleServer extends AbstractServer {
 		{
 			System.out.println("Displaying menu");
 			MenuItem item2 = new MenuItem(
-					"Pizza",
+					"Pizza ",
 					55.00,
-					"Mushrooms, onions, tomatoes",
-					"Includes vegan option",
+					" Mushrooms, onions, tomatoes ",
+					"Includes vegan option ",
 					null
 			);
 			List<MenuItem> menuList = new ArrayList<>(List.of(item2));
@@ -61,7 +67,45 @@ public class SimpleServer extends AbstractServer {
 				e.printStackTrace();
 			}
 		}
+
 	}
+
+
+
+	private void updateItemInDB(MenuItem item) {
+		Session session = null;
+		try {
+			// Initialize the Hibernate session
+			SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+
+			// Double the price of the item
+			double currentPrice = item.getPrice();
+			double newPrice = currentPrice * 2;
+			item.setPrice(newPrice);
+
+			// Update the item in the database
+			session.merge(item);
+
+			// Commit the transaction
+			session.getTransaction().commit();
+
+			System.out.println("Item with ID " + item.getItemID() + " updated successfully. New price: " + newPrice);
+		} catch (Exception e) {
+			if (session != null) {
+				session.getTransaction().rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+	}
+
+
+
 	public void sendToAllClients(String message) {
 		try {
 			for (SubscribedClient subscribedClient : SubscribersList) {
