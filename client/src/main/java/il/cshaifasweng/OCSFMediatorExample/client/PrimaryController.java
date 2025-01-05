@@ -26,6 +26,7 @@ public class PrimaryController {
 	private Label WelcomeLabel;
 
 	@FXML
+
 	void displayMenuFunc(ActionEvent event) throws IOException{
 		try {
 			App.setRoot("secondary");
@@ -54,6 +55,5 @@ public class PrimaryController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
 
 }
