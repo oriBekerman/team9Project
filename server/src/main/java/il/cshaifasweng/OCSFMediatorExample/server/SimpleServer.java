@@ -52,7 +52,14 @@ public class SimpleServer extends AbstractServer {
 					"Includes vegan option",
 					null
 			);
-			List<MenuItem> menuList = new ArrayList<>(List.of(item2));
+			MenuItem item1 = new MenuItem(
+					"Salad",
+					35.00,
+					"Tomatoes, cucumbers, lettuce",
+					"Low calorie",
+					null
+			);
+			List<MenuItem> menuList = new ArrayList<>(List.of(item1, item2));
 			Menu menu=new Menu(menuList);
 
 			try {
