@@ -10,6 +10,8 @@
         <Button fx:id="UpdatePriceBtn" layoutX="14.0" layoutY="64.0" mnemonicParsing="false" onAction="#UpdateTheMenu" text="Update Price" />
         <Button fx:id="SaveBtn" layoutX="14.0" layoutY="107.0" mnemonicParsing="false" onAction="#SaveTheUpdateMenu" text="Save" />
 
-        <ListView fx:id="menuListView" layoutX="14.0" layoutY="150.0" prefHeight="200.0" prefWidth="550.0" />
+        <ListView fx:id="menuListView" layoutX="14.0" layoutY="150.0" prefHeight="600.0" prefWidth="550.0" />
+
+
     </children>
 </AnchorPane>
