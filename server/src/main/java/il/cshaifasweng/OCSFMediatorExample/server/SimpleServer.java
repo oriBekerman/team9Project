@@ -40,8 +40,7 @@ public class SimpleServer extends AbstractServer {
 			}
 
 		}
-		//receives display menu msg from client and returns a map with "menu sent" string and a list of the menu items
-
+		//receives display menu msg from client and returns the menu
 		else if (msgString.startsWith("#display menu"))
 		{
 			System.out.println("Displaying menu");
@@ -57,6 +56,36 @@ public class SimpleServer extends AbstractServer {
 
 			try {
 				client.sendToClient(menu);//sent the menu
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		//receives edit item msg from client and returns the updated item
+		else if (msgString.contains("#edit item"))
+		{
+			int itemId=0;
+			int price=0;
+			System.out.println("edit item");
+			String[] parts = msgString.split(",");
+			try {
+				 itemId = Integer.parseInt(parts[1]);
+				 price = Integer.parseInt(parts[2]);
+			} catch (NumberFormatException e) {
+				System.out.println("Error: One of the parts is not a valid integer.");
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.out.println("Error: The input string does not have enough parts.");
+			}
+			updateDish(itemId,price);
+			MenuItem item2 = new MenuItem(
+					"Pizza",
+					55.00,
+					"Mushrooms, onions, tomatoes",
+					"Includes vegan option",
+					null
+			);
+			try {
+				client.sendToClient(item2);//sent the menu
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

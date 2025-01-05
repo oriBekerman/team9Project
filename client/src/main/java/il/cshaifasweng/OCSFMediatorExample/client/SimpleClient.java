@@ -26,10 +26,19 @@ public class SimpleClient extends AbstractClient {
 			System.out.println(message);
 			EventBus.getDefault().post(new WarningEvent((Warning) msg));
 		}
-
-		if (msg.getClass().equals(Menu.class)) {
+		//got menu to display from server
+		if (msg.getClass().equals(Menu.class))
+		{
 			System.out.println("menu received");
 			((Menu) msg).printMenu();
+		}
+		//got updated dish from server
+		if (msg.getClass().equals(MenuItem.class))
+		{
+			System.out.println("new item received");
+			((MenuItem) msg).printMenuIteam();
+			EventBus.getDefault().post(new updateDishEvent((MenuItem) msg));
+			System.out.println("new item event posted");
 		}
 
 	}
@@ -44,5 +53,10 @@ public class SimpleClient extends AbstractClient {
 	public void displayMenu() throws IOException {
 		client.sendToServer("#display menu");
 	}
+	public void editMenu(String itemId,String price) throws IOException
+	{
+		client.sendToServer("#edit item"+","+ itemId +","+ price);
+	}
+
 
 }
