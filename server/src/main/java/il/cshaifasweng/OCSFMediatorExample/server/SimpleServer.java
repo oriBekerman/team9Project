@@ -34,7 +34,31 @@ public class SimpleServer extends AbstractServer {
 	private Menu menu=new Menu();
 
 	public SimpleServer(int port) {
-		super(port);}
+		super(port);
+		// Initialize DB
+		try {
+
+			SessionFactory sessionFactory = getSessionFactory(); //need to define session factory
+			session = sessionFactory.openSession(); // have to do next two lines to make actions in the DB
+			session.beginTransaction();
+			List<MenuItem> existingItems = getMenuItems();
+			if (existingItems.isEmpty()) {
+				System.out.println("Menu is empty in the database- initilize it");
+				initializeData();  // Only initialize data if the menu is empty in db
+			} else {
+				System.out.println("Menu already has data in the database, skipping initialization.");
+			}
+		} catch (Exception exception) {
+			if (session != null) {
+				session.getTransaction().rollback();
+			}
+			System.err.println("An error occured, changes have been rolled back.");
+			exception.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+	}
 
 	@Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
@@ -70,14 +94,15 @@ public class SimpleServer extends AbstractServer {
 			String[] parts = msgString.split(",");
 			try {
 				 itemId = Integer.parseInt(parts[1]);
-				newPrice = Double.parseDouble(parts[2]);
+				 System.out.println(itemId);
+				 newPrice = Double.parseDouble(parts[2]);
 			} catch (NumberFormatException e) {
 				System.out.println("Error: One of the parts is not a valid integer.");
 			} catch (ArrayIndexOutOfBoundsException e) {
 				System.out.println("Error: The input string does not have enough parts.!");
 			}
 			System.out.println("before updateItemInDB");
-			MenuItem item=menu.getItemByID(itemId);
+			MenuItem item=menu.getItemByID(itemId-1); //id start in 1 when but index in 0
 			item.printMenuItem();
 			updateItemInDB(item,newPrice);
 			System.out.println("after updateItemInDB");
@@ -102,6 +127,9 @@ public class SimpleServer extends AbstractServer {
 
 			// Update the item in the database
 			session.merge(item);
+
+			// Force Hibernate to flush changes to the database
+			session.flush();
 
 			// Commit the transaction
 			session.getTransaction().commit();
@@ -137,12 +165,6 @@ public class SimpleServer extends AbstractServer {
 			session.beginTransaction();
 			//after begin transaction we can make actions in the database, when we finish we make commit
 			System.out.println("Displaying menu");
-			if(menu.isMenuEmpty())
-			{
-				System.out.println("Menu is empty");
-				initializeData();
-			}
-			System.out.println("1111");
 			menu.SetMenuItems(getMenuItems());
 			menu.printMenu();
 			session.getTransaction().commit(); // Save everything.
@@ -171,10 +193,10 @@ public class SimpleServer extends AbstractServer {
 			HibernateException
 	{
 		Configuration configuration = new Configuration();
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Please enter the database password: ");
-		String password = scanner.nextLine();
-		configuration.setProperty("hibernate.connection.password", password);
+//		Scanner scanner = new Scanner(System.in);
+//		System.out.println("Please enter the database password: ");
+//		String password = scanner.nextLine();
+		configuration.setProperty("hibernate.connection.password", "poolgirL1?");
 		//add dynamic password here
 		// Add ALL of your entities(Classes) here. You can also try adding a whole package.
 		configuration.addAnnotatedClass(Menu.class);

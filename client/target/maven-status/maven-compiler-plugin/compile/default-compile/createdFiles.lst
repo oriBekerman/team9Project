@@ -4,6 +4,7 @@ il\cshaifasweng\OCSFMediatorExample\client\App.class
 il\cshaifasweng\OCSFMediatorExample\client\WarningEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.class
+il\cshaifasweng\OCSFMediatorExample\client\updateDishEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryController$1.class

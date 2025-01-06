@@ -56,7 +56,7 @@ public class SecondaryController {
 
     // Save the updated menu logic (stub)
     @FXML
-    void SaveTheUpdateMenu(ActionEvent event) {
+    void SaveTheUpdateMenu(ActionEvent event) throws IOException {
         // Create a map to hold the MenuItem IDs and their new prices
         Map<Integer, Double> updatedPrices = new HashMap<>();
 
@@ -86,6 +86,7 @@ public class SecondaryController {
 
         // Send the updated prices to the server (stub)
         for (Map.Entry<Integer, Double> entry : updatedPrices.entrySet()) {
+            SimpleClient.getClient().editMenu(entry.getKey().toString(),entry.getValue().toString());
             System.out.println("Item ID: " + entry.getKey() + " New Price: " + entry.getValue());
         }
 
