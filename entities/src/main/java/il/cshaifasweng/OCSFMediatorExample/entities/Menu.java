@@ -12,6 +12,7 @@ public class Menu implements Serializable {
     {
         this.menuItems = items;
     }
+    public Menu () {};
 
     public List<MenuItem> getMenuItems()
     {
@@ -20,7 +21,22 @@ public class Menu implements Serializable {
 
     public void printMenu(){
         for(int i=0; i<=this.menuItems.size(); i++){
-            menuItems.get(i).printMenuIteam();
+            menuItems.get(i).printMenuItem();
         }
+    }
+    public MenuItem getItemByID(int itemID)
+    {
+       return menuItems.get(itemID);
+    }
+    public void SetMenuItems(List<MenuItem> menuItems) {
+        this.menuItems = menuItems;
+    }
+    public boolean isMenuEmpty()
+    {
+        if(menuItems==null)
+            return true;
+        boolean I= menuItems.isEmpty();
+        System.out.println(I);
+        return I;
     }
 }

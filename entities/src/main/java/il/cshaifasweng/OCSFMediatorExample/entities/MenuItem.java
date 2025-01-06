@@ -89,12 +89,10 @@ public class MenuItem implements Serializable {
     public void setPicture(byte[] picture) {
         this.picture = picture;
     }
-    public void printMenuIteam(){
-        System.out.println(this.name+
-        this.price+
-        this.ingredients+
-        this.preference+
-        this.picture);
+    public void printMenuItem(){
+        System.out.println("name:"+this.name+" price:"+this.price+
+                " ingredients:"+this.ingredients+" preference:"+this.preference);
+
     }
 }
 
