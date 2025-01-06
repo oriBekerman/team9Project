@@ -4,11 +4,20 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="392.0" prefWidth="579.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryController">
     <children>
         <Button fx:id="BackToHPbtn" layoutX="14.0" layoutY="22.0" mnemonicParsing="false" onAction="#BackToHPfunc" text="Back to Home Page" />
         <Button fx:id="UpdatePriceBtn" layoutX="14.0" layoutY="64.0" mnemonicParsing="false" onAction="#UpdateTheMenu" text="Update Price" />
         <Button fx:id="SaveBtn" layoutX="14.0" layoutY="107.0" mnemonicParsing="false" onAction="#SaveTheUpdateMenu" text="Save" />
+        <TableView fx:id="menuTable" layoutX="150.0" layoutY="22.0" prefHeight="250.0" prefWidth="400.0">
+            <columns>
+                <TableColumn fx:id="nameColumn" text="Name" />
+                <TableColumn fx:id="priceColumn" text="Price" />
+                <TableColumn fx:id="ingredientsColumn" text="Ingredients" />
+            </columns>
+        </TableView>
     </children>
 </AnchorPane>
 
