@@ -24,8 +24,19 @@ public class Menu implements Serializable {
             menuItems.get(i).printMenuItem();
         }
     }
-
+    public MenuItem getItemByID(int itemID)
+    {
+       return menuItems.get(itemID);
+    }
     public void SetMenuItems(List<MenuItem> menuItems) {
         this.menuItems = menuItems;
+    }
+    public boolean isMenuEmpty()
+    {
+        if(menuItems==null)
+            return true;
+        boolean I= menuItems.isEmpty();
+        System.out.println(I);
+        return I;
     }
 }

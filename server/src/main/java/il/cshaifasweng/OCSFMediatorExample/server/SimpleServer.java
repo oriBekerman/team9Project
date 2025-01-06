@@ -17,9 +17,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import java.util.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
+
+
 
 
 
@@ -63,35 +66,57 @@ public class SimpleServer extends AbstractServer {
 		{
 			System.out.println("in edit item");
 			int itemId=0;
-			int price=0;
-			System.out.println("edit item");
+			double newPrice=0;
 			String[] parts = msgString.split(",");
 			try {
 				 itemId = Integer.parseInt(parts[1]);
-				 price = Integer.parseInt(parts[2]);
+				newPrice = Double.parseDouble(parts[2]);
 			} catch (NumberFormatException e) {
 				System.out.println("Error: One of the parts is not a valid integer.");
 			} catch (ArrayIndexOutOfBoundsException e) {
 				System.out.println("Error: The input string does not have enough parts.!");
 			}
-			updateDish(itemId,price);
-			MenuItem item2 = new MenuItem(
-					"Pizza",
-					55.00,
-					"Mushrooms, onions, tomatoes",
-					"Includes vegan option",
-					null
-			);
+			System.out.println("before updateItemInDB");
+			MenuItem item=menu.getItemByID(itemId);
+			item.printMenuItem();
+			updateItemInDB(item,newPrice);
+			System.out.println("after updateItemInDB");
 			try {
-				client.sendToClient(item2);//sent the menu
+				client.sendToClient((menu.getItemByID(itemId)));//sent the menu
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	private void updateDish(int ItemId, int price)
-	{
-		System.out.println("in updateDish");
+	private void updateItemInDB(MenuItem item,double newPrice) {
+		Session session = null;
+		System.out.println("in updateItemInDB");
+		try {
+			SessionFactory sessionFactory = getSessionFactory(); //need to define session factory
+			session = sessionFactory.openSession(); // have to do next two lines to make actions in the DB
+			session.beginTransaction();
+			//after begin transaction we can make actions in the database, when we finish we make commit
+
+			// Double the price of the item
+			item.setPrice(newPrice);
+
+			// Update the item in the database
+			session.merge(item);
+
+			// Commit the transaction
+			session.getTransaction().commit();
+
+			System.out.println("Item with ID " + item.getItemID() + " updated successfully. New price: " + newPrice);
+		} catch (Exception e) {
+			if (session != null) {
+				session.getTransaction().rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
 	}
 	public void sendToAllClients(String message) {
 		try {
@@ -106,20 +131,21 @@ public class SimpleServer extends AbstractServer {
 
 	private void displayMenuFun() {
 		try {
-			System.out.println("indisp!!!!!!!!!!");
 
 			SessionFactory sessionFactory = getSessionFactory(); //need to define session factory
 			session = sessionFactory.openSession(); // have to do next two lines to make actions in the DB
 			session.beginTransaction();
 			//after begin transaction we can make actions in the database, when we finish we make commit
 			System.out.println("Displaying menu");
-			initializeData();
-
+			if(menu.isMenuEmpty())
+			{
+				System.out.println("Menu is empty");
+				initializeData();
+			}
+			System.out.println("1111");
 			menu.SetMenuItems(getMenuItems());
-
-
+			menu.printMenu();
 			session.getTransaction().commit(); // Save everything.
-
 		} catch (Exception exception) {
 			if (session != null) {
 				session.getTransaction().rollback();
@@ -136,6 +162,8 @@ public class SimpleServer extends AbstractServer {
 		CriteriaQuery<MenuItem> query = builder.createQuery(MenuItem.class);
 		query.from(MenuItem.class);
 		List<MenuItem> data = session.createQuery(query).getResultList();
+		System.out.println("getting menu items");
+		System.out.println(data);
 		return data;
 	}
 
@@ -196,5 +224,6 @@ public class SimpleServer extends AbstractServer {
 		session.flush();
 
 	}
+
 }
 

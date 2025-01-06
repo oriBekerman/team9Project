@@ -38,7 +38,7 @@ public class SecondaryController {
     void UpdateTheMenu(ActionEvent event)
     {
         try {
-            SimpleClient.getClient().editMenu("5","500");
+            SimpleClient.getClient().editMenu("1","500");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

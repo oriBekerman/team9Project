@@ -37,6 +37,7 @@ public class SimpleClient extends AbstractClient {
 		{
 			System.out.println("new item received");
 			((MenuItem) msg).printMenuItem();
+			((Menu) msg).printMenu();
 			EventBus.getDefault().post(new updateDishEvent((MenuItem) msg));
 			System.out.println("new item event posted");
 		}
