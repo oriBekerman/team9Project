@@ -48,26 +48,20 @@ public class SimpleServer extends AbstractServer {
 			}
 
 		}
-		//receives display menu msg from client and returns a map with "menu sent" string and a list of the menu items
-
+		//receives display menu msg from client and sends back menu
 		else if (msgString.startsWith("#display menu"))
 		{
-
-
 			displayMenuFun();
-
-
-
 			try {
 				client.sendToClient(menu);//sent the menu
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-
 		//receives edit item msg from client and returns the updated item
 		else if (msgString.contains("#edit item"))
 		{
+			System.out.println("in edit item");
 			int itemId=0;
 			int price=0;
 			System.out.println("edit item");
@@ -94,15 +88,11 @@ public class SimpleServer extends AbstractServer {
 				e.printStackTrace();
 			}
 		}
-
 	}
-
-
-
-
-
-
-
+	private void updateDish(int ItemId, int price)
+	{
+		System.out.println("in updateDish");
+	}
 	public void sendToAllClients(String message) {
 		try {
 			for (SubscribedClient subscribedClient : SubscribersList) {
@@ -121,7 +111,7 @@ public class SimpleServer extends AbstractServer {
 			SessionFactory sessionFactory = getSessionFactory(); //need to define session factory
 			session = sessionFactory.openSession(); // have to do next two lines to make actions in the DB
 			session.beginTransaction();
-//after begin transaction we can make actions in the database, when we finish we make commit
+			//after begin transaction we can make actions in the database, when we finish we make commit
 			System.out.println("Displaying menu");
 			initializeData();
 
@@ -140,7 +130,8 @@ public class SimpleServer extends AbstractServer {
 			session.close();
 		}
 	}
-	private List<MenuItem> getMenuItems() {
+	private List<MenuItem> getMenuItems()
+	{
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<MenuItem> query = builder.createQuery(MenuItem.class);
 		query.from(MenuItem.class);
@@ -149,14 +140,14 @@ public class SimpleServer extends AbstractServer {
 	}
 
 	private static SessionFactory getSessionFactory() throws
-			HibernateException {
-
+			HibernateException
+	{
 		Configuration configuration = new Configuration();
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Please enter the database password: ");
 		String password = scanner.nextLine();
 		configuration.setProperty("hibernate.connection.password", password);
-//add dynamic password here
+		//add dynamic password here
 		// Add ALL of your entities(Classes) here. You can also try adding a whole package.
 		configuration.addAnnotatedClass(Menu.class);
 		configuration.addAnnotatedClass(MenuItem.class);
@@ -174,45 +165,25 @@ public class SimpleServer extends AbstractServer {
 	public static void initializeData() {
 
 		// יצירת פריטים עבור התפריט בעזרת הבנאי
-		MenuItem item1 = new MenuItem(
-				"Salad",
-				35.00,
+		MenuItem item1 = new MenuItem("Salad", 35.00,
 				"Tomatoes, cucumbers, lettuce",
-				"Low calorie",
-				null
-		);
+				"Low calorie", null);
 
-		MenuItem item2 = new MenuItem(
-				"Pizza ",
-				55.00,
+		MenuItem item2 = new MenuItem("Pizza ", 55.00,
 				" Mushrooms, onions, tomatoes",
-				" Includes vegan option ",
-				null
-		);
+				" Includes vegan option ", null);
 
-		MenuItem item3 = new MenuItem(
-				"Pasta",
-				60.00,
+		MenuItem item3 = new MenuItem("Pasta", 60.00,
 				"Mushroom cream sauce",
-				"Available gluten-free",
-				null
-		);
+				"Available gluten-free", null);
 
-		MenuItem item4 = new MenuItem(
-				"Hamburger",
-				80.00,
+		MenuItem item4 = new MenuItem("Hamburger", 80.00,
 				"Meatball, pickle, tomato, lettuce",
-				"Choice of meat or plant-based",
-				null
-		);
+				"Choice of meat or plant-based", null);
 
-		MenuItem item5 = new MenuItem(
+		MenuItem item5 = new MenuItem("Edamame", 30.00,
 				"Edamame",
-				30.00,
-				"Edamame",
-				"Served with sea salt",
-				null
-		);
+				"Served with sea salt", null);
 
 		// שמירת הפריטים במסד הנתונים
 		session.save(item1);
