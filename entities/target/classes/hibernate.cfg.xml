@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+
+<hibernate-configuration>
+    <session-factory>
+        <!-- חיבור למסד הנתונים -->
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/RestaurantDB1?useSSL=false&amp;serverTimezone=UTC</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">N2O0A0M6</property>
+
+        <!-- Dialect -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+        <!-- אפשרויות דיבאג -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- יצירת טבלה אוטומטית (רק בעת פיתוח, לא בשימוש בייצור) -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- מיפוי מחלקת MenuItem -->
+        <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.MenuItem"/>
+    </session-factory>
+</hibernate-configuration>

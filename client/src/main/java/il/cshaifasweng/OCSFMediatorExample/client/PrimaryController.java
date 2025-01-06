@@ -29,19 +29,11 @@ public class PrimaryController {
 	void displayMenuFunc(ActionEvent event) throws IOException {
 		try {
 			App.setRoot("secondary");
-			System.out.println("here!!!!!!!");
 			SimpleClient.getClient().displayMenu();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-//	@FXML
-//	void initialize() {
-//		assert HomePageLabel != null : "fx:id=\"HomePageLabel\" was not injected: check your FXML file 'primary.fxml'.";
-//		assert MenutBtn != null : "fx:id=\"MentBtn\" was not injected: check your FXML file 'primary.fxml'.";
-//		assert WelcomeLabel != null : "fx:id=\"WelcomeLabel\" was not injected: check your FXML file 'primary.fxml'.";
-//
-//	}
 
 	@FXML
 	void initialize() {
@@ -54,6 +46,6 @@ public class PrimaryController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
 
 	}
-}
