@@ -12,6 +12,7 @@ public class Menu implements Serializable {
     {
         this.menuItems = items;
     }
+    public Menu () {};
 
     public List<MenuItem> getMenuItems()
     {
@@ -22,5 +23,9 @@ public class Menu implements Serializable {
         for(int i=0; i<=this.menuItems.size(); i++){
             menuItems.get(i).printMenuItem();
         }
+    }
+
+    public void SetMenuItems(List<MenuItem> menuItems) {
+        this.menuItems = menuItems;
     }
 }

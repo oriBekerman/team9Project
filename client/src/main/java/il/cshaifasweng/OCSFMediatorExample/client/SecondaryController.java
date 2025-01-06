@@ -35,12 +35,9 @@ public class SecondaryController {
     }
 
     @FXML
-    void UpdateTheMenu(ActionEvent event) {
-        try {
-            SimpleClient.getClient().editMenu("5","500");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    void UpdateTheMenu(ActionEvent event)
+    {
+
     }
 
     @FXML

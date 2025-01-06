@@ -38,7 +38,7 @@ public class PrimaryController {
 	@FXML
 	void initialize() {
 		assert HomePageLabel != null : "fx:id=\"HomePageLabel\" was not injected: check your FXML file 'primary.fxml'.";
-		assert MenutBtn != null : "fx:id=\"MentBtn\" was not injected: check your FXML file 'primary.fxml'.";
+		assert MenutBtn != null : "fx:id=\"MenutBtn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert WelcomeLabel != null : "fx:id=\"WelcomeLabel\" was not injected: check your FXML file 'primary.fxml'.";
 		try {
 			SimpleClient.getClient().sendToServer("add client");
