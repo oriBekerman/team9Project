@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -100,18 +101,30 @@ public class SecondaryController {
             System.out.println("Item ID: " + entry.getKey() + " New Price: " + entry.getValue());
         }
 
-        // After saving, disable all price TextFields again
+        // Disable all price TextFields after saving
         for (TextField priceField : priceFieldMap.values()) {
-            priceField.setDisable(true);  // Disable the TextField again
+            priceField.setDisable(true);
         }
+
+        Platform.runLater(() -> {
+            menuListView.refresh();
+            SaveBtn.setDisable(true);
+            UpdatePriceBtn.setDisable(false);
+            UpdatePriceBtn.requestFocus();
+        });
+
     }
 
     @FXML
     void UpdateTheMenu(ActionEvent event) {
         // Enable all price fields
-        for (TextField priceField : priceFieldMap.values()) {
-            priceField.setDisable(false);  // Enable the TextField
-        }
+        Platform.runLater(() -> {
+            for (TextField priceField : priceFieldMap.values()) {
+                priceField.setDisable(false);  // Enable the TextField
+            }
+            SaveBtn.setDisable(false); //enable save button
+            UpdatePriceBtn.setDisable(true); //disable update button
+        });
     }
 
 
@@ -125,7 +138,7 @@ public class SecondaryController {
 
         // Notify the SimpleClient that the SecondaryController has been initialized
         SimpleClient.setSecondaryControllerInitialized();
-        // Set custom cell factory to display MenuItem details more nicely
+
         menuListView.setCellFactory(param -> new ListCell<MenuItem>() {
             @Override
             protected void updateItem(MenuItem item, boolean empty) {
@@ -169,5 +182,9 @@ public class SecondaryController {
         assert BackToHPbtn != null : "fx:id=\"BackToHPbtn\" was not injected: check your FXML file 'secondary.fxml'.";
         assert SaveBtn != null : "fx:id=\"SaveBtn\" was not injected: check your FXML file 'secondary.fxml'.";
         assert UpdatePriceBtn != null : "fx:id=\"UpdatePriceBtn\" was not injected: check your FXML file 'secondary.fxml'.";
+
+        Platform.runLater(() -> {
+            SaveBtn.setDisable(true); //save button is disabled
+        });
     }
 }
