@@ -28,7 +28,7 @@ public class App extends Application {
     	client = SimpleClient.getClient();
     	client.openConnection();
         stage.setTitle("ProtoType Team 9 - Mom's kitchen");
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        scene = new Scene(loadFXML("primary"), 500, 600);
         stage.setScene(scene);
         stage.show();
     }
