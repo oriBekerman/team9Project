@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
@@ -35,6 +36,13 @@ public class SimpleClient extends AbstractClient {
 				// Post immediately if SecondaryController is ready
 				EventBus.getDefault().post(menuEvent);
 			}
+		}
+		if(msg.getClass().equals(MenuItem.class))
+		{
+			MenuItem menuItem = (MenuItem) msg;
+			// Post immediately if SecondaryController is ready
+			updateDishEvent updateEvent=new updateDishEvent(menuItem);
+			EventBus.getDefault().post(updateEvent);
 		}
 	}
 

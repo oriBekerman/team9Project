@@ -106,12 +106,8 @@ public class SimpleServer extends AbstractServer {
 			item.printMenuItem();
 			updateItemInDB(item,newPrice);
 			System.out.println("after updateItemInDB");
-			try {
-				client.sendToClient((menu.getItemByID(itemId)));//sent the menu
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+            sendToAllClients((menu.getItemByID(itemId)));//sent the menu to all the clients
+        }
 	}
 	private void updateItemInDB(MenuItem item,double newPrice) {
 		Session session = null;
@@ -196,7 +192,7 @@ public class SimpleServer extends AbstractServer {
 //		Scanner scanner = new Scanner(System.in);
 //		System.out.println("Please enter the database password: ");
 //		String password = scanner.nextLine();
-		configuration.setProperty("hibernate.connection.password", "poolgirL1?");
+		configuration.setProperty("hibernate.connection.password", "Bekitnt26@");
 		//add dynamic password here
 		// Add ALL of your entities(Classes) here. You can also try adding a whole package.
 		configuration.addAnnotatedClass(Menu.class);
