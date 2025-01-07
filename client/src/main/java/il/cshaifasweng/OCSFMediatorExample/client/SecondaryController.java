@@ -47,6 +47,15 @@ public class SecondaryController {
         menuListView.getItems().clear();  // Clear previous items
         menuListView.getItems().addAll(menu.getMenuItems()); // Add the new items
     }
+    // Event handler for MenuEvent
+    @Subscribe
+    public void onUpdateEvent(updateDishEvent event) {
+        try {
+            SimpleClient.getClient().sendToServer("#display menu");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // Back to home page button logic
     @FXML
@@ -55,6 +64,7 @@ public class SecondaryController {
     }
 
     // Save the updated menu logic (stub)
+
     @FXML
     void SaveTheUpdateMenu(ActionEvent event) throws IOException {
         // Create a map to hold the MenuItem IDs and their new prices

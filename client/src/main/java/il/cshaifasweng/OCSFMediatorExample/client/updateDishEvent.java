@@ -4,7 +4,8 @@ import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 
 public class updateDishEvent {
     MenuItem item;
-    updateDishEvent(MenuItem dish) {
+    updateDishEvent(MenuItem dish)
+    {
         this.item = dish;
     }
 }
