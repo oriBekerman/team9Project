@@ -106,7 +106,7 @@ public class SimpleServer extends AbstractServer {
 			item.printMenuItem();
 			updateItemInDB(item,newPrice);
 			System.out.println("after updateItemInDB");
-            sendToAllClients((menu.getItemByID(itemId)));//sent the menu to all the clients
+            sendToAllClients((menu));//sent the menu to all the clients
         }
 	}
 	private void updateItemInDB(MenuItem item,double newPrice) {

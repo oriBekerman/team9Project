@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.*;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -34,7 +36,19 @@ public class SecondaryController {
     private Button UpdatePriceBtn;
 
     @FXML
-    private ListView<MenuItem> menuListView;
+    private TableView<MenuItem> menuTableView;
+
+    @FXML
+    private TableColumn<MenuItem, String> nameColumn;
+
+    @FXML
+    private TableColumn<MenuItem, String> ingredientsColumn;
+
+    @FXML
+    private TableColumn<MenuItem, String> preferenceColumn;
+
+    @FXML
+    private TableColumn<MenuItem, Double> priceColumn;
 
     private Map<MenuItem, TextField> priceFieldMap = new HashMap<>();
 
@@ -44,15 +58,23 @@ public class SecondaryController {
         Menu menu = event.getMenu();
         System.out.println("Menu received in secondary controller");
 
-        // Display menu items in the ListView
-        menuListView.getItems().clear();  // Clear previous items
-        menuListView.getItems().addAll(menu.getMenuItems()); // Add the new items
+        Platform.runLater(() -> {
+            // Clear the TableView before updating
+            menuTableView.getItems().clear();
+            for (MenuItem item : menu.getMenuItems()) {
+                System.out.println(item);
+            }
+            // Add new menu items to the TableView
+            menuTableView.getItems().setAll(menu.getMenuItems());
+        });
     }
+
     // Event handler for MenuEvent
     @Subscribe
     public void onUpdateEvent(updateDishEvent event) {
         try {
             SimpleClient.getClient().sendToServer("#display menu");
+            menuTableView.refresh();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -65,7 +87,6 @@ public class SecondaryController {
     }
 
     // Save the updated menu logic (stub)
-
     @FXML
     void SaveTheUpdateMenu(ActionEvent event) throws IOException {
         // Create a map to hold the MenuItem IDs and their new prices
@@ -97,7 +118,7 @@ public class SecondaryController {
 
         // Send the updated prices to the server (stub)
         for (Map.Entry<Integer, Double> entry : updatedPrices.entrySet()) {
-            SimpleClient.getClient().editMenu(entry.getKey().toString(),entry.getValue().toString());
+            SimpleClient.getClient().editMenu(entry.getKey().toString(), entry.getValue().toString());
             System.out.println("Item ID: " + entry.getKey() + " New Price: " + entry.getValue());
         }
 
@@ -107,14 +128,14 @@ public class SecondaryController {
         }
 
         Platform.runLater(() -> {
-            menuListView.refresh();
+            menuTableView.refresh();
             SaveBtn.setDisable(true);
             UpdatePriceBtn.setDisable(false);
             UpdatePriceBtn.requestFocus();
         });
-
     }
 
+    // Update the menu (enable price fields)
     @FXML
     void UpdateTheMenu(ActionEvent event) {
         // Enable all price fields
@@ -122,13 +143,12 @@ public class SecondaryController {
             for (TextField priceField : priceFieldMap.values()) {
                 priceField.setDisable(false);  // Enable the TextField
             }
-            SaveBtn.setDisable(false); //enable save button
-            UpdatePriceBtn.setDisable(true); //disable update button
+            SaveBtn.setDisable(false); // Enable save button
+            UpdatePriceBtn.setDisable(true); // Disable update button
         });
     }
 
-
-    // Initialize method to register for events and notify SimpleClient about SecondaryController initialization
+    // Initialize method to register for events
     @FXML
     void initialize() {
         System.out.println("SecondaryController initialized");
@@ -139,52 +159,34 @@ public class SecondaryController {
         // Notify the SimpleClient that the SecondaryController has been initialized
         SimpleClient.setSecondaryControllerInitialized();
 
-        menuListView.setCellFactory(param -> new ListCell<MenuItem>() {
+        // Initialize TableColumns to bind MenuItem data
+        nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        ingredientsColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIngredients()));
+        preferenceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPreference()));
+        priceColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getPrice()).asObject());
+
+        // Set cell factories for price fields
+        priceColumn.setCellFactory(col -> new TableCell<MenuItem, Double>() {
             @Override
-            protected void updateItem(MenuItem item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
+            protected void updateItem(Double price, boolean empty) {
+                super.updateItem(price, empty);
+                if (empty || price == null) {
                     setText(null);
                 } else {
-                    VBox vbox = new VBox();
-
-                    // Create labels for each attribute
-                    Text name = new Text("Name: " + item.getName());
-                    Text ingredients = new Text("Ingredients: " + item.getIngredients());
-                    Text preference = new Text("Preference: " + item.getPreference());
-                    Text picture = new Text("Picture: " + (item.getPicture() != null ? "Available" : "Not available"));
-
-                    // Create an HBox for the price field and label
-                    HBox priceBox = new HBox();
-                    Text priceLabel = new Text("Price: ");
-                    TextField priceField = new TextField(String.valueOf(item.getPrice()));
-                    priceField.setDisable(true);  // Initially disabled
-                    priceField.setPrefWidth(50);
-
-                    // Add the label and text field to the HBox
-                    priceBox.getChildren().addAll(priceLabel, priceField);
-                    priceBox.setSpacing(5);  // Add space between label and field
-
-                    // Add all the elements to the VBox
-                    vbox.getChildren().addAll(name, priceBox, ingredients, preference, picture);
-
-                    // Set VBox as the graphic of the cell
-                    setGraphic(vbox);
-                    // Store the price field
-                    priceFieldMap.put(item, priceField);
+                    TextField priceField = new TextField(price.toString());
+                    priceField.setDisable(true);  // Initially disable the price field
+                    priceFieldMap.put(getTableView().getItems().get(getIndex()), priceField);
+                    setGraphic(priceField);
                 }
             }
-
-
         });
 
-        // Ensure that FXML components are injected properly
-        assert BackToHPbtn != null : "fx:id=\"BackToHPbtn\" was not injected: check your FXML file 'secondary.fxml'.";
-        assert SaveBtn != null : "fx:id=\"SaveBtn\" was not injected: check your FXML file 'secondary.fxml'.";
-        assert UpdatePriceBtn != null : "fx:id=\"UpdatePriceBtn\" was not injected: check your FXML file 'secondary.fxml'.";
-
         Platform.runLater(() -> {
-            SaveBtn.setDisable(true); //save button is disabled
+            // Clear the TableView and refresh it with the updated menu items
+            menuTableView.getItems().clear(); // Clear previous items
+            SaveBtn.setDisable(true);  // Disable the save button
+            UpdatePriceBtn.setDisable(false);  // Re-enable the update button
+            UpdatePriceBtn.requestFocus();  // Focus the update button
         });
     }
 }
