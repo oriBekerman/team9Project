@@ -27,8 +27,9 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
     	EventBus.getDefault().register(this);
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter host and port: ");
+        System.out.println("Please enter host: ");
         String host = scanner.nextLine();
+        System.out.println("Please enter port: ");
         String port = scanner.nextLine();
         int port2 = Integer.parseInt(port);
     	client = SimpleClient.getClient();
