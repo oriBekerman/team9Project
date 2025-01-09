@@ -13,6 +13,8 @@ public class SimpleClient extends AbstractClient {
 	private static SimpleClient client = null;
 	private static MenuEvent pendingMenuEvent = null;  // Store pending MenuEvent if SecondaryController isn't ready
 	private static boolean isSecondaryControllerInitialized = false;
+	public static String host="localhost";
+	public  static int port=3000;
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
@@ -39,6 +41,7 @@ public class SimpleClient extends AbstractClient {
 		}
 		if(msg.getClass().equals(MenuItem.class))
 		{
+			System.out.println("here");
 			MenuItem menuItem = (MenuItem) msg;
 			// Post immediately if SecondaryController is ready
 			updateDishEvent updateEvent=new updateDishEvent(menuItem);
@@ -48,7 +51,7 @@ public class SimpleClient extends AbstractClient {
 
 	public static SimpleClient getClient() {
 		if (client == null) {
-			client = new SimpleClient("localhost", 3000);
+			client = new SimpleClient(host, port);
 		}
 		return client;
 	}

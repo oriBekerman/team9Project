@@ -10,6 +10,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -25,7 +26,14 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
     	EventBus.getDefault().register(this);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter host and port: ");
+        String host = scanner.nextLine();
+        String port = scanner.nextLine();
+        int port2 = Integer.parseInt(port);
     	client = SimpleClient.getClient();
+        client.setHost(host);
+        client.setPort(port2);
     	client.openConnection();
         stage.setTitle("ProtoType Team 9 - Mom's kitchen");
         scene = new Scene(loadFXML("primary"), 500, 600);
