@@ -149,7 +149,6 @@ public class SecondaryController {
     @FXML
     void initialize() {
         System.out.println("SecondaryController initialized");
-
         // Register to listen for MenuEvent
         EventBus.getDefault().register(this);
 
