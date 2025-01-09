@@ -32,9 +32,13 @@ public class SimpleServer extends AbstractServer {
 
 	private static Session session;
 	private Menu menu=new Menu();
+	private String password="";
 
 	public SimpleServer(int port) {
 		super(port);
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Please enter the database password: ");
+		this.password = scanner.nextLine();
 		// Initialize DB
 		try {
 
@@ -185,15 +189,11 @@ public class SimpleServer extends AbstractServer {
 		return data;
 	}
 
-	private static SessionFactory getSessionFactory() throws
+	private SessionFactory getSessionFactory() throws
 			HibernateException
 	{
 		Configuration configuration = new Configuration();
-//		Scanner scanner = new Scanner(System.in);
-//		System.out.println("Please enter the database password: ");
-//		String password = scanner.nextLine();
-		configuration.setProperty("hibernate.connection.password", "poolgirL1?");
-		//add dynamic password here
+		configuration.setProperty("hibernate.connection.password", this.password);
 		// Add ALL of your entities(Classes) here. You can also try adding a whole package.
 		configuration.addAnnotatedClass(Menu.class);
 		configuration.addAnnotatedClass(MenuItem.class);

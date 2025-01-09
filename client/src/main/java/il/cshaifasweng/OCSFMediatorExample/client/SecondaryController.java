@@ -61,9 +61,6 @@ public class SecondaryController {
         Platform.runLater(() -> {
             // Clear the TableView before updating
             menuTableView.getItems().clear();
-            for (MenuItem item : menu.getMenuItems()) {
-                System.out.println(item);
-            }
             // Add new menu items to the TableView
             menuTableView.getItems().setAll(menu.getMenuItems());
         });
