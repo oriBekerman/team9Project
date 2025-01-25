@@ -39,6 +39,7 @@ public class SimpleServer extends AbstractServer {
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         String msgString = msg.toString();
+        Request request=(Request)msg;
 
         if (msgString.startsWith("add client")) {
             SubscribedClient connection = new SubscribedClient(client);
@@ -52,8 +53,9 @@ public class SimpleServer extends AbstractServer {
 
         }
         //receives display menu msg from client and sends back menu
-        else if (msgString.startsWith("#display menu"))
+        else if (request.getAction().equals("#display menu"))
         {
+            System.out.println("in server display menu");
             menu=menuController.displayMenu();
             try {
                 client.sendToClient(menu);//sent the menu

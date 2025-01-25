@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
+import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
@@ -59,7 +60,9 @@ public class SimpleClient extends AbstractClient {
 	}
 
 	public void displayMenu() throws IOException {
-		client.sendToServer("#display menu");
+//		client.sendToServer("#display menu");
+		Request request=new Request("#display menu",null);
+		client.sendToServer(request);
 	}
 
 	//called by SecondaryController to notify when it is initialized
