@@ -30,6 +30,8 @@ public class SimpleClient extends AbstractClient {
 
 		if (msg.getClass().equals(Menu.class)) {
 			System.out.println("Menu received, storing event...");
+			Menu menu = (Menu) msg;
+			menu.printMenu();
 			MenuEvent menuEvent = new MenuEvent((Menu) msg);
 			// Store the event if SecondaryController is not initialized
 			if (!isSecondaryControllerInitialized) {

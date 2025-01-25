@@ -3,14 +3,13 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
-
 @Entity
-@Table(name = "MenuItems")
+@Table(name ="menuItems")
 public class MenuItem implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int itemID;
+    private  int itemID;
 
     @Column(nullable = false)
     private String name;
@@ -40,12 +39,12 @@ public class MenuItem implements Serializable {
         // בנאי ריק נדרש על ידי Hibernate
     }
 
+     //Getters and Setters
 
-    // Getters and Setters
+
     public int getItemID() {
         return itemID;
     }
-
     public void setItemID(int itemID) {
         this.itemID = itemID;
     }

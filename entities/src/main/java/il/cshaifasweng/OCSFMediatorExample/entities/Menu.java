@@ -1,19 +1,35 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 
+import javax.persistence.*;
 import java.util.List;
 import java.io.Serializable;
 
+//@Entity
+//@Table(name = "Menu")
+
 public class Menu implements Serializable {
 
-    private String message;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private int menuID;
+//
+//    @Column(nullable = false)
+//    private int branchID;
+
     private List<MenuItem>menuItems;
+
     public Menu(List<MenuItem>items)
     {
         this.menuItems = items;
     }
+
     public Menu () {};
 
+//    public int getId() {
+//        return menuID;
+//    }
+    
     public List<MenuItem> getMenuItems()
     {
         return menuItems;
