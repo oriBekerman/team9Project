@@ -23,7 +23,10 @@ public class MenuItemsController {
         System.out.println("in MenuController constructor");
         this.menuItemsRepository = new MenuItemsRepository(sessionFactory);
     }
+    //constructor
     public MenuItemsController() {};
+
+    //checks if menuItems table is empty in DB and if empty saves the next items to table
     public void checkAndPopulateMenuItems() {
         try {
             // Check if the menu is already populated
@@ -56,6 +59,7 @@ public class MenuItemsController {
             throw exception; // Rethrow to ensure rollback in the constructor
         }
     }
+    //gets  items from MenuItems table and returns menu
     public Menu displayMenu() //gets menu from menuitem repository
     {
         System.out.println("in MenuController displayMenu");
