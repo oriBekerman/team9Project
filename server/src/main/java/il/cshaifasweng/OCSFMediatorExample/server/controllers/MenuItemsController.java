@@ -14,7 +14,7 @@ public class MenuItemsController {
 
 
 
-    // Constructor to inject the repository
+    // constructor to inject the repository
     public MenuItemsController(SessionFactory sessionFactory) {
         if(sessionFactory == null)
         {

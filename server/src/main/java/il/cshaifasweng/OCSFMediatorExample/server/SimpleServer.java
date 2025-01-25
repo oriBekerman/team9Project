@@ -94,7 +94,7 @@ public class SimpleServer extends AbstractServer {
             session.beginTransaction();
             //after begin transaction we can make actions in the database, when we finish we make commit
 
-            // Double the price of the item
+            // double the price of the item
             item.setPrice(newPrice);
 
             // Update the item in the database

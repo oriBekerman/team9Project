@@ -28,7 +28,7 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
         return MenuItem.class;
     }
 
-    // get menuItems form database returns menuItemsList
+    // get MenuItems form database returns menuItemsList
     public List<MenuItem> getMenuItems()
     {
         List<MenuItem> data=new ArrayList<>();
