@@ -7,7 +7,10 @@ import org.hibernate.Transaction;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import java.util.ArrayList;
 import java.util.List;
+
+import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
 
 public class MenuItemsRepository extends BaseRepository<MenuItem>
 {
@@ -24,14 +27,32 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
     protected Class<MenuItem> getEntityClass() {
         return MenuItem.class;
     }
-    private List<MenuItem> getMenuItems(Session session)
+    public List<MenuItem> getMenuItems()
     {
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<MenuItem> query = builder.createQuery(MenuItem.class);
-        query.from(MenuItem.class);
-        List<MenuItem> data = session.createQuery(query).getResultList();
-        System.out.println("getting menu items");
-        System.out.println(data);
-        return data;
+        List<MenuItem> data=new ArrayList<>();
+        try {
+                session =openSession();
+                session.beginTransaction();
+                //get items from database
+                CriteriaBuilder builder = session.getCriteriaBuilder();
+                CriteriaQuery<MenuItem> query = builder.createQuery(MenuItem.class);
+                query.from(MenuItem.class);
+                data = session.createQuery(query).getResultList();
+                System.out.println("getting menu items");
+                System.out.println(data);
+                session.getTransaction().commit(); // Save everything.
+            } catch (Exception exception)
+            {
+                if (session != null)
+                {
+                    session.getTransaction().rollback();
+                }
+                System.err.println("An error occured, changes have been rolled back.");
+                exception.printStackTrace();
+            }
+            finally {
+                session.close();
+            }
+            return data;
     }
 }

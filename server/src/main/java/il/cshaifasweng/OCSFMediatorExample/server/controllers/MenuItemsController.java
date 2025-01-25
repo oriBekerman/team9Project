@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.MenuItemsRepository;
 import org.hibernate.SessionFactory;
@@ -9,8 +10,10 @@ import java.util.List;
 
 public class MenuItemsController {
 
-    private MenuItemsRepository MenuItemsRepository;
-    private boolean nullFlag = true;
+    private MenuItemsRepository menuItemsRepository;
+
+
+
     // Constructor to inject the repository
     public MenuItemsController(SessionFactory sessionFactory) {
         if(sessionFactory == null)
@@ -18,14 +21,13 @@ public class MenuItemsController {
             throw new NullPointerException(" in MenuController sessionFactory is null");
         }
         System.out.println("in MenuController constructor");
-        this.MenuItemsRepository = new MenuItemsRepository(sessionFactory);
-        nullFlag = false;
+        this.menuItemsRepository = new MenuItemsRepository(sessionFactory);
     }
     public MenuItemsController() {};
     public void checkAndPopulateMenuItems() {
         try {
             // Check if the menu is already populated
-           if(MenuItemsRepository.checkIfEmpty())
+           if(menuItemsRepository.checkIfEmpty())
            {
                MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce",
                        "Low calorie", null);
@@ -48,15 +50,18 @@ public class MenuItemsController {
                initMenuItems.add(item3);
                initMenuItems.add(item4);
                initMenuItems.add(item5);
-               MenuItemsRepository.populate(initMenuItems);
+               menuItemsRepository.populate(initMenuItems);
            }
         } catch (Exception exception) {
             throw exception; // Rethrow to ensure rollback in the constructor
         }
     }
-
-
-
-
+    public Menu displayMenu() //gets menu from menuitem repository
+    {
+        System.out.println("in MenuController displayMenu");
+        Menu menu= new Menu(menuItemsRepository.getMenuItems());
+        menu.printMenu();
+        return menu;
+    }
 
 }

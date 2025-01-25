@@ -88,6 +88,13 @@ public class DatabaseManager {
 
         return configuration.buildSessionFactory(serviceRegistry);
     }
+    MenuItemsController getMenuItemsController() {
+        if(menuItemsController==null)
+        {
+            menuItemsController=new MenuItemsController(getSessionFactory());
+        }
+        return menuItemsController;
+    }
 
 
 

@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 
@@ -23,6 +24,7 @@ public class SimpleServer extends AbstractServer {
 
     public static Session session;
     private Menu menu=new Menu();
+    private MenuItemsController menuController=null;
     private String password="";
     private final DatabaseManager databaseManager=new DatabaseManager();
     public SimpleServer(int port) {
@@ -32,6 +34,7 @@ public class SimpleServer extends AbstractServer {
         this.password = scanner.nextLine();
         System.out.println("after password ");
         DatabaseManager.initialize(password);//initialize DB and populate table if empty
+        getControllers();
     }
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
@@ -51,7 +54,10 @@ public class SimpleServer extends AbstractServer {
         //receives display menu msg from client and sends back menu
         else if (msgString.startsWith("#display menu"))
         {
-            displayMenuFun();
+            System.out.println("before menucont");
+            menu=menuController.displayMenu();
+            System.out.println("after menucont");
+//            displayMenuFun();
             try {
                 client.sendToClient(menu);//sent the menu
             } catch (IOException e) {
@@ -126,36 +132,40 @@ public class SimpleServer extends AbstractServer {
     }
 
 
-    private void displayMenuFun() {
-        try {
-
-
-            SessionFactory sessionFactory = databaseManager.getSessionFactory(); //need to define session factory
-            session = sessionFactory.openSession(); // have to do next two lines to make actions in the DB
-            session.beginTransaction();
-            //after begin transaction we can make actions in the database, when we finish we make commit
-            System.out.println("Displaying menu");
-            menu.SetMenuItems(getMenuItems());
-            menu.printMenu();
-            session.getTransaction().commit(); // Save everything.
-        } catch (Exception exception) {
-            if (session != null) {
-                session.getTransaction().rollback();
-            }
-            System.err.println("An error occured, changes have been rolled back.");
-            exception.printStackTrace();
-        } finally {
-            session.close();
-        }
-    }
-    private List<MenuItem> getMenuItems()
+//    private void displayMenuFun() {
+//        try {
+//
+//
+//            SessionFactory sessionFactory = databaseManager.getSessionFactory(); //need to define session factory
+//            session = sessionFactory.openSession(); // have to do next two lines to make actions in the DB
+//            session.beginTransaction();
+//            //after begin transaction we can make actions in the database, when we finish we make commit
+//            System.out.println("Displaying menu");
+//            menu.SetMenuItems(getMenuItems());
+//            menu.printMenu();
+//            session.getTransaction().commit(); // Save everything.
+//        } catch (Exception exception) {
+//            if (session != null) {
+//                session.getTransaction().rollback();
+//            }
+//            System.err.println("An error occured, changes have been rolled back.");
+//            exception.printStackTrace();
+//        } finally {
+//            session.close();
+//        }
+//    }
+//    private List<MenuItem> getMenuItems()
+//    {
+//        CriteriaBuilder builder = session.getCriteriaBuilder();
+//        CriteriaQuery<MenuItem> query = builder.createQuery(MenuItem.class);
+//        query.from(MenuItem.class);
+//        List<MenuItem> data = session.createQuery(query).getResultList();
+//        System.out.println("getting menu items");
+//        System.out.println(data);
+//        return data;
+//    }
+    private void getControllers()
     {
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<MenuItem> query = builder.createQuery(MenuItem.class);
-        query.from(MenuItem.class);
-        List<MenuItem> data = session.createQuery(query).getResultList();
-        System.out.println("getting menu items");
-        System.out.println(data);
-        return data;
+        menuController=databaseManager.getMenuItemsController();
     }
 }
