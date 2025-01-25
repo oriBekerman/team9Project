@@ -1,13 +1,14 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
-import il.cshaifasweng.OCSFMediatorExample.entities.Request;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import org.greenrobot.eventbus.EventBus;
-import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
-import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import java.io.IOException;
+
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
+
 
 public class SimpleClient extends AbstractClient {
 
@@ -23,17 +24,21 @@ public class SimpleClient extends AbstractClient {
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
+		Response response=(Response)msg;
+
 		if (msg.getClass().equals(Warning.class)) {
 			String message = msg.toString();
 			System.out.println(message);
 			EventBus.getDefault().post(new WarningEvent((Warning) msg));
 		}
 
-		if (msg.getClass().equals(Menu.class)) {
+//		if (msg.getClass().equals(Menu.class)) {
+		if(response.getResponseType().equals(RETURN_MENU))
+		{
 			System.out.println("Menu received, storing event...");
-			Menu menu = (Menu) msg;
+			Menu menu = (Menu) response.getData();
 			menu.printMenu();
-			MenuEvent menuEvent = new MenuEvent((Menu) msg);
+			MenuEvent menuEvent = new MenuEvent(menu);
 			// Store the event if SecondaryController is not initialized
 			if (!isSecondaryControllerInitialized) {
 				pendingMenuEvent = menuEvent;
@@ -60,8 +65,7 @@ public class SimpleClient extends AbstractClient {
 	}
 
 	public void displayMenu() throws IOException {
-//		client.sendToServer("#display menu");
-		Request request=new Request("#display menu",null);
+		Request request=new Request("action",DISPLAY_MENU);
 		client.sendToServer(request);
 	}
 

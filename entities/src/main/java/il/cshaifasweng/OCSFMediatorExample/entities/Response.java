@@ -2,35 +2,42 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import java.io.Serializable;
 
-public class Response implements Serializable {
+public class Response<T> implements Serializable {
 
-    private String status;
-    private Object data;
-    private String message="";
+    private Status status;
+    private T data;
+    private String message = "";
+    private ResponseType responseType;
 
-    public Response(String status, Object data, String message) {
+    // Full Constructor
+    public Response(Status status, T data, String message, ResponseType responseType) {
         this.status = status;
         this.data = data;
         this.message = message;
-    }
-    public Response(String status, Object data) {
-        this.status = status;
-        this.data = data;
+        this.responseType = responseType;
     }
 
-    public String getStatus() {
+    // Constructor without message
+    public Response(Status status, T data,ResponseType responseType) {
+        this.status = status;
+        this.data = data;
+        this.responseType = responseType;
+    }
+
+    // Getters and Setters
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 
@@ -40,5 +47,43 @@ public class Response implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public ResponseType getResponseType() {
+        return responseType;
+    }
+
+    public void setResponseType(ResponseType responseType) {
+        this.responseType = responseType;
+    }
+
+//    public ActionType getActionType() {
+//        return actionType;
+//    }
+//
+//    public void setActionType(ActionType actionType) {
+//        this.actionType = actionType;
+//    }
+
+//    // Enums for ResponseType, ActionType, and Status
+//    public enum ResponseType {
+//        GENERAL,
+//        MENU,
+//        COMPLAINT,
+//        LOGIN,
+//        DELIVERY,
+//        RESERVATION,
+//        REPORT
+//    }
+
+    public enum ResponseType {
+        NO_ACTION,
+        //menu related responses
+        RETURN_MENU
+    }
+
+    public enum Status {
+        ERROR,
+        SUCCESS
     }
 }

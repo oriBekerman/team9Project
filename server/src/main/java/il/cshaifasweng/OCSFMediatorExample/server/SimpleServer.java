@@ -15,8 +15,10 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
+
+import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.*;
 
 
 public class SimpleServer extends AbstractServer {
@@ -53,12 +55,14 @@ public class SimpleServer extends AbstractServer {
 
         }
         //receives display menu msg from client and sends back menu
-        else if (request.getAction().equals("#display menu"))
+        else if (request.getRequestType().equals(DISPLAY_MENU))
         {
             System.out.println("in server display menu");
             menu=menuController.displayMenu();
+            Response response=new Response(SUCCESS,menu, RETURN_MENU);
             try {
-                client.sendToClient(menu);//sent the menu
+                client.sendToClient(response);
+//                client.sendToClient(menu);//sent the menu
             } catch (IOException e) {
                 e.printStackTrace();
             }
