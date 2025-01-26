@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
+import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.MenuItemsRepository;
 import org.hibernate.SessionFactory;
 
@@ -66,6 +67,15 @@ public class MenuItemsController {
         Menu menu= new Menu(menuItemsRepository.getMenuItems());
         menu.printMenu();
         return menu;
+    }
+    public MenuItem updatePrice(Request request)
+    {
+        System.out.println("in MenuController updatePrice1");
+        String[] data = (String[]) request.getData();
+        int id = Integer.parseInt(data[0]);
+        double price =Double.parseDouble(data[1]);
+        System.out.println("in MenuController updatePrice2");
+        return menuItemsRepository.updatePrice(id, price);
     }
 
 }

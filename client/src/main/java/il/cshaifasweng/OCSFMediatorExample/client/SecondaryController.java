@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,6 +18,8 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+
+import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
 
 public class SecondaryController {
 
@@ -70,7 +73,8 @@ public class SecondaryController {
     @Subscribe
     public void onUpdateEvent(updateDishEvent event) {
         try {
-            SimpleClient.getClient().sendToServer("#display menu");
+            Request request=new Request<>(DISPLAY_MENU);
+            SimpleClient.getClient().sendToServer(request);
             menuTableView.refresh();
         } catch (IOException e) {
             throw new RuntimeException(e);

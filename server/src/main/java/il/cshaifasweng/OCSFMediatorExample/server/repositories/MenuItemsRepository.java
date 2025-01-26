@@ -57,4 +57,33 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
             }
             return data;
     }
+    public MenuItem updatePrice(int id,double price)
+    {
+        System.out.println("in MenuRepository updatePrice");
+        MenuItem item=findById(id);
+        try {
+            session = openSession();
+            session.beginTransaction();
+            // set item price
+            item.setPrice(price);
+            // Update the item in the database
+            session.merge(item);
+            // Force Hibernate to flush changes to the database
+            session.flush();
+            // Commit the transaction
+            session.getTransaction().commit();
+        }
+        catch (Exception e) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return item;
+    }
+
 }

@@ -10,8 +10,6 @@ import java.util.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SubscribedClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 
-import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -26,7 +24,7 @@ public class SimpleServer extends AbstractServer {
 
     public static Session session;
     private Menu menu=new Menu();
-    private MenuItemsController menuController=null;
+    private MenuItemsController menuItemsController =null;
     private String password="";
     private final DatabaseManager databaseManager=new DatabaseManager();
     public SimpleServer(int port) {
@@ -58,70 +56,20 @@ public class SimpleServer extends AbstractServer {
         else if (request.getRequestType().equals(DISPLAY_MENU))
         {
             System.out.println("in server display menu");
-            menu=menuController.displayMenu();
-            Response response=new Response(SUCCESS,menu, RETURN_MENU);
+            menu= menuItemsController.displayMenu();
+            Response response=new Response(RETURN_MENU,menu,SUCCESS);
             try {
                 client.sendToClient(response);
-//                client.sendToClient(menu);//sent the menu
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         //receives edit item msg from client and returns the updated item
-        else if (msgString.contains("#edit item"))
+        else if(request.getRequestType().equals(UPDATE_PRICE))
         {
-            System.out.println("in edit item");
-            int itemId=0;
-            double newPrice=0;
-            String[] parts = msgString.split(",");
-            try {
-                itemId = Integer.parseInt(parts[1]);
-                System.out.println(itemId);
-                newPrice = Double.parseDouble(parts[2]);
-            } catch (NumberFormatException e) {
-                System.out.println("Error: One of the parts is not a valid integer.");
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Error: The input string does not have enough parts.!");
-            }
-            System.out.println("before updateItemInDB");
-            MenuItem item=menu.getItemByID(itemId-1); //id start in 1 when but index in 0
-            item.printMenuItem();
-            updateItemInDB(item,newPrice);
-            System.out.println("after updateItemInDB");
-            sendToAllClients((menu));//sent the menu to all the clients
-        }
-    }
-    private void updateItemInDB(MenuItem item,double newPrice) {
-        Session session = null;
-        System.out.println("in updateItemInDB");
-        try {
-            SessionFactory sessionFactory = databaseManager.getSessionFactory(); //need to define session factory
-            session = sessionFactory.openSession(); // have to do next two lines to make actions in the DB
-            session.beginTransaction();
-            //after begin transaction we can make actions in the database, when we finish we make commit
-
-            // double the price of the item
-            item.setPrice(newPrice);
-
-            // Update the item in the database
-            session.merge(item);
-
-            // Force Hibernate to flush changes to the database
-            session.flush();
-
-            // Commit the transaction
-            session.getTransaction().commit();
-
-            System.out.println("Item with ID " + item.getItemID() + " updated successfully. New price: " + newPrice);
-        } catch (Exception e) {
-            if (session != null) {
-                session.getTransaction().rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
+            MenuItem item=menuItemsController.updatePrice(request);
+            Response response=new Response<>(UPDATED_PRICE,item,SUCCESS);
+            sendToAllClients((response));//sent the item to all the clients
         }
     }
     public void sendToAllClients(String message) {
@@ -135,6 +83,6 @@ public class SimpleServer extends AbstractServer {
     }
     private void getControllers()
     {
-        menuController=databaseManager.getMenuItemsController();
+        menuItemsController =databaseManager.getMenuItemsController();
     }
 }

@@ -47,10 +47,9 @@ public class SimpleClient extends AbstractClient {
 				EventBus.getDefault().post(menuEvent);
 			}
 		}
-		if(msg.getClass().equals(MenuItem.class))
+		if(response.getResponseType().equals(UPDATED_PRICE))
 		{
-			System.out.println("here");
-			MenuItem menuItem = (MenuItem) msg;
+			MenuItem menuItem = (MenuItem) response.getData();
 			// Post immediately if SecondaryController is ready
 			updateDishEvent updateEvent=new updateDishEvent(menuItem);
 			EventBus.getDefault().post(updateEvent);
@@ -65,7 +64,7 @@ public class SimpleClient extends AbstractClient {
 	}
 
 	public void displayMenu() throws IOException {
-		Request request=new Request("action",DISPLAY_MENU);
+		Request request=new Request(DISPLAY_MENU);
 		client.sendToServer(request);
 	}
 
@@ -82,6 +81,8 @@ public class SimpleClient extends AbstractClient {
 
 	public void editMenu(String itemId,String price) throws IOException
 	{
-		client.sendToServer("#edit item"+","+ itemId +","+ price);
+		String[] data={itemId,price};
+		Request request=new Request(UPDATE_PRICE,data);
+		client.sendToServer(request);
 	}
 }

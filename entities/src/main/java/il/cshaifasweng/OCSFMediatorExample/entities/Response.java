@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 public class Response<T> implements Serializable {
 
+    private ResponseType responseType;
     private Status status;
     private T data;
     private String message = "";
-    private ResponseType responseType;
 
     // Full Constructor
-    public Response(Status status, T data, String message, ResponseType responseType) {
+    public Response(ResponseType responseType, T data, String message,Status status) {
         this.status = status;
         this.data = data;
         this.message = message;
@@ -18,7 +18,7 @@ public class Response<T> implements Serializable {
     }
 
     // Constructor without message
-    public Response(Status status, T data,ResponseType responseType) {
+    public Response(ResponseType responseType,T data,Status status) {
         this.status = status;
         this.data = data;
         this.responseType = responseType;
@@ -57,29 +57,11 @@ public class Response<T> implements Serializable {
         this.responseType = responseType;
     }
 
-//    public ActionType getActionType() {
-//        return actionType;
-//    }
-//
-//    public void setActionType(ActionType actionType) {
-//        this.actionType = actionType;
-//    }
-
-//    // Enums for ResponseType, ActionType, and Status
-//    public enum ResponseType {
-//        GENERAL,
-//        MENU,
-//        COMPLAINT,
-//        LOGIN,
-//        DELIVERY,
-//        RESERVATION,
-//        REPORT
-//    }
-
     public enum ResponseType {
         NO_ACTION,
         //menu related responses
-        RETURN_MENU
+        RETURN_MENU,
+        UPDATED_PRICE
     }
 
     public enum Status {
