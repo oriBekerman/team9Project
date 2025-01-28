@@ -5,11 +5,15 @@ il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableOriginatorServer.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractConnectionFactory.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableServer.class
+il\cshaifasweng\OCSFMediatorExample\server\repositories\MenusRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AdaptableServer.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer$1.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\MenuItemsController.class
 il\cshaifasweng\OCSFMediatorExample\server\DatabaseManager.class
 il\cshaifasweng\OCSFMediatorExample\server\SimpleServer.class
+il\cshaifasweng\OCSFMediatorExample\server\controllers\MenusController.class
+il\cshaifasweng\OCSFMediatorExample\server\controllers\BranchController.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\OriginatorMessage.class
+il\cshaifasweng\OCSFMediatorExample\server\repositories\BranchRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\repositories\MenuItemsRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\repositories\BaseRepository.class

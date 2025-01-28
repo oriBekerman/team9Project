@@ -1,12 +1,16 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
-import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
 
@@ -15,6 +19,8 @@ import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
 public class DatabaseManager {
     private static SessionFactory sessionFactory;
     private MenuItemsController menuItemsController=null;
+    private MenusController menusController=null;
+    private BranchController branchController=null;
 //    private boolean initializedFlag=false;
 
     public DatabaseManager() {
@@ -54,16 +60,32 @@ public class DatabaseManager {
     public void initControllers(SessionFactory sessionFactory)
     {
         this.menuItemsController = new MenuItemsController(sessionFactory);
+        this.menusController = new MenusController(sessionFactory);
+        this.branchController = new BranchController(sessionFactory);
     }
+
     public void checkAndPopulateTables()
     {
-        menuItemsController.checkAndPopulateMenuItems();
+        //if there are no menus,menuItems and branches initialize all three
+        if(menuItemsController.checkIfEmpty() && menusController.checkIfEmpty())
+        {
+            menuItemsController.PopulateMenuItems();
+            Branch defaultBranch = new Branch("Default Branch", "Default Location", "9:00","19:00");
+           List<MenuItem> items= menuItemsController.getItems();
+           Menu base=new Menu();
+            base.setBranch(defaultBranch);  // Associate with the branch
+            defaultBranch.setMenu(base);   // Associate the menu with the branch
+            base.SetMenuItems(items);//set items in menu
+            List<Branch> branches = List.of(defaultBranch);
+            branchController.populateBranches(branches);//save branch
+        }
     }
     private SessionFactory getSessionFactory(String password) throws HibernateException {
         Configuration configuration = new Configuration();
         configuration.setProperty("hibernate.connection.password",password);
 
         // Add annotated classes
+        configuration.addAnnotatedClass(Branch.class);
         configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
 
@@ -79,8 +101,10 @@ public class DatabaseManager {
         configuration.setProperty("hibernate.connection.password",password);
 
         // Add all entity classes here
+        configuration.addAnnotatedClass(Branch.class);
         configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
+
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -94,6 +118,20 @@ public class DatabaseManager {
             menuItemsController=new MenuItemsController(getSessionFactory());
         }
         return menuItemsController;
+    }
+    MenusController getMenusController() {
+        if(menusController==null)
+        {
+            menusController=new MenusController(getSessionFactory());
+        }
+        return menusController;
+    }
+    BranchController getBranchController() {
+        if(branchController==null)
+        {
+            branchController=new BranchController(getSessionFactory());
+        }
+        return branchController;
     }
 
 

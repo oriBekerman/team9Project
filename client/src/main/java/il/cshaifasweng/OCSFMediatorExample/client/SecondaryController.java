@@ -53,6 +53,9 @@ public class SecondaryController {
     @FXML
     private TableColumn<MenuItem, Double> priceColumn;
 
+//    @FXML
+//   private TableColumn<MenuItem,String> branchSpecialColumn;
+
     private Map<MenuItem, TextField> priceFieldMap = new HashMap<>();
 
     // Event handler for MenuEvent
@@ -60,12 +63,13 @@ public class SecondaryController {
     public void onMenuEvent(MenuEvent event) {
         Menu menu = event.getMenu();
         System.out.println("Menu received in secondary controller");
-
         Platform.runLater(() -> {
             // Clear the TableView before updating
             menuTableView.getItems().clear();
             // Add new menu items to the TableView
-            menuTableView.getItems().setAll(menu.getMenuItems());
+            menu.printMenu();
+            System.out.println("Menu received in secondary controller 2222");
+            menuTableView.getItems().setAll(menu.getFullMenuItems());
         });
     }
 
@@ -73,7 +77,7 @@ public class SecondaryController {
     @Subscribe
     public void onUpdateEvent(updateDishEvent event) {
         try {
-            Request request=new Request<>(DISPLAY_MENU);
+            Request request=new Request<>(GET_NETWORK_MENU);
             SimpleClient.getClient().sendToServer(request);
             menuTableView.refresh();
         } catch (IOException e) {
@@ -156,16 +160,14 @@ public class SecondaryController {
 
         // Register to listen for MenuEvent
         EventBus.getDefault().register(this);
-
         // Notify the SimpleClient that the SecondaryController has been initialized
         SimpleClient.setSecondaryControllerInitialized();
-
         // Initialize TableColumns to bind MenuItem data
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         ingredientsColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIngredients()));
         preferenceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPreference()));
         priceColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getPrice()).asObject());
-
+//        branchSpecialColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDishType()));
         // Set cell factories for price fields
         priceColumn.setCellFactory(col -> new TableCell<MenuItem, Double>() {
             @Override

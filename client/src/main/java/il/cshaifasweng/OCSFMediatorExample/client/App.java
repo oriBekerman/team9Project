@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +11,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,6 +24,7 @@ public class App extends Application {
 
     private static Scene scene;
     private SimpleClient client;
+    private BranchPageController branchPageController;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -37,7 +40,7 @@ public class App extends Application {
         client.setPort(3000);//change later for two computer connection
     	client.openConnection();
         stage.setTitle("ProtoType Team 9 - Mom's kitchen");
-        scene = new Scene(loadFXML("primary"), 500, 600);
+        scene = new Scene(loadFXML("primary"), 693, 658);
         stage.setScene(scene);
         stage.show();
     }

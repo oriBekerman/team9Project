@@ -5,6 +5,7 @@ import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import java.io.IOException;
+import java.util.List;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
@@ -54,6 +55,12 @@ public class SimpleClient extends AbstractClient {
 			updateDishEvent updateEvent=new updateDishEvent(menuItem);
 			EventBus.getDefault().post(updateEvent);
 		}
+		else if(response.getResponseType().equals(BRANCHES_SENT))
+		{
+			List<Branch> branches = (List<Branch>) response.getData();
+			BranchesSentEvent branchSentEvent=new BranchesSentEvent(branches);
+			EventBus.getDefault().post(branchSentEvent);
+		}
 	}
 
 	public static SimpleClient getClient() {
@@ -63,8 +70,13 @@ public class SimpleClient extends AbstractClient {
 		return client;
 	}
 
-	public void displayMenu() throws IOException {
-		Request request=new Request(DISPLAY_MENU);
+	public void displayNetworkMenu() throws IOException {
+		Request request=new Request(GET_NETWORK_MENU);
+		client.sendToServer(request);
+	}
+	public void displayBranchMenu(String branchName) throws IOException {
+		Request request=new Request(GET_BRANCH_MENU);
+		request.setData(branchName);
 		client.sendToServer(request);
 	}
 
@@ -84,5 +96,9 @@ public class SimpleClient extends AbstractClient {
 		String[] data={itemId,price};
 		Request request=new Request(UPDATE_PRICE,data);
 		client.sendToServer(request);
+	}
+
+	public void getBranchList() {
+		Request request=new Request(GET_BRANCHES);
 	}
 }

@@ -61,7 +61,9 @@ public class Response<T> implements Serializable {
         NO_ACTION,
         //menu related responses
         RETURN_MENU,
-        UPDATED_PRICE
+        UPDATED_PRICE,
+
+        BRANCHES_SENT
     }
 
     public enum Status {

@@ -3,6 +3,8 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
+
 @Entity
 @Table(name ="menuItems")
 public class MenuItem implements Serializable {
@@ -23,16 +25,24 @@ public class MenuItem implements Serializable {
     @Column
     private String preference;
 
+    @Column
+    private String dishType;//base or branch
+
     @Lob
     private byte[] picture;
 
+    @ManyToMany(mappedBy = "additionalMenuItems") // Refers to the 'additionalMenuItems' field in Menu
+    private List<Menu> menus;
+
+
     // Constructor with all fields except itemID (auto-generated)
-    public MenuItem(String name, double price, String ingredients, String preference, byte[] picture) {
+    public MenuItem(String name, double price, String ingredients, String preference, byte[] picture,String dishType) {
         this.name = name;
         this.price = price;
         this.ingredients = ingredients;
         this.preference = preference;
         this.picture = picture;
+        this.dishType = dishType;
     }
 
     public MenuItem() {
@@ -87,6 +97,18 @@ public class MenuItem implements Serializable {
 
     public void setPicture(byte[] picture) {
         this.picture = picture;
+    }
+    public String getDishType() {
+        return dishType;
+    }
+    public void setDishType(String dishType) {
+        this.dishType = dishType;
+    }
+    public List<Menu> getMenus() {
+        return menus;
+    }
+    public void setMenus(List<Menu> menus) {
+        this.menus = menus;
     }
     public void printMenuItem(){
         System.out.println("name:"+this.name+" price:"+this.price+

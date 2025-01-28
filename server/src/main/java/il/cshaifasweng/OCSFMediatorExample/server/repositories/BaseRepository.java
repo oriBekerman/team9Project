@@ -36,8 +36,6 @@ public abstract class BaseRepository<T> {
         if (result != null) {
             return result;
         }
-
-        // If not found, search in the database
         // If not found, search in the database
         Session session = null;
         try {
@@ -87,6 +85,20 @@ public abstract class BaseRepository<T> {
 
     public abstract int getId(T entity);
 
+
+    public T getByName(String name) {
+        Session session = null;
+        try {
+            session = openSession();
+            return session.get(getEntityClass(),name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to save entity", e);
+        } finally {
+            closeSession(session);
+        }
+    }
+
     protected abstract Class<T> getEntityClass();
 
     protected void save(T entity) {
@@ -135,4 +147,5 @@ public abstract class BaseRepository<T> {
             session.close();
         }
     }
+
 }

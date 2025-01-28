@@ -4,12 +4,9 @@ import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
 
 public class MenuItemsRepository extends BaseRepository<MenuItem>
