@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
+import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePassword;
 
 
 public abstract class BaseRepository<T> {
