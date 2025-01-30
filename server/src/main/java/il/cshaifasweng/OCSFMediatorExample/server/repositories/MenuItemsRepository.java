@@ -86,4 +86,99 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
         return item;
     }
 
+
+    public boolean removeDish(int id)
+    {
+        System.out.println("In MenuRepository removeDish");
+
+        MenuItem item = findById(id);
+        if (item == null)
+        {
+            System.out.println("Menu item not found with ID: " + id);
+            return false;
+        }
+
+        Transaction transaction = null;
+        try (Session session = openSession())
+        {
+            transaction = session.beginTransaction();
+            session.remove(item);
+            transaction.commit();
+            System.out.println("Menu item removed successfully.");
+            return true;
+        } catch (Exception e)
+        {
+            if (transaction != null)
+            {
+                transaction.rollback();
+            }
+            System.err.println("Error removing menu item: " + e.getMessage());
+        }
+        return false;
+    }
+
+
+    public MenuItem addDish(String name, double price)
+    {
+        System.out.println("In MenuRepository addDish");
+        MenuItem newItem = new MenuItem(name, price, "Tomatoes, cucumbers, lettuce",
+                "Low calorie", null);
+        Transaction transaction = null;
+
+        try (Session session = openSession())
+        {
+            transaction = session.beginTransaction();
+            session.persist(newItem);
+            transaction.commit();
+            System.out.println("Menu item added successfully.");
+            return newItem;
+        }
+        catch (Exception e)
+        {
+            if (transaction != null)
+            {
+                transaction.rollback();
+            }
+            System.err.println("Error adding menu item: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+
+    public MenuItem updateIngredients(int id, String newIngredients)
+    {
+        System.out.println("In MenuRepository updateIngredients");
+
+        MenuItem item = findById(id);
+        if (item == null) {
+            System.out.println("Menu item not found with ID: " + id);
+            return null;
+        }
+
+        Transaction transaction = null;
+        try (Session session = openSession())
+        {
+            transaction = session.beginTransaction();
+
+            // Update ingredients
+            item.setIngredients(newIngredients);
+            session.merge(item);
+
+            transaction.commit();
+            System.out.println("Ingredients updated successfully.");
+            return item;
+        }
+        catch (Exception e)
+        {
+            if (transaction != null)
+            {
+                transaction.rollback();
+            }
+            System.err.println("Error updating ingredients: " + e.getMessage());
+        }
+        return null;
+    }
+
+
 }

@@ -20,5 +20,8 @@
                 <TableColumn fx:id="priceColumn" text="Price" />
             </columns>
         </TableView>
+      <Button fx:id="UpdateIngredientsBtn" layoutX="109.0" layoutY="64.0" mnemonicParsing="false" onAction="#UpdateIngridients" text="Update Ingridients" />
+      <Button fx:id="NewItemBtn" layoutX="232.0" layoutY="64.0" mnemonicParsing="false" onAction="#addDish" text="New Dish" />
+      <Button fx:id="RemoveDishBtn" layoutX="308.0" layoutY="64.0" mnemonicParsing="false" onAction="#removeDish" text="Remove Dish" />
     </children>
 </AnchorPane>

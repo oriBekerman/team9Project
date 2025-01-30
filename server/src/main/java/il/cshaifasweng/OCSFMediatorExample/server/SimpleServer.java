@@ -25,7 +25,7 @@ public class SimpleServer extends AbstractServer {
     public static Session session;
     private Menu menu=new Menu();
     private MenuItemsController menuItemsController =null;
-    public static String dataBasePassword="Bekitnt26@";//change database password here
+    public static String dataBasePassword="1234";//change database password here
     public String password="";//used only when entering a new password through cmd
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
 
