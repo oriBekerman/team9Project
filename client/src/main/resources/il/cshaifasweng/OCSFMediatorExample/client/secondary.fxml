@@ -18,6 +18,7 @@
                 <TableColumn fx:id="ingredientsColumn" text="Ingredients" />
                 <TableColumn fx:id="preferenceColumn" text="Preference" />
                 <TableColumn fx:id="priceColumn" text="Price" />
+                <TableColumn fx:id="dishTypeColumn" text="type" />
             </columns>
         </TableView>
     </children>

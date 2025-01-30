@@ -28,15 +28,17 @@ public class SimpleServer extends AbstractServer {
     private MenuItemsController menuItemsController =null;
     private MenusController menusController=null;
     private BranchController branchController=null;
-    private String password="";
-    private final DatabaseManager databaseManager=new DatabaseManager();
+    public static String dataBasePassword="Bekitnt26@";//change database password here
+    public String password="";//used only when entering a new password through cmd
+    private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {
         super(port);
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter the database password: ");
-        this.password = scanner.nextLine();
-        System.out.println("after password ");
-        DatabaseManager.initialize(password);//initialize DB and populate table if empty
+        //change to password and remove comments if we want to enter another database passwords
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Please enter the database password: ");
+//        this.password = scanner.nextLine();
+//        System.out.println("after password ");
+        DatabaseManager.initialize(dataBasePassword);// (if we want aa diffrent password to be entered when running change databasePassword-> password
         getControllers();
     }
     @Override

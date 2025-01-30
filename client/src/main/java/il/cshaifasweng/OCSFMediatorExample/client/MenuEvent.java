@@ -1,6 +1,10 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
+import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
+
+import java.util.List;
+
 public class MenuEvent {
     private Menu menu;
 
@@ -8,6 +12,9 @@ public class MenuEvent {
         this.menu = menu;
     }
 
+    public List<MenuItem> getMenuItems() {
+        return menu.getFullMenuItems();
+    }
     public Menu getMenu() {
         return menu;
     }
