@@ -56,6 +56,7 @@ public class DatabaseManager {
             }
         }
     }
+
     public void initControllers(SessionFactory sessionFactory)
     {
         this.menuItemsController = new MenuItemsController(sessionFactory);
@@ -79,6 +80,7 @@ public class DatabaseManager {
             branchController.populateBranches(branches);//save branch
         }
     }
+
     private SessionFactory getSessionFactory(String password) throws HibernateException {
         Configuration configuration = new Configuration();
         configuration.setProperty("hibernate.connection.password",password);
@@ -87,6 +89,9 @@ public class DatabaseManager {
         configuration.addAnnotatedClass(Branch.class);
         configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
+
+        /// ///////////////////// shir may added this line
+//        configuration.addAnnotatedClass(Employee.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -102,6 +107,9 @@ public class DatabaseManager {
         configuration.addAnnotatedClass(Branch.class);
         configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
+
+        /// ///////////////////// shir may added this line
+//        configuration.addAnnotatedClass(Employee.class);
 
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
@@ -131,7 +139,5 @@ public class DatabaseManager {
         }
         return branchController;
     }
-
-
 
 }

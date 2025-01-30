@@ -24,10 +24,11 @@ public class App extends Application {
 
     private static Scene scene;
     private SimpleClient client;
-    private BranchPageController branchPageController;
+    private static Stage appStage;
 
     @Override
     public void start(Stage stage) throws IOException {
+        appStage = stage;
     	EventBus.getDefault().register(this);
 //        Scanner scanner = new Scanner(System.in);
 //        System.out.println("Please enter host: ");
@@ -40,7 +41,7 @@ public class App extends Application {
         client.setPort(3000);//change later for two computer connection
     	client.openConnection();
         stage.setTitle("ProtoType Team 9 - Mom's kitchen");
-        scene = new Scene(loadFXML("primary"), 693, 658);
+        scene = new Scene(loadFXML("primary"), 600, 600);
         stage.setScene(scene);
         stage.show();
     }
@@ -49,7 +50,7 @@ public class App extends Application {
         scene.setRoot(loadFXML(fxml));
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
+    static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }
@@ -82,4 +83,77 @@ public class App extends Application {
         launch();
     }
 
+    public static void setWindowTitle(String title) {
+        appStage.setTitle(title);
+    }
+    public static void setContent(String pageName) throws IOException {
+        Parent root = loadFXML(pageName);
+        scene = new Scene(root);
+        appStage.setScene(scene);
+        appStage.show();
+    }
+    public static void switchScreen (String screenName) {
+        switch (screenName) {
+            case "Home Page":
+                Platform.runLater(() -> {
+                    setWindowTitle("Home Page");
+                    try {
+                        setContent("primary");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "Branches":
+                Platform.runLater(() -> {
+                    setWindowTitle(" Our Branches");
+                    try {
+                        setContent("branches");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "Delivery":
+                Platform.runLater(() -> {
+                    setWindowTitle("Delivery");
+                    try {
+                        setContent("delivery");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "Reservation":
+                Platform.runLater(() -> {
+                    setWindowTitle("Reservation");
+                    try {
+                        setContent("reservation");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "Personal Details Filling":
+                Platform.runLater(() -> {
+                    setWindowTitle("Personal Details Filling");
+                    try {
+                        setContent("personalDetailsFilling");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "Credit Card Info":
+                Platform.runLater(() -> {
+                    setWindowTitle("Credit Card Information");
+                    try {
+                        setContent("creditCardInfo");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+        }
+    }
 }

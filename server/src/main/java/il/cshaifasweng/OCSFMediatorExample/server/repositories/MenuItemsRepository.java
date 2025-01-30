@@ -15,6 +15,10 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
     public MenuItemsRepository(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
+
+    ///  both of them to copy ( to my new EmployeeRepository )and change just name + type
+
+
     @Override
     public int getId(MenuItem entity) {
         return ((MenuItem)entity).getItemID();
@@ -24,6 +28,8 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
     protected Class<MenuItem> getEntityClass() {
         return MenuItem.class;
     }
+
+    /// //////
 
     // get MenuItems form database returns menuItemsList
     public List<MenuItem> getMenuItems()
