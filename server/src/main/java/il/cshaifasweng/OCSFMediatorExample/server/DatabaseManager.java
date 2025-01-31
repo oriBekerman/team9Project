@@ -9,7 +9,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
-
+import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePassword;
 
 //configures database,handles opening and closing sessions
 public class DatabaseManager {
@@ -17,8 +17,8 @@ public class DatabaseManager {
     private MenuItemsController menuItemsController=null;
 //    private boolean initializedFlag=false;
 
-    public DatabaseManager() {
-        initialize("Bekitnt26@");
+    public DatabaseManager(String password) {
+        initialize(password);
         if(sessionFactory!=null)
         {
             initControllers(sessionFactory);
@@ -35,7 +35,7 @@ public class DatabaseManager {
     {
         System.out.println("in initialize database");
         try {
-             sessionFactory = getSessionFactory(); // Create session factory
+            sessionFactory = getSessionFactory(); // Create session factory
             session = sessionFactory.openSession(); // Open session
             session.beginTransaction(); // Start transaction
 
@@ -51,6 +51,7 @@ public class DatabaseManager {
             }
         }
     }
+
     public void initControllers(SessionFactory sessionFactory)
     {
         this.menuItemsController = new MenuItemsController(sessionFactory);
@@ -59,6 +60,7 @@ public class DatabaseManager {
     {
         menuItemsController.checkAndPopulateMenuItems();
     }
+
     private SessionFactory getSessionFactory(String password) throws HibernateException {
         Configuration configuration = new Configuration();
         configuration.setProperty("hibernate.connection.password",password);
@@ -67,6 +69,9 @@ public class DatabaseManager {
         configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
 
+        /// ///////////////////// shir may added this line
+//        configuration.addAnnotatedClass(Employee.class);
+
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
@@ -74,13 +79,15 @@ public class DatabaseManager {
         return configuration.buildSessionFactory(serviceRegistry);
     }
     static SessionFactory getSessionFactory() throws HibernateException {
-        String password="Bekitnt26@";//change password here
         Configuration configuration = new Configuration();
-        configuration.setProperty("hibernate.connection.password",password);
+        configuration.setProperty("hibernate.connection.password",dataBasePassword);
 
         // Add all entity classes here
         configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
+
+        /// ///////////////////// shir may added this line
+//        configuration.addAnnotatedClass(Employee.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -95,7 +102,5 @@ public class DatabaseManager {
         }
         return menuItemsController;
     }
-
-
 
 }

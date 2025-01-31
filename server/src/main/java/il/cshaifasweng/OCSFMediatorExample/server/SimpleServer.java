@@ -25,15 +25,16 @@ public class SimpleServer extends AbstractServer {
     public static Session session;
     private Menu menu=new Menu();
     private MenuItemsController menuItemsController =null;
+    public static String dataBasePassword="282817SMAY";//change database password here
     private String password="";
-    private final DatabaseManager databaseManager=new DatabaseManager();
+    private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {
         super(port);
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter the database password: ");
-        this.password = scanner.nextLine();
-        System.out.println("after password ");
-        DatabaseManager.initialize(password);//initialize DB and populate table if empty
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Please enter the database password: ");
+//        this.password = scanner.nextLine();
+//        System.out.println("after password ");
+        DatabaseManager.initialize(dataBasePassword);//initialize DB and populate table if empty
         getControllers();
     }
     @Override
