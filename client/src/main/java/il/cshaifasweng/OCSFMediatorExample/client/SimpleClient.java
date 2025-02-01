@@ -20,6 +20,7 @@ public class SimpleClient extends AbstractClient {
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
+
 	}
 
 	@Override
@@ -57,9 +58,7 @@ public class SimpleClient extends AbstractClient {
 
 		if(response.getResponseType().equals(CORRECTNESS_USER))
 		{
-			System.out.println("login successful");
-			System.out.println("user not found");
-			System.out.println("wrong password");
+
 		}
 	}
 
@@ -74,6 +73,7 @@ public class SimpleClient extends AbstractClient {
 		Request request=new Request(DISPLAY_MENU);
 		client.sendToServer(request);
 	}
+
 
 	//called by SecondaryController to notify when it is initialized
 	public static void setSecondaryControllerInitialized() {

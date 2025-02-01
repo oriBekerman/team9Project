@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
@@ -25,7 +26,9 @@ public class SimpleServer extends AbstractServer {
     public static Session session;
     private Menu menu=new Menu();
     private MenuItemsController menuItemsController =null;
-    public static String dataBasePassword="282817SMAY";//change database password here
+
+    private LogInController logInController = null;
+    public static String dataBasePassword="poolgirL1?";//change database password here
     private String password="";
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {
@@ -72,6 +75,24 @@ public class SimpleServer extends AbstractServer {
             Response response=new Response<>(UPDATED_PRICE,item,SUCCESS);
             sendToAllClients((response));//sent the item to all the clients
         }
+
+        //receives login message from client
+        else if (request.getRequestType().equals(CHECK_USER))
+        {
+            System.out.println("in server check user login");
+            String data = (String) request.getData();
+            String[] credentials = data.split(" ");
+            String userName = credentials[0];
+            String password = credentials[1];
+            // Call LoginController to verify credentials
+            String loginResult = logInController.verifyUser(userName, password);
+            Response response=new Response(CORRECTNESS_USER, loginResult, SUCCESS);
+            try {
+                client.sendToClient(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
     public void sendToAllClients(String message) {
         try {
@@ -85,5 +106,6 @@ public class SimpleServer extends AbstractServer {
     private void getControllers()
     {
         menuItemsController =databaseManager.getMenuItemsController();
+        logInController = databaseManager.getLogInController();
     }
 }

@@ -15,6 +15,7 @@ import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.CHECK_USER;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.DISPLAY_MENU;
 
+
 public class LoginController {
 
     @FXML
