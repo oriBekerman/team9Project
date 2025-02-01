@@ -103,4 +103,12 @@ public class DatabaseManager {
         return menuItemsController;
     }
 
+    LogInController getLogInController() {
+        if (logInController == null) {
+            logInController = new LogInController(getSessionFactory());
+        }
+        return logInController;
+    }
+
+
 }

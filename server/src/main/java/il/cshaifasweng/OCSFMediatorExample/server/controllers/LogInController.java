@@ -22,6 +22,26 @@ public class LogInController {
         this.employeeRepository = new EmployeeRepository(sessionFactory);
     }
 
+    public String verifyUser(String username, String password) {
+
+        // Fetch employee by username
+        Employee employee = this.employeeRepository.findByUsername(username);
+
+        if (employee == null) {
+            System.out.println("user not found");
+            return "user not found";
+        }
+
+        // Check if password matches
+        if (!employee.getPassword().equals(password)) {
+            System.out.println("wrong password");
+            return "wrong password";
+        }
+        System.out.println("login successful");
+        return "login successful";
+    }
+
+
     // Method to populate Customer and Employee tables if they are empty
     public void checkAndPopulateUsers() {
         try {

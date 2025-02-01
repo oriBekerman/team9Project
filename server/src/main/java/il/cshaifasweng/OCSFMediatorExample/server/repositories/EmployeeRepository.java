@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -25,6 +26,16 @@ public class EmployeeRepository extends BaseRepository<Employee> {
     protected Class<Employee> getEntityClass() {
         return Employee.class;
     }
+
+    //find employee by username
+    public Employee findByUsername(String username) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Employee WHERE username = :username", Employee.class)
+                    .setParameter("username", username)
+                    .uniqueResult();
+        }
+    }
+
     // get Employee form database returns employeesList
     public List<Employee> getEmployee()
     {
