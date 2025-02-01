@@ -1,6 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
+/// ///////////////////// shir may added this line
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.EmployeesController;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 
@@ -25,6 +27,9 @@ public class SimpleServer extends AbstractServer {
     public static Session session;
     private Menu menu=new Menu();
     private MenuItemsController menuItemsController =null;
+    /// ///////////////////// shir may added this line
+    private EmployeesController EmployeesController =null;
+
     public static String dataBasePassword="282817SMAY";//change database password here
     private String password="";
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
@@ -72,7 +77,26 @@ public class SimpleServer extends AbstractServer {
             Response response=new Response<>(UPDATED_PRICE,item,SUCCESS);
             sendToAllClients((response));//sent the item to all the clients
         }
+
+
+
+        //receives check user msg from client and sends back correctness msg
+//        else if (request.getRequestType().equals(CHECK_USER))
+//        {
+//            System.out.println("in server check user");
+//            Employee employee= EmployeesController.getUserDetails();
+//            employee= EmployeesController.checkUser(employee);
+//            Response response=new Response(CORRECTNESS_USER,employee,SUCCESS);
+//            try {
+//                client.sendToClient(response);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
     }
+
+
     public void sendToAllClients(String message) {
         try {
             for (SubscribedClient subscribedClient : SubscribersList) {
@@ -85,5 +109,7 @@ public class SimpleServer extends AbstractServer {
     private void getControllers()
     {
         menuItemsController =databaseManager.getMenuItemsController();
+        /// ///////////////////// shir may added this line
+        EmployeesController =databaseManager.getEmployeesController();
     }
 }

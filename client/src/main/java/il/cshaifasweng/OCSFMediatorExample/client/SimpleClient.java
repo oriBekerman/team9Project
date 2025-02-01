@@ -54,6 +54,11 @@ public class SimpleClient extends AbstractClient {
 			updateDishEvent updateEvent=new updateDishEvent(menuItem);
 			EventBus.getDefault().post(updateEvent);
 		}
+
+		if(response.getResponseType().equals(CORRECTNESS_USER))
+		{
+			//
+		}
 	}
 
 	public static SimpleClient getClient() {

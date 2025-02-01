@@ -1,6 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
-
 import java.io.Serializable;
 
 public class Request<T> implements Serializable{
@@ -38,9 +37,9 @@ public class Request<T> implements Serializable{
     public enum RequestType{
        //menu related requests
         DISPLAY_MENU,
-        UPDATE_PRICE
+        UPDATE_PRICE,
         //login related requests
-
+        CHECK_USER
         //delivery related requests
     }
 }
