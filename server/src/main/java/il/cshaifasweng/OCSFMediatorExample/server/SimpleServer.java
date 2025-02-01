@@ -2,7 +2,6 @@ package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 /// ///////////////////// shir may added this line
-import il.cshaifasweng.OCSFMediatorExample.server.controllers.EmployeesController;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 
@@ -13,7 +12,6 @@ import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SubscribedClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;

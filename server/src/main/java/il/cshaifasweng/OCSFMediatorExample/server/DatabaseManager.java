@@ -2,7 +2,6 @@ package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 //////////////////////// shir may added this line
-import il.cshaifasweng.OCSFMediatorExample.server.controllers.EmployeesController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
