@@ -41,6 +41,13 @@ public class PrimaryController {
 	@FXML
 	private Pane MenuBarPane;
 
+	@FXML
+	private Button loginBttn;
+
+	@FXML
+	void navToLoginP(ActionEvent event) {
+		switchScreen("Login");
+	}
 
 	@FXML
 	void navToDeliv(ActionEvent event) {
@@ -80,6 +87,8 @@ public class PrimaryController {
 		assert MenuBarPane != null : "fx:id=\"MenuBarPane\" was not injected: check your FXML file 'primary.fxml'.";
 		assert MenutBtn != null : "fx:id=\"MenutBtn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert WelcomeLabel != null : "fx:id=\"WelcomeLabel\" was not injected: check your FXML file 'primary.fxml'.";
+		assert loginBttn != null : "fx:id=\"loginBttn\" was not injected: check your FXML file 'primary.fxml'.";
+
 
 		// Menu bar (in the home page - this is the menu bar that is shown as "ALL")
 		Parent menuBarParent = App.loadFXML("MenuBar");

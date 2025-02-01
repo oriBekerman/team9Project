@@ -25,7 +25,7 @@ public class SimpleServer extends AbstractServer {
     public static Session session;
     private Menu menu=new Menu();
     private MenuItemsController menuItemsController =null;
-    public static String dataBasePassword="poolgirL1?";//change database password here
+    public static String dataBasePassword="282817SMAY";//change database password here
     private String password="";
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {

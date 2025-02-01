@@ -152,6 +152,16 @@ public class App extends Application {
                     }
                 });
                 break;
+            case "Login":
+                Platform.runLater(() -> {
+                    setWindowTitle("Login");
+                    try {
+                        setContent("login");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
         }
     }
 }
