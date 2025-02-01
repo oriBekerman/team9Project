@@ -38,6 +38,7 @@ public class Request<T> implements Serializable{
        //menu related requests
         DISPLAY_MENU,
         UPDATE_PRICE,
+
         //login related requests
         CHECK_USER
         //delivery related requests

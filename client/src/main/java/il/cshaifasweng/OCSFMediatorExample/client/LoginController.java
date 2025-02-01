@@ -1,13 +1,19 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import org.greenrobot.eventbus.Subscribe;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.CHECK_USER;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.DISPLAY_MENU;
 
 public class LoginController {
 
@@ -42,6 +48,22 @@ public class LoginController {
     void userNameFiled(ActionEvent event) {
 
     }
+
+
+    // Event handler for MenuEvent
+//    @Subscribe
+//    public void (updateDishEvent event) {
+//        try {
+//            Request request=new Request<>(CHECK_USER);
+//            request.
+//            SimpleClient.getClient().sendToServer(request);
+//            menuTableView.refresh();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+
 
     @FXML
     void initialize() {

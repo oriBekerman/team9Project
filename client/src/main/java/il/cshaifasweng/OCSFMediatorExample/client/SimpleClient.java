@@ -57,7 +57,9 @@ public class SimpleClient extends AbstractClient {
 
 		if(response.getResponseType().equals(CORRECTNESS_USER))
 		{
-			//
+			System.out.println("login successful");
+			System.out.println("user not found");
+			System.out.println("wrong password");
 		}
 	}
 
