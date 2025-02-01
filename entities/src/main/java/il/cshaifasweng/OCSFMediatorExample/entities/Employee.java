@@ -24,8 +24,8 @@ public class Employee extends Person implements Serializable {
     // Default constructor
     public Employee() {}
 
-    public Employee(String name, String address, String email, String username, String password, EmployeeType employeeType, int branchID) {
-        super(name, address, email); // Call the parent class constructor (Person)
+    public Employee(int id, String name, String address, String email, String username, String password, EmployeeType employeeType, int branchID) {
+        super(id, name, address, email); // Call the parent class constructor (Person)
         this.username = username;
         this.password = password;
         this.employeeType = employeeType;

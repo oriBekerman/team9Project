@@ -10,9 +10,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class Person {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generate primary key (ID)
     private int id;
-
     private String name;
     private String address;
     private String email;
@@ -21,7 +19,8 @@ public abstract class Person {
     public Person() {}
 
     // Constructor with fields
-    public Person(String name, String address, String email) {
+    public Person(int id, String name, String address, String email) {
+        this.id =id;
         this.name = name;
         this.address = address;
         this.email = email;

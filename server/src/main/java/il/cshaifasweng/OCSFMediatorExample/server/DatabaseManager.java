@@ -73,7 +73,6 @@ public class DatabaseManager {
         configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
         configuration.addAnnotatedClass(Employee.class);
-        configuration.addAnnotatedClass(Customer.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -89,7 +88,6 @@ public class DatabaseManager {
         configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
         configuration.addAnnotatedClass(Employee.class);
-        configuration.addAnnotatedClass(Customer.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
