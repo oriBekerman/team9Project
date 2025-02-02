@@ -28,7 +28,7 @@ public class SimpleServer extends AbstractServer {
     private MenuItemsController menuItemsController =null;
 
     private LogInController logInController = null;
-    public static String dataBasePassword="poolgirL1?";//change database password here
+    public static String dataBasePassword="282817SMAY";//change database password here
     private String password="";
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {
@@ -77,23 +77,32 @@ public class SimpleServer extends AbstractServer {
         }
 
         //receives login message from client
-        else if (request.getRequestType().equals(CHECK_USER))
-        {
-            System.out.println("in server check user login");
+        else if (request.getRequestType().equals(CHECK_USER)) {
             String data = (String) request.getData();
             String[] credentials = data.split(" ");
             String userName = credentials[0];
             String password = credentials[1];
-            // Call LoginController to verify credentials
             String loginResult = logInController.verifyUser(userName, password);
-            Response response=new Response(CORRECTNESS_USER, loginResult, SUCCESS);
+
             try {
+                Response<String> response;
+                if (loginResult.equals("Login successful")) {
+                    // Assuming a role is also attached; adjust accordingly if the role is handled differently
+                    String role = loginResult.split(":")[1]; // Make sure role extraction is correct
+                    response = new Response<>(CORRECTNESS_USER, userName + ":" + role, Response.Status.SUCCESS);
+                } else {
+                    // Check that loginResult contains the actual error message
+                    response = new Response<>(CORRECTNESS_USER, loginResult, Response.Status.ERROR);
+                }
+                System.out.println("Preparing to send response with message: " + response.getMessage());
                 client.sendToClient(response);
             } catch (IOException e) {
+                System.err.println("Failed to send response to client.");
                 e.printStackTrace();
             }
         }
     }
+
     public void sendToAllClients(String message) {
         try {
             for (SubscribedClient subscribedClient : SubscribersList) {

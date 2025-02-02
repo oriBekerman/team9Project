@@ -5,16 +5,17 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import javafx.scene.control.Label;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.CHECK_USER;
-import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.DISPLAY_MENU;
-
 
 public class LoginController {
 
@@ -33,43 +34,63 @@ public class LoginController {
     @FXML
     private TextField userNameTextF;
 
+    @FXML
+    private Label statusLabel;
 
 
     @FXML
     void loginFunc(ActionEvent event) {
+        try {
+            String username = userNameTextF.getText();
+            String password = passwordTextF.getText();
+            System.out.println("Sending login request: Username=" + username + ", Password=" + password); // Debug print
+            Request<String> request = new Request<>(Request.RequestType.CHECK_USER, username + " " + password);
+            SimpleClient.getClient().sendToServer(request);
+        } catch (IOException e) {
+            e.printStackTrace();
+            statusLabel.setText("Error connecting to server.");  // Display connection error message
+        }
+    }
+
+
+    @Subscribe
+    public void handleLoginSuccess(UserLoginSuccessEvent event) {
+        SessionManager.getInstance().setUser(event.getUsername(), event.getAuthorization());
+        updateUIBasedOnRole();
         switchScreen("Home Page");
     }
 
+    private void updateUIBasedOnRole() {
+        String role = SessionManager.getInstance().getAuthorization();
+        // Enable or disable UI components based on role, if applicable to this controller
+    }
+
+
+    @Subscribe
+    public void handleLoginFailure(UserLoginFailedEvent event) {
+        Platform.runLater(() -> {
+            System.out.println("Login Failed: " + event.getMessage());
+            statusLabel.setText(event.getMessage() != null ? event.getMessage() : "Unknown error");  // Update UI safely
+        });
+    }
+
+
     @FXML
     void passwordFiled(ActionEvent event) {
-
     }
 
     @FXML
     void userNameFiled(ActionEvent event) {
-
     }
-
-
-    // Event handler for MenuEvent
-//    @Subscribe
-//    public void (updateDishEvent event) {
-//        try {
-//            Request request=new Request<>(CHECK_USER);
-//            request.
-//            SimpleClient.getClient().sendToServer(request);
-//            menuTableView.refresh();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
 
 
     @FXML
     void initialize() {
+
+        EventBus.getDefault().register(this);
         assert loginBtn != null : "fx:id=\"loginBtn\" was not injected: check your FXML file 'login.fxml'.";
         assert passwordTextF != null : "fx:id=\"passwordTextF\" was not injected: check your FXML file 'login.fxml'.";
+        assert statusLabel != null : "fx:id=\"statusLabel\" was not injected: check your FXML file 'login.fxml'.";
         assert userNameTextF != null : "fx:id=\"userNameTextF\" was not injected: check your FXML file 'login.fxml'.";
 
 

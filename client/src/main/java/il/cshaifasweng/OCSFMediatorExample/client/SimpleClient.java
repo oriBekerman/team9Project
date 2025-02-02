@@ -6,6 +6,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import java.io.IOException;
 
+
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
 
@@ -15,8 +16,8 @@ public class SimpleClient extends AbstractClient {
 	private static SimpleClient client = null;
 	private static MenuEvent pendingMenuEvent = null;  // Store pending MenuEvent if SecondaryController isn't ready
 	private static boolean isSecondaryControllerInitialized = false;
-	public static String host="localhost";
-	public  static int port=3000;
+	public static String host = "localhost";
+	public static int port = 3000;
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
@@ -25,7 +26,7 @@ public class SimpleClient extends AbstractClient {
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		Response response=(Response)msg;
+		Response response = (Response) msg;
 
 		if (msg.getClass().equals(Warning.class)) {
 			String message = msg.toString();
@@ -34,8 +35,7 @@ public class SimpleClient extends AbstractClient {
 		}
 
 //		if (msg.getClass().equals(Menu.class)) {
-		if(response.getResponseType().equals(RETURN_MENU))
-		{
+		if (response.getResponseType().equals(RETURN_MENU)) {
 			System.out.println("Menu received, storing event...");
 			Menu menu = (Menu) response.getData();
 			menu.printMenu();
@@ -48,17 +48,26 @@ public class SimpleClient extends AbstractClient {
 				EventBus.getDefault().post(menuEvent);
 			}
 		}
-		if(response.getResponseType().equals(UPDATED_PRICE))
-		{
+		if (response.getResponseType().equals(UPDATED_PRICE)) {
 			MenuItem menuItem = (MenuItem) response.getData();
 			// Post immediately if SecondaryController is ready
-			updateDishEvent updateEvent=new updateDishEvent(menuItem);
+			updateDishEvent updateEvent = new updateDishEvent(menuItem);
 			EventBus.getDefault().post(updateEvent);
 		}
 
-		if(response.getResponseType().equals(CORRECTNESS_USER))
-		{
-
+		// Handle user authentication response
+		if (response.getResponseType().equals(CORRECTNESS_USER)) {
+			System.out.println("Handling CORRECTNESS_USER response with status: " + response.getStatus());
+			if (response.getStatus() == Response.Status.SUCCESS) {
+				String[] parts = ((String) response.getData()).split(":");
+				String username = parts[0];
+				String role = parts.length > 1 ? parts[1] : "";
+				EventBus.getDefault().post(new UserLoginSuccessEvent(username, role));
+			} else {
+				String message = (String) response.getData();
+				System.out.println("Login failed with message: " + message); // Ensure this message is not null
+				EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
+			}
 		}
 	}
 

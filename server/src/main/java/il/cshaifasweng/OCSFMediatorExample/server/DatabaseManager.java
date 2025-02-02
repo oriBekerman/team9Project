@@ -31,7 +31,7 @@ public class DatabaseManager {
         }
         System.out.println("in initialize database");
         checkAndPopulateTables();
-        System.out.println("in  databaseManager populate");
+        System.out.println("in databaseManager populate");
     };
     public static void initialize(String password)throws HibernateException
     {

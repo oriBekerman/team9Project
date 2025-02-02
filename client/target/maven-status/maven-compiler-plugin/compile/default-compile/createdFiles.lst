@@ -9,12 +9,15 @@ il\cshaifasweng\OCSFMediatorExample\client\updateDishEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingController.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
+il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\WarningEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.class
 il\cshaifasweng\OCSFMediatorExample\client\ReservationController.class
+il\cshaifasweng\OCSFMediatorExample\client\SessionManager.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryController$1.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.class
+il\cshaifasweng\OCSFMediatorExample\client\UserLoginSuccessEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryController.class
 il\cshaifasweng\OCSFMediatorExample\client\LoginController.class

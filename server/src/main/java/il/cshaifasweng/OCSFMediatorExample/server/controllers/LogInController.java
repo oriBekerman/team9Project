@@ -23,40 +23,37 @@ public class LogInController {
     }
 
     public String verifyUser(String username, String password) {
-
-        // Fetch employee by username
         Employee employee = this.employeeRepository.findByUsername(username);
 
         if (employee == null) {
-            System.out.println("user not found");
-            return "user not found";
+            System.out.println("User not found");
+            return "User not found";
         }
 
-        // Check if password matches
         if (!employee.getPassword().equals(password)) {
-            System.out.println("wrong password");
-            return "wrong password";
+            System.out.println("Wrong password");
+            return "Wrong password";
         }
-        System.out.println("login successful");
-        return "login successful";
+
+        System.out.println("Login successful");
+        return "Login successful";
     }
+
 
 
     // Method to populate Customer and Employee tables if they are empty
     public void checkAndPopulateUsers() {
         try {
-
             // Check if the Employee table is empty
             if (employeeRepository.checkIfEmpty()) {
                 List<Employee> employees = new ArrayList<>();
 
                 // Prepopulate with 5 employees, using enum for employeeType
-                Employee employee1 = new Employee(111111111, "Alice Manager", "1234 Maple St", "alice.manager@example.com", "alice.manager", "managerpass", EmployeeType.COMPANY_MANAGER, 1);
-                Employee employee2 = new Employee(222222222, "Bob Regular", "5678 Oak St", "bob.regular@example.com", "bob.regular", "regularpass", EmployeeType.RESTAURANT_SERVICE, 1);
-                Employee employee3 = new Employee(333333333, "Charlie Dietitian", "9101 Pine St", "charlie.dietitian@example.com", "charlie.dietitian", "dietitianpass", EmployeeType.DIETITIAN, 2);
-                Employee employee4 = new Employee(444444444, "Debbie Customer Service", "2345 Birch St", "debbie.cs@example.com", "debbie.cs", "customerservicepass", EmployeeType.CUSTOMER_SERVICE, 3);
-                Employee employee5 = new Employee(555555555, "Eva Admin", "6789 Cedar St", "eva.admin@example.com", "eva.admin", "adminpass", EmployeeType.CUSTOMER_SERVICE_MANAGER, 3);
-
+                Employee employee1 = new Employee(111111111, "Alice Manager", "1234 Maple St", "alice.manager@example.com", "alice.manager", "1234", EmployeeType.COMPANY_MANAGER, 1);
+                Employee employee2 = new Employee(222222222, "Bob Regular", "5678 Oak St", "bob.regular@example.com", "bob.regular", "1234", EmployeeType.RESTAURANT_SERVICE, 1);
+                Employee employee3 = new Employee(333333333, "Charlie Dietitian", "9101 Pine St", "charlie.dietitian@example.com", "charlie.dietitian", "1234", EmployeeType.DIETITIAN, 2);
+                Employee employee4 = new Employee(444444444, "Debbie Customer Service", "2345 Birch St", "debbie.cs@example.com", "debbie.cs", "1234", EmployeeType.CUSTOMER_SERVICE, 3);
+                Employee employee5 = new Employee(555555555, "Eva Admin", "6789 Cedar St", "eva.admin@example.com", "eva.admin", "1234", EmployeeType.CUSTOMER_SERVICE_MANAGER, 3);
 
                 employees.add(employee1);
                 employees.add(employee2);
