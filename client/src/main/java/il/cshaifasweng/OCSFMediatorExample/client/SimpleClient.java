@@ -68,10 +68,8 @@ public class SimpleClient extends AbstractClient {
 				if (parts.length > 1) {
 					String username = parts[0];
 					String role = parts[1];
-					//set active user
-					activeUser.setUsername(username);
-					EmployeeType employeeType = EmployeeType.valueOf(role);
-					activeUser.setEmployeeType(employeeType);
+					// Set the active user
+					SimpleClient.setActiveUser(new ActiveUser(username, EmployeeType.valueOf(role)));
 					//post to eventbus
 					EventBus.getDefault().post(new UserLoginSuccessEvent(username, role));
 				} else {
@@ -115,4 +113,19 @@ public class SimpleClient extends AbstractClient {
 		Request request=new Request(UPDATE_PRICE,data);
 		client.sendToServer(request);
 	}
+
+	public static ActiveUser getActiveUser() {
+		return activeUser;
+	}
+	public static void setActiveUser(ActiveUser activeUser) {
+		SimpleClient.activeUser = activeUser;
+	}
+	private static void clearActiveUser() {
+		activeUser = null;
+	}
+
+	public static void logout() {
+		clearActiveUser();  // Clear active user in SimpleClient
+	}
+
 }

@@ -6,6 +6,7 @@ il\cshaifasweng\OCSFMediatorExample\client\PrimaryController.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchesController.class
 il\cshaifasweng\OCSFMediatorExample\client\App.class
 il\cshaifasweng\OCSFMediatorExample\client\updateDishEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\ActiveUser.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingController.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class

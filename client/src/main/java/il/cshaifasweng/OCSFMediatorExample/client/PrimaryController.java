@@ -45,6 +45,9 @@ public class PrimaryController {
 	private Button loginBttn;
 
 	@FXML
+	private Button logoutBttn;
+
+	@FXML
 	void navToLoginP(ActionEvent event) {
 		switchScreen("Login");
 	}
@@ -81,13 +84,26 @@ public class PrimaryController {
 	}
 
 	@FXML
+	void LogOut(ActionEvent event) {
+		// Call the logout method in SimpleClient to clear active user
+		SimpleClient.getClient().logout();
+
+		// Hide the logout button and show the login button again
+		logoutBttn.setVisible(false);
+		loginBttn.setVisible(true);
+	}
+
+
+	@FXML
 	void initialize() throws IOException {
+
 		assert HomePageLabel != null : "fx:id=\"HomePageLabel\" was not injected: check your FXML file 'primary.fxml'.";
 		assert MOMSImage != null : "fx:id=\"MOMSImage\" was not injected: check your FXML file 'primary.fxml'.";
 		assert MenuBarPane != null : "fx:id=\"MenuBarPane\" was not injected: check your FXML file 'primary.fxml'.";
 		assert MenutBtn != null : "fx:id=\"MenutBtn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert WelcomeLabel != null : "fx:id=\"WelcomeLabel\" was not injected: check your FXML file 'primary.fxml'.";
 		assert loginBttn != null : "fx:id=\"loginBttn\" was not injected: check your FXML file 'primary.fxml'.";
+		assert logoutBttn != null : "fx:id=\"logoutBttn\" was not injected: check your FXML file 'primary.fxml'.";
 
 
 		// Menu bar (in the home page - this is the menu bar that is shown as "ALL")
@@ -99,6 +115,17 @@ public class PrimaryController {
 		String imagePath = "il/cshaifasweng/OCSFMediatorExample/client/mamasKitchen.jpg";
 		Image image = new Image(imagePath);
 		MOMSImage.setImage(image);
+
+		// Check if the user is logged in (activeUser is not null)
+		if (SimpleClient.getClient().getActiveUser() != null) {
+			// If logged in, show logout button and hide login button
+			logoutBttn.setVisible(true);
+			loginBttn.setVisible(false);
+		} else {
+			// If not logged in, show login button and hide logout button
+			logoutBttn.setVisible(false);
+			loginBttn.setVisible(true);
+		}
 
 
 		try {
