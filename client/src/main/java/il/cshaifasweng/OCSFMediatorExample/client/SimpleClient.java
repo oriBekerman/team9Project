@@ -19,6 +19,8 @@ public class SimpleClient extends AbstractClient {
 	public static String host = "localhost";
 	public static int port = 3000;
 
+	private static ActiveUser activeUser = null;
+
 	private SimpleClient(String host, int port) {
 		super(host, port);
 
@@ -66,6 +68,11 @@ public class SimpleClient extends AbstractClient {
 				if (parts.length > 1) {
 					String username = parts[0];
 					String role = parts[1];
+					//set active user
+					activeUser.setUsername(username);
+					EmployeeType employeeType = EmployeeType.valueOf(role);
+					activeUser.setEmployeeType(employeeType);
+					//post to eventbus
 					EventBus.getDefault().post(new UserLoginSuccessEvent(username, role));
 				} else {
 					System.out.println("Error: Response doesn't contain both username and role.");
