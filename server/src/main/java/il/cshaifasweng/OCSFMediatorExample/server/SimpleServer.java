@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
@@ -25,7 +26,9 @@ public class SimpleServer extends AbstractServer {
     public static Session session;
     private Menu menu=new Menu();
     private MenuItemsController menuItemsController =null;
-    public static String dataBasePassword="282817SMAY";//change database password here
+
+    private LogInController logInController = null;
+    public static String dataBasePassword="poolgirL1?";//change database password here
     private String password="";
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {
@@ -72,7 +75,40 @@ public class SimpleServer extends AbstractServer {
             Response response=new Response<>(UPDATED_PRICE,item,SUCCESS);
             sendToAllClients((response));//sent the item to all the clients
         }
+
+        else if (request.getRequestType().equals(CHECK_USER)) {
+            try {
+                String data = (String) request.getData();
+                String[] credentials = data.split(" ");
+                String userName = credentials[0];
+                String password = credentials[1];
+
+                System.out.println("Checking login for: " + userName);
+
+                String loginResult = logInController.verifyUser(userName, password);
+                // Debug prints after verifyUser()
+                System.out.println("Login result from controller: " + loginResult);
+
+                Response<String> response;
+                if (loginResult.equals("Login successful")) {
+                    EmployeeType employeeType = logInController.getEmployeeTypeByUsername(userName);
+                    response = new Response<>(CORRECTNESS_USER, userName + ":" + employeeType , SUCCESS);
+                } else {
+                    response = new Response<>(CORRECTNESS_USER, loginResult, ERROR);
+                }
+
+                System.out.println("Preparing to send response with message: " + response.getMessage());
+                client.sendToClient(response);
+                System.out.println("Response sent successfully.");
+
+            } catch (Exception e) {
+                System.err.println("Exception in CHECK_USER handling: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
     }
+
     public void sendToAllClients(String message) {
         try {
             for (SubscribedClient subscribedClient : SubscribersList) {
@@ -85,5 +121,6 @@ public class SimpleServer extends AbstractServer {
     private void getControllers()
     {
         menuItemsController =databaseManager.getMenuItemsController();
+        logInController = databaseManager.getLogInController();
     }
 }

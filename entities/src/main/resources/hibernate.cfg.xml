@@ -24,6 +24,6 @@
 
         <!-- מיפוי מחלקת MenuItem -->
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.MenuItem"/>
-<!--        <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Employee"/>-->
+        <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Employee"/>
     </session-factory>
 </hibernate-configuration>

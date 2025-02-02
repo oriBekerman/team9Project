@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
@@ -15,6 +16,7 @@ import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePa
 public class DatabaseManager {
     private static SessionFactory sessionFactory;
     private MenuItemsController menuItemsController=null;
+    private LogInController logInController = null;
 //    private boolean initializedFlag=false;
 
     public DatabaseManager(String password) {
@@ -29,7 +31,7 @@ public class DatabaseManager {
         }
         System.out.println("in initialize database");
         checkAndPopulateTables();
-        System.out.println("in  databaseManager populate");
+        System.out.println("in databaseManager populate");
     };
     public static void initialize(String password)throws HibernateException
     {
@@ -55,10 +57,12 @@ public class DatabaseManager {
     public void initControllers(SessionFactory sessionFactory)
     {
         this.menuItemsController = new MenuItemsController(sessionFactory);
+        this.logInController = new LogInController(sessionFactory);
     }
     public void checkAndPopulateTables()
     {
         menuItemsController.checkAndPopulateMenuItems();
+        logInController.checkAndPopulateUsers();
     }
 
     private SessionFactory getSessionFactory(String password) throws HibernateException {
@@ -68,9 +72,7 @@ public class DatabaseManager {
         // Add annotated classes
         configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
-
-        /// ///////////////////// shir may added this line
-//        configuration.addAnnotatedClass(Employee.class);
+        configuration.addAnnotatedClass(Employee.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -85,9 +87,7 @@ public class DatabaseManager {
         // Add all entity classes here
         configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
-
-        /// ///////////////////// shir may added this line
-//        configuration.addAnnotatedClass(Employee.class);
+        configuration.addAnnotatedClass(Employee.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -102,5 +102,13 @@ public class DatabaseManager {
         }
         return menuItemsController;
     }
+
+    LogInController getLogInController() {
+        if (logInController == null) {
+            logInController = new LogInController(getSessionFactory());
+        }
+        return logInController;
+    }
+
 
 }

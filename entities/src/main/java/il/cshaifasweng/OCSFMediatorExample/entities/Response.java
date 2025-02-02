@@ -24,6 +24,13 @@ public class Response<T> implements Serializable {
         this.responseType = responseType;
     }
 
+    // Constructor without data
+    public Response(ResponseType responseType, String message ,Status status) {
+        this.status = status;
+        this.message = message;
+        this.responseType = responseType;
+    }
+
     // Getters and Setters
     public Status getStatus() {
         return status;
@@ -61,7 +68,10 @@ public class Response<T> implements Serializable {
         NO_ACTION,
         //menu related responses
         RETURN_MENU,
-        UPDATED_PRICE
+        UPDATED_PRICE,
+
+        //login
+        CORRECTNESS_USER
     }
 
     public enum Status {

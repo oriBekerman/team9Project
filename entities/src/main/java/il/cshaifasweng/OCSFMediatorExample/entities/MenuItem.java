@@ -1,8 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
-
 import javax.persistence.*;
 import java.io.Serializable;
+
 @Entity
 @Table(name ="menuItems")
 public class MenuItem implements Serializable {
