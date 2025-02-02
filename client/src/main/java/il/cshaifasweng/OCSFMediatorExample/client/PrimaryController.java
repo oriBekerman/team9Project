@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -30,7 +32,7 @@ public class PrimaryController {
 	private Label HomePageLabel;
 
 	@FXML
-	private Button MenutBtn;
+	private Button UpdateMenuBtn;
 
 	@FXML
 	private Label WelcomeLabel;
@@ -75,13 +77,14 @@ public class PrimaryController {
 
 	@FXML
 	void displayMenuFunc(ActionEvent event) throws IOException {
+		switchScreen("secondary");
 		try {
-			App.setRoot("secondary");
 			SimpleClient.getClient().displayMenu();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
+
 
 	@FXML
 	void LogOut(ActionEvent event) {
@@ -91,6 +94,8 @@ public class PrimaryController {
 		// Hide the logout button and show the login button again
 		logoutBttn.setVisible(false);
 		loginBttn.setVisible(true);
+		// Hide the Update button after logging out
+		UpdateMenuBtn.setVisible(false);
 	}
 
 
@@ -100,7 +105,7 @@ public class PrimaryController {
 		assert HomePageLabel != null : "fx:id=\"HomePageLabel\" was not injected: check your FXML file 'primary.fxml'.";
 		assert MOMSImage != null : "fx:id=\"MOMSImage\" was not injected: check your FXML file 'primary.fxml'.";
 		assert MenuBarPane != null : "fx:id=\"MenuBarPane\" was not injected: check your FXML file 'primary.fxml'.";
-		assert MenutBtn != null : "fx:id=\"MenutBtn\" was not injected: check your FXML file 'primary.fxml'.";
+		assert UpdateMenuBtn != null : "fx:id=\"UpdateMenuBtn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert WelcomeLabel != null : "fx:id=\"WelcomeLabel\" was not injected: check your FXML file 'primary.fxml'.";
 		assert loginBttn != null : "fx:id=\"loginBttn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert logoutBttn != null : "fx:id=\"logoutBttn\" was not injected: check your FXML file 'primary.fxml'.";
@@ -121,10 +126,18 @@ public class PrimaryController {
 			// If logged in, show logout button and hide login button
 			logoutBttn.setVisible(true);
 			loginBttn.setVisible(false);
+			// Check if the user is a "DIETITIAN" and display the Update button if true
+			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN) {
+				System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
+				UpdateMenuBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
+			} else {
+				UpdateMenuBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
+			}
 		} else {
 			// If not logged in, show login button and hide logout button
 			logoutBttn.setVisible(false);
 			loginBttn.setVisible(true);
+			UpdateMenuBtn.setVisible(false); // Hide Update button if not logged in
 		}
 
 
