@@ -26,17 +26,22 @@ public class LogInController {
         Employee employee = this.employeeRepository.findByUsername(username);
 
         if (employee == null) {
-            System.out.println("User not found");
             return "User not found";
         }
 
         if (!employee.getPassword().equals(password)) {
-            System.out.println("Wrong password");
             return "Wrong password";
         }
 
-        System.out.println("Login successful");
         return "Login successful";
+    }
+
+    public EmployeeType getEmployeeTypeByUsername(String username) {
+        Employee employee = this.employeeRepository.findByUsername(username);
+        if (employee != null) {
+            return employee.getEmployeeType();
+        }
+        return null; // Return null if the user is not found
     }
 
 

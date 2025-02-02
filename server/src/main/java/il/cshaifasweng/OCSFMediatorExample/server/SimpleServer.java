@@ -28,7 +28,7 @@ public class SimpleServer extends AbstractServer {
     private MenuItemsController menuItemsController =null;
 
     private LogInController logInController = null;
-    public static String dataBasePassword="282817SMAY";//change database password here
+    public static String dataBasePassword="poolgirL1?";//change database password here
     private String password="";
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {
@@ -76,31 +76,37 @@ public class SimpleServer extends AbstractServer {
             sendToAllClients((response));//sent the item to all the clients
         }
 
-        //receives login message from client
         else if (request.getRequestType().equals(CHECK_USER)) {
-            String data = (String) request.getData();
-            String[] credentials = data.split(" ");
-            String userName = credentials[0];
-            String password = credentials[1];
-            String loginResult = logInController.verifyUser(userName, password);
-
             try {
+                String data = (String) request.getData();
+                String[] credentials = data.split(" ");
+                String userName = credentials[0];
+                String password = credentials[1];
+
+                System.out.println("Checking login for: " + userName);
+
+                String loginResult = logInController.verifyUser(userName, password);
+                // Debug prints after verifyUser()
+                System.out.println("Login result from controller: " + loginResult);
+
                 Response<String> response;
                 if (loginResult.equals("Login successful")) {
-                    // Assuming a role is also attached; adjust accordingly if the role is handled differently
-                    String role = loginResult.split(":")[1]; // Make sure role extraction is correct
-                    response = new Response<>(CORRECTNESS_USER, userName + ":" + role, Response.Status.SUCCESS);
+                    EmployeeType employeeType = logInController.getEmployeeTypeByUsername(userName);
+                    response = new Response<>(CORRECTNESS_USER, userName + ":" + employeeType , SUCCESS);
                 } else {
-                    // Check that loginResult contains the actual error message
-                    response = new Response<>(CORRECTNESS_USER, loginResult, Response.Status.ERROR);
+                    response = new Response<>(CORRECTNESS_USER, loginResult, ERROR);
                 }
+
                 System.out.println("Preparing to send response with message: " + response.getMessage());
                 client.sendToClient(response);
-            } catch (IOException e) {
-                System.err.println("Failed to send response to client.");
+                System.out.println("Response sent successfully.");
+
+            } catch (Exception e) {
+                System.err.println("Exception in CHECK_USER handling: " + e.getMessage());
                 e.printStackTrace();
             }
         }
+
     }
 
     public void sendToAllClients(String message) {

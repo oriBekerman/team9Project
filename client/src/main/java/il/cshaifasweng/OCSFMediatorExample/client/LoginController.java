@@ -19,6 +19,7 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.C
 
 public class LoginController {
 
+
     @FXML
     private ResourceBundle resources;
 
@@ -41,17 +42,25 @@ public class LoginController {
     @FXML
     void loginFunc(ActionEvent event) {
         try {
-            String username = userNameTextF.getText();
-            String password = passwordTextF.getText();
-            System.out.println("Sending login request: Username=" + username + ", Password=" + password); // Debug print
+            String username = userNameTextF.getText().trim();
+            String password = passwordTextF.getText().trim();
+
+            if (username.isEmpty() || password.isEmpty()) {
+                statusLabel.setText("Username or Password cannot be empty.");
+                return;
+            }
+
+            System.out.println("Attempting to send login request: Username=" + username + ", Password=" + password);
+
             Request<String> request = new Request<>(Request.RequestType.CHECK_USER, username + " " + password);
             SimpleClient.getClient().sendToServer(request);
+            System.out.println("Login request sent to server.");
+
         } catch (IOException e) {
             e.printStackTrace();
-            statusLabel.setText("Error connecting to server.");  // Display connection error message
+            statusLabel.setText("Error connecting to server.");
         }
     }
-
 
     @Subscribe
     public void handleLoginSuccess(UserLoginSuccessEvent event) {
@@ -86,7 +95,7 @@ public class LoginController {
 
     @FXML
     void initialize() {
-
+        System.out.println("LoginController initialized. Registering EventBus...");
         EventBus.getDefault().register(this);
         assert loginBtn != null : "fx:id=\"loginBtn\" was not injected: check your FXML file 'login.fxml'.";
         assert passwordTextF != null : "fx:id=\"passwordTextF\" was not injected: check your FXML file 'login.fxml'.";

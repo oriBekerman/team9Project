@@ -58,14 +58,21 @@ public class SimpleClient extends AbstractClient {
 		// Handle user authentication response
 		if (response.getResponseType().equals(CORRECTNESS_USER)) {
 			System.out.println("Handling CORRECTNESS_USER response with status: " + response.getStatus());
+
 			if (response.getStatus() == Response.Status.SUCCESS) {
-				String[] parts = ((String) response.getData()).split(":");
-				String username = parts[0];
-				String role = parts.length > 1 ? parts[1] : "";
-				EventBus.getDefault().post(new UserLoginSuccessEvent(username, role));
+				String responseData = response.getMessage();
+				System.out.println("Response Data: " + responseData);
+				String[] parts = responseData.split(":");
+				if (parts.length > 1) {
+					String username = parts[0];
+					String role = parts[1];
+					EventBus.getDefault().post(new UserLoginSuccessEvent(username, role));
+				} else {
+					System.out.println("Error: Response doesn't contain both username and role.");
+				}
 			} else {
 				String message = (String) response.getData();
-				System.out.println("Login failed with message: " + message); // Ensure this message is not null
+				System.out.println("Login failed with message: " + message);
 				EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 			}
 		}
