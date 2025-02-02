@@ -25,6 +25,8 @@ public class LoginController {
 
     @FXML
     private URL location;
+    @FXML
+    private Button backToHPBtn;
 
     @FXML
     private Button loginBtn;
@@ -91,12 +93,17 @@ public class LoginController {
     @FXML
     void userNameFiled(ActionEvent event) {
     }
+    @FXML
+    void navToHP(ActionEvent event) {
+        switchScreen("Home Page");
+    }
 
 
     @FXML
     void initialize() {
         System.out.println("LoginController initialized. Registering EventBus...");
         EventBus.getDefault().register(this);
+        assert backToHPBtn != null : "fx:id=\"backToHPBtn\" was not injected: check your FXML file 'delivery.fxml'.";
         assert loginBtn != null : "fx:id=\"loginBtn\" was not injected: check your FXML file 'login.fxml'.";
         assert passwordTextF != null : "fx:id=\"passwordTextF\" was not injected: check your FXML file 'login.fxml'.";
         assert statusLabel != null : "fx:id=\"statusLabel\" was not injected: check your FXML file 'login.fxml'.";

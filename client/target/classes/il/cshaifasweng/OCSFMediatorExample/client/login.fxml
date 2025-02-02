@@ -18,6 +18,7 @@
             <Font size="15.0" />
          </font>
       </Label>
+      <Button fx:id="backToHPBtn" layoutX="40.0" layoutY="31.0" mnemonicParsing="false" onAction="#navToHP" text="Back To Home Page" />
       <TextField fx:id="userNameTextF" layoutX="234.0" layoutY="92.0" onAction="#userNameFiled" />
       <TextField fx:id="passwordTextF" layoutX="234.0" layoutY="154.0" onAction="#passwordFiled" />
       <Button fx:id="loginBtn" layoutX="270.0" layoutY="223.0" mnemonicParsing="false" onAction="#loginFunc" text="Log in" />
