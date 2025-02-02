@@ -71,7 +71,7 @@ public class SimpleClient extends AbstractClient {
 					System.out.println("Error: Response doesn't contain both username and role.");
 				}
 			} else {
-				String message = (String) response.getData();
+				String message = (String) response.getMessage();
 				System.out.println("Login failed with message: " + message);
 				EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 			}
