@@ -38,14 +38,15 @@ public class SimpleServer extends AbstractServer {
 //        System.out.println("Please enter the database password: ");
 //        this.password = scanner.nextLine();
 //        System.out.println("after password ");
-        DatabaseManager.initialize(dataBasePassword);// (if we want aa diffrent password to be entered when running change databasePassword-> password
+        DatabaseManager.initialize(dataBasePassword);// (if we want aa different password to be entered when running change databasePassword-> password
         getControllers();
     }
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client){
         String msgString = msg.toString();
+        System.out.println("server");
         Request request=(Request)msg;
-
+        System.out.println("Received request from client: ");
         if (msgString.startsWith("add client")) {
             SubscribedClient connection = new SubscribedClient(client);
             SubscribersList.add(connection);
@@ -61,7 +62,7 @@ public class SimpleServer extends AbstractServer {
         else if (request.getRequestType().equals(GET_NETWORK_MENU))
         {
             menu= menusController.getBaseMenu();
-            Response response=new Response(RETURN_MENU,menu,SUCCESS);
+            Response <Menu> response= new Response<>(RETURN_MENU, menu, SUCCESS);
             try {
                 client.sendToClient(response);
             } catch (IOException e) {
@@ -70,16 +71,16 @@ public class SimpleServer extends AbstractServer {
         }
         else if (request.getRequestType().equals(GET_BRANCH_MENU))
         {
-            Response response;
+            Response <Menu> response;
             System.out.println("in server display menu");
             menu= menusController.getBranchMenu((int)request.getData());
             if(menu==null)
             {
-                 response=new Response(RETURN_MENU,menu,ERROR);
+                 response= new Response<>(RETURN_MENU, null, ERROR);
             }
             else
             {
-                 response=new Response(RETURN_MENU,menu,SUCCESS);
+                 response= new Response<>(RETURN_MENU, menu, SUCCESS);
             }
             try {
                 client.sendToClient(response);
@@ -91,18 +92,21 @@ public class SimpleServer extends AbstractServer {
         else if(request.getRequestType().equals(UPDATE_PRICE))
         {
             MenuItem item=menuItemsController.updatePrice(request);
-            Response response=new Response<>(UPDATED_PRICE,item,SUCCESS);
+            Response<MenuItem> response= new Response<>(UPDATED_PRICE, item, SUCCESS);
             sendToAllClients((response));//sent the item to all the clients
 
         } else if (request.getRequestType().equals(GET_BRANCHES)) {
+            System.out.println("in server get branches");
             List<Branch> branches=BranchController.getALLBranches();
-            Response response=new Response(BRANCHES_SENT,branches,SUCCESS);
+            Response<List<Branch>> response= new Response<>(BRANCHES_SENT, branches, SUCCESS);
+            System.out.println("in server get branches got response");
             if(branches==null)
             {
                 response.setStatus(ERROR);
             }
             try {
                 client.sendToClient(response);
+                System.out.println("in server get branches sent successfully");
             } catch (IOException e) {
                 e.printStackTrace();
             }

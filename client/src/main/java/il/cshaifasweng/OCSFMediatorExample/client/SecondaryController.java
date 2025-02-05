@@ -62,13 +62,11 @@ public class SecondaryController {
     @Subscribe
     public void onMenuEvent(MenuEvent event) {
         Menu menu = event.getMenu();
-        System.out.println("Menu received in secondary controller");
         Platform.runLater(() -> {
             // Clear the TableView before updating
             menuTableView.getItems().clear();
             // Add new menu items to the TableView
             menu.printMenu();
-            System.out.println("Menu received in secondary controller 2222");
             menuTableView.getItems().setAll(menu.getFullMenuItems());
         });
     }

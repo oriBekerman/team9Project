@@ -65,23 +65,36 @@ public abstract class BaseRepository<T> {
     }
 
     public void deleteById(int id) {
-        // Remove from in-memory storage
-        storage.removeIf(entity -> getId(entity) == id);
         Session session = null;
-        // Remove from the database
         try {
-            session =openSession();
-            session.beginTransaction();
+            session = openSession();  // Open Hibernate session
+            session.beginTransaction(); // Start transaction
+
+            // Fetch the entity to ensure it exists before attempting to delete
             T entity = session.get(getEntityClass(), id);
-            if (entity != null) {
-                session.delete(entity);
+            if (entity == null) {
+                System.out.println("Entity with ID " + id + " not found. Skipping deletion.");
+                session.getTransaction().rollback(); // Rollback to prevent unnecessary commit
+                return;
             }
-            session.getTransaction().commit();
+
+            // Delete the entity
+            session.delete(entity);
+            session.getTransaction().commit(); // Commit transaction
+            System.out.println("Entity with ID " + id + " deleted successfully.");
         } catch (Exception e) {
+            if (session != null && session.getTransaction().isActive()) {
+                session.getTransaction().rollback(); // Rollback in case of error
+            }
             e.printStackTrace();
-            throw new RuntimeException("Failed to delete entity by ID", e);
+            throw new RuntimeException("Failed to delete entity by ID: " + id, e);
+        } finally {
+            if (session != null) {
+                session.close(); // Ensure session is closed
+            }
         }
     }
+
 
     public abstract int getId(T entity);
 

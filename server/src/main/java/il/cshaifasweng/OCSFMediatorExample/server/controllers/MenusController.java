@@ -28,6 +28,10 @@ public class MenusController {
     }
     public void populateMenus(List<Menu> menus)
     {
+        if(checkIfEmpty())
+        {
+
+        }
         menusRepository.populate(menus);
     }
     public Menu getBaseMenu()

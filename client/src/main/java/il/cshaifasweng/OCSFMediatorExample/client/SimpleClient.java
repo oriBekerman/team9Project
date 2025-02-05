@@ -25,41 +25,63 @@ public class SimpleClient extends AbstractClient {
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		Response response=(Response)msg;
 
-		if (msg.getClass().equals(Warning.class)) {
+			if (msg.getClass().equals(Warning.class)) {
 			String message = msg.toString();
 			System.out.println(message);
 			EventBus.getDefault().post(new WarningEvent((Warning) msg));
 		}
 
-//		if (msg.getClass().equals(Menu.class)) {
-		if(response.getResponseType().equals(RETURN_MENU))
-		{
-			System.out.println("Menu received, storing event...");
-			Menu menu = (Menu) response.getData();
-			menu.printMenu();
-			MenuEvent menuEvent = new MenuEvent(menu);
-			// Store the event if SecondaryController is not initialized
-			if (!isSecondaryControllerInitialized) {
-				pendingMenuEvent = menuEvent;
-			} else {
-				// Post immediately if SecondaryController is ready
-				EventBus.getDefault().post(menuEvent);
+		if (msg instanceof Response<?> response) {
+			// Safe cast
+            if (response.getResponseType().equals(RETURN_MENU)) {
+				System.out.println("Menu received, storing event...");
+				Menu menu = (Menu) response.getData();
+				menu.printMenu();
+				MenuEvent menuEvent = new MenuEvent(menu);
+				// Store the event if SecondaryController is not initialized
+				if (!isSecondaryControllerInitialized) {
+					pendingMenuEvent = menuEvent;
+				} else {
+					// Post immediately if SecondaryController is ready
+					EventBus.getDefault().post(menuEvent);
+				}
 			}
-		}
-		if(response.getResponseType().equals(UPDATED_PRICE))
-		{
-			MenuItem menuItem = (MenuItem) response.getData();
-			// Post immediately if SecondaryController is ready
-			updateDishEvent updateEvent=new updateDishEvent(menuItem);
-			EventBus.getDefault().post(updateEvent);
-		}
-		else if(response.getResponseType().equals(BRANCHES_SENT))
-		{
-			List<Branch> branches = (List<Branch>) response.getData();
-			BranchesSentEvent branchSentEvent=new BranchesSentEvent(branches);
-			EventBus.getDefault().post(branchSentEvent);
+
+			if (response.getResponseType().equals(UPDATED_PRICE)) {
+				MenuItem menuItem = (MenuItem) response.getData();
+				// Post immediately if SecondaryController is ready
+				updateDishEvent updateEvent = new updateDishEvent(menuItem);
+				EventBus.getDefault().post(updateEvent);
+			}
+
+			else if (response.getResponseType().equals(BRANCHES_SENT)) {
+				try {
+					System.out.println("client got branches sent");
+                    //noinspection unchecked
+                    List<Branch> branches = (List<Branch>) response.getData();
+					BranchesSentEvent branchSentEvent = new BranchesSentEvent(branches);
+					EventBus.getDefault().post(branchSentEvent);
+				}
+				catch (ClassCastException e) {
+					e.printStackTrace();
+				}
+
+//				// Use TypeCheck to validate the data type and avoid class exception
+//				if (TypeCheck.isListOfType(response.getData(), Branch.class)) {
+//					try {
+//						List<Branch> branches = (List<Branch>) response.getData();
+//						System.out.println("getBranchList data converted to ArrayList");
+//						BranchesSentEvent branchSentEvent = new BranchesSentEvent(branches);
+//						EventBus.getDefault().post(branchSentEvent);
+//						System.out.println("branch sent event posted");
+//					} catch (ClassCastException e) {
+//						System.err.println("Error casting response data: " + e.getMessage());
+//					}
+//				} else {
+//					System.err.println("Error: Response data is not of type List<Branch>");
+//				}
+			}
 		}
 	}
 
@@ -71,11 +93,11 @@ public class SimpleClient extends AbstractClient {
 	}
 
 	public void displayNetworkMenu() throws IOException {
-		Request request=new Request(GET_NETWORK_MENU);
+		Request<Object> request=new Request<>(GET_NETWORK_MENU);
 		client.sendToServer(request);
 	}
 	public void displayBranchMenu(String branchName) throws IOException {
-		Request request=new Request(GET_BRANCH_MENU);
+		Request<String> request= new Request<>(GET_BRANCH_MENU);
 		request.setData(branchName);
 		client.sendToServer(request);
 	}
@@ -94,11 +116,18 @@ public class SimpleClient extends AbstractClient {
 	public void editMenu(String itemId,String price) throws IOException
 	{
 		String[] data={itemId,price};
-		Request request=new Request(UPDATE_PRICE,data);
+		Request<String[]> request= new Request<>(UPDATE_PRICE, data);
 		client.sendToServer(request);
 	}
 
 	public void getBranchList() {
 		Request request=new Request(GET_BRANCHES);
+        try {
+            client.sendToServer(request);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("getBranchList requested");
 	}
 }
+

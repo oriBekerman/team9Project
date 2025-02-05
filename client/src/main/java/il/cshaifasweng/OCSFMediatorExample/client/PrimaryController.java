@@ -2,39 +2,37 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.MenuBar;
 import javafx.scene.layout.Pane;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
-import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.*;
 
 //
 public class PrimaryController {
 
 	@FXML
 	private ResourceBundle resources;
-
 	@FXML
 	private URL location;
 
@@ -52,6 +50,13 @@ public class PrimaryController {
 
 	@FXML
 	private Pane MenuBarPane;
+
+	@FXML private Button toggleButtonBranch;
+	private Popup popup = new Popup();
+
+	public List<Branch> branches=null;
+	public boolean branchListInit=false;
+	private final Object lock = new Object();
 
 
 	@FXML
@@ -92,7 +97,8 @@ public class PrimaryController {
 		assert MenuBarPane != null : "fx:id=\"MenuBarPane\" was not injected: check your FXML file 'primary.fxml'.";
 		assert MenutBtn != null : "fx:id=\"MenutBtn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert WelcomeLabel != null : "fx:id=\"WelcomeLabel\" was not injected: check your FXML file 'primary.fxml'.";
-
+		EventBus.getDefault().register(this);
+		SimpleClient.getClient().getBranchList(); // Request branch list from server
 		// Menu bar (in the home page - this is the menu bar that is shown as "ALL")
 		Parent menuBarParent = App.loadFXML("MenuBar");
 		MenuBarPane.getChildren().clear();
@@ -102,14 +108,101 @@ public class PrimaryController {
 		String imagePath = "il/cshaifasweng/OCSFMediatorExample/client/mamasKitchen.jpg";
 		Image image = new Image(imagePath);
 		MOMSImage.setImage(image);
-
-
 		try {
 			SimpleClient.getClient().sendToServer("add client");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		// ✅ Set the button action here
+		toggleButtonBranch.setOnAction(e -> {
+			System.out.println("Button clicked - showing popup");
+			GetBranchListPopup();
+		});
 	}
 
+	private void GetBranchListPopup() {
+		synchronized (lock) {
+			if (!branchListInit) {
+				try {
+					SimpleClient.getClient().getBranchList();
+					while (!branchListInit) {
+						lock.wait();
+					}
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					System.out.println("Thread interrupted while waiting for branch list.");
+					return;
+				}
+			}
+		}
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("BranchList.fxml"));
+			System.out.println("in getClass");
+			Parent popupContent = loader.load();
+			System.out.println("after load");
+
+			// Get BranchListController instance and set branches
+			BranchListController controller = loader.getController();
+			controller.setBranches(branches);
+
+			popup.getContent().clear();
+			popup.getContent().add(popupContent);
+			System.out.println("after popupContent");
+			popup.setAutoHide(true);
+			System.out.println("after setAutoHide");
+			// ✅ Ensure popup shows correctly
+			if (toggleButtonBranch.getScene() != null) {
+				popup.show(toggleButtonBranch.getScene().getWindow(),
+						toggleButtonBranch.localToScreen(0, 0).getX(),
+						toggleButtonBranch.localToScreen(0, 0).getY() + toggleButtonBranch.getHeight());
+			} else {
+				System.out.println("toggleButtonBranch scene is NULL - cannot display popup");
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
+
+	@FXML
+	public void getPopup(ActionEvent actionEvent) {
+		System.out.println("getPopup");
+		GetBranchListPopup();
+	}
+
+	// Handle the branch selection event from the popup
+	@Subscribe
+	public void onBranchSelectedEvent(BranchSelectedEvent event) {
+		System.out.println("Branch selected: " + event.getBranch().getName());
+		Branch branch = event.getBranch();
+		openBranchPage(branch);
+	}
+
+	private void openBranchPage(Branch branch) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("BranchPage.fxml"));
+			Parent branchPageRoot = loader.load();
+
+			// ✅ Get the controller and pass the branch object
+			BranchPageController controller = loader.getController();
+			controller.setBranch(branch);
+
+			// ✅ Use App.setRoot() to switch the scene
+			App.setRoot("BranchPage");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Subscribe
+	public void onBranchesSentEvent(BranchesSentEvent event) {
+		synchronized (lock) {
+			this.branches = event.branches;
+			this.branchListInit = true;
+			System.out.println("onBranchesSentEvent");
+			lock.notifyAll(); // Notify waiting threads that branches are initialized
+		}
+	}
+}

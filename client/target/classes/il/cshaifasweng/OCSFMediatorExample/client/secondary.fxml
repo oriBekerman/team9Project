@@ -5,14 +5,14 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="579.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="743.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryController">
     <children>
         <Button fx:id="BackToHPbtn" layoutX="14.0" layoutY="22.0" mnemonicParsing="false" onAction="#BackToHPfunc" text="Back to Home Page" />
         <Button fx:id="UpdatePriceBtn" layoutX="14.0" layoutY="64.0" mnemonicParsing="false" onAction="#UpdateTheMenu" text="Update Price" />
         <Button fx:id="SaveBtn" layoutX="14.0" layoutY="107.0" mnemonicParsing="false" onAction="#SaveTheUpdateMenu" text="Save" />
 
         <!-- TableView for MenuItems -->
-        <TableView fx:id="menuTableView" layoutX="14.0" layoutY="150.0" prefHeight="600.0" prefWidth="550.0">
+        <TableView fx:id="menuTableView" layoutX="143.0" layoutY="22.0" prefHeight="664.0" prefWidth="605.0">
             <columns>
                 <TableColumn fx:id="nameColumn" text="Name" />
                 <TableColumn fx:id="ingredientsColumn" text="Ingredients" />

@@ -71,12 +71,13 @@ public class DatabaseManager {
         {
             menuItemsController.PopulateMenuItems();
             Branch defaultBranch = new Branch("Default Branch", "Default Location", "9:00","19:00");
+            Branch haifaBranch=new Branch("Haifa", "Haifa port", "9:00","19:00");
            List<MenuItem> items= menuItemsController.getItems();
            Menu base=new Menu();
             base.setBranch(defaultBranch);  // Associate with the branch
             defaultBranch.setMenu(base);   // Associate the menu with the branch
             base.SetMenuItems(items);//set items in menu
-            List<Branch> branches = List.of(defaultBranch);
+            List<Branch> branches = List.of(defaultBranch,haifaBranch);
             branchController.populateBranches(branches);//save branch
         }
     }

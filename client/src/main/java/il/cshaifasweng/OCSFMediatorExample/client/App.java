@@ -41,7 +41,7 @@ public class App extends Application {
         client.setPort(3000);//change later for two computer connection
     	client.openConnection();
         stage.setTitle("ProtoType Team 9 - Mom's kitchen");
-        scene = new Scene(loadFXML("primary"), 600, 600);
+        scene = new Scene(loadFXML("primary"), 623, 854);
         stage.setScene(scene);
         stage.show();
     }
@@ -154,6 +154,7 @@ public class App extends Application {
                     }
                 });
                 break;
+
         }
     }
 }

@@ -37,6 +37,6 @@ public class BranchController {
     }
     public static List<Branch>getALLBranches()
     {
-        return (List<Branch>) branchRepository.findAll();
+        return branchRepository.findAll();
     }
 }

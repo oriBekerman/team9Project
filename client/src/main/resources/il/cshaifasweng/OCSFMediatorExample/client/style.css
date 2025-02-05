@@ -2,10 +2,10 @@
 .root {
     -fx-background-color: #fbe9d0;
 }
+
 /* ======== Main Titles ======== */
-/* Styles for main headers in the application */
 .main-title {
-    -fx-font-size: 20px;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: #4e453c; /* Dark brown */
     -fx-alignment: center;
@@ -14,17 +14,48 @@
 }
 
 /* ======== Subtitles ======== */
-/* Styles for secondary section headers */
 .subtitle {
-    -fx-font-size: 24px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: #6c5339; /* Muted brown */
     -fx-padding: 10px 0;
     -fx-font-family: "Serif";
 }
 
+/* ======== Toolbar Styles ======== */
+.toolbar {
+    -fx-background-color: #cfb08a; /* Soft peach */
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+    -fx-alignment: center-left;
+    -fx-border-color: #8a6f48;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+}
+
+/* Toolbar Labels */
+.toolbar .label {
+    -fx-text-fill: #4e453c;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+}
+
+/* Toolbar Buttons */
+.toolbar .button {
+    -fx-background-color: #8a6f48; /* Muted brown */
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 8px 14px;
+    -fx-border-radius: 6px;
+    -fx-font-weight: bold;
+}
+
+.toolbar .button:hover {
+    -fx-background-color: #6c5339;
+}
+
 /* ======== Popup Table/Panes ======== */
-/* Styling for pop-up tables or information panes */
 .popup-pane {
     -fx-background-color: #f6d7b0; /* Soft peach */
     -fx-border-color: #8a6f48;
@@ -42,7 +73,6 @@
     -fx-border-radius: 6px;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
-
 
 /* ======== Sidebar Navigation ======== */
 .sidebar {
@@ -64,7 +94,12 @@
     -fx-alignment: center-left;
     -fx-pref-width: 180px;
     -fx-font-weight: bold;
+}
 
+.sidebar .label {
+    -fx-background-color: transparent;
+    -fx-text-fill: #fbe9d0;
+    -fx-font-size: 18px;
 }
 
 .sidebar .button:hover {
@@ -79,6 +114,34 @@
     -fx-spacing: 20px;
     -fx-alignment: center-left;
     -fx-font-family: "Serif";
+}
+
+/* ======== ListView Styling ======== */
+.list-view {
+    -fx-background-color: #fbe9d0; /* Soft warm background */
+    -fx-border-color: #8a6f48;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-padding: 5px;
+}
+
+.list-view .list-cell {
+    -fx-background-color: #f6d7b0; /* Soft peach */
+    -fx-text-fill: #4e453c;
+    -fx-padding: 8px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 16px;
+    -fx-font-family: "Serif";
+}
+
+.list-view .list-cell:hover {
+    -fx-background-color: #cfb08a; /* Soft highlight */
+}
+
+.list-view .list-cell:selected {
+    -fx-background-color: #8a6f48;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 /* ======== Buttons ======== */

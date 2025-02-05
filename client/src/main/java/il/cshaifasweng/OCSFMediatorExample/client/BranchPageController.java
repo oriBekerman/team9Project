@@ -1,62 +1,105 @@
-
 package il.cshaifasweng.OCSFMediatorExample.client;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.input.InputMethodEvent;
-import javafx.stage.WindowEvent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 
-import java.io.IOException;
+import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
 public class BranchPageController {
 
-    public TextArea sidebarMenu;
-    public Button menuBtn;
-    @FXML // fx:id="BranchMenuButton"
-    private MenuItem BranchMenuButton; // Value injected by FXMLLoader
+    public Button reservationBtn;
+    public Button deliveryBtn;
+    public Button complaintBtn;
+    public Label openingHoursLabel;
+    public Label branchTitle;
+    public VBox sideBar;
 
-    @FXML // fx:id="branchNameLabel"
-    private Label branchNameLabel; // Value injected by FXMLLoader
+    public BranchPageController() {};
+    public Branch branch;
+    @FXML
+    private ResourceBundle resources;
 
-    @FXML // fx:id="closingHour"
-    private Label closingHour; // Value injected by FXMLLoader
+    @FXML
+    private URL location;
 
-    @FXML // fx:id="menuBarButton"
-    private Button menuBarButton; // Value injected by FXMLLoader
+    @FXML
+    private Button backToHPBtn;
 
-    @FXML // fx:id="openingHour"
-    private Label openingHour; // Value injected by FXMLLoader
+    @FXML
+    private Button haifaBBtn;
 
-    @FXML // fx:id="openingHoursLabel"
-    private Label openingHoursLabel; // Value injected by FXMLLoader
+    @FXML
+    private Button jersualemBtn;
 
-    @FXML // fx:id="sidePopBar"
-    private ContextMenu sidePopBar; // Value injected by FXMLLoader
+    @FXML
+    private Button telAvivBtn;
 
-   Branch branch;
-   String branchName;
+    @FXML
+    private Button zikhronBtn;
 
-    public  void setBranch(Branch branch) {
-        this.branch=branch;
+    @FXML
+    void navToHP(ActionEvent event) {
+        switchScreen("Home Page");
     }
 
     @FXML
-    void setHours(InputMethodEvent event) {
-        openingHour.setText(branch.getOpeningTime());
-        closingHour.setText(branch.getClosingTime());
+    void navToHaifaBranch(ActionEvent event) {
+
     }
 
-//need to change to actual branch
     @FXML
-    void openBranchMenu(ActionEvent event) {
-        try {
-            App.setRoot("secondary");
-            SimpleClient.getClient().displayNetworkMenu();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    void navToJersualemBranch(ActionEvent event) {
+
+    }
+
+    @FXML
+    void navToTelAvivBranch(ActionEvent event) {
+
+    }
+
+    @FXML
+    void navToZikhronBranch(ActionEvent event) {
+
+    }
+
+    @FXML
+    void initialize() {
+        updateUI();
+        assert backToHPBtn != null : "fx:id=\"backToHPBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
+        assert haifaBBtn != null : "fx:id=\"haifaBBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
+        assert jersualemBtn != null : "fx:id=\"jersualemBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
+        assert telAvivBtn != null : "fx:id=\"telAvivBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
+        assert zikhronBtn != null : "fx:id=\"zikhronBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
+
+    }
+
+    public void navToReservationPage(ActionEvent actionEvent) {
+    }
+
+    public void navTodeliveryPage(ActionEvent actionEvent) {
+    }
+
+    public void navToComplaintPage(ActionEvent actionEvent) {
+    }
+
+    // Method to set the branch data
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+        updateUI(); // Update UI when branch is set
+    }
+
+    // Method to update UI based on the branch data
+    private void updateUI() {
+        if (branch != null && branchTitle != null) {
+            branchTitle.setText("Branch: " + branch.getName());
+            openingHoursLabel.setText("opening hours: " + branch.getOpeningTime() + " - " + branch.getClosingTime());
         }
     }
 }
-
