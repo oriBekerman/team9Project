@@ -21,6 +21,8 @@ public class BranchPageController {
     public Label openingHoursLabel;
     public Label branchTitle;
     public VBox sideBar;
+    public Label openHour;
+    public Label closeHour;
 
     public BranchPageController() {};
     public Branch branch;
@@ -94,8 +96,10 @@ public class BranchPageController {
     public void setBranch(Branch branch) {
         this.branch = branch;
         branchTitle.setText("Branch: " + branch.getName());
-        String openingHours = "opening hours: " + branch.getOpeningTime() + " - " + branch.getClosingTime();
-        openingHoursLabel.setText(openingHours);
+        //String openingHours = "opening hours: " + branch.getOpeningTime() + " - " + branch.getClosingTime();
+        //openingHoursLabel.setText(openingHours);
+        openHour.setText(branch.getOpeningTime());
+        closeHour.setText(branch.getClosingTime());
         branchIsSet = true;
         System.out.println("in branch page controller");
         System.out.println("opening: " + branch.getOpeningTime());
