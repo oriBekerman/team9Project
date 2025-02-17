@@ -92,6 +92,11 @@ public class App extends Application {
         appStage.setScene(scene);
         appStage.show();
     }
+    public static void setContent1(Parent parent) throws IOException {
+        scene = new Scene(parent);
+        appStage.setScene(scene);
+        appStage.show();
+    }
     public static void switchScreen (String screenName) {
         switch (screenName) {
             case "Home Page":

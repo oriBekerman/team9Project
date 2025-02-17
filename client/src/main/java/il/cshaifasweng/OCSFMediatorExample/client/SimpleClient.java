@@ -60,7 +60,7 @@ public class SimpleClient extends AbstractClient {
 					System.out.println("client got branches sent");
                     //noinspection unchecked
                     List<Branch> branches = (List<Branch>) response.getData();
-					BranchesSentEvent branchSentEvent = new BranchesSentEvent(branches);
+					BranchListSentEvent branchSentEvent = new BranchListSentEvent(branches);
 					EventBus.getDefault().post(branchSentEvent);
 				}
 				catch (ClassCastException e) {

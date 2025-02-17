@@ -7,6 +7,7 @@ il\cshaifasweng\OCSFMediatorExample\client\BranchPageController.class
 il\cshaifasweng\OCSFMediatorExample\client\App.class
 il\cshaifasweng\OCSFMediatorExample\client\updateDishEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\BranchListSentEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchListController.class
 il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingController.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
@@ -16,7 +17,6 @@ il\cshaifasweng\OCSFMediatorExample\client\ReservationController.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchSelectedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.class
-il\cshaifasweng\OCSFMediatorExample\client\BranchesSentEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryController$1.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryController.class

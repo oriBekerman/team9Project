@@ -14,6 +14,7 @@ import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
 public class BranchPageController {
 
+    public boolean branchIsSet = false;
     public Button reservationBtn;
     public Button deliveryBtn;
     public Button complaintBtn;
@@ -92,7 +93,9 @@ public class BranchPageController {
     // Method to set the branch data
     public void setBranch(Branch branch) {
         this.branch = branch;
-        updateUI(); // Update UI when branch is set
+        branchTitle.setText("Branch: " + branch.getName());
+        openingHoursLabel.setText("opening hours: " + branch.getOpeningTime() + " - " + branch.getClosingTime());
+        branchIsSet = true;
     }
 
     // Method to update UI based on the branch data

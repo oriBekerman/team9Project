@@ -3,15 +3,13 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -22,10 +20,8 @@ import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Popup;
-import javafx.stage.Stage;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.*;
 
 //
@@ -54,7 +50,7 @@ public class PrimaryController {
 	@FXML private Button toggleButtonBranch;
 	private Popup popup = new Popup();
 
-	public List<Branch> branches=null;
+	public List<Branch> branchList =null;
 	public boolean branchListInit=false;
 	private final Object lock = new Object();
 
@@ -114,7 +110,7 @@ public class PrimaryController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// ✅ Set the button action here
+		// Set the button action here
 		toggleButtonBranch.setOnAction(e -> {
 			System.out.println("Button clicked - showing popup");
 			GetBranchListPopup();
@@ -144,7 +140,7 @@ public class PrimaryController {
 
 			// Get BranchListController instance and set branches
 			BranchListController controller = loader.getController();
-			controller.setBranches(branches);
+			controller.setBranches(branchList);
 
 			popup.getContent().clear();
 			popup.getContent().add(popupContent);
@@ -171,35 +167,48 @@ public class PrimaryController {
 		GetBranchListPopup();
 	}
 
-	// Handle the branch selection event from the popup
+	// Handle the branch selected from the list
 	@Subscribe
 	public void onBranchSelectedEvent(BranchSelectedEvent event) {
 		System.out.println("Branch selected: " + event.getBranch().getName());
 		Branch branch = event.getBranch();
+		if (branch==null) {
+			System.out.println("branch is null");
+		}
 		openBranchPage(branch);
 	}
 
 	private void openBranchPage(Branch branch) {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("BranchPage.fxml"));
+//			FXMLLoader loader = new FXMLLoader(getClass().getResource("BranchPage.fxml"));
+//			Parent branchPageRoot = loader.load();
+//
+//			// Get the controller and pass the branch
+//			BranchPageController controller = loader.getController();
+//			controller.setBranch(branch);
+//
+////			// Use App.setRoot() to switch the scene
+////			App.setRoot("BranchPage");
+//			while (!controller.branchIsSet)
+//			{
+//				System.out.println("Waiting for branch to load");
+//			}
+//			App.setContent1(branchPageRoot);
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Branch.fxml"));
 			Parent branchPageRoot = loader.load();
-
-			// ✅ Get the controller and pass the branch object
+			// Get the controller and pass the branch
 			BranchPageController controller = loader.getController();
-			controller.setBranch(branch);
-
-			// ✅ Use App.setRoot() to switch the scene
-			App.setRoot("BranchPage");
-
+			App.setContent1(branchPageRoot);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	@Subscribe
-	public void onBranchesSentEvent(BranchesSentEvent event) {
+	public void onBranchListSentEvent(BranchListSentEvent event) {
 		synchronized (lock) {
-			this.branches = event.branches;
+			this.branchList = event.branches;
 			this.branchListInit = true;
 			System.out.println("onBranchesSentEvent");
 			lock.notifyAll(); // Notify waiting threads that branches are initialized
