@@ -94,8 +94,11 @@ public class BranchPageController {
     public void setBranch(Branch branch) {
         this.branch = branch;
         branchTitle.setText("Branch: " + branch.getName());
-        openingHoursLabel.setText("opening hours: " + branch.getOpeningTime() + " - " + branch.getClosingTime());
+        String openingHours = "opening hours: " + branch.getOpeningTime() + " - " + branch.getClosingTime();
+        openingHoursLabel.setText(openingHours);
         branchIsSet = true;
+        System.out.println("in branch page controller");
+        System.out.println("opening: " + branch.getOpeningTime());
     }
 
     // Method to update UI based on the branch data

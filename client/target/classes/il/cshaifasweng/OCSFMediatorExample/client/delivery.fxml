@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="632.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.DeliveryController">
+   <children>
+      <Label layoutX="283.0" layoutY="21.0" prefHeight="33.0" prefWidth="157.0" text=" Make a Delivery">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Button fx:id="payBtn" layoutX="647.0" layoutY="552.0" mnemonicParsing="false" onAction="#navToPay" text="Continue to payment" />
+      <TableView fx:id="deliveryTableView" layoutX="55.0" layoutY="61.0" prefHeight="553.0" prefWidth="583.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="Name" />
+          <TableColumn prefWidth="75.0" text="Ingredients" />
+            <TableColumn prefWidth="75.0" text="Preference" />
+            <TableColumn prefWidth="75.0" text="Price" />
+            <TableColumn prefWidth="75.0" text="Qoantity" />
+        </columns>
+      </TableView>
+      <Button fx:id="backToHPBtn" layoutX="29.0" layoutY="25.0" mnemonicParsing="false" onAction="#navToHP" text="Back to HP" />
+   </children>
+</AnchorPane>

@@ -198,6 +198,15 @@ public class PrimaryController {
 			Parent branchPageRoot = loader.load();
 			// Get the controller and pass the branch
 			BranchPageController controller = loader.getController();
+			controller.setBranch(branch);
+			if (controller.branchIsSet)
+			{
+				System.out.println("branch is already set");
+			}
+			while(!controller.branchIsSet)
+			{
+				System.out.println("Waiting for branch to be set");
+			}
 			App.setContent1(branchPageRoot);
 		} catch (IOException e) {
 			e.printStackTrace();
