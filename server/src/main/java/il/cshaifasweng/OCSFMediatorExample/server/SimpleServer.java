@@ -2,7 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.BranchController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
-import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenusController;
+//import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenusController;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 
@@ -24,9 +24,9 @@ public class SimpleServer extends AbstractServer {
     private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 
     public static Session session;
-    private Menu menu=new Menu();
+//    private Menu menu=new Menu();
     private MenuItemsController menuItemsController =null;
-    private MenusController menusController=null;
+//    private MenusController menusController=null;
     private BranchController branchController=null;
     public static String dataBasePassword="Bekitnt26@";//change database password here
     public String password="";//used only when entering a new password through cmd
@@ -59,35 +59,35 @@ public class SimpleServer extends AbstractServer {
 
         }
         //receives display menu msg from client and sends back menu
-        else if (request.getRequestType().equals(GET_NETWORK_MENU))
-        {
-            menu= menusController.getBaseMenu();
-            Response <Menu> response= new Response<>(RETURN_MENU, menu, SUCCESS);
-            try {
-                client.sendToClient(response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else if (request.getRequestType().equals(GET_BRANCH_MENU))
-        {
-            Response <Menu> response;
-            System.out.println("in server display menu");
-            menu= menusController.getBranchMenu((int)request.getData());
-            if(menu==null)
-            {
-                 response= new Response<>(RETURN_MENU, null, ERROR);
-            }
-            else
-            {
-                 response= new Response<>(RETURN_MENU, menu, SUCCESS);
-            }
-            try {
-                client.sendToClient(response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        else if (request.getRequestType().equals(GET_NETWORK_MENU))
+//        {
+//            menu= menusController.getBaseMenu();
+//            Response <Menu> response= new Response<>(RETURN_MENU, menu, SUCCESS);
+//            try {
+//                client.sendToClient(response);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        else if (request.getRequestType().equals(GET_BRANCH_MENU))
+//        {
+//            Response <Menu> response;
+//            System.out.println("in server display menu");
+//            menu= menusController.getBranchMenu((int)request.getData());
+//            if(menu==null)
+//            {
+//                 response= new Response<>(RETURN_MENU, null, ERROR);
+//            }
+//            else
+//            {
+//                 response= new Response<>(RETURN_MENU, menu, SUCCESS);
+//            }
+//            try {
+//                client.sendToClient(response);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
         //receives edit item msg from client and returns the updated item
         else if(request.getRequestType().equals(UPDATE_PRICE))
         {
@@ -125,7 +125,7 @@ public class SimpleServer extends AbstractServer {
     private void getControllers()
     {
         this.menuItemsController =databaseManager.getMenuItemsController();
-        this.menusController=databaseManager.getMenusController();
+//        this.menusController=databaseManager.getMenusController();
         this.branchController=databaseManager.getBranchController();
 
     }

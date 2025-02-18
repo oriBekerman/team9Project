@@ -67,7 +67,7 @@ public class SecondaryController {
             menuTableView.getItems().clear();
             // Add new menu items to the TableView
             menu.printMenu();
-            menuTableView.getItems().setAll(menu.getFullMenuItems());
+            menuTableView.getItems().setAll(menu.getMenuItems());
         });
     }
 

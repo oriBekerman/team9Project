@@ -96,8 +96,6 @@ public class BranchPageController {
     public void setBranch(Branch branch) {
         this.branch = branch;
         branchTitle.setText("Branch: " + branch.getName());
-        //String openingHours = "opening hours: " + branch.getOpeningTime() + " - " + branch.getClosingTime();
-        //openingHoursLabel.setText(openingHours);
         openHour.setText(branch.getOpeningTime());
         closeHour.setText(branch.getClosingTime());
         branchIsSet = true;

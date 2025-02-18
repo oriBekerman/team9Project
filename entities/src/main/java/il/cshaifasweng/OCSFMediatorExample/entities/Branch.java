@@ -3,7 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import javax.persistence.Entity;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,8 +25,13 @@ public class Branch implements Serializable  {
     @Column(nullable = false)
     private String closingTime; // Closing hour
 
-    @OneToOne(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Menu menu;
+    @ManyToMany
+    @JoinTable(
+            name = "branch_menu_items",
+            joinColumns = @JoinColumn(name = "branch_id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_item_id")
+    )
+    private List<MenuItem> menuItems;
 
     public Branch() {}
 
@@ -62,13 +67,8 @@ public class Branch implements Serializable  {
         this.location = location;
     }
 
-    public Menu getMenu() {
-        return menu;
-    }
-
-    public void setMenu(Menu menu) {
-        this.menu = menu;
-    }
+    public List<MenuItem> getBranchMenuItems() { return menuItems; }
+    public void setBranchMenuItems(List<MenuItem> menuItems) { this.menuItems = menuItems; }
 
     public int getBranchID() {
         return id;
@@ -88,6 +88,15 @@ public class Branch implements Serializable  {
 
     public void setClosingTime(String closingTime) {
         this.closingTime = closingTime;
+    }
+    public List<MenuItem> getBranchSpecial(){
+        List<MenuItem> special = new ArrayList<MenuItem>();
+        for(MenuItem menuItem : menuItems){
+            if (menuItem.getDishType().equals(DishType.SPECIAL)){
+                special.add(menuItem);
+            }
+        }
+        return special;
     }
 }
 

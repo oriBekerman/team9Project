@@ -25,18 +25,21 @@ public class MenuItem implements Serializable {
     @Column
     private String preference;
 
-    @Column
-    private String dishType;//base or branch
 
     @Lob
     private byte[] picture;
 
-    @ManyToMany(mappedBy = "additionalMenuItems") // Refers to the 'additionalMenuItems' field in Menu
-    private List<Menu> menus;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DishType dishType;  // BASE or SPECIAL
+
+
+    @ManyToMany(mappedBy = "menuItems")
+    private List<Branch> branches;
 
 
     // Constructor with all fields except itemID (auto-generated)
-    public MenuItem(String name, double price, String ingredients, String preference, byte[] picture,String dishType) {
+    public MenuItem(String name, double price, String ingredients, String preference, byte[] picture,DishType dishType) {
         this.name = name;
         this.price = price;
         this.ingredients = ingredients;
@@ -97,18 +100,15 @@ public class MenuItem implements Serializable {
     public void setPicture(byte[] picture) {
         this.picture = picture;
     }
-    public String getDishType() {
+    public DishType getDishType() {
         return dishType;
     }
-    public void setDishType(String dishType) {
+    public void setDishType(DishType dishType) {
         this.dishType = dishType;
     }
-    public List<Menu> getMenus() {
-        return menus;
-    }
-    public void setMenus(List<Menu> menus) {
-        this.menus = menus;
-    }
+    public List<Branch> getBranches() { return branches; }
+    public void setBranches(List<Branch> branches) { this.branches = branches; }
+
     public void printMenuItem(){
         System.out.println("name:"+this.name+" price:"+this.price+
                 " ingredients:"+this.ingredients+" preference:"+this.preference);

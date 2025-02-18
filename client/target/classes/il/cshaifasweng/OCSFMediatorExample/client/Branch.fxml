@@ -7,37 +7,37 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="871.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BranchPageController">
-    <Label fx:id="branchTitle" layoutX="547.0" layoutY="29.0" prefHeight="68.0" prefWidth="384.0" styleClass="main-title" text="Haifa Branch">
+<AnchorPane prefHeight="782.0" prefWidth="1295.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BranchPageController">
+    <Label fx:id="branchTitle" layoutX="551.0" layoutY="35.0" prefHeight="63.0" prefWidth="194.0" styleClass="main-title" text="Haifa Branch">
         <font>
             <Font size="15.0" />
         </font>
     </Label>
-    <Button fx:id="backToHPBtn" layoutX="1017.0" layoutY="14.0" mnemonicParsing="false" onAction="#navToHP" prefHeight="49.0" prefWidth="194.0" styleClass="menu-btn" text="Back To Home Page" />
-    <VBox fx:id="sideBar" layoutY="-0.7999999999999989" prefHeight="884.0" prefWidth="190.0" styleClass="sidebar" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1035.0" AnchorPane.topAnchor="-11.0">
+    <Button fx:id="backToHPBtn" layoutX="1060.0" layoutY="20.0" mnemonicParsing="false" onAction="#navToHP" prefHeight="49.0" prefWidth="194.0" styleClass="menu-btn" text="Back To Home Page" />
+    <VBox fx:id="sideBar" layoutY="-0.7999999999999989" prefHeight="795.0" prefWidth="194.0" styleClass="sidebar" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1101.0" AnchorPane.topAnchor="-11.0">
     </VBox>
     <AnchorPane prefHeight="138.0" prefWidth="190.0">
         <ImageView fitHeight="125.0" fitWidth="155.0" layoutX="17.0" pickOnBounds="true" preserveRatio="true" />
     </AnchorPane>
     <VBox prefHeight="167.0" prefWidth="227.0" spacing="10.0">
-        <Button fx:id="reservationBtn" mnemonicParsing="false" onAction="#navToReservationPage" prefHeight="49.0" prefWidth="181.0" styleClass="menu-btn" text="make a reservation">
+        <Button fx:id="reservationBtn" mnemonicParsing="false" onAction="#navToReservationPage" prefHeight="49.0" prefWidth="192.0" styleClass="menu-btn" text="make a reservation">
             <font>
                 <Font size="10.0" />
             </font>
         </Button>
-        <Button fx:id="deliveryBtn" mnemonicParsing="false" onAction="#navTodeliveryPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="make a delivery">
+        <Button fx:id="deliveryBtn" mnemonicParsing="false" onAction="#navTodeliveryPage" prefHeight="50.0" prefWidth="190.0" styleClass="menu-btn" text="make a delivery">
             <font>
                 <Font size="10.0" />
             </font>
         </Button>
-        <Button fx:id="complaintBtn" mnemonicParsing="false" onAction="#navToComplaintPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="make a complaint">
+        <Button fx:id="complaintBtn" mnemonicParsing="false" onAction="#navToComplaintPage" prefHeight="50.0" prefWidth="194.0" styleClass="menu-btn" text="make a complaint">
             <font>
                 <Font size="10.0" />
             </font>
         </Button>
     </VBox>
-    <Label fx:id="openingHoursLabel" layoutX="469.0" layoutY="136.0" prefHeight="41.0" prefWidth="136.0" styleClass="subtitle" stylesheets="@style.css" text="opening hours:" />
-   <Label fx:id="openHour" layoutX="590.0" layoutY="137.0" prefHeight="17.0" prefWidth="65.0" styleClass="subtitle" text="open" />
-   <Label fx:id="closeHour" layoutX="638.0" layoutY="137.0" prefHeight="17.0" prefWidth="65.0" styleClass="subtitle" text="close" />
-   <Label layoutX="632.0" layoutY="137.0" styleClass="subtitle" text="-" />
+    <Label fx:id="openingHoursLabel" layoutX="464.0" layoutY="126.0" prefHeight="41.0" prefWidth="136.0" styleClass="subtitle" stylesheets="@style.css" text="opening hours:" />
+   <Label fx:id="openHour" layoutX="593.0" layoutY="127.0" styleClass="subtitle" text="open" />
+   <Label layoutX="645.0" layoutY="127.0" styleClass="subtitle" text="-" />
+   <Label fx:id="closeHour" layoutX="663.0" layoutY="127.0" styleClass="subtitle" text="close" />
 </AnchorPane>

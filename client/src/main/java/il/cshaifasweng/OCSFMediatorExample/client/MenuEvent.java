@@ -13,7 +13,7 @@ public class MenuEvent {
     }
 
     public List<MenuItem> getMenuItems() {
-        return menu.getFullMenuItems();
+        return menu.getMenuItems();
     }
     public Menu getMenu() {
         return menu;

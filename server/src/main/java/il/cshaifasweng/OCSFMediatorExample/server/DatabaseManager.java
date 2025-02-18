@@ -18,7 +18,7 @@ import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePa
 public class DatabaseManager {
     private static SessionFactory sessionFactory;
     private MenuItemsController menuItemsController=null;
-    private MenusController menusController=null;
+//    private MenusController menusController=null;
     private BranchController branchController=null;
 //    private boolean initializedFlag=false;
 
@@ -35,7 +35,7 @@ public class DatabaseManager {
         System.out.println("in initialize database");
         checkAndPopulateTables();
         System.out.println("in  databaseManager populate");
-    };
+    }
     public static void initialize(String password)throws HibernateException
     {
         System.out.println("in initialize database");
@@ -60,53 +60,71 @@ public class DatabaseManager {
     public void initControllers(SessionFactory sessionFactory)
     {
         this.menuItemsController = new MenuItemsController(sessionFactory);
-        this.menusController = new MenusController(sessionFactory);
+//        this.menusController = new MenusController(sessionFactory);
         this.branchController = new BranchController(sessionFactory);
     }
 
     public void checkAndPopulateTables()
     {
-        //if there are no menus,menuItems and branches initialize all three
-        if(menuItemsController.checkIfEmpty() && menusController.checkIfEmpty())
+        //if there menuItem and branches are empty initialize them
+        if(menuItemsController.checkIfEmpty() && branchController.checkIfEmpty())
         {
-            menuItemsController.PopulateMenuItems();
             Branch defaultBranch = new Branch("Default Branch", "Default Location", "9:00","19:00");
             Branch haifaBranch=new Branch("Haifa", "Haifa port", "9:00","19:00");
-           List<MenuItem> items= menuItemsController.getItems();
-           Menu base=new Menu();
-            base.setBranch(defaultBranch);  // Associate with the branch
-            defaultBranch.setMenu(base);   // Associate the menu with the branch
-            base.SetMenuItems(items);//set items in menu
             List<Branch> branches = List.of(defaultBranch,haifaBranch);
-            branchController.populateBranches(branches);//save branch
+
+            MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce",
+                    "Low calorie", null, DishType.BASE);
+
+            MenuItem item2 = new MenuItem("Pizza ", 55.00, " Mushrooms, onions, tomatoes",
+                    " Includes vegan option ", null,DishType.BASE);
+
+            MenuItem item3 = new MenuItem("Pasta", 60.00, "Mushroom cream sauce",
+                    "Available gluten-free", null,DishType.BASE);
+
+            MenuItem item4 = new MenuItem("Hamburger", 80.00, "Meatball, pickle, tomato, lettuce",
+                    "Choice of meat or plant-based", null,DishType.BASE);
+
+            MenuItem item5 = new MenuItem("Edamame", 30.00, "Edamame",
+                    "Served with sea salt", null,DishType.BASE);
+            List<MenuItem> menuItems=List.of(item1,item2,item3,item4,item5);
+            //set the base menu items for every branch
+          for (Branch branch : branches) {
+              branch.setBranchMenuItems(menuItems);
+          }
+          //sett all branches to each base menu item
+          for (MenuItem menuItem : menuItems) {
+              menuItem.setBranches(branches);
+          }
+            menuItemsController.PopulateMenuItems(menuItems);
+            branchController.populateBranches(branches);
         }
     }
 
-    private SessionFactory getSessionFactory(String password) throws HibernateException {
-        Configuration configuration = new Configuration();
-        configuration.setProperty("hibernate.connection.password",password);
-
-        // Add annotated classes
-        configuration.addAnnotatedClass(Branch.class);
-        configuration.addAnnotatedClass(Menu.class);
-        configuration.addAnnotatedClass(MenuItem.class);
-
-        /// ///////////////////// shir may added this line
-//        configuration.addAnnotatedClass(Employee.class);
-
-        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties())
-                .build();
-
-        return configuration.buildSessionFactory(serviceRegistry);
-    }
+//    private SessionFactory getSessionFactory(String password) throws HibernateException {
+//        Configuration configuration = new Configuration();
+//        configuration.setProperty("hibernate.connection.password",password);
+//
+//        // Add annotated classes
+//        configuration.addAnnotatedClass(Branch.class);
+//        configuration.addAnnotatedClass(MenuItem.class);
+//
+//        /// ///////////////////// shir may added this line
+////        configuration.addAnnotatedClass(Employee.class);
+//
+//        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+//                .applySettings(configuration.getProperties())
+//                .build();
+//
+//        return configuration.buildSessionFactory(serviceRegistry);
+//    }
     static SessionFactory getSessionFactory() throws HibernateException {
         Configuration configuration = new Configuration();
         configuration.setProperty("hibernate.connection.password",dataBasePassword);
 
         // Add all entity classes here
         configuration.addAnnotatedClass(Branch.class);
-        configuration.addAnnotatedClass(Menu.class);
+//        configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
 
         /// ///////////////////// shir may added this line
@@ -126,13 +144,13 @@ public class DatabaseManager {
         }
         return menuItemsController;
     }
-    MenusController getMenusController() {
-        if(menusController==null)
-        {
-            menusController=new MenusController(getSessionFactory());
-        }
-        return menusController;
-    }
+//    MenusController getMenusController() {
+//        if(menusController==null)
+//        {
+//            menusController=new MenusController(getSessionFactory());
+//        }
+//        return menusController;
+//    }
     BranchController getBranchController() {
         if(branchController==null)
         {

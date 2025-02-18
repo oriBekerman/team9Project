@@ -3,40 +3,23 @@ package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 import com.sun.glass.ui.Clipboard;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
+import org.hibernate.query.Query;
 import java.util.ArrayList;
 import java.util.List;
-
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
 
 
 public abstract class BaseRepository<T> {
-    protected final List<T> storage = new ArrayList<>(); // Simulated in-memory storage
     protected final SessionFactory sessionFactory;
 
     public BaseRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
-    public void saveToStorage(T entity) {
-        storage.add(entity);
-    }
 
-    public void deleteFromStorage(T entity) {
-        storage.remove(entity);
-    }
 
     public T findById(int id) {
-        // First, search in in-memory storage
-        T result = storage.stream()
-                .filter(entity -> getId(entity) == id)
-                .findFirst()
-                .orElse(null);
-
-        if (result != null) {
-            return result;
-        }
-        // If not found, search in the database
+        //search in the database
         Session session = null;
         try {
             session = openSession();
@@ -50,14 +33,11 @@ public abstract class BaseRepository<T> {
     }
 
     public List<T> findAll() {
-        // Merge in-memory and database storage
-        Session session = null;
+        Session session;
+        session = null;
         try {
             session =openSession();
-            List<T> databaseResults = session.createQuery("from " + getEntityClass().getName(), getEntityClass()).list();
-            List<T> combinedResults = new ArrayList<>(databaseResults);
-            combinedResults.addAll(storage);
-            return combinedResults;
+            return session.createQuery("FROM " + getEntityClass().getSimpleName(), getEntityClass()).list();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to find all entities", e);

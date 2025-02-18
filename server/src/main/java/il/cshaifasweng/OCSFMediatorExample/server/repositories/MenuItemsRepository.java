@@ -1,9 +1,9 @@
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.DishType;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
-import org.hibernate.Session;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
     /// //////
 
     // get MenuItems form database returns menuItemsList
-    public List<MenuItem> getMenuItems()
+    public List<MenuItem> getAllItems()
     {
         List<MenuItem> data=new ArrayList<>();
         try {
@@ -56,9 +56,18 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
                 exception.printStackTrace();
             }
             finally {
-                session.close();
+            assert session != null;
+            session.close();
             }
             return data;
+    }
+
+    public List<MenuItem>getBaseItems()
+    {
+        session.clear();
+        Query<MenuItem> query = session.createQuery("from MenuItem WHERE dishType= :type", MenuItem.class);
+        query.setParameter("type", DishType.BASE);
+        return query.getResultList();
     }
     public MenuItem updatePrice(int id,double price)
     {
