@@ -38,7 +38,7 @@ public class PrimaryController {
 	private Label HomePageLabel;
 
 	@FXML
-	private Button MenutBtn;
+	private Button MenuBtn;
 
 	@FXML
 	private Label WelcomeLabel;
@@ -93,7 +93,7 @@ public class PrimaryController {
 		assert HomePageLabel != null : "fx:id=\"HomePageLabel\" was not injected: check your FXML file 'primary.fxml'.";
 		assert MOMSImage != null : "fx:id=\"MOMSImage\" was not injected: check your FXML file 'primary.fxml'.";
 		assert MenuBarPane != null : "fx:id=\"MenuBarPane\" was not injected: check your FXML file 'primary.fxml'.";
-		assert MenutBtn != null : "fx:id=\"MenutBtn\" was not injected: check your FXML file 'primary.fxml'.";
+		assert MenuBtn != null : "fx:id=\"MenutBtn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert WelcomeLabel != null : "fx:id=\"WelcomeLabel\" was not injected: check your FXML file 'primary.fxml'.";
 		EventBus.getDefault().register(this);
 		SimpleClient.getClient().getBranchList(); // Request branch list from server

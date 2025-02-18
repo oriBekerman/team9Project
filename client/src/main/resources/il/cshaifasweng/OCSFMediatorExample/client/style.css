@@ -4,10 +4,10 @@
 }
 
 /* ======== Main Titles ======== */
-.main-title {
+.main-title, .menuPageTitle {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-fill: #4e453c; /* Dark brown */
+    -fx-text-fill: #4e453c;
     -fx-alignment: center;
     -fx-padding: 20px 0;
     -fx-font-family: "Serif";
@@ -17,9 +17,114 @@
 .subtitle {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #6c5339; /* Muted brown */
+    -fx-text-fill: #6c5339;
     -fx-padding: 10px 0;
     -fx-font-family: "Serif";
+}
+
+/* ======== TableView Styling ======== */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #8a6f48;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #cfb08a;
+}
+
+.table-view .column-header {
+    -fx-font-size: 16px;
+    -fx-text-fill: #4e453c;
+    -fx-padding: 8px;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f6d7b0;
+}
+
+.table-row-cell:even {
+    -fx-background-color: #fbe9d0;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #8a6f48;
+    -fx-text-fill: white;
+}
+
+/* ======== Buttons ======== */
+.button {
+    -fx-font-size: 16px;
+    -fx-padding: 12px 18px;
+    -fx-border-radius: 6px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.return-btn {
+    -fx-background-color: #8a6f48;
+    -fx-text-fill: white;
+}
+
+.return-btn:hover {
+    -fx-background-color: #506037;
+}
+
+.next-btn {
+    -fx-background-color: #8d702b;
+    -fx-text-fill: white;
+    -fx-shape: "M 10 0 L 40 0 Q 50 0 50 10 L 50 40 Q 50 50 40 50 L 10 50 Q 0 50 0 40 L 0 10 Q 0 0 10 0 Z";
+}
+
+.next-btn:hover {
+    -fx-background-color: #a56734;
+
+}
+
+.cancel-btn {
+    -fx-background-color: #cfb08a;
+    -fx-text-fill: #4e453c;
+    -fx-shape: "M 10 0 L 40 0 Q 50 0 50 10 L 50 40 Q 50 50 40 50 L 10 50 Q 0 50 0 40 L 0 10 Q 0 0 10 0 Z";
+}
+
+.cancel-btn:hover {
+    -fx-background-color: #b29672;
+}
+
+/* ======== Footer ======== */
+.footer {
+    -fx-background-color: #f4d1a6;
+    -fx-text-fill: #4e453c;
+    -fx-padding: 15px;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+/* ======== Form Inputs ======== */
+.input {
+    -fx-padding: 10px;
+    -fx-border-color: #8a6f48;
+    -fx-border-radius: 4px;
+    -fx-font-size: 16px;
+    -fx-background-color: #fbe9d0;
+    -fx-text-fill: #4e453c;
+}
+
+.input:focused {
+    -fx-border-color: #a56734;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+/* Menu Button */
+.menu-btn {
+    -fx-background-color: #8a6f48;
+    -fx-text-fill: white;
+}
+
+.menu-btn:hover {
+    -fx-background-color: #6c5339;
 }
 
 /* ======== Toolbar Styles ======== */
@@ -144,14 +249,6 @@
     -fx-font-weight: bold;
 }
 
-/* ======== Buttons ======== */
-.button {
-    -fx-font-size: 16px;
-    -fx-padding: 12px 18px;
-    -fx-border-radius: 6px;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-}
 
 /* Employee Login Button */
 .employee-login {
@@ -164,15 +261,6 @@
     -fx-background-color: #ba6b3a;
 }
 
-/* Menu Button */
-.menu-btn {
-    -fx-background-color: #8a6f48;
-    -fx-text-fill: white;
-}
-
-.menu-btn:hover {
-    -fx-background-color: #6c5339;
-}
 
 /* Order Now Button */
 .order-btn {
@@ -192,28 +280,4 @@
 
 .reservation-btn:hover {
     -fx-background-color: #cfb08a;
-}
-
-/* ======== Footer ======== */
-.footer {
-    -fx-background-color: #f4d1a6; /* Muted peach */
-    -fx-text-fill: #4e453c;
-    -fx-padding: 15px;
-    -fx-font-size: 14px;
-    -fx-alignment: center;
-}
-
-/* ======== Form Inputs ======== */
-.input {
-    -fx-padding: 10px;
-    -fx-border-color: #8a6f48;
-    -fx-border-radius: 4px;
-    -fx-font-size: 16px;
-    -fx-background-color: #fbe9d0;
-    -fx-text-fill: #4e453c;
-}
-
-.input:focused {
-    -fx-border-color: #d27d4a;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }

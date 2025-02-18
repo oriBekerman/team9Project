@@ -22,6 +22,7 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*
 
 public class SecondaryController {
 
+    public Label menuLabel;
     @FXML
     private ResourceBundle resources;
 
@@ -65,7 +66,6 @@ public class SecondaryController {
             // Clear the TableView before updating
             menuTableView.getItems().clear();
             // Add new menu items to the TableView
-            menu.printMenu();
             menuTableView.getItems().setAll(menu.getMenuItems());
         });
     }
