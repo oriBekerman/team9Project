@@ -10,7 +10,7 @@
 <AnchorPane prefHeight="782.0" prefWidth="1295.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BranchPageController">
     <Label fx:id="branchTitle" layoutX="551.0" layoutY="35.0" prefHeight="63.0" prefWidth="194.0" styleClass="main-title" text="Haifa Branch">
         <font>
-            <Font size="15.0" />
+            <Font size="15.0"/>
         </font>
     </Label>
     <Button fx:id="backToHPBtn" layoutX="1060.0" layoutY="20.0" mnemonicParsing="false" onAction="#navToHP" prefHeight="49.0" prefWidth="194.0" styleClass="menu-btn" text="Back To Home Page" />
@@ -22,17 +22,17 @@
     <VBox prefHeight="167.0" prefWidth="227.0" spacing="10.0">
         <Button fx:id="reservationBtn" mnemonicParsing="false" onAction="#navToReservationPage" prefHeight="49.0" prefWidth="192.0" styleClass="menu-btn" text="make a reservation">
             <font>
-                <Font size="10.0" />
+                <Font size="10.0"/>
             </font>
         </Button>
         <Button fx:id="deliveryBtn" mnemonicParsing="false" onAction="#navTodeliveryPage" prefHeight="50.0" prefWidth="190.0" styleClass="menu-btn" text="make a delivery">
             <font>
-                <Font size="10.0" />
+                <Font size="10.0"/>
             </font>
         </Button>
         <Button fx:id="complaintBtn" mnemonicParsing="false" onAction="#navToComplaintPage" prefHeight="50.0" prefWidth="194.0" styleClass="menu-btn" text="make a complaint">
             <font>
-                <Font size="10.0" />
+                <Font size="10.0"/>
             </font>
         </Button>
     </VBox>
