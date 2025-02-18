@@ -1,12 +1,10 @@
 package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.DishType;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.MenuItemsRepository;
 import org.hibernate.SessionFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MenuItemsController {

@@ -92,7 +92,7 @@ public class Branch implements Serializable  {
     public List<MenuItem> getBranchSpecial(){
         List<MenuItem> special = new ArrayList<MenuItem>();
         for(MenuItem menuItem : menuItems){
-            if (menuItem.getDishType().equals(DishType.SPECIAL)){
+            if (menuItem.getDishType().equals(il.cshaifasweng.OCSFMediatorExample.entities.DishType.SPECIAL)){
                 special.add(menuItem);
             }
         }

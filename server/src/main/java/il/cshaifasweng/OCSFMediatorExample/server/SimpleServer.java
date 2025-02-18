@@ -46,7 +46,7 @@ public class SimpleServer extends AbstractServer {
         String msgString = msg.toString();
         System.out.println("server");
         Request request=(Request)msg;
-        System.out.println("Received request from client: ");
+        System.out.println("received request from client: ");
         if (msgString.startsWith("add client")) {
             SubscribedClient connection = new SubscribedClient(client);
             SubscribersList.add(connection);

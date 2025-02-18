@@ -10,4 +10,4 @@ public class BranchListSentEvent {
     BranchListSentEvent(List<Branch> branches) {
         this.branches = branches;
     }
-}
+} //change

@@ -223,4 +223,4 @@ public class PrimaryController {
 			lock.notifyAll(); // Notify waiting threads that branches are initialized
 		}
 	}
-}
+} //change

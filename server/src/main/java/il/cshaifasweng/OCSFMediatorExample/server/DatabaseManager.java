@@ -74,19 +74,19 @@ public class DatabaseManager {
             List<Branch> branches = List.of(defaultBranch,haifaBranch);
 
             MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce",
-                    "Low calorie", null, DishType.BASE);
+                    "Low calorie", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
 
             MenuItem item2 = new MenuItem("Pizza ", 55.00, " Mushrooms, onions, tomatoes",
-                    " Includes vegan option ", null,DishType.BASE);
+                    " Includes vegan option ", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
 
             MenuItem item3 = new MenuItem("Pasta", 60.00, "Mushroom cream sauce",
-                    "Available gluten-free", null,DishType.BASE);
+                    "Available gluten-free", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
 
             MenuItem item4 = new MenuItem("Hamburger", 80.00, "Meatball, pickle, tomato, lettuce",
-                    "Choice of meat or plant-based", null,DishType.BASE);
+                    "Choice of meat or plant-based", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
 
             MenuItem item5 = new MenuItem("Edamame", 30.00, "Edamame",
-                    "Served with sea salt", null,DishType.BASE);
+                    "Served with sea salt", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
             List<MenuItem> menuItems=List.of(item1,item2,item3,item4,item5);
             //set the base menu items for every branch
           for (Branch branch : branches) {

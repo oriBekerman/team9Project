@@ -14,6 +14,6 @@ public class App
     {
         server = new SimpleServer(3000);
         server.listen();
-        System.out.println("Server listening on port 3000");
+        System.out.println("Server is listening on port 3000");
     }
 }

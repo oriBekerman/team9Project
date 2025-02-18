@@ -19,6 +19,7 @@ public class BranchRepository extends BaseRepository<Branch> {
     protected Class<Branch> getEntityClass() {
         return Branch.class;
     }
+    //change
 
 
 

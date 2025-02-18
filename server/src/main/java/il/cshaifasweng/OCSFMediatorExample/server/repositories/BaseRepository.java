@@ -53,7 +53,7 @@ public abstract class BaseRepository<T> {
             // Fetch the entity to ensure it exists before attempting to delete
             T entity = session.get(getEntityClass(), id);
             if (entity == null) {
-                System.out.println("Entity with ID " + id + " not found. Skipping deletion.");
+                System.out.println("Entity with ID " + id + " not found. skipping deletion.");
                 session.getTransaction().rollback(); // Rollback to prevent unnecessary commit
                 return;
             }

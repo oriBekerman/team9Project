@@ -110,7 +110,7 @@ public class MenuItem implements Serializable {
     public void setBranches(List<Branch> branches) { this.branches = branches; }
 
     public void printMenuItem(){
-        System.out.println("name:"+this.name+" price:"+this.price+
+        System.out.println("Name:"+this.name+" price:"+this.price+
                 " ingredients:"+this.ingredients+" preference:"+this.preference);
 
     }

@@ -97,9 +97,9 @@ public class Menu implements Serializable {
     {
         if(menuItems==null)
             return true;
-        boolean I= menuItems.isEmpty();
-        System.out.println(I);
-        return I;
+        boolean i= menuItems.isEmpty();
+        System.out.println(i);
+        return i;
     }
 
     public List<MenuItem> getMenuItems() {

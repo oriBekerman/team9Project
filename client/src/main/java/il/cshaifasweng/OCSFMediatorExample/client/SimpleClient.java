@@ -93,7 +93,7 @@ public class SimpleClient extends AbstractClient {
 	}
 
 	public void displayNetworkMenu() throws IOException {
-		Request<Object> request=new Request<>(GET_NETWORK_MENU);
+		Request<Object> request=new Request<>(GET_BASE_MENU);
 		client.sendToServer(request);
 	}
 	public void displayBranchMenu(String branchName) throws IOException {
