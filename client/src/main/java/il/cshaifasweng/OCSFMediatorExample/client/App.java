@@ -1,6 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.WarningEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -11,8 +11,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Scanner;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

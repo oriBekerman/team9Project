@@ -1,6 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.MenuItemsRepository;
 import org.hibernate.SessionFactory;

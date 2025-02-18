@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchListSentEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

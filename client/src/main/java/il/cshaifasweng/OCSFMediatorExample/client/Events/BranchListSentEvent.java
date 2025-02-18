@@ -1,4 +1,4 @@
-package il.cshaifasweng.OCSFMediatorExample.client;
+package il.cshaifasweng.OCSFMediatorExample.client.Events;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 
@@ -6,8 +6,8 @@ import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import java.util.List;
 
 public class BranchListSentEvent {
-    List<Branch> branches;
-    BranchListSentEvent(List<Branch> branches) {
+    public List<Branch> branches;
+    public BranchListSentEvent(List<Branch> branches) {
         this.branches = branches;
     }
 } //change

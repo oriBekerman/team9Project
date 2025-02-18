@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Events.MenuEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.updateDishEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -11,13 +13,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
 
