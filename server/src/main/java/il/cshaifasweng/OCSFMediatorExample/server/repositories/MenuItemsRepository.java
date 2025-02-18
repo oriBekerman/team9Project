@@ -64,10 +64,29 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
 
     public List<MenuItem>getBaseItems()
     {
-        session.clear();
-        Query<MenuItem> query = session.createQuery("from MenuItem WHERE dishType= :type", MenuItem.class);
-        query.setParameter("type", DishType.BASE);
-        return query.getResultList();
+        List<MenuItem> items;
+        try {
+            session =openSession();
+            session.beginTransaction();
+            if(session==null)
+            {
+                System.out.println("session is null");
+            }
+            session.clear();
+            System.out.println("menu base rep 1");
+            Query<MenuItem> query = session.createQuery("from MenuItem WHERE dishType= :type", MenuItem.class);
+            System.out.println("menu base rep 2");
+            query.setParameter("type", DishType.BASE);
+            System.out.println("menu base rep 3");
+            items = query.getResultList();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            assert session != null;
+            session.close();
+        }
+        return items;
     }
     public MenuItem updatePrice(int id,double price)
     {

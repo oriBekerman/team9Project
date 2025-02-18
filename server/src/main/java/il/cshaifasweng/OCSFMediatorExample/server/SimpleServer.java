@@ -59,16 +59,28 @@ public class SimpleServer extends AbstractServer {
 
         }
         //receives display menu msg from client and sends back menu
-//        else if (request.getRequestType().equals(GET_NETWORK_MENU))
-//        {
-//            menu= menusController.getBaseMenu();
-//            Response <Menu> response= new Response<>(RETURN_MENU, menu, SUCCESS);
-//            try {
-//                client.sendToClient(response);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        else if (request.getRequestType().equals(GET_BASE_MENU))
+        {
+            System.out.println("menu req received");
+            Response <Menu> response;
+           Menu menu=new Menu();
+           List<MenuItem>baseItems=menuItemsController.getBaseItems();
+           menu.setMenuItems(baseItems);
+           menu.printMenu();
+           if(baseItems!=null)
+           {
+               response= new Response<>(RETURN_MENU, menu, SUCCESS);
+           }
+           else
+           {
+               response= new Response<>(RETURN_MENU,menu, ERROR);
+           }
+            try {
+                client.sendToClient(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 //        else if (request.getRequestType().equals(GET_BRANCH_MENU))
 //        {
 //            Response <Menu> response;

@@ -32,14 +32,16 @@ public class MenuItemsController {
     public void PopulateMenuItems(List<MenuItem>menuItems) {
         menuItemsRepository.populate(menuItems);
     }
-//    //gets  items from MenuItems table and returns menu
-//    public Menu displayBaseMenu() //gets menu from menuitem repository
-//    {
-//        System.out.println("in MenuController displayMenu");
-//        Menu menu= new Menu(menuItemsRepository.getMenuItems());
-//        menu.printMenu();
-//        return menu;
-//    }
+   //get base menu items
+    public List<MenuItem> getBaseItems() {
+        System.out.println("menu base controller ");
+        List<MenuItem> menuItems= menuItemsRepository.getBaseItems();
+        for(MenuItem menuItem : menuItems)
+        {
+            System.out.println(menuItem.getName()+" ");
+        }
+        return menuItems;
+    }
     public MenuItem updatePrice(Request request)
     {
         System.out.println("in MenuController updatePrice1");

@@ -45,6 +45,10 @@ public class Menu implements Serializable {
     public int getMenuID() {
         return menuID;
     }
+    public void setMenuItems(List<MenuItem> menuItems)
+    {
+        this.menuItems = menuItems;
+    }
 
 //    public Branch getBranch() {
 //        return branch;

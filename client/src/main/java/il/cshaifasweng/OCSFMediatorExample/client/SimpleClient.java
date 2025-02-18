@@ -68,21 +68,6 @@ public class SimpleClient extends AbstractClient {
 				catch (ClassCastException e) {
 					e.printStackTrace();
 				}
-
-//				// Use TypeCheck to validate the data type and avoid class exception
-//				if (TypeCheck.isListOfType(response.getData(), Branch.class)) {
-//					try {
-//						List<Branch> branches = (List<Branch>) response.getData();
-//						System.out.println("getBranchList data converted to ArrayList");
-//						BranchesSentEvent branchSentEvent = new BranchesSentEvent(branches);
-//						EventBus.getDefault().post(branchSentEvent);
-//						System.out.println("branch sent event posted");
-//					} catch (ClassCastException e) {
-//						System.err.println("Error casting response data: " + e.getMessage());
-//					}
-//				} else {
-//					System.err.println("Error: Response data is not of type List<Branch>");
-//				}
 			}
 		}
 	}
@@ -97,6 +82,7 @@ public class SimpleClient extends AbstractClient {
 	public void displayNetworkMenu() throws IOException {
 		Request<Object> request=new Request<>(GET_BASE_MENU);
 		client.sendToServer(request);
+		System.out.println("menu base req sent");
 	}
 	public void displayBranchMenu(String branchName) throws IOException {
 		Request<String> request= new Request<>(GET_BRANCH_MENU);
