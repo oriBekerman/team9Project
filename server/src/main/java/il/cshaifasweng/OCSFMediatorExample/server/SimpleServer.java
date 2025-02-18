@@ -1,8 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.BranchController;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
-//import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenusController;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 
@@ -30,6 +30,7 @@ public class SimpleServer extends AbstractServer {
     private BranchController branchController=null;
     public static String dataBasePassword="Bekitnt26@";//change database password here
     public String password="";//used only when entering a new password through cmd
+    private LogInController logInController = null;
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {
         super(port);
@@ -44,7 +45,6 @@ public class SimpleServer extends AbstractServer {
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client){
         String msgString = msg.toString();
-        System.out.println("server");
         Request request=(Request)msg;
         System.out.println("received request from client: ");
         if (msgString.startsWith("add client")) {
@@ -81,25 +81,6 @@ public class SimpleServer extends AbstractServer {
                 e.printStackTrace();
             }
         }
-//        else if (request.getRequestType().equals(GET_BRANCH_MENU))
-//        {
-//            Response <Menu> response;
-//            System.out.println("in server display menu");
-//            menu= menusController.getBranchMenu((int)request.getData());
-//            if(menu==null)
-//            {
-//                 response= new Response<>(RETURN_MENU, null, ERROR);
-//            }
-//            else
-//            {
-//                 response= new Response<>(RETURN_MENU, menu, SUCCESS);
-//            }
-//            try {
-//                client.sendToClient(response);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
         //receives edit item msg from client and returns the updated item
         else if(request.getRequestType().equals(UPDATE_PRICE))
         {
@@ -122,8 +103,40 @@ public class SimpleServer extends AbstractServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            
+
         }
+
+        else if (request.getRequestType().equals(CHECK_USER)) {
+            try {
+                String data = (String) request.getData();
+                String[] credentials = data.split(" ");
+                String userName = credentials[0];
+                String password = credentials[1];
+
+                System.out.println("Checking login for: " + userName);
+
+                String loginResult = logInController.verifyUser(userName, password);
+                // Debug prints after verifyUser()
+                System.out.println("Login result from controller: " + loginResult);
+
+                Response<String> response;
+                if (loginResult.equals("Login successful")) {
+                    EmployeeType employeeType = logInController.getEmployeeTypeByUsername(userName);
+                    response = new Response<>(CORRECTNESS_USER, userName + ":" + employeeType , SUCCESS);
+                } else {
+                    response = new Response<>(CORRECTNESS_USER, loginResult, ERROR);
+                }
+
+                System.out.println("Preparing to send response with message: " + response.getMessage());
+                client.sendToClient(response);
+                System.out.println("Response sent successfully.");
+
+            } catch (Exception e) {
+                System.err.println("Exception in CHECK_USER handling: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
     }
     public void sendToAllClients(String message) {
         try {
@@ -139,7 +152,6 @@ public class SimpleServer extends AbstractServer {
         this.menuItemsController =databaseManager.getMenuItemsController();
 //        this.menusController=databaseManager.getMenusController();
         this.branchController=databaseManager.getBranchController();
-
+        logInController = databaseManager.getLogInController();
     }
-
 }

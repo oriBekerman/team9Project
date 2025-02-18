@@ -90,6 +90,16 @@ public class ReservationController {
     }
 
 
+   // need to modify it according to the as needed
+    private void updateUIBasedOnUserRole() {
+        String role = SessionManager.getInstance().getAuthorization();
+        if (!"Admin".equals(role)) {
+            continueBtn.setDisable(true);  // Example: Disable the continue button if not an admin
+        }
+    }
+
+
+
     @FXML
     void initialize() {
         assert MapPane != null : "fx:id=\"MapPane\" was not injected: check your FXML file 'reservation.fxml'.";
@@ -97,7 +107,7 @@ public class ReservationController {
         assert branchesList != null : "fx:id=\"branchesList\" was not injected: check your FXML file 'reservation.fxml'.";
         assert continueBtn != null : "fx:id=\"continueBtn\" was not injected: check your FXML file 'reservation.fxml'.";
         assert hoursList != null : "fx:id=\"hoursList\" was not injected: check your FXML file 'reservation.fxml'.";
-
+        updateUIBasedOnUserRole();
         setHoursList();
         setBranchesList();
     }

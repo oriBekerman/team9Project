@@ -1,7 +1,9 @@
 il\cshaifasweng\OCSFMediatorExample\server\App.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ConnectionToClient.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\SubscribedClient.class
+il\cshaifasweng\OCSFMediatorExample\server\controllers\LogInController.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableOriginatorServer.class
+il\cshaifasweng\OCSFMediatorExample\server\repositories\EmployeeRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractConnectionFactory.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableServer.class

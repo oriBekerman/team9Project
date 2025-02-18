@@ -2,6 +2,8 @@ package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -18,9 +20,8 @@ import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePa
 public class DatabaseManager {
     private static SessionFactory sessionFactory;
     private MenuItemsController menuItemsController=null;
-//    private MenusController menusController=null;
+    private LogInController logInController = null;
     private BranchController branchController=null;
-//    private boolean initializedFlag=false;
 
     public DatabaseManager(String password) {
         initialize(password);//change password here!!!!
@@ -62,6 +63,7 @@ public class DatabaseManager {
         this.menuItemsController = new MenuItemsController(sessionFactory);
 //        this.menusController = new MenusController(sessionFactory);
         this.branchController = new BranchController(sessionFactory);
+        this.logInController = new LogInController(sessionFactory);
     }
 
     public void checkAndPopulateTables()
@@ -72,6 +74,9 @@ public class DatabaseManager {
             Branch defaultBranch = new Branch("Default Branch", "Default Location", "9:00","19:00");
             Branch haifaBranch=new Branch("Haifa", "Haifa port", "9:00","19:00");
             List<Branch> branches = List.of(defaultBranch,haifaBranch);
+        menuItemsController.checkAndPopulateMenuItems();
+        logInController.checkAndPopulateUsers();
+    }
 
             MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce",
                     "Low calorie", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
@@ -100,24 +105,6 @@ public class DatabaseManager {
             branchController.populateBranches(branches);
         }
     }
-
-//    private SessionFactory getSessionFactory(String password) throws HibernateException {
-//        Configuration configuration = new Configuration();
-//        configuration.setProperty("hibernate.connection.password",password);
-//
-//        // Add annotated classes
-//        configuration.addAnnotatedClass(Branch.class);
-//        configuration.addAnnotatedClass(MenuItem.class);
-//
-//        /// ///////////////////// shir may added this line
-////        configuration.addAnnotatedClass(Employee.class);
-//
-//        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-//                .applySettings(configuration.getProperties())
-//                .build();
-//
-//        return configuration.buildSessionFactory(serviceRegistry);
-//    }
     static SessionFactory getSessionFactory() throws HibernateException {
         Configuration configuration = new Configuration();
         configuration.setProperty("hibernate.connection.password",dataBasePassword);
@@ -126,9 +113,7 @@ public class DatabaseManager {
         configuration.addAnnotatedClass(Branch.class);
 //        configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
-
-        /// ///////////////////// shir may added this line
-//        configuration.addAnnotatedClass(Employee.class);
+        configuration.addAnnotatedClass(Employee.class);
 
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
@@ -144,13 +129,7 @@ public class DatabaseManager {
         }
         return menuItemsController;
     }
-//    MenusController getMenusController() {
-//        if(menusController==null)
-//        {
-//            menusController=new MenusController(getSessionFactory());
-//        }
-//        return menusController;
-//    }
+
     BranchController getBranchController() {
         if(branchController==null)
         {
@@ -158,5 +137,13 @@ public class DatabaseManager {
         }
         return branchController;
     }
+
+    LogInController getLogInController() {
+        if (logInController == null) {
+            logInController = new LogInController(getSessionFactory());
+        }
+        return logInController;
+    }
+
 
 }

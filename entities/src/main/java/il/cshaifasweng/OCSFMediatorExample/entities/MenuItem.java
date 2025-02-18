@@ -25,7 +25,6 @@ public class MenuItem implements Serializable {
     @Column
     private String preference;
 
-
     @Lob
     private byte[] picture;
 

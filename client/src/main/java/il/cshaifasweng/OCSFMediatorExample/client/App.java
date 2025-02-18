@@ -10,9 +10,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.Scanner;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
 
 /**
  * JavaFX App
@@ -89,7 +90,7 @@ public class App extends Application {
         appStage.setScene(scene);
         appStage.show();
     }
-    public static void setContent1(Parent parent) throws IOException {
+    public static void setContent(Parent parent) throws IOException {
         scene = new Scene(parent);
         appStage.setScene(scene);
         appStage.show();
@@ -156,7 +157,26 @@ public class App extends Application {
                     }
                 });
                 break;
-
+            case "Login":
+                Platform.runLater(() -> {
+                    setWindowTitle("Login");
+                    try {
+                        setContent("login");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "secondary":
+                Platform.runLater(() -> {
+                    setWindowTitle("Update Menu");
+                    try {
+                        setContent("secondary");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
         }
     }
 }

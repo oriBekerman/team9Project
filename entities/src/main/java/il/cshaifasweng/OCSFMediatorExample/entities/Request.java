@@ -1,6 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
-
 import java.io.Serializable;
 
 public class Request<T> implements Serializable{
@@ -41,8 +40,7 @@ public class Request<T> implements Serializable{
         GET_BRANCH_MENU,
         UPDATE_PRICE,
         //login related requests
-
-
+        CHECK_USER,
         //delivery related requests
 
         //branch related requests

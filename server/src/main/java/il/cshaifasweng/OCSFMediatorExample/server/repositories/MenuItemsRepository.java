@@ -18,7 +18,6 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
 
     ///  both of them to copy ( to my new EmployeeRepository )and change just name + type
 
-
     @Override
     public int getId(MenuItem entity) {
         return ((MenuItem)entity).getItemID();
