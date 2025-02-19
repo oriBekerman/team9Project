@@ -2,15 +2,27 @@ package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.*;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class BranchController {
-
     private static BranchRepository branchRepository;
+    public Response handleRequest(Request request)
+    {
 
+        return switch (request.getRequestType())
+        {
+            case GET_BRANCH_BY_NAME ->getByName(request.getData());
+            case GET_BRANCHES->getALLBranches();
+            case GET_BRANCH_MENU->getBranchMenu(request.getData());
+            default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
+        };
+    }
     // constructor to inject the repository
     public BranchController(SessionFactory sessionFactory) {
         if(sessionFactory == null)
@@ -31,13 +43,50 @@ public class BranchController {
     {
         branchRepository.populate(branches);
     }
-    public Branch getByName(String branchName)
+    public Response getByName(Object branchName)
     {
-        return branchRepository.getByName(branchName);
+        Response response=new Response<>(RETURN_BRANCH,null,null);
+        String branchNameString = (String) branchName;
+        Branch branch= branchRepository.getByName(branchNameString);
+        if(branch == null)
+        {
+            response.setStatus(ERROR);
+        }
+        else
+        {
+            response.setStatus(SUCCESS);
+            response.setData(branch);
+        }
+        return response;
     }
-    public static List<Branch>getALLBranches()
+    public Response getALLBranches()
     {
-        return branchRepository.findAll();
+        Response response=new Response<>(BRANCHES_SENT,null,ERROR);
+         List<Branch>breanches=branchRepository.findAll();
+         if(breanches==null)
+         {
+             response.setStatus(ERROR);
+         }
+         else {
+             response.setStatus(SUCCESS);
+             response.setData(breanches);
+         }
+         return response;
+
     }
-    //change
+    private Response getBranchMenu(Object data) {
+        Response response=new Response<>(  RETURN_BRANCH_MENU,null,ERROR);
+        Branch branch = (Branch) data;
+        Menu menu = new Menu();
+        List<MenuItem> items;
+        items=branchRepository.getBranchMenuItems(branch);
+        menu.setMenuItems(items);
+        if(!menu.getMenuItems().isEmpty())
+        {
+            response.setResponseType(BRANCHES_SENT);
+            response.setData(menu);
+            response.setStatus(SUCCESS);
+        }
+        return response;
+    }
 }

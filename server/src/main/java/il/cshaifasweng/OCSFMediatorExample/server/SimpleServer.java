@@ -15,9 +15,10 @@ import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import org.hibernate.Session;
 
 
-import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 
 
 public class SimpleServer extends AbstractServer {
@@ -46,6 +47,15 @@ public class SimpleServer extends AbstractServer {
     protected void handleMessageFromClient(Object msg, ConnectionToClient client){
         String msgString = msg.toString();
         Request request=(Request)msg;
+        if(request.getCategory()==BRANCH)
+        {
+            Response response=branchController.handleRequest(request);
+            try {
+                client.sendToClient(response);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         System.out.println("received request from client: ");
         if (msgString.startsWith("add client")) {
             SubscribedClient connection = new SubscribedClient(client);
@@ -82,29 +92,29 @@ public class SimpleServer extends AbstractServer {
             }
         }
         //receives edit item msg from client and returns the updated item
-        else if(request.getRequestType().equals(UPDATE_PRICE))
-        {
-            MenuItem item=menuItemsController.updatePrice(request);
-            Response<MenuItem> response= new Response<>(UPDATED_PRICE, item, SUCCESS);
+        else if(request.getRequestType().equals(UPDATE_PRICE)) {
+            MenuItem item = menuItemsController.updatePrice(request);
+            Response<MenuItem> response = new Response<>(UPDATED_PRICE, item, SUCCESS);
             sendToAllClients((response));//sent the item to all the clients
-
-        } else if (request.getRequestType().equals(GET_BRANCHES)) {
-            System.out.println("in server get branches");
-            List<Branch> branches=BranchController.getALLBranches();
-            Response<List<Branch>> response= new Response<>(BRANCHES_SENT, branches, SUCCESS);
-            System.out.println("in server get branches got response");
-            if(branches==null)
-            {
-                response.setStatus(ERROR);
-            }
-            try {
-                client.sendToClient(response);
-                System.out.println("in server get branches sent successfully");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
         }
+
+//        } else if (request.getRequestType().equals(GET_BRANCHES)) {
+//            System.out.println("in server get branches");
+//            List<Branch> branches=BranchController.getALLBranches();
+//            Response<List<Branch>> response= new Response<>(BRANCHES_SENT, branches, SUCCESS);
+//            System.out.println("in server get branches got response");
+//            if(branches==null)
+//            {
+//                response.setStatus(ERROR);
+//            }
+//            try {
+//                client.sendToClient(response);
+//                System.out.println("in server get branches sent successfully");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
 
         else if (request.getRequestType().equals(CHECK_USER)) {
             try {

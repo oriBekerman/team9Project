@@ -69,7 +69,10 @@ public class Response<T> implements Serializable {
         //menu related responses
         RETURN_MENU,
         UPDATED_PRICE,
+
+        RETURN_BRANCH_MENU,
         BRANCHES_SENT,
+        RETURN_BRANCH,
         //login
         CORRECTNESS_USER
     }

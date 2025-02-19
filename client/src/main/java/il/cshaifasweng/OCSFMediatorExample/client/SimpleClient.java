@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.util.List;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
-import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 
 
 public class SimpleClient extends AbstractClient {
@@ -100,13 +101,12 @@ public class SimpleClient extends AbstractClient {
 	}
 
 	public void displayNetworkMenu() throws IOException {
-		Request<Object> request=new Request<>(GET_BASE_MENU);
+		Request<Object> request=new Request<>(BASE_MENU,GET_BASE_MENU,null	);
 		client.sendToServer(request);
 		System.out.println("menu base req sent");
 	}
 	public void displayBranchMenu(String branchName) throws IOException {
-		Request<String> request= new Request<>(GET_BRANCH_MENU);
-		request.setData(branchName);
+		Request<String> request= new Request<>(BRANCH,GET_BRANCH_MENU,branchName);
 		client.sendToServer(request);
 	}
 
@@ -124,12 +124,12 @@ public class SimpleClient extends AbstractClient {
 	public void editMenu(String itemId,String price) throws IOException
 	{
 		String[] data={itemId,price};
-		Request<String[]> request= new Request<>(UPDATE_PRICE, data);
+		Request<String[]> request= new Request<>(BASE_MENU,UPDATE_PRICE,data);
 		client.sendToServer(request);
 	}
 
 	public void getBranchList(){
-		Request request=new Request(GET_BRANCHES);
+		Request request=new Request(BRANCH,GET_BRANCHES,null);
         try {
             client.sendToServer(request);
         } catch (IOException e) {

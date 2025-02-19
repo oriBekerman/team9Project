@@ -18,7 +18,7 @@ import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 
-import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 
 public class SecondaryController {
 

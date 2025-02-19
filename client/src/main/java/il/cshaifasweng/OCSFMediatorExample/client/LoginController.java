@@ -15,7 +15,8 @@ import org.greenrobot.eventbus.Subscribe;
 import javafx.scene.control.Label;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
-import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.CHECK_USER;
+import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 
 public class LoginController {
 
@@ -54,7 +55,7 @@ public class LoginController {
 
             System.out.println("Attempting to send login request: Username=" + username + ", Password=" + password);
 
-            Request<String> request = new Request<>(Request.RequestType.CHECK_USER, username + " " + password);
+            Request<String> request = new Request<>(LOGIN,CHECK_USER, username + " " + password);
             SimpleClient.getClient().sendToServer(request);
             System.out.println("Login request sent to server.");
 
