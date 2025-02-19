@@ -150,7 +150,6 @@ public class SimpleServer extends AbstractServer {
     private void getControllers()
     {
         this.menuItemsController =databaseManager.getMenuItemsController();
-//        this.menusController=databaseManager.getMenusController();
         this.branchController=databaseManager.getBranchController();
         logInController = databaseManager.getLogInController();
     }

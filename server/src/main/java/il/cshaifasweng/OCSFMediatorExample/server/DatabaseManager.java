@@ -10,8 +10,8 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePassword;
 
@@ -61,22 +61,26 @@ public class DatabaseManager {
     public void initControllers(SessionFactory sessionFactory)
     {
         this.menuItemsController = new MenuItemsController(sessionFactory);
-//        this.menusController = new MenusController(sessionFactory);
         this.branchController = new BranchController(sessionFactory);
         this.logInController = new LogInController(sessionFactory);
     }
 
-    public void checkAndPopulateTables()
-    {
+    //if  database tables are empty initialize them
+    public void checkAndPopulateTables() {
         //if there menuItem and branches are empty initialize them
-        if(menuItemsController.checkIfEmpty() && branchController.checkIfEmpty())
-        {
-            Branch defaultBranch = new Branch("Default Branch", "Default Location", "9:00","19:00");
-            Branch haifaBranch=new Branch("Haifa", "Haifa port", "9:00","19:00");
-            List<Branch> branches = List.of(defaultBranch,haifaBranch);
-        menuItemsController.checkAndPopulateMenuItems();
-        logInController.checkAndPopulateUsers();
-    }
+        if (menuItemsController.checkIfEmpty() && branchController.checkIfEmpty()) {
+
+            // Prepopulate with 5 employees, using enum for employeeType
+            Employee employee1 = new Employee(111111111, "Alice Manager", "1234 Maple St", "alice.manager@example.com", "alice.manager", "1234", EmployeeType.COMPANY_MANAGER, 1);
+            Employee employee2 = new Employee(222222222, "Bob Regular", "5678 Oak St", "bob.regular@example.com", "bob.regular", "1234", EmployeeType.RESTAURANT_SERVICE, 1);
+            Employee employee3 = new Employee(333333333, "Charlie Dietitian", "9101 Pine St", "charlie.dietitian@example.com", "charlie.dietitian", "1234", EmployeeType.DIETITIAN, 2);
+            Employee employee4 = new Employee(444444444, "Debbie Customer Service", "2345 Birch St", "debbie.cs@example.com", "debbie.cs", "1234", EmployeeType.CUSTOMER_SERVICE, 3);
+            Employee employee5 = new Employee(555555555, "Eva Admin", "6789 Cedar St", "eva.admin@example.com", "eva.admin", "1234", EmployeeType.CUSTOMER_SERVICE_MANAGER, 3);
+            List<Employee> employees = List.of(employee1, employee2, employee3, employee4, employee5);
+            logInController.checkAndPopulateUsers(employees);
+            Branch defaultBranch = new Branch("Default Branch", "Default Location", "9:00", "19:00");
+            Branch haifaBranch = new Branch("Haifa", "Haifa port", "9:00", "19:00");
+            List<Branch> branches = List.of(defaultBranch, haifaBranch);
 
             MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce",
                     "Low calorie", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
@@ -92,15 +96,15 @@ public class DatabaseManager {
 
             MenuItem item5 = new MenuItem("Edamame", 30.00, "Edamame",
                     "Served with sea salt", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
-            List<MenuItem> menuItems=List.of(item1,item2,item3,item4,item5);
+            List<MenuItem> menuItems = List.of(item1, item2, item3, item4, item5);
             //set the base menu items for every branch
-          for (Branch branch : branches) {
-              branch.setBranchMenuItems(menuItems);
-          }
-          //sett all branches to each base menu item
-          for (MenuItem menuItem : menuItems) {
-              menuItem.setBranches(branches);
-          }
+            for (Branch branch : branches) {
+                branch.setBranchMenuItems(menuItems);
+            }
+            //sett all branches to each base menu item
+            for (MenuItem menuItem : menuItems) {
+                menuItem.setBranches(branches);
+            }
             menuItemsController.PopulateMenuItems(menuItems);
             branchController.populateBranches(branches);
         }
@@ -111,7 +115,6 @@ public class DatabaseManager {
 
         // Add all entity classes here
         configuration.addAnnotatedClass(Branch.class);
-//        configuration.addAnnotatedClass(Menu.class);
         configuration.addAnnotatedClass(MenuItem.class);
         configuration.addAnnotatedClass(Employee.class);
 
@@ -144,6 +147,4 @@ public class DatabaseManager {
         }
         return logInController;
     }
-
-
 }

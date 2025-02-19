@@ -32,6 +32,7 @@ import org.greenrobot.eventbus.*;
 //
 public class PrimaryController {
 
+	public Button MenuBtn;
 	@FXML
 	private ResourceBundle resources;
 
@@ -53,11 +54,12 @@ public class PrimaryController {
 	@FXML
 	private Pane MenuBarPane;
 
-	@FXML private Button toggleButtonBranch;
+	@FXML
+	private Button toggleButtonBranch;
 	private Popup popup = new Popup();
 
-	public List<Branch> branchList =null;
-	public boolean branchListInit=false;
+	public List<Branch> branchList = null;
+	public boolean branchListInit = false;
 	private final Object lock = new Object();
 
 	@FXML
@@ -88,7 +90,7 @@ public class PrimaryController {
 
 	@FXML
 	void navToBranches(ActionEvent event) {
-		switchScreen("Branches");
+		switchScreen("Branch");
 	}
 
 
@@ -173,6 +175,7 @@ public class PrimaryController {
 		});
 	}
 
+	//get list of brunches pop up
 	private void GetBranchListPopup() {
 		synchronized (lock) {
 			if (!branchListInit) {
@@ -190,9 +193,7 @@ public class PrimaryController {
 		}
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("BranchList.fxml"));
-			System.out.println("in getClass");
 			Parent popupContent = loader.load();
-			System.out.println("after load");
 
 			// Get BranchListController instance and set branches
 			BranchListController controller = loader.getController();
@@ -200,10 +201,8 @@ public class PrimaryController {
 
 			popup.getContent().clear();
 			popup.getContent().add(popupContent);
-			System.out.println("after popupContent");
 			popup.setAutoHide(true);
-			System.out.println("after setAutoHide");
-			// ✅ Ensure popup shows correctly
+			// Ensure popup shows correctly
 			if (toggleButtonBranch.getScene() != null) {
 				popup.show(toggleButtonBranch.getScene().getWindow(),
 						toggleButtonBranch.localToScreen(0, 0).getX(),
@@ -228,48 +227,34 @@ public class PrimaryController {
 	public void onBranchSelectedEvent(BranchSelectedEvent event) {
 		System.out.println("Branch selected: " + event.getBranch().getName());
 		Branch branch = event.getBranch();
-		if (branch==null) {
+		if (branch == null) {
 			System.out.println("branch is null");
 		}
 		openBranchPage(branch);
 	}
 
+	//open selected branch page
 	private void openBranchPage(Branch branch) {
 		try {
-//			FXMLLoader loader = new FXMLLoader(getClass().getResource("BranchPage.fxml"));
-//			Parent branchPageRoot = loader.load();
-//
-//			// Get the controller and pass the branch
-//			BranchPageController controller = loader.getController();
-//			controller.setBranch(branch);
-//
-////			// Use App.setRoot() to switch the scene
-////			App.setRoot("BranchPage");
-//			while (!controller.branchIsSet)
-//			{
-//				System.out.println("Waiting for branch to load");
-//			}
-//			App.setContent1(branchPageRoot);
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("Branch.fxml"));
 			Parent branchPageRoot = loader.load();
 			// Get the controller and pass the branch
 			BranchPageController controller = loader.getController();
 			controller.setBranch(branch);
-			if (controller.branchIsSet)
-			{
+			if (controller.branchIsSet) {
 				System.out.println("branch is already set");
 			}
-			while(!controller.branchIsSet)
-			{
+			while (!controller.branchIsSet) {
 				System.out.println("Waiting for branch to be set");
 			}
-			App.setContent1(branchPageRoot);
+			App.setContent(branchPageRoot);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
 
+	//handle branch list sent
 	@Subscribe
 	public void onBranchListSentEvent(BranchListSentEvent event) {
 		synchronized (lock) {
@@ -279,3 +264,4 @@ public class PrimaryController {
 			lock.notifyAll(); // Notify waiting threads that branches are initialized
 		}
 	}
+}

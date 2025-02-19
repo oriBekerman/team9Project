@@ -19,27 +19,28 @@ public class SimpleClient extends AbstractClient {
 	private static boolean isSecondaryControllerInitialized = false;
 	public static String host="localhost";
 	public  static int port=3000;
-
 	private static ActiveUser activeUser = null;
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
 
 	}
-
+	public static SimpleClient getClient() {
+		if (client == null) {
+			client = new SimpleClient(host, port);
+		}
+		return client;
+	}
 	@Override
 	protected void handleMessageFromServer(Object msg) {
 		Response response=(Response)msg;
-
 		if (msg.getClass().equals(Warning.class)) {
 			String message = msg.toString();
 			System.out.println(message);
 			EventBus.getDefault().post(new WarningEvent((Warning) msg));
 		}
-
-		if (msg instanceof Response<?> response) {
-			// Safe cast
-            if (response.getResponseType().equals(RETURN_MENU)) {
+		// Safe cast
+		if (response.getResponseType().equals(RETURN_MENU)) {
 				System.out.println("Menu received, storing event...");
 				Menu menu = (Menu) response.getData();
 				menu.printMenu();
@@ -59,7 +60,7 @@ public class SimpleClient extends AbstractClient {
 				updateDishEvent updateEvent = new updateDishEvent(menuItem);
 				EventBus.getDefault().post(updateEvent);
 			}
-
+			//list of branches sent from server
 			else if (response.getResponseType().equals(BRANCHES_SENT)) {
 				try {
 					System.out.println("client got branches sent");
@@ -72,27 +73,6 @@ public class SimpleClient extends AbstractClient {
 					e.printStackTrace();
 				}
 			}
-//		if (msg.getClass().equals(Menu.class)) {
-		if (response.getResponseType().equals(RETURN_MENU)) {
-			System.out.println("Menu received, storing event...");
-			Menu menu = (Menu) response.getData();
-			menu.printMenu();
-			MenuEvent menuEvent = new MenuEvent(menu);
-			// Store the event if SecondaryController is not initialized
-			if (!isSecondaryControllerInitialized) {
-				pendingMenuEvent = menuEvent;
-			} else {
-				// Post immediately if SecondaryController is ready
-				EventBus.getDefault().post(menuEvent);
-			}
-		}
-		if (response.getResponseType().equals(UPDATED_PRICE)) {
-			MenuItem menuItem = (MenuItem) response.getData();
-			// Post immediately if SecondaryController is ready
-			updateDishEvent updateEvent = new updateDishEvent(menuItem);
-			EventBus.getDefault().post(updateEvent);
-		}
-
 		// Handle user authentication response
 		if (response.getResponseType().equals(CORRECTNESS_USER)) {
 			System.out.println("Handling CORRECTNESS_USER response with status: " + response.getStatus());
@@ -117,13 +97,6 @@ public class SimpleClient extends AbstractClient {
 				EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 			}
 		}
-	}
-
-	public static SimpleClient getClient() {
-		if (client == null) {
-			client = new SimpleClient(host, port);
-		}
-		return client;
 	}
 
 	public void displayNetworkMenu() throws IOException {

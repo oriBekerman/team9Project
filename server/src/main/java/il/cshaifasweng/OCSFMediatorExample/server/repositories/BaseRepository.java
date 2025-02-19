@@ -115,6 +115,7 @@ public abstract class BaseRepository<T> {
     public void populate(List<T> entities) {
         Session session = null;
         try {
+            System.out.println("In checkAndPopulateUsers base repository");
             session =openSession();
             session.beginTransaction();
             for(T entity : entities) {
