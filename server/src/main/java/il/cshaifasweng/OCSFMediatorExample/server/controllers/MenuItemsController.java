@@ -1,7 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
-import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.MenuItemsRepository;
 import org.hibernate.SessionFactory;
@@ -12,6 +11,8 @@ import java.util.List;
 public class MenuItemsController {
 
     private MenuItemsRepository menuItemsRepository;
+
+
 
     // constructor to inject the repository
     public MenuItemsController(SessionFactory sessionFactory) {
@@ -24,47 +25,24 @@ public class MenuItemsController {
     }
     //constructor
     public MenuItemsController() {};
-
-    //checks if menuItems table is empty in DB and if empty saves the next items to table
-    public void checkAndPopulateMenuItems() {
-        try {
-            // Check if the menu is already populated
-           if(menuItemsRepository.checkIfEmpty())
-           {
-               MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce",
-                       "Low calorie", null);
-
-               MenuItem item2 = new MenuItem("Pizza ", 55.00, " Mushrooms, onions, tomatoes",
-                       " Includes vegan option ", null);
-
-               MenuItem item3 = new MenuItem("Pasta", 60.00, "Mushroom cream sauce",
-                       "Available gluten-free", null);
-
-               MenuItem item4 = new MenuItem("Hamburger", 80.00, "Meatball, pickle, tomato, lettuce",
-                       "Choice of meat or plant-based", null);
-
-               MenuItem item5 = new MenuItem("Edamame", 30.00, "Edamame",
-                       "Served with sea salt", null);
-
-               List<MenuItem> initMenuItems=new ArrayList<MenuItem>();
-               initMenuItems.add(item1);
-               initMenuItems.add(item2);
-               initMenuItems.add(item3);
-               initMenuItems.add(item4);
-               initMenuItems.add(item5);
-               menuItemsRepository.populate(initMenuItems);
-           }
-        } catch (Exception exception) {
-            throw exception; // Rethrow to ensure rollback in the constructor
-        }
-    }
-    //gets  items from MenuItems table and returns menu
-    public Menu displayMenu() //gets menu from menuitem repository
+    public boolean checkIfEmpty()
     {
-        System.out.println("in MenuController displayMenu");
-        Menu menu= new Menu(menuItemsRepository.getMenuItems());
-        menu.printMenu();
-        return menu;
+        return (menuItemsRepository.checkIfEmpty());
+    }
+
+    //initialize menuItem table with base items
+    public void PopulateMenuItems(List<MenuItem>menuItems) {
+        menuItemsRepository.populate(menuItems);
+    }
+   //get base menu items
+    public List<MenuItem> getBaseItems() {
+        System.out.println("menu base controller ");
+        List<MenuItem> menuItems= menuItemsRepository.getBaseItems();
+        for(MenuItem menuItem : menuItems)
+        {
+            System.out.println(menuItem.getName()+" ");
+        }
+        return menuItems;
     }
     public MenuItem updatePrice(Request request)
     {
@@ -75,5 +53,10 @@ public class MenuItemsController {
         System.out.println("in MenuController updatePrice2");
         return menuItemsRepository.updatePrice(id, price);
     }
+    public List <MenuItem> getAllItems()
+    {
+        return menuItemsRepository.getAllItems();
+    }
+
 
 }

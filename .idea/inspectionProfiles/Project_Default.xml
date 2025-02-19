@@ -4,5 +4,20 @@
     <inspection_tool class="AutoCloseableResource" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="METHOD_MATCHER_CONFIG" value="java.util.Formatter,format,java.io.Writer,append,com.google.common.base.Preconditions,checkNotNull,org.hibernate.Session,close,java.io.PrintWriter,printf,java.io.PrintStream,printf,java.lang.foreign.Arena,ofAuto,java.lang.foreign.Arena,global,il.cshaifasweng.OCSFMediatorExample.server.repositories.BaseRepository,openSession" />
     </inspection_tool>
+    <inspection_tool class="CssUnknownProperty" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myCustomPropertiesEnabled" value="true" />
+      <option name="myIgnoreVendorSpecificProperties" value="false" />
+      <option name="myCustomPropertiesList">
+        <value>
+          <list size="5">
+            <item index="0" class="java.lang.String" itemvalue="-root" />
+            <item index="1" class="java.lang.String" itemvalue="-primary" />
+            <item index="2" class="java.lang.String" itemvalue="-secondary" />
+            <item index="3" class="java.lang.String" itemvalue="-delete" />
+            <item index="4" class="java.lang.String" itemvalue="-hover" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
   </profile>
 </component>

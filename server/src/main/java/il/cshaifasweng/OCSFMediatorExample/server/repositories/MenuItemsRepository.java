@@ -1,15 +1,12 @@
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.DishType;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
-import org.hibernate.Session;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
 
 public class MenuItemsRepository extends BaseRepository<MenuItem>
@@ -34,7 +31,7 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
     /// //////
 
     // get MenuItems form database returns menuItemsList
-    public List<MenuItem> getMenuItems()
+    public List<MenuItem> getAllItems()
     {
         List<MenuItem> data=new ArrayList<>();
         try {
@@ -58,9 +55,37 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
                 exception.printStackTrace();
             }
             finally {
-                session.close();
+            assert session != null;
+            session.close();
             }
             return data;
+    }
+
+    public List<MenuItem>getBaseItems()
+    {
+        List<MenuItem> items;
+        try {
+            session =openSession();
+            session.beginTransaction();
+            if(session==null)
+            {
+                System.out.println("session is null");
+            }
+            session.clear();
+            System.out.println("menu base rep 1");
+            Query<MenuItem> query = session.createQuery("from MenuItem WHERE dishType= :type", MenuItem.class);
+            System.out.println("menu base rep 2");
+            query.setParameter("type", DishType.BASE);
+            System.out.println("menu base rep 3");
+            items = query.getResultList();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            assert session != null;
+            session.close();
+        }
+        return items;
     }
     public MenuItem updatePrice(int id,double price)
     {
@@ -90,5 +115,5 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
         }
         return item;
     }
-
+    //change
 }

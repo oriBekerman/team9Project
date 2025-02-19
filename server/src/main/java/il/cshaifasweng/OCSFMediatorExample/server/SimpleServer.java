@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.BranchController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
@@ -12,7 +13,6 @@ import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SubscribedClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
@@ -24,27 +24,29 @@ public class SimpleServer extends AbstractServer {
     private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 
     public static Session session;
-    private Menu menu=new Menu();
+//    private Menu menu=new Menu();
     private MenuItemsController menuItemsController =null;
-
+//    private MenusController menusController=null;
+    private BranchController branchController=null;
+    public static String dataBasePassword="Bekitnt26@";//change database password here
+    public String password="";//used only when entering a new password through cmd
     private LogInController logInController = null;
-    public static String dataBasePassword="poolgirL1?";//change database password here
-    private String password="";
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {
         super(port);
+        //change to password and remove comments if we want to enter another database passwords
 //        Scanner scanner = new Scanner(System.in);
 //        System.out.println("Please enter the database password: ");
 //        this.password = scanner.nextLine();
 //        System.out.println("after password ");
-        DatabaseManager.initialize(dataBasePassword);//initialize DB and populate table if empty
+        DatabaseManager.initialize(dataBasePassword);// (if we want aa different password to be entered when running change databasePassword-> password
         getControllers();
     }
     @Override
-    protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
+    protected void handleMessageFromClient(Object msg, ConnectionToClient client){
         String msgString = msg.toString();
         Request request=(Request)msg;
-
+        System.out.println("received request from client: ");
         if (msgString.startsWith("add client")) {
             SubscribedClient connection = new SubscribedClient(client);
             SubscribersList.add(connection);
@@ -57,11 +59,22 @@ public class SimpleServer extends AbstractServer {
 
         }
         //receives display menu msg from client and sends back menu
-        else if (request.getRequestType().equals(DISPLAY_MENU))
+        else if (request.getRequestType().equals(GET_BASE_MENU))
         {
-            System.out.println("in server display menu");
-            menu= menuItemsController.displayMenu();
-            Response response=new Response(RETURN_MENU,menu,SUCCESS);
+            System.out.println("menu req received");
+            Response <Menu> response;
+           Menu menu=new Menu();
+           List<MenuItem>baseItems=menuItemsController.getBaseItems();
+           menu.setMenuItems(baseItems);
+           menu.printMenu();
+           if(baseItems!=null)
+           {
+               response= new Response<>(RETURN_MENU, menu, SUCCESS);
+           }
+           else
+           {
+               response= new Response<>(RETURN_MENU,menu, ERROR);
+           }
             try {
                 client.sendToClient(response);
             } catch (IOException e) {
@@ -72,8 +85,25 @@ public class SimpleServer extends AbstractServer {
         else if(request.getRequestType().equals(UPDATE_PRICE))
         {
             MenuItem item=menuItemsController.updatePrice(request);
-            Response response=new Response<>(UPDATED_PRICE,item,SUCCESS);
+            Response<MenuItem> response= new Response<>(UPDATED_PRICE, item, SUCCESS);
             sendToAllClients((response));//sent the item to all the clients
+
+        } else if (request.getRequestType().equals(GET_BRANCHES)) {
+            System.out.println("in server get branches");
+            List<Branch> branches=BranchController.getALLBranches();
+            Response<List<Branch>> response= new Response<>(BRANCHES_SENT, branches, SUCCESS);
+            System.out.println("in server get branches got response");
+            if(branches==null)
+            {
+                response.setStatus(ERROR);
+            }
+            try {
+                client.sendToClient(response);
+                System.out.println("in server get branches sent successfully");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
 
         else if (request.getRequestType().equals(CHECK_USER)) {
@@ -108,7 +138,6 @@ public class SimpleServer extends AbstractServer {
         }
 
     }
-
     public void sendToAllClients(String message) {
         try {
             for (SubscribedClient subscribedClient : SubscribersList) {
@@ -120,7 +149,8 @@ public class SimpleServer extends AbstractServer {
     }
     private void getControllers()
     {
-        menuItemsController =databaseManager.getMenuItemsController();
+        this.menuItemsController =databaseManager.getMenuItemsController();
+        this.branchController=databaseManager.getBranchController();
         logInController = databaseManager.getLogInController();
     }
 }

@@ -36,11 +36,15 @@ public class Request<T> implements Serializable{
 
     public enum RequestType{
        //menu related requests
-        DISPLAY_MENU,
+       GET_BASE_MENU,
+        GET_BRANCH_MENU,
         UPDATE_PRICE,
-
         //login related requests
-        CHECK_USER
+        CHECK_USER,
         //delivery related requests
+
+        //branch related requests
+        GET_BRANCH_BY_NAME,
+        GET_BRANCHES
     }
 }

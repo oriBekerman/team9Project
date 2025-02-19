@@ -22,7 +22,8 @@
         <!-- יצירת טבלה אוטומטית (רק בעת פיתוח, לא בשימוש בייצור) -->
         <property name="hibernate.hbm2ddl.auto">update</property>
 
-        <!-- מיפוי מחלקת MenuItem -->
+        <!-- מיפוי מחלקות  -->
+        <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Branch" />
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.MenuItem"/>
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Employee"/>
     </session-factory>

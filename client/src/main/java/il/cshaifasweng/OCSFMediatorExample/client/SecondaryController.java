@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Events.MenuEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.updateDishEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -11,18 +13,16 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
 
 public class SecondaryController {
 
+    public Label menuLabel;
     @FXML
     private ResourceBundle resources;
 
@@ -53,14 +53,15 @@ public class SecondaryController {
     @FXML
     private TableColumn<MenuItem, Double> priceColumn;
 
+//    @FXML
+//   private TableColumn<MenuItem,String> branchSpecialColumn;
+
     private Map<MenuItem, TextField> priceFieldMap = new HashMap<>();
 
     // Event handler for MenuEvent
     @Subscribe
     public void onMenuEvent(MenuEvent event) {
         Menu menu = event.getMenu();
-        System.out.println("Menu received in secondary controller");
-
         Platform.runLater(() -> {
             // Clear the TableView before updating
             menuTableView.getItems().clear();
@@ -73,7 +74,7 @@ public class SecondaryController {
     @Subscribe
     public void onUpdateEvent(updateDishEvent event) {
         try {
-            Request request=new Request<>(DISPLAY_MENU);
+            Request request=new Request<>(GET_BASE_MENU);
             SimpleClient.getClient().sendToServer(request);
             menuTableView.refresh();
         } catch (IOException e) {
@@ -156,16 +157,14 @@ public class SecondaryController {
 
         // Register to listen for MenuEvent
         EventBus.getDefault().register(this);
-
         // Notify the SimpleClient that the SecondaryController has been initialized
         SimpleClient.setSecondaryControllerInitialized();
-
         // Initialize TableColumns to bind MenuItem data
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         ingredientsColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIngredients()));
         preferenceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPreference()));
         priceColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getPrice()).asObject());
-
+//        branchSpecialColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDishType()));
         // Set cell factories for price fields
         priceColumn.setCellFactory(col -> new TableCell<MenuItem, Double>() {
             @Override
