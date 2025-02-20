@@ -1,4 +1,5 @@
 il\cshaifasweng\OCSFMediatorExample\entities\Person.class
+il\cshaifasweng\OCSFMediatorExample\entities\ReqCategory.class
 il\cshaifasweng\OCSFMediatorExample\entities\Warning.class
 il\cshaifasweng\OCSFMediatorExample\entities\Response$Status.class
 il\cshaifasweng\OCSFMediatorExample\entities\MenuItem.class
@@ -6,8 +7,9 @@ il\cshaifasweng\OCSFMediatorExample\entities\Branch.class
 il\cshaifasweng\OCSFMediatorExample\entities\EmployeeType.class
 il\cshaifasweng\OCSFMediatorExample\entities\DishType.class
 il\cshaifasweng\OCSFMediatorExample\entities\Employee.class
+il\cshaifasweng\OCSFMediatorExample\entities\RequestType.class
 il\cshaifasweng\OCSFMediatorExample\entities\Response$ResponseType.class
+il\cshaifasweng\OCSFMediatorExample\entities\Response$Recipient.class
 il\cshaifasweng\OCSFMediatorExample\entities\Menu.class
 il\cshaifasweng\OCSFMediatorExample\entities\Request.class
 il\cshaifasweng\OCSFMediatorExample\entities\Response.class
-il\cshaifasweng\OCSFMediatorExample\entities\Request$RequestType.class

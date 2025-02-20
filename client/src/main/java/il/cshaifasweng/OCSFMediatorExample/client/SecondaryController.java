@@ -18,7 +18,7 @@ import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 
-import static il.cshaifasweng.OCSFMediatorExample.entities.Request.RequestType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 
 public class SecondaryController {
 
@@ -74,8 +74,9 @@ public class SecondaryController {
     @Subscribe
     public void onUpdateEvent(updateDishEvent event) {
         try {
-            Request request=new Request<>(GET_BASE_MENU);
-            SimpleClient.getClient().sendToServer(request);
+//            Request request=new Request<>(GET_BASE_MENU);
+//            SimpleClient.getClient().sendToServer(request);
+            SimpleClient.getClient().displayNetworkMenu();
             menuTableView.refresh();
         } catch (IOException e) {
             throw new RuntimeException(e);

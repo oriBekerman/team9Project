@@ -2,11 +2,19 @@ package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
 import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.Request;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.EmployeeRepository;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.THIS_CLIENT;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.BRANCHES_SENT;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.CORRECTNESS_USER;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
 
 public class LogInController {
 
@@ -21,19 +29,43 @@ public class LogInController {
         System.out.println("In LoginController constructor");
         this.employeeRepository = new EmployeeRepository(sessionFactory);
     }
+    public Response handleRequest(Request request)
+    {
+        return switch (request.getRequestType())
+        {
+            case CHECK_USER->verifyUser(request);
+            default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
+        };
+    }
 
-    public String verifyUser(String username, String password) {
+    public Response verifyUser(Request request) {
+        Response response=new Response<>(CORRECTNESS_USER,null,ERROR,THIS_CLIENT);
+        String data = (String) request.getData();
+        String[] credentials = data.split(" ");
+        String username = credentials[0];
+        String password = credentials[1];
         Employee employee = this.employeeRepository.findByUsername(username);
+        String loginResult;
 
         if (employee == null) {
-            return "User not found";
+            loginResult= "User not found";
         }
 
         if (!employee.getPassword().equals(password)) {
-            return "Wrong password";
+            loginResult= "Wrong password";
         }
+        loginResult= "Login successful";
+        if (loginResult.equals("Login successful"))
+        {
+            EmployeeType employeeType = getEmployeeTypeByUsername(username);
+            response.setStatus(SUCCESS);
+            response.setMessage(username + ":" + employeeType);
+        } else {
+            response.setStatus(ERROR);
+            response.setData(loginResult);
 
-        return "Login successful";
+        }
+        return response;
     }
 
     public EmployeeType getEmployeeTypeByUsername(String username) {
