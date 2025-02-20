@@ -11,6 +11,7 @@ import java.util.List;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
 
 
 public class SimpleClient extends AbstractClient {
@@ -79,7 +80,7 @@ public class SimpleClient extends AbstractClient {
 		if (response.getResponseType().equals(CORRECTNESS_USER)) {
 			System.out.println("Handling CORRECTNESS_USER response with status: " + response.getStatus());
 
-			if (response.getStatus() == Response.Status.SUCCESS) {
+			if (response.getStatus() == SUCCESS) {
 				String responseData = response.getMessage();
 				System.out.println("Response Data: " + responseData);
 				String[] parts = responseData.split(":");

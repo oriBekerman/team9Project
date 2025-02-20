@@ -15,6 +15,7 @@ il\cshaifasweng\OCSFMediatorExample\server\controllers\MenuItemsController.class
 il\cshaifasweng\OCSFMediatorExample\server\DatabaseManager.class
 il\cshaifasweng\OCSFMediatorExample\server\SimpleServer$1.class
 il\cshaifasweng\OCSFMediatorExample\server\SimpleServer.class
+il\cshaifasweng\OCSFMediatorExample\server\controllers\LogInController$1.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\BranchController.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\OriginatorMessage.class
 il\cshaifasweng\OCSFMediatorExample\server\repositories\BranchRepository.class

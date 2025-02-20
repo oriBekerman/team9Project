@@ -5,20 +5,12 @@ import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
-
 import java.io.IOException;
 import java.util.*;
-
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SubscribedClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
-
 import org.hibernate.Session;
-
-
-import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
-import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
-import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 
 
@@ -49,6 +41,7 @@ public class SimpleServer extends AbstractServer {
         System.out.println("received request from client: ");
         String msgString = msg.toString();
         Request request=(Request)msg;
+        //connect client
         if (msgString.startsWith("add client")) {
             SubscribedClient connection = new SubscribedClient(client);
             SubscribersList.add(connection);
@@ -58,48 +51,21 @@ public class SimpleServer extends AbstractServer {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         }
-        else if (request.getRequestType().equals(CHECK_USER)) {
-            try {
-                String data = (String) request.getData();
-                String[] credentials = data.split(" ");
-                String userName = credentials[0];
-                String password = credentials[1];
-
-                System.out.println("Checking login for: " + userName);
-
-                String loginResult = logInController.verifyUser(userName, password);
-                // Debug prints after verifyUser()
-                System.out.println("Login result from controller: " + loginResult);
-
-                Response<String> response;
-                if (loginResult.equals("Login successful")) {
-                    EmployeeType employeeType = logInController.getEmployeeTypeByUsername(userName);
-                    response = new Response<>(CORRECTNESS_USER, userName + ":" + employeeType , SUCCESS,THIS_CLIENT);
-                } else {
-                    response = new Response<>(CORRECTNESS_USER, loginResult,ERROR,THIS_CLIENT);
-                }
-
-                System.out.println("Preparing to send response with message: " + response.getMessage());
-                client.sendToClient(response);
-                System.out.println("Response sent successfully.");
-
-            } catch (Exception e) {
-                System.err.println("Exception in CHECK_USER handling: " + e.getMessage());
-                e.printStackTrace();
-            }
-        }
+        //navigate client's request to the appropriate controller and sent the controller's response to the client
         Response response = switch (request.getCategory())
         {
             case BASE_MENU -> menuItemsController.handleRequest(request);
             case BRANCH -> branchController.handleRequest(request);
+            case LOGIN -> logInController.handleRequest(request);
             default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
         };
+        //check if the response should be sent to all clients or just one
         if (response.getRecipient()==ALL_CLIENTS) {
             sendToAllClients(response);
         }
-        if (response.getRecipient()==THIS_CLIENT) {
+        if (response.getRecipient()==THIS_CLIENT)
+        {
             try {
                 client.sendToClient(response);
             } catch (Exception e)
@@ -107,78 +73,7 @@ public class SimpleServer extends AbstractServer {
                 throw new RuntimeException(e);
             }
         }
-//        if(request.getCategory()==BRANCH)
-//        {
-//            Response response=branchController.handleRequest(request);
-//            try {
-//                client.sendToClient(response);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//        if(request.getCategory()==BASE_MENU)
-//        {
-//            System.out.println("server got menu request");
-//            Response response=menuItemsController.handleRequest(request);
-//            try {
-//                if(response.getRecipient()==ALL_CLIENTS)
-//                {
-//                    sendToAllClients(response);
-//                    System.out.println("server SENT TO all clients");
-//                }
-//                if (response.getRecipient()==THIS_CLIENT)
-//                {
-//                    client.sendToClient(response);
-//                }
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//        if (msgString.startsWith("add client")) {
-//            SubscribedClient connection = new SubscribedClient(client);
-//            SubscribersList.add(connection);
-//            try {
-//                client.sendToClient("client added successfully");
-//                System.out.println("Client added successfully");
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//        }
-//        else if (request.getRequestType().equals(CHECK_USER)) {
-//            try {
-//                String data = (String) request.getData();
-//                String[] credentials = data.split(" ");
-//                String userName = credentials[0];
-//                String password = credentials[1];
-//
-//                System.out.println("Checking login for: " + userName);
-//
-//                String loginResult = logInController.verifyUser(userName, password);
-//                // Debug prints after verifyUser()
-//                System.out.println("Login result from controller: " + loginResult);
-//
-//                Response<String> response;
-//                if (loginResult.equals("Login successful")) {
-//                    EmployeeType employeeType = logInController.getEmployeeTypeByUsername(userName);
-//                    response = new Response<>(CORRECTNESS_USER, userName + ":" + employeeType , SUCCESS,THIS_CLIENT);
-//                } else {
-//                    response = new Response<>(CORRECTNESS_USER, loginResult,ERROR,THIS_CLIENT);
-//                }
-//
-//                System.out.println("Preparing to send response with message: " + response.getMessage());
-//                client.sendToClient(response);
-//                System.out.println("Response sent successfully.");
-//
-//            } catch (Exception e) {
-//                System.err.println("Exception in CHECK_USER handling: " + e.getMessage());
-//                e.printStackTrace();
-//            }
-//        }
-
     }
-
-
 
     public void sendToAllClients(String message) {
         try {
