@@ -74,8 +74,9 @@ public class SecondaryController {
     @Subscribe
     public void onUpdateEvent(updateDishEvent event) {
         try {
-            Request request=new Request<>(GET_BASE_MENU);
-            SimpleClient.getClient().sendToServer(request);
+//            Request request=new Request<>(GET_BASE_MENU);
+//            SimpleClient.getClient().sendToServer(request);
+            SimpleClient.getClient().displayNetworkMenu();
             menuTableView.refresh();
         } catch (IOException e) {
             throw new RuntimeException(e);

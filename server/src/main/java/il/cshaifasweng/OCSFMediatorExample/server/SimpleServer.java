@@ -16,6 +16,7 @@ import org.hibernate.Session;
 
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
@@ -62,10 +63,15 @@ public class SimpleServer extends AbstractServer {
             System.out.println("server got menu request");
             Response response=menuItemsController.handleRequest(request);
             try {
-                System.out.println(response.getData().getClass());
-                Menu menu=(Menu)response.getData();
-                menu.printMenu();
-                client.sendToClient(response);
+                if(response.getRecipient()==ALL_CLIENTS)
+                {
+                    sendToAllClients(response);
+                    System.out.println("server SENT TO all clients");
+                }
+                if (response.getRecipient()==THIS_CLIENT)
+                {
+                    client.sendToClient(response);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -81,29 +87,6 @@ public class SimpleServer extends AbstractServer {
             }
 
         }
-        //receives display menu msg from client and sends back menu
-//        else if (request.getRequestType().equals(GET_BASE_MENU))
-//        {
-//            System.out.println("menu req received");
-//            Response <Menu> response;
-//           Menu menu=new Menu();
-//           List<MenuItem>baseItems=menuItemsController.getBaseItems();
-//           menu.setMenuItems(baseItems);
-//           menu.printMenu();
-//           if(baseItems!=null)
-//           {
-//               response= new Response<>(RETURN_MENU, menu, SUCCESS);
-//           }
-//           else
-//           {
-//               response= new Response<>(RETURN_MENU,menu, ERROR);
-//           }
-//            try {
-//                client.sendToClient(response);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
         //receives edit item msg from client and returns the updated item
 //        else if(request.getRequestType().equals(UPDATE_PRICE)) {
 //            MenuItem item = menuItemsController.updatePrice(request);
@@ -126,9 +109,9 @@ public class SimpleServer extends AbstractServer {
                 Response<String> response;
                 if (loginResult.equals("Login successful")) {
                     EmployeeType employeeType = logInController.getEmployeeTypeByUsername(userName);
-                    response = new Response<>(CORRECTNESS_USER, userName + ":" + employeeType , SUCCESS);
+                    response = new Response<>(CORRECTNESS_USER, userName + ":" + employeeType , SUCCESS,THIS_CLIENT);
                 } else {
-                    response = new Response<>(CORRECTNESS_USER, loginResult, ERROR);
+                    response = new Response<>(CORRECTNESS_USER, loginResult,ERROR,THIS_CLIENT);
                 }
 
                 System.out.println("Preparing to send response with message: " + response.getMessage());

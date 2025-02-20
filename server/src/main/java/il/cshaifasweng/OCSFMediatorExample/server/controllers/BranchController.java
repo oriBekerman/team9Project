@@ -2,6 +2,8 @@ package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.*;
+
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.THIS_CLIENT;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.*;
 import org.hibernate.SessionFactory;
@@ -46,7 +48,7 @@ public class BranchController {
     }
     public Response getByName(Object branchName)
     {
-        Response response=new Response<>(RETURN_BRANCH,null,null);
+        Response response=new Response<>(RETURN_BRANCH,null,null,THIS_CLIENT);
         String branchNameString = (String) branchName;
         Branch branch= branchRepository.getByName(branchNameString);
         if(branch == null)
@@ -62,7 +64,7 @@ public class BranchController {
     }
     public Response getALLBranches()
     {
-        Response response=new Response<>(BRANCHES_SENT,null,ERROR);
+        Response response=new Response<>(BRANCHES_SENT,null,ERROR,THIS_CLIENT);
          List<Branch>breanches=branchRepository.findAll();
          if(breanches==null)
          {
@@ -76,7 +78,7 @@ public class BranchController {
 
     }
     private Response getBranchMenu(Object data) {
-        Response response=new Response<>(  RETURN_BRANCH_MENU,null,ERROR);
+        Response response=new Response<>(  RETURN_BRANCH_MENU,null,ERROR,THIS_CLIENT);
         Branch branch = (Branch) data;
         Menu menu = new Menu();
         List<MenuItem> items;

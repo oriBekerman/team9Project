@@ -8,27 +8,31 @@ public class Response<T> implements Serializable {
     private Status status;
     private T data;
     private String message = "";
+    private Recipient recipient = null;
 
     // Full Constructor
-    public Response(ResponseType responseType, T data, String message,Status status) {
+    public Response(ResponseType responseType, T data, String message,Status status, Recipient recipient) {
         this.status = status;
         this.data = data;
         this.message = message;
         this.responseType = responseType;
+        this.recipient = recipient;
     }
 
     // Constructor without message
-    public Response(ResponseType responseType,T data,Status status) {
+    public Response(ResponseType responseType,T data,Status status, Recipient recipient) {
         this.status = status;
         this.data = data;
         this.responseType = responseType;
+        this.recipient = recipient;
     }
 
     // Constructor without data
-    public Response(ResponseType responseType, String message ,Status status) {
+    public Response(ResponseType responseType, String message ,Status status, Recipient recipient) {
         this.status = status;
         this.message = message;
         this.responseType = responseType;
+        this.recipient = recipient;
     }
 
     // Getters and Setters
@@ -64,6 +68,15 @@ public class Response<T> implements Serializable {
         this.responseType = responseType;
     }
 
+    public Recipient getRecipient()
+    {
+        return recipient;
+    }
+    public void setRecipient(Recipient recipient)
+    {
+        this.recipient = recipient;
+    }
+
     public enum ResponseType {
         NO_ACTION,
         //menu related responses
@@ -80,5 +93,9 @@ public class Response<T> implements Serializable {
     public enum Status {
         ERROR,
         SUCCESS
+    }
+    public enum Recipient {
+        ALL_CLIENTS,
+        THIS_CLIENT
     }
 }

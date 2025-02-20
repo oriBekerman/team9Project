@@ -8,6 +8,8 @@ import org.hibernate.SessionFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.ALL_CLIENTS;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.THIS_CLIENT;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
@@ -50,7 +52,7 @@ public class MenuItemsController {
     }
    //get base menu items
     public Response getBaseItems() {
-        Response response=new Response(RETURN_MENU,null,null);
+        Response response=new Response(RETURN_MENU,null,null,THIS_CLIENT);
         System.out.println("getBaseItems control");
         List<MenuItem> menuItems= menuItemsRepository.getBaseItems();
         if(menuItems.isEmpty())
@@ -70,7 +72,7 @@ public class MenuItemsController {
     }
     public Response updatePrice(Request request)
     {
-        Response response=new Response(UPDATED_PRICE,null,null);
+        Response response=new Response(UPDATED_PRICE,null,null,ALL_CLIENTS);
         System.out.println("in MenuController updatePrice1");
         String[] data = (String[]) request.getData();
         int id = Integer.parseInt(data[0]);

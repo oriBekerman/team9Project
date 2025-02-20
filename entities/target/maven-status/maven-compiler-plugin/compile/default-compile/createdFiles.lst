@@ -9,6 +9,7 @@ il\cshaifasweng\OCSFMediatorExample\entities\DishType.class
 il\cshaifasweng\OCSFMediatorExample\entities\Employee.class
 il\cshaifasweng\OCSFMediatorExample\entities\RequestType.class
 il\cshaifasweng\OCSFMediatorExample\entities\Response$ResponseType.class
+il\cshaifasweng\OCSFMediatorExample\entities\Response$Recipient.class
 il\cshaifasweng\OCSFMediatorExample\entities\Menu.class
 il\cshaifasweng\OCSFMediatorExample\entities\Request.class
 il\cshaifasweng\OCSFMediatorExample\entities\Response.class
