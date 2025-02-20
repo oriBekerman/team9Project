@@ -12,6 +12,7 @@ import java.util.List;
 
 public class BranchController {
     private static BranchRepository branchRepository;
+    //calls the needed method for each request,each method returns response
     public Response handleRequest(Request request)
     {
 

@@ -8,11 +8,11 @@ import java.util.List;
 public class MenuEvent {
     private Menu menu;
 
-    public MenuEvent(Menu menu) {
+    public MenuEvent(Menu menu){
         this.menu = menu;
     }
 
-    public List<MenuItem> getMenuItems() {
+    public List<MenuItem> getMenuItems(){
         return menu.getMenuItems();
     }
     public Menu getMenu() {

@@ -8,6 +8,7 @@ il\cshaifasweng\OCSFMediatorExample\server\repositories\EmployeeRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractConnectionFactory.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableServer.class
+il\cshaifasweng\OCSFMediatorExample\server\controllers\MenuItemsController$1.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AdaptableServer.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer$1.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\MenuItemsController.class

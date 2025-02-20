@@ -78,6 +78,10 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
             query.setParameter("type", DishType.BASE);
             System.out.println("menu base rep 3");
             items = query.getResultList();
+            for(MenuItem item : items)
+            {
+                System.out.println(item.getName());
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

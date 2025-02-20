@@ -8,9 +8,23 @@ import org.hibernate.SessionFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
+
 public class MenuItemsController {
 
     private MenuItemsRepository menuItemsRepository;
+    public Response handleRequest(Request request)
+    {
+        System.out.println("Handling request: " + request.getRequestType());
+        return switch (request.getRequestType())
+        {
+            case GET_BASE_MENU->getBaseItems();
+             case UPDATE_PRICE->updatePrice(request);
+            default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
+        };
+    }
 
 
 
@@ -35,23 +49,44 @@ public class MenuItemsController {
         menuItemsRepository.populate(menuItems);
     }
    //get base menu items
-    public List<MenuItem> getBaseItems() {
-        System.out.println("menu base controller ");
+    public Response getBaseItems() {
+        Response response=new Response(RETURN_MENU,null,null);
+        System.out.println("getBaseItems control");
         List<MenuItem> menuItems= menuItemsRepository.getBaseItems();
-        for(MenuItem menuItem : menuItems)
+        if(menuItems.isEmpty())
         {
-            System.out.println(menuItem.getName()+" ");
+            response.setStatus(ERROR);
         }
-        return menuItems;
+        Menu menu=new Menu(menuItems);
+        if(menuItems.isEmpty())
+        {
+            response.setStatus(ERROR);
+        }
+        else{
+            response.setStatus(SUCCESS);
+            response.setData(menu);
+        }
+        return response;
     }
-    public MenuItem updatePrice(Request request)
+    public Response updatePrice(Request request)
     {
+        Response response=new Response(UPDATED_PRICE,null,null);
         System.out.println("in MenuController updatePrice1");
         String[] data = (String[]) request.getData();
         int id = Integer.parseInt(data[0]);
         double price =Double.parseDouble(data[1]);
         System.out.println("in MenuController updatePrice2");
-        return menuItemsRepository.updatePrice(id, price);
+        MenuItem item= menuItemsRepository.updatePrice(id, price);
+        if(item == null)
+        {
+            response.setStatus(ERROR);
+        }
+        else
+        {
+            response.setStatus(SUCCESS);
+            response.setData(item);
+        }
+        return response;
     }
     public List <MenuItem> getAllItems()
     {

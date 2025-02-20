@@ -45,6 +45,7 @@ public class SimpleServer extends AbstractServer {
     }
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client){
+        System.out.println("received request from client: ");
         String msgString = msg.toString();
         Request request=(Request)msg;
         if(request.getCategory()==BRANCH)
@@ -56,7 +57,19 @@ public class SimpleServer extends AbstractServer {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("received request from client: ");
+        if(request.getCategory()==BASE_MENU)
+        {
+            System.out.println("server got menu request");
+            Response response=menuItemsController.handleRequest(request);
+            try {
+                System.out.println(response.getData().getClass());
+                Menu menu=(Menu)response.getData();
+                menu.printMenu();
+                client.sendToClient(response);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         if (msgString.startsWith("add client")) {
             SubscribedClient connection = new SubscribedClient(client);
             SubscribersList.add(connection);
@@ -69,53 +82,34 @@ public class SimpleServer extends AbstractServer {
 
         }
         //receives display menu msg from client and sends back menu
-        else if (request.getRequestType().equals(GET_BASE_MENU))
-        {
-            System.out.println("menu req received");
-            Response <Menu> response;
-           Menu menu=new Menu();
-           List<MenuItem>baseItems=menuItemsController.getBaseItems();
-           menu.setMenuItems(baseItems);
-           menu.printMenu();
-           if(baseItems!=null)
-           {
-               response= new Response<>(RETURN_MENU, menu, SUCCESS);
-           }
-           else
-           {
-               response= new Response<>(RETURN_MENU,menu, ERROR);
-           }
-            try {
-                client.sendToClient(response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        //receives edit item msg from client and returns the updated item
-        else if(request.getRequestType().equals(UPDATE_PRICE)) {
-            MenuItem item = menuItemsController.updatePrice(request);
-            Response<MenuItem> response = new Response<>(UPDATED_PRICE, item, SUCCESS);
-            sendToAllClients((response));//sent the item to all the clients
-        }
-
-//        } else if (request.getRequestType().equals(GET_BRANCHES)) {
-//            System.out.println("in server get branches");
-//            List<Branch> branches=BranchController.getALLBranches();
-//            Response<List<Branch>> response= new Response<>(BRANCHES_SENT, branches, SUCCESS);
-//            System.out.println("in server get branches got response");
-//            if(branches==null)
-//            {
-//                response.setStatus(ERROR);
-//            }
+//        else if (request.getRequestType().equals(GET_BASE_MENU))
+//        {
+//            System.out.println("menu req received");
+//            Response <Menu> response;
+//           Menu menu=new Menu();
+//           List<MenuItem>baseItems=menuItemsController.getBaseItems();
+//           menu.setMenuItems(baseItems);
+//           menu.printMenu();
+//           if(baseItems!=null)
+//           {
+//               response= new Response<>(RETURN_MENU, menu, SUCCESS);
+//           }
+//           else
+//           {
+//               response= new Response<>(RETURN_MENU,menu, ERROR);
+//           }
 //            try {
 //                client.sendToClient(response);
-//                System.out.println("in server get branches sent successfully");
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
-//
 //        }
-
+        //receives edit item msg from client and returns the updated item
+//        else if(request.getRequestType().equals(UPDATE_PRICE)) {
+//            MenuItem item = menuItemsController.updatePrice(request);
+//            Response<MenuItem> response = new Response<>(UPDATED_PRICE, item, SUCCESS);
+//            sendToAllClients((response));//sent the item to all the clients
+//        }
         else if (request.getRequestType().equals(CHECK_USER)) {
             try {
                 String data = (String) request.getData();
