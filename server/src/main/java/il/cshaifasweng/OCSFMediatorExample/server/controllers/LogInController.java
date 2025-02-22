@@ -19,15 +19,11 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCE
 public class LogInController {
 
 
-    private EmployeeRepository employeeRepository;
+    private static EmployeeRepository employeeRepository;
 
     // Constructor to inject the repositories
-    public LogInController(SessionFactory sessionFactory) {
-        if (sessionFactory == null) {
-            throw new NullPointerException("In LoginController, sessionFactory is null");
-        }
-        System.out.println("In LoginController constructor");
-        this.employeeRepository = new EmployeeRepository(sessionFactory);
+    public LogInController() {
+        employeeRepository = new EmployeeRepository();
     }
     public Response handleRequest(Request request)
     {

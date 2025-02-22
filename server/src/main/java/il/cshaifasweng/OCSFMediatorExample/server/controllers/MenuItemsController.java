@@ -27,20 +27,10 @@ public class MenuItemsController {
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
-
-
-
-    // constructor to inject the repository
-    public MenuItemsController(SessionFactory sessionFactory) {
-        if(sessionFactory == null)
-        {
-            throw new NullPointerException(" in MenuController sessionFactory is null");
-        }
-        System.out.println("in MenuController constructor");
-        this.menuItemsRepository = new MenuItemsRepository(sessionFactory);
-    }
     //constructor
-    public MenuItemsController() {};
+    public MenuItemsController() {
+        this.menuItemsRepository = new MenuItemsRepository();
+    };
     public boolean checkIfEmpty()
     {
         return (menuItemsRepository.checkIfEmpty());
@@ -58,15 +48,14 @@ public class MenuItemsController {
         if(menuItems.isEmpty())
         {
             response.setStatus(ERROR);
-        }
-        Menu menu=new Menu(menuItems);
-        if(menuItems.isEmpty())
-        {
-            response.setStatus(ERROR);
+            System.out.println("getBaseItems returned empty list");
         }
         else{
+            Menu menu=new Menu(menuItems);
             response.setStatus(SUCCESS);
             response.setData(menu);
+            System.out.println("getBaseItems returned successfully");
+            menu.printMenu();
         }
         return response;
     }

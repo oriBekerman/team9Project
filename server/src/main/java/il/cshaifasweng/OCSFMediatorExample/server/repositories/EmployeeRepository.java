@@ -1,20 +1,18 @@
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
+import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.ArrayList;
 import java.util.List;
-
-import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
-
 public class EmployeeRepository extends BaseRepository<Employee> {
 
-    public EmployeeRepository(SessionFactory sessionFactory) {
-        super(sessionFactory);
+    public EmployeeRepository() {super();
     }
 
     @Override
@@ -29,7 +27,7 @@ public class EmployeeRepository extends BaseRepository<Employee> {
 
     //find employee by username
     public Employee findByUsername(String username) {
-        try (Session session = sessionFactory.openSession()) {
+        try (Session session = HibernateUtil.getSession()) {
             return session.createQuery("FROM Employee WHERE username = :username", Employee.class)
                     .setParameter("username", username)
                     .uniqueResult();
@@ -40,9 +38,10 @@ public class EmployeeRepository extends BaseRepository<Employee> {
     public List<Employee> getEmployee()
     {
         List<Employee> data=new ArrayList<>();
-        try {
-            session =openSession();
-            session.beginTransaction();
+        Transaction tx=null;
+        try (Session session = HibernateUtil.getSession())
+        {
+            tx=session.beginTransaction();
             //get items from database
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<Employee> query = builder.createQuery(Employee.class);
@@ -53,17 +52,18 @@ public class EmployeeRepository extends BaseRepository<Employee> {
             session.getTransaction().commit(); // Save everything.
         } catch (Exception exception)
         {
-            if (session != null)
-            {
-                session.getTransaction().rollback();
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
             System.err.println("An error occured, changes have been rolled back.");
             exception.printStackTrace();
         }
-        finally {
-            session.close();
-        }
         return data;
     }
 
+    public void populate(List<Employee> employees) {
+        for (Employee employee : employees) {
+            save(employee);
+        }
+    }
 }
