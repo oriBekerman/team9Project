@@ -60,6 +60,7 @@ public class SimpleServer extends AbstractServer {
             case LOGIN -> logInController.handleRequest(request);
             default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
         };
+        System.out.println(response.getResponseType().toString());
         //check if the response should be sent to all clients or just one
         if (response.getRecipient()==ALL_CLIENTS) {
             sendToAllClients(response);

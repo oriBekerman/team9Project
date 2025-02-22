@@ -11,7 +11,7 @@ import org.hibernate.Transaction;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
+
 
 public class MenuItemsRepository extends BaseRepository<MenuItem>
 {
@@ -49,18 +49,6 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
                 System.out.println("getting menu items");
                 System.out.println(data);
                 session.getTransaction().commit(); // Save everything.
-            } catch (Exception exception)
-            {
-                if (session != null)
-                {
-                    session.getTransaction().rollback();
-                }
-                System.err.println("An error occured, changes have been rolled back.");
-                exception.printStackTrace();
-            }
-            finally {
-            assert session != null;
-            session.close();
             }
             return data;
     }
@@ -89,10 +77,6 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        finally {
-            assert session != null;
-            session.close();
-        }
         return items;
     }
     public MenuItem updatePrice(int id,double price)
@@ -110,16 +94,6 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
             session.flush();
             // Commit the transaction
             session.getTransaction().commit();
-        }
-        catch (Exception e) {
-            if (session != null) {
-                session.getTransaction().rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
         return item;
     }

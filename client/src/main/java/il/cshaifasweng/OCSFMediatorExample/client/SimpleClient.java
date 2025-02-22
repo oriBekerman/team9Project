@@ -47,13 +47,13 @@ public class SimpleClient extends AbstractClient {
 				Menu menu = (Menu) response.getData();
 				System.out.println(menu.getMenuItems().getFirst());
 				MenuEvent menuEvent = new MenuEvent(menu);
-				System.out.println("menu event posted");
 				// Store the event if SecondaryController is not initialized
 				if (!isSecondaryControllerInitialized) {
 					pendingMenuEvent = menuEvent;
 				} else {
 					// Post immediately if SecondaryController is ready
 					EventBus.getDefault().post(menuEvent);
+					System.out.println("menu event posted");
 				}
 			}
 

@@ -6,7 +6,6 @@ import java.util.*;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.MenuEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.updateDishEvent;
-import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,8 +16,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
-
-import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 
 public class SecondaryController {
 
@@ -62,6 +59,7 @@ public class SecondaryController {
     @Subscribe
     public void onMenuEvent(MenuEvent event) {
         Menu menu = event.getMenu();
+        System.out.println("got menu event in second controller");
         Platform.runLater(() -> {
             // Clear the TableView before updating
             menuTableView.getItems().clear();

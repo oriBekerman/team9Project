@@ -48,15 +48,14 @@ public class MenuItemsController {
         if(menuItems.isEmpty())
         {
             response.setStatus(ERROR);
-        }
-        Menu menu=new Menu(menuItems);
-        if(menuItems.isEmpty())
-        {
-            response.setStatus(ERROR);
+            System.out.println("getBaseItems returned empty list");
         }
         else{
+            Menu menu=new Menu(menuItems);
             response.setStatus(SUCCESS);
             response.setData(menu);
+            System.out.println("getBaseItems returned successfully");
+            menu.printMenu();
         }
         return response;
     }
