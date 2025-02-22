@@ -33,7 +33,7 @@ public class SimpleServer extends AbstractServer {
 //        System.out.println("Please enter the database password: ");
 //        this.password = scanner.nextLine();
 //        System.out.println("after password ");
-        DatabaseManager.initialize(dataBasePassword);// (if we want aa different password to be entered when running change databasePassword-> password
+//        DatabaseManager.initialize();// (if we want a different password to be entered when running change databasePassword-> password
         getControllers();
     }
     @Override
@@ -88,6 +88,6 @@ public class SimpleServer extends AbstractServer {
     {
         this.menuItemsController =databaseManager.getMenuItemsController();
         this.branchController=databaseManager.getBranchController();
-        logInController = databaseManager.getLogInController();
+        this.logInController = databaseManager.getLogInController();
     }
 }

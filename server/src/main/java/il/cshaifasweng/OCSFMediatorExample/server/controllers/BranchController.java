@@ -14,6 +14,12 @@ import java.util.List;
 
 public class BranchController {
     private static BranchRepository branchRepository;
+    // constructor
+    public BranchController() {
+
+        branchRepository = new BranchRepository();
+    }
+
     //calls the needed method for each request,each method returns response
     public Response handleRequest(Request request)
     {
@@ -26,18 +32,6 @@ public class BranchController {
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
-    // constructor to inject the repository
-    public BranchController(SessionFactory sessionFactory) {
-        if(sessionFactory == null)
-        {
-            throw new NullPointerException(" in MenuController sessionFactory is null");
-        }
-        System.out.println("in MenuController constructor");
-        this.branchRepository = new BranchRepository(sessionFactory);
-    }
-    //constructor
-    public BranchController() {};
-
     public boolean checkIfEmpty()
     {
         return (branchRepository.checkIfEmpty());
@@ -65,14 +59,14 @@ public class BranchController {
     public Response getALLBranches()
     {
         Response response=new Response<>(BRANCHES_SENT,null,ERROR,THIS_CLIENT);
-         List<Branch>breanches=branchRepository.findAll();
-         if(breanches==null)
+         List<Branch>branches=branchRepository.findAll();
+         if(branches==null)
          {
              response.setStatus(ERROR);
          }
          else {
              response.setStatus(SUCCESS);
-             response.setData(breanches);
+             response.setData(branches);
          }
          return response;
 

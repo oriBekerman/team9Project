@@ -2,22 +2,23 @@ package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
+import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
-
 public class BranchRepository extends BaseRepository<Branch> {
-    public BranchRepository(SessionFactory sessionFactory) {
-        super(sessionFactory);
+    public BranchRepository() {
+        super();
     }
 
     @Override
     public int getId(Branch entity) {
-        return ((Branch)entity).getBranchID();
+        return entity.getBranchID();
     }
 
     @Override
@@ -27,26 +28,24 @@ public class BranchRepository extends BaseRepository<Branch> {
 
     public List<MenuItem> getBranchMenuItems(Branch branch) {
         List<MenuItem> result = new ArrayList<>();
-        try {
-            int branchID = branch.getBranchID();
-            session =openSession();
-            session.beginTransaction();
-            if(session==null)
-            {
-                System.out.println("session is null");
-            }
-            session.clear();
-            Query<MenuItem> query = session.createQuery("SELECT m FROM Branch b JOIN b.menuItems m WHERE b.id = :branchId", MenuItem.class);
-            query.setParameter("branchId", branchID);
+        Transaction tx = null;
+        try (Session session = HibernateUtil.getSession())
+        {
+            Query<MenuItem> query = session.createQuery(
+                    "SELECT m FROM Branch b JOIN b.menuItems m WHERE b.id = :branchId",
+                    MenuItem.class);
+            query.setParameter("branchId", branch.getBranchID());
             result = query.getResultList();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        finally {
-            assert session != null;
-            session.close();
-        }
         return result;
+    }
+
+    public void populate(List<Branch> branches) {
+        for (Branch branch : branches) {
+            save(branch);
+        }
     }
     //change
 

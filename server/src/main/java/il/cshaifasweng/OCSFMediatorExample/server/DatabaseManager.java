@@ -5,7 +5,9 @@ import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
@@ -18,51 +20,56 @@ import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePa
 
 //configures database,handles opening and closing sessions
 public class DatabaseManager {
-    private static SessionFactory sessionFactory;
-    private MenuItemsController menuItemsController=null;
-    private LogInController logInController = null;
-    private BranchController branchController=null;
+    private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private MenuItemsController menuItemsController;
+    private BranchController branchController;
+    private LogInController logInController;
 
     public DatabaseManager(String password) {
-        initialize(password);//change password here!!!!
-        if(sessionFactory!=null)
-        {
-            initControllers(sessionFactory);
-        }
-        if(sessionFactory==null)
-        {
-            System.out.println("SessionFactory is null");
-        }
-        System.out.println("in initialize database");
+        initialize(password);
+        initControllers();
         checkAndPopulateTables();
-        System.out.println("in  databaseManager populate");
-    }
-    public static void initialize(String password)throws HibernateException
-    {
-        System.out.println("in initialize database");
-        try {
-             sessionFactory = getSessionFactory(); // Create session factory
-            session = sessionFactory.openSession(); // Open session
-            session.beginTransaction(); // Start transaction
-
-        } catch (Exception exception) {
-            if (session != null) {
-                session.getTransaction().rollback(); // Rollback on failure
-            }
-            System.err.println("An error occurred, changes have been rolled back.");
-            exception.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.close(); // Always close the session
-            }
-        }
+        System.out.println("Database initialized & populated successfully!");
     }
 
-    public void initControllers(SessionFactory sessionFactory)
+//    public static void initialize(String password)throws HibernateException
+//    {
+//        System.out.println("in initialize database");
+//        Session session = null;
+//        Transaction transaction = null;
+//        try {
+//            sessionFactory= getSessionFactory(); // Create session factory
+//            session = sessionFactory.openSession(); // Open session
+//            session.beginTransaction(); // Start transaction
+//
+//        } catch (Exception exception) {
+//            if (session != null) {
+//                session.getTransaction().rollback(); // Rollback on failure
+//            }
+//            System.err.println("An error occurred, changes have been rolled back.");
+//            exception.printStackTrace();
+//        } finally {
+//            if (session != null) {
+//                session.close(); // Always close the session
+//            }
+//        }
+//    }
+private static void initialize(String password) {
+    System.out.println("initializing database...");
+    if (sessionFactory == null) {
+        System.err.println("failed to initialize Hibernate! SessionFactory is null.");
+        throw new HibernateException("SessionFactory creation failed.");
+    }
+    System.out.println("SessionFactory initialized successfully!");
+}
+
+
+
+    public void initControllers()
     {
-        this.menuItemsController = new MenuItemsController(sessionFactory);
-        this.branchController = new BranchController(sessionFactory);
-        this.logInController = new LogInController(sessionFactory);
+        this.menuItemsController = new MenuItemsController();
+        this.branchController = new BranchController();
+        this.logInController = new LogInController();
     }
 
     //if  database tables are empty initialize them
@@ -109,26 +116,26 @@ public class DatabaseManager {
             branchController.populateBranches(branches);
         }
     }
-    static SessionFactory getSessionFactory() throws HibernateException {
-        Configuration configuration = new Configuration();
-        configuration.setProperty("hibernate.connection.password",dataBasePassword);
-
-        // Add all entity classes here
-        configuration.addAnnotatedClass(Branch.class);
-        configuration.addAnnotatedClass(MenuItem.class);
-        configuration.addAnnotatedClass(Employee.class);
-
-
-        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties())
-                .build();
-
-        return configuration.buildSessionFactory(serviceRegistry);
-    }
+//    static SessionFactory getSessionFactory() throws HibernateException {
+//        Configuration configuration = new Configuration();
+//        configuration.setProperty("hibernate.connection.password",dataBasePassword);
+//
+//        // Add all entity classes here
+//        configuration.addAnnotatedClass(Branch.class);
+//        configuration.addAnnotatedClass(MenuItem.class);
+//        configuration.addAnnotatedClass(Employee.class);
+//
+//
+//        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+//                .applySettings(configuration.getProperties())
+//                .build();
+//
+//        return configuration.buildSessionFactory(serviceRegistry);
+//    }
     MenuItemsController getMenuItemsController() {
         if(menuItemsController==null)
         {
-            menuItemsController=new MenuItemsController(getSessionFactory());
+            menuItemsController=new MenuItemsController();
         }
         return menuItemsController;
     }
@@ -136,15 +143,20 @@ public class DatabaseManager {
     BranchController getBranchController() {
         if(branchController==null)
         {
-            branchController=new BranchController(getSessionFactory());
+            branchController=new BranchController();
         }
         return branchController;
     }
 
     LogInController getLogInController() {
         if (logInController == null) {
-            logInController = new LogInController(getSessionFactory());
+            logInController = new LogInController();
         }
         return logInController;
     }
+    // shuts down Hibernate.
+    public static void shutdown() {
+        HibernateUtil.shutdown();
+    }
 }
+
