@@ -60,6 +60,7 @@ public class SecondaryController {
     public void onMenuEvent(MenuEvent event) {
         Menu menu = event.getMenu();
         System.out.println("got menu event in second controller");
+        menu.printMenu();
         Platform.runLater(() -> {
             // Clear the TableView before updating
             menuTableView.getItems().clear();

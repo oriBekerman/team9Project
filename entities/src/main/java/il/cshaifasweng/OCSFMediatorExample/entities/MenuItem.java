@@ -3,15 +3,19 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+
 @Entity
-@Table(name ="menuItems")
+@Table(name ="menuItems",uniqueConstraints = {
+        @UniqueConstraint(columnNames = "ID")})
 public class MenuItem implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  int itemID;
+    @Column(name = "ID", unique = true, nullable = false)
+    private Integer itemID;
 
     @Column(nullable = false)
     private String name;
@@ -33,8 +37,8 @@ public class MenuItem implements Serializable {
     private DishType dishType;  // BASE or SPECIAL
 
 
-    @ManyToMany(mappedBy = "menuItems")
-    private List<Branch> branches;
+    @ManyToMany(mappedBy = "menuItems", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Branch> branches = new ArrayList<>();
 
 
     // Constructor with all fields except itemID (auto-generated)

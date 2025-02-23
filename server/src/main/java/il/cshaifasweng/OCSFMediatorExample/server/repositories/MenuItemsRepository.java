@@ -38,7 +38,7 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
     public List<MenuItem> getAllItems()
     {
         List<MenuItem> data=new ArrayList<>();
-        try (Session session = HibernateUtil.getSession())
+        try (Session session = HibernateUtil.getSessionFactory().openSession())
         {
             session.beginTransaction();
                 //get items from database
@@ -56,7 +56,7 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
     public List<MenuItem>getBaseItems()
     {
         List<MenuItem> items;
-        try (Session session = HibernateUtil.getSession())
+        try (Session session = HibernateUtil.getSessionFactory().openSession())
         {
             session.beginTransaction();
             if(session==null)
@@ -83,7 +83,7 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
     {
         System.out.println("in MenuRepository updatePrice");
         MenuItem item=findById(id);
-        try (Session session = HibernateUtil.getSession())
+        try (Session session = HibernateUtil.getSessionFactory().openSession())
         {
             session.beginTransaction();
             // set item price

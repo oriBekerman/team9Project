@@ -1,14 +1,18 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Events.MenuEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.greenrobot.eventbus.EventBus;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
@@ -23,6 +27,7 @@ public class BranchPageController {
     public VBox sideBar;
     public Label openHour;
     public Label closeHour;
+    public Button menuBtn;
 
     public BranchPageController() {};
     public Branch branch;
@@ -108,6 +113,20 @@ public class BranchPageController {
         if (branch != null && branchTitle != null) {
             branchTitle.setText("Branch: " + branch.getName());
             openingHoursLabel.setText("opening hours: " + branch.getOpeningTime() + " - " + branch.getClosingTime());
+        }
+    }
+
+    public void displayMenu(ActionEvent actionEvent) {
+        switchScreen("secondary");
+        try {
+            App.setRoot("secondary");
+            SimpleClient.getClient().displayBranchMenu(branch);
+//            Menu menu = new Menu(branch.getBranchMenuItems());
+//            menu.printMenu();
+//            SimpleClient.getClient().showMenu(menu);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
