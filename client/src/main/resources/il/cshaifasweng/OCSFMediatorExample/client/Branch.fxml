@@ -14,28 +14,32 @@
         </font>
     </Label>
     <Button fx:id="backToHPBtn" layoutX="1017.0" layoutY="14.0" mnemonicParsing="false" onAction="#navToHP" prefHeight="49.0" prefWidth="194.0" styleClass="menu-btn" text="Back To Home Page" />
-    <VBox fx:id="sideBar" layoutY="-0.7999999999999989" prefHeight="884.0" prefWidth="190.0" styleClass="sidebar" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1035.0" AnchorPane.topAnchor="-11.0">
-    </VBox>
+    <VBox fx:id="sideBar" layoutY="-0.7999999999999989" prefHeight="884.0" prefWidth="232.0" styleClass="sidebar" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="993.0" AnchorPane.topAnchor="-11.0">
+      <children>
+          <VBox prefHeight="329.0" prefWidth="190.0" spacing="10.0" styleClass="sidebar">
+              <Button fx:id="reservationBtn" mnemonicParsing="false" onAction="#navToReservationPage" prefHeight="49.0" prefWidth="181.0" styleClass="menu-btn" text="make a reservation">
+                  <font>
+                      <Font size="10.0" />
+                  </font>
+              </Button>
+              <Button fx:id="deliveryBtn" mnemonicParsing="false" onAction="#navTodeliveryPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="make a delivery">
+                  <font>
+                      <Font size="10.0" />
+                  </font>
+              </Button>
+              <Button fx:id="complaintBtn" mnemonicParsing="false" onAction="#navToComplaintPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="make a complaint">
+                  <font>
+                      <Font size="10.0" />
+                  </font>
+              </Button>
+            <Button fx:id="menuBtn" mnemonicParsing="false" onAction="#displayMenu" prefHeight="49.0" prefWidth="190.0" text="Menu" />
+          </VBox>
+      </children></VBox>
     <AnchorPane prefHeight="138.0" prefWidth="190.0">
-        <ImageView fitHeight="125.0" fitWidth="155.0" layoutX="17.0" pickOnBounds="true" preserveRatio="true" />
+      <children>
+           <ImageView fitHeight="175.0" fitWidth="188.0" layoutX="21.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true" />
+      </children>
     </AnchorPane>
-    <VBox prefHeight="167.0" prefWidth="227.0" spacing="10.0">
-        <Button fx:id="reservationBtn" mnemonicParsing="false" onAction="#navToReservationPage" prefHeight="49.0" prefWidth="181.0" styleClass="menu-btn" text="make a reservation">
-            <font>
-                <Font size="10.0" />
-            </font>
-        </Button>
-        <Button fx:id="deliveryBtn" mnemonicParsing="false" onAction="#navTodeliveryPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="make a delivery">
-            <font>
-                <Font size="10.0" />
-            </font>
-        </Button>
-        <Button fx:id="complaintBtn" mnemonicParsing="false" onAction="#navToComplaintPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="make a complaint">
-            <font>
-                <Font size="10.0" />
-            </font>
-        </Button>
-    </VBox>
     <Label fx:id="openingHoursLabel" layoutX="469.0" layoutY="136.0" prefHeight="41.0" prefWidth="136.0" styleClass="subtitle" stylesheets="@style.css" text="opening hours:" />
    <Label fx:id="openHour" layoutX="590.0" layoutY="137.0" prefHeight="17.0" prefWidth="65.0" styleClass="subtitle" text="open" />
    <Label fx:id="closeHour" layoutX="638.0" layoutY="137.0" prefHeight="17.0" prefWidth="65.0" styleClass="subtitle" text="close" />

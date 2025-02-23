@@ -27,27 +27,6 @@ public class HibernateUtil {
     //private Constructor (Singleton)
     private HibernateUtil() {
     }
-//    //Gets a thread-safe Hibernate session.
-//    public static Session getSession() {
-//        Session session = threadLocalSession.get();
-//
-//        if (session == null || !session.isOpen()) {
-//            session = sessionFactory.openSession();
-//            threadLocalSession.set(session);
-//        }
-//        return session;
-//    }
-
-    //closes the session associated with the current thread.
-    //Automatically closes session when thread ends
-//    public static void closeSession() {
-//        Session session = threadLocalSession.get();
-//        if (session != null) {
-//            session.close();
-//            threadLocalSession.remove();
-//        }
-//    }
-
     // Close Hibernate SessionFactory
     public static void shutdown() {
 //        closeSession();  // Ensure all sessions are closed

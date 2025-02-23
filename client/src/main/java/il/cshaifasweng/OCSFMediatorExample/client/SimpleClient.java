@@ -45,7 +45,6 @@ public class SimpleClient extends AbstractClient {
 		if (response.getResponseType().equals(RETURN_MENU)) {
 				System.out.println("Menu received, storing event...");
 				Menu menu = (Menu) response.getData();
-				System.out.println(menu.getMenuItems().getFirst());
 				MenuEvent menuEvent = new MenuEvent(menu);
 				// Store the event if SecondaryController is not initialized
 				if (!isSecondaryControllerInitialized) {
@@ -56,7 +55,19 @@ public class SimpleClient extends AbstractClient {
 					System.out.println("menu event posted");
 				}
 			}
-
+//		if (response.getResponseType().equals(RETURN_BRANCH_MENU)) {
+//			System.out.println("Menu received, storing event...");
+//			Menu menu = (Menu) response.getData();
+//			MenuEvent menuEvent = new MenuEvent(menu);
+//			// Store the event if SecondaryController is not initialized
+//			if (!isSecondaryControllerInitialized) {
+//				pendingMenuEvent = menuEvent;
+//			} else {
+//				// Post immediately if SecondaryController is ready
+//				EventBus.getDefault().post(menuEvent);
+//				System.out.println("menu event posted");
+//			}
+//		}
 			if (response.getResponseType().equals(UPDATED_PRICE)) {
 				MenuItem menuItem = (MenuItem) response.getData();
 				// Post immediately if SecondaryController is ready
@@ -107,8 +118,8 @@ public class SimpleClient extends AbstractClient {
 		client.sendToServer(request);
 		System.out.println("menu base req sent");
 	}
-	public void displayBranchMenu(String branchName) throws IOException {
-		Request<String> request= new Request<>(BRANCH,GET_BRANCH_MENU,branchName);
+	public void displayBranchMenu(Branch branch) throws IOException {
+		Request<Branch> request= new Request<>(BRANCH,GET_BRANCH_MENU,branch);
 		client.sendToServer(request);
 	}
 
@@ -153,6 +164,18 @@ public class SimpleClient extends AbstractClient {
 	public static void logout() {
 		clearActiveUser();  // Clear active user in SimpleClient
 	}
+
+//	public void showMenu(Menu menu) {
+//		MenuEvent menuEvent = new MenuEvent(menu);
+//		// Store the event if SecondaryController is not initialized
+//		if (!isSecondaryControllerInitialized) {
+//			pendingMenuEvent = menuEvent;
+//		} else {
+//			// Post immediately if SecondaryController is ready
+//			EventBus.getDefault().post(menuEvent);
+//			System.out.println("menu event posted");
+//		}
+//	}
 
 }
 

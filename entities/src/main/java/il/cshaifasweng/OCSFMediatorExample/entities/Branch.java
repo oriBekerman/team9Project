@@ -37,7 +37,7 @@ public class Branch implements Serializable  {
 //    )
 //    private List<MenuItem> menuItems;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
     @JoinTable(name = "branchSpecialItems",
             joinColumns = @JoinColumn(name = "branch_id", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "menu_item_id", referencedColumnName = "ID"))

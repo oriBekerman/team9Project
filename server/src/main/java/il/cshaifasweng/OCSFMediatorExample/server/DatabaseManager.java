@@ -33,29 +33,6 @@ public class DatabaseManager {
         checkAndPopulateTables();
         System.out.println("Database initialized & populated successfully!");
     }
-
-//    public static void initialize(String password)throws HibernateException
-//    {
-//        System.out.println("in initialize database");
-//        Session session = null;
-//        Transaction transaction = null;
-//        try {
-//            sessionFactory= getSessionFactory(); // Create session factory
-//            session = sessionFactory.openSession(); // Open session
-//            session.beginTransaction(); // Start transaction
-//
-//        } catch (Exception exception) {
-//            if (session != null) {
-//                session.getTransaction().rollback(); // Rollback on failure
-//            }
-//            System.err.println("An error occurred, changes have been rolled back.");
-//            exception.printStackTrace();
-//        } finally {
-//            if (session != null) {
-//                session.close(); // Always close the session
-//            }
-//        }
-//    }
 private static void initialize(String password) {
     System.out.println("initializing database...");
     if (sessionFactory == null) {

@@ -41,7 +41,6 @@ public class BranchRepository extends BaseRepository<Branch> {
         }
         return result;
     }
-
     public void populate(List<Branch> branches) {
         for (Branch branch : branches) {
             save(branch);
