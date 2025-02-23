@@ -19,7 +19,7 @@ public abstract class BaseRepository<T> {
 
     public T findById(int id) {
         //search in the database
-       try (Session session = HibernateUtil.getSession())
+       try (Session session = HibernateUtil.getSessionFactory().openSession())
        {
            return session.get(getEntityClass(),id);
        }
@@ -27,27 +27,27 @@ public abstract class BaseRepository<T> {
             e.printStackTrace();
             throw new RuntimeException("Failed to find entity by ID", e);
         }
-       finally {
-           HibernateUtil.closeSession();  //ensure session is closed
-       }
+//       finally {
+//           HibernateUtil.closeSession();  //ensure session is closed
+//       }
     }
     protected abstract Class<T> getEntityClass();
 
     public List<T> findAll() {
-        try (Session session = HibernateUtil.getSession()){
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
             return session.createQuery("FROM " + getEntityClass().getSimpleName(), getEntityClass()).list();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to find all entities", e);
         }
-        finally {
-            HibernateUtil.closeSession();  //ensure session is closed
-        }
+//        finally {
+//            HibernateUtil.closeSession();  //ensure session is closed
+//        }
     }
 
     public void deleteById(int id) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSession()) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
             transaction=session.beginTransaction(); // Start transaction
             // Fetch the entity to ensure it exists before attempting to delete
             T entity = session.get(getEntityClass(), id);
@@ -68,35 +68,34 @@ public abstract class BaseRepository<T> {
             e.printStackTrace();
             throw new RuntimeException("Failed to delete entity by ID: " + id, e);
         }
-        finally {
-            HibernateUtil.closeSession();  //ensure session is closed
-        }
+//        finally {
+//            HibernateUtil.closeSession();  //ensure session is closed
+//        }
     }
 
     public abstract int getId(T entity);
 
 
     public T getByName(String name) {
-        try (Session session = HibernateUtil.getSession()){
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
             return session.get(getEntityClass(),name);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to save entity", e);
         }
-        finally {
-            HibernateUtil.closeSession();  //ensure session is closed
-        }
+//        finally {
+//            HibernateUtil.closeSession();  //ensure session is closed
+//        }
     }
 
 
     protected void save(T entity) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSession())
-        {
-            transaction=session.beginTransaction();
-            session.saveOrUpdate(entity);
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(entity);
             transaction.commit();
-        }   catch (org.hibernate.exception.ConstraintViolationException e) {
+        } catch (org.hibernate.exception.ConstraintViolationException e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
@@ -111,8 +110,9 @@ public abstract class BaseRepository<T> {
                 transaction.rollback();
             }
             System.err.println("An unexpected error occurred: " + e.getMessage());
-        } finally {
-            HibernateUtil.closeSession();
+//        } finally {
+//            HibernateUtil.closeSession();
+//        }
         }
     }
 
@@ -155,7 +155,7 @@ public abstract class BaseRepository<T> {
 //    }
     protected void persist(T entity) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSession())
+            try (Session session = HibernateUtil.getSessionFactory().openSession())
         {
             transaction=session.beginTransaction();
             session.persist(entity);
@@ -167,8 +167,8 @@ public abstract class BaseRepository<T> {
             e.printStackTrace();
             throw new RuntimeException("Failed to save entity",e);
         }
-        finally {
-            HibernateUtil.closeSession();  //ensure session is closed
-        }
+//        finally {
+//            HibernateUtil.closeSession();  //ensure session is closed
+//        }
     }
 }

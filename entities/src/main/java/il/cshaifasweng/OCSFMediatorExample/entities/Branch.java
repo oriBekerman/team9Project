@@ -7,11 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "branches")
+
+@Table(name = "branch", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "ID")})
 public class Branch implements Serializable  {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "ID", unique = true, nullable = false)
+    private Integer branchID;
 
     @Column(nullable = false)
     private String name;
@@ -25,13 +29,20 @@ public class Branch implements Serializable  {
     @Column(nullable = false)
     private String closingTime; // Closing hour
 
-    @ManyToMany
-    @JoinTable(
-            name = "branch_menu_items",
-            joinColumns = @JoinColumn(name = "branch_id"),
-            inverseJoinColumns = @JoinColumn(name = "menu_item_id")
-    )
-    private List<MenuItem> menuItems;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "branch_menu_items",
+//            joinColumns = @JoinColumn(name = "branch_id"),
+//            inverseJoinColumns = @JoinColumn(name = "menu_item_id")
+//    )
+//    private List<MenuItem> menuItems;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "branchSpecialItems",
+            joinColumns = @JoinColumn(name = "branch_id", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "menu_item_id", referencedColumnName = "ID"))
+    private List<MenuItem> menuItems = new ArrayList<>();
+
 
     public Branch() {}
 
@@ -44,11 +55,11 @@ public class Branch implements Serializable  {
 
     // Getters and Setters
     public int getId() {
-        return id;
+        return branchID;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.branchID = id;
     }
 
     public String getName() {
@@ -71,7 +82,7 @@ public class Branch implements Serializable  {
     public void setBranchMenuItems(List<MenuItem> menuItems) { this.menuItems = menuItems; }
 
     public int getBranchID() {
-        return id;
+        return branchID;
     }
 
     public String getOpeningTime() {

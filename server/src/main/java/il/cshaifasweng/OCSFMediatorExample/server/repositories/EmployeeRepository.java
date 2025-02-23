@@ -27,7 +27,7 @@ public class EmployeeRepository extends BaseRepository<Employee> {
 
     //find employee by username
     public Employee findByUsername(String username) {
-        try (Session session = HibernateUtil.getSession()) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("FROM Employee WHERE username = :username", Employee.class)
                     .setParameter("username", username)
                     .uniqueResult();
@@ -39,7 +39,7 @@ public class EmployeeRepository extends BaseRepository<Employee> {
     {
         List<Employee> data=new ArrayList<>();
         Transaction tx=null;
-        try (Session session = HibernateUtil.getSession())
+        try (Session session = HibernateUtil.getSessionFactory().openSession())
         {
             tx=session.beginTransaction();
             //get items from database

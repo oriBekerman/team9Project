@@ -29,7 +29,7 @@ public class BranchRepository extends BaseRepository<Branch> {
     public List<MenuItem> getBranchMenuItems(Branch branch) {
         List<MenuItem> result = new ArrayList<>();
         Transaction tx = null;
-        try (Session session = HibernateUtil.getSession())
+        try (Session session = HibernateUtil.getSessionFactory().openSession())
         {
             Query<MenuItem> query = session.createQuery(
                     "SELECT m FROM Branch b JOIN b.menuItems m WHERE b.id = :branchId",

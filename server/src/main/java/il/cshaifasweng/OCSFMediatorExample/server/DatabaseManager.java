@@ -14,6 +14,8 @@ import org.hibernate.service.ServiceRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE;
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePassword;
 
@@ -85,53 +87,36 @@ private static void initialize(String password) {
             Employee employee5 = new Employee(555555555, "Eva Admin", "6789 Cedar St", "eva.admin@example.com", "eva.admin", "1234", EmployeeType.CUSTOMER_SERVICE_MANAGER, 3);
             List<Employee> employees = List.of(employee1, employee2, employee3, employee4, employee5);
             logInController.checkAndPopulateUsers(employees);
-            Branch defaultBranch = new Branch("Default Branch", "Default Location", "9:00", "19:00");
-            Branch haifaBranch = new Branch("Haifa", "Haifa port", "9:00", "19:00");
-            List<Branch> branches = List.of(defaultBranch, haifaBranch);
-
             MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce",
-                    "Low calorie", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
+                    "Low calorie", null, BASE);
 
             MenuItem item2 = new MenuItem("Pizza ", 55.00, " Mushrooms, onions, tomatoes",
-                    " Includes vegan option ", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
+                    " Includes vegan option ", null, BASE);
 
             MenuItem item3 = new MenuItem("Pasta", 60.00, "Mushroom cream sauce",
-                    "Available gluten-free", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
+                    "Available gluten-free", null, BASE);
 
             MenuItem item4 = new MenuItem("Hamburger", 80.00, "Meatball, pickle, tomato, lettuce",
-                    "Choice of meat or plant-based", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
+                    "Choice of meat or plant-based", null, BASE);
 
             MenuItem item5 = new MenuItem("Edamame", 30.00, "Edamame",
-                    "Served with sea salt", null, il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE);
-            List<MenuItem> menuItems = List.of(item1, item2, item3, item4, item5);
-            //set the base menu items for every branch
-            for (Branch branch : branches) {
-                branch.setBranchMenuItems(menuItems);
-            }
-            //sett all branches to each base menu item
-            for (MenuItem menuItem : menuItems) {
-                menuItem.setBranches(branches);
-            }
-            menuItemsController.PopulateMenuItems(menuItems);
+                    "Served with sea salt", null,BASE);
+            MenuItem item6 = new MenuItem("Fries", 15.00, "potato",
+                    "Served with sea salt", null, DishType.SPECIAL);
+            MenuItem item7 = new MenuItem("salmon", 70.00, "salmon",
+                    "Served with lemon", null, DishType.SPECIAL);
+            List<MenuItem> menuItems1 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6));
+            List<MenuItem> menuItems2 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item7));
+            Branch telAvivBranch = new Branch("Tel Aviv", "Tel Aviv", "9:00", "22:00");
+            Branch haifaBranch = new Branch("Haifa", "Haifa port", "9:00", "19:00");
+            List<Branch> branches = List.of(haifaBranch,telAvivBranch);
+            haifaBranch.setBranchMenuItems(menuItems1);
+            telAvivBranch.setBranchMenuItems(menuItems2);
+            List<MenuItem> menuItems3= new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6, item7));
+            menuItemsController.PopulateMenuItems(menuItems3);
             branchController.populateBranches(branches);
         }
     }
-//    static SessionFactory getSessionFactory() throws HibernateException {
-//        Configuration configuration = new Configuration();
-//        configuration.setProperty("hibernate.connection.password",dataBasePassword);
-//
-//        // Add all entity classes here
-//        configuration.addAnnotatedClass(Branch.class);
-//        configuration.addAnnotatedClass(MenuItem.class);
-//        configuration.addAnnotatedClass(Employee.class);
-//
-//
-//        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-//                .applySettings(configuration.getProperties())
-//                .build();
-//
-//        return configuration.buildSessionFactory(serviceRegistry);
-//    }
     MenuItemsController getMenuItemsController() {
         if(menuItemsController==null)
         {
