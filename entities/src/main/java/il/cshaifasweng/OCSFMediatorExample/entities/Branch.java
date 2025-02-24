@@ -43,7 +43,7 @@ public class Branch implements Serializable  {
     @JoinTable(
             name = "branchDeliverableItems",
             joinColumns = @JoinColumn(name = "branchID"),
-            inverseJoinColumns = @JoinColumn(name = "itemID")
+            inverseJoinColumns = @JoinColumn(name = "ItemID")
     )
     private List<MenuItem> deliverableItems = new ArrayList<>();
 
