@@ -70,7 +70,7 @@ private static void initialize(String password) {
             MenuItem item2 = new MenuItem("Pizza ", 55.00, " Mushrooms, onions, tomatoes",
                     " Includes vegan option ", null, BASE);
 
-            MenuItem item3 = new MenuItem("Pasta", 60.00, "Mushroom cream sauce",
+            MenuItem item3 = new MenuItem("Pasta", 70.00, "Mushroom cream sauce",
                     "Available gluten-free", null, BASE);
 
             MenuItem item4 = new MenuItem("Hamburger", 80.00, "Meatball, pickle, tomato, lettuce",
