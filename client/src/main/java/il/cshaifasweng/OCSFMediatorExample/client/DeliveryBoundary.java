@@ -9,7 +9,7 @@ import javafx.scene.control.TableView;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
-public class DeliveryController {
+public class DeliveryBoundary {
 
     @FXML
     private ResourceBundle resources;

@@ -1,22 +1,18 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import il.cshaifasweng.OCSFMediatorExample.client.Events.MenuEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
-import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import org.greenrobot.eventbus.EventBus;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
-public class BranchPageController {
+public class BranchPageBoundary {
 
     public boolean branchIsSet = false;
     public Button reservationBtn;
@@ -29,7 +25,7 @@ public class BranchPageController {
     public Label closeHour;
     public Button menuBtn;
 
-    public BranchPageController() {};
+    public BranchPageBoundary() {};
     public Branch branch;
     @FXML
     private ResourceBundle resources;

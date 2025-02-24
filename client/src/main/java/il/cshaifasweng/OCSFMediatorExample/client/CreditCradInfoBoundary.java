@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
-public class CreditCradInfoController {
+public class CreditCradInfoBoundary {
 
     @FXML
     private ResourceBundle resources;

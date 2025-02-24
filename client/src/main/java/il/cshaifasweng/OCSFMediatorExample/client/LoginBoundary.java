@@ -18,7 +18,7 @@ import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 
-public class LoginController {
+public class LoginBoundary {
 
 
     @FXML

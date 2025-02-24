@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BranchListController">
+<VBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BranchListBoundary">
 
     <Label text="Select a Branch"/>
 

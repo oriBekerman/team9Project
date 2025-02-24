@@ -10,10 +10,10 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BranchListController {
+public class BranchListBoundary {
     @FXML private ListView<String> branchListView;
     private List<Branch> branches;
-    private PrimaryController primaryController; // Reference to PrimaryController
+    private PrimaryBoundary primaryController; // Reference to PrimaryController
 
     @FXML
     public void initialize() {
@@ -49,7 +49,7 @@ public class BranchListController {
     }
 
     // Set reference to PrimaryController
-    public void setPrimaryController(PrimaryController primaryController) {
+    public void setPrimaryController(PrimaryBoundary primaryController) {
         this.primaryController = primaryController;
     }
 }

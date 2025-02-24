@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="871.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BranchPageController">
+<AnchorPane prefHeight="871.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.BranchPageBoundary">
     <Label fx:id="branchTitle" layoutX="431.0" layoutY="29.0" prefHeight="68.0" prefWidth="384.0" styleClass="main-title" text="Haifa Branch">
         <font>
             <Font size="15.0" />

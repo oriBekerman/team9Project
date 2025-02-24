@@ -1,15 +1,12 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchListSentEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
-import il.cshaifasweng.OCSFMediatorExample.client.Events.*;
-import il.cshaifasweng.OCSFMediatorExample.client.Events.MenuEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
@@ -20,7 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.MenuBar;
 import javafx.scene.layout.Pane;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
@@ -32,7 +28,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.*;
 
 //
-public class PrimaryController {
+public class PrimaryBoundary {
 
 	public Button MenuBtn;
 	@FXML
@@ -198,7 +194,7 @@ public class PrimaryController {
 			Parent popupContent = loader.load();
 
 			// Get BranchListController instance and set branches
-			BranchListController controller = loader.getController();
+			BranchListBoundary controller = loader.getController();
 			controller.setBranches(branchList);
 
 			popup.getContent().clear();
@@ -241,7 +237,7 @@ public class PrimaryController {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("Branch.fxml"));
 			Parent branchPageRoot = loader.load();
 			// Get the controller and pass the branch
-			BranchPageController controller = loader.getController();
+			BranchPageBoundary controller = loader.getController();
 			controller.setBranch(branch);
 			if (controller.branchIsSet) {
 				System.out.println("branch is already set");

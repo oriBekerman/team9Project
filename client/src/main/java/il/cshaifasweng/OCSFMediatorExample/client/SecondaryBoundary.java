@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 
-public class SecondaryController {
+public class SecondaryBoundary {
 
     public Label menuLabel;
     @FXML

@@ -52,6 +52,7 @@ public class HibernateUtil {
                             configuration.addAnnotatedClass(MenuItem.class);
                             configuration.addAnnotatedClass(Employee.class);
 
+
                             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                                     .applySettings(configuration.getProperties())
                                     .build();

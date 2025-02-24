@@ -8,7 +8,7 @@ import javafx.scene.control.MenuBar;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
-public class MenuBarController {
+public class MenuBarBoundary {
 
     @FXML
     private ResourceBundle resources;

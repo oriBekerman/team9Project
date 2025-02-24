@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
-public class PersonalDetailsFillingController {
+public class PersonalDetailsFillingBoundary {
 
     @FXML
     private ResourceBundle resources;

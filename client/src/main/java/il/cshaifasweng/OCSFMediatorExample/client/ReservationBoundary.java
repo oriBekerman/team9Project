@@ -10,7 +10,7 @@ import javafx.scene.layout.Pane;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
-public class ReservationController {
+public class ReservationBoundary {
 
     @FXML
     private ResourceBundle resources;

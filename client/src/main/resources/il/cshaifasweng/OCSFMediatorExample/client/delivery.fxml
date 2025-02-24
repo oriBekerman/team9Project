@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="632.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.DeliveryController">
+<AnchorPane prefHeight="632.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.DeliveryBoundary">
    <children>
       <Label layoutX="283.0" layoutY="21.0" prefHeight="33.0" prefWidth="157.0" text=" Make a Delivery">
          <font>
