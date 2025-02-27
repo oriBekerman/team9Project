@@ -4,7 +4,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 
@@ -29,19 +31,21 @@ public class Branch implements Serializable  {
     @Column(nullable = false)
     private String closingTime; // Closing hour
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "branch_menu_items",
-//            joinColumns = @JoinColumn(name = "branch_id"),
-//            inverseJoinColumns = @JoinColumn(name = "menu_item_id")
-//    )
-//    private List<MenuItem> menuItems;
-
+//all branch menu items
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
     @JoinTable(name = "branchSpecialItems",
             joinColumns = @JoinColumn(name = "branch_id", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "menu_item_id", referencedColumnName = "ID"))
     private List<MenuItem> menuItems = new ArrayList<>();
+
+    // only deliverable menu items
+    @ManyToMany
+    @JoinTable(
+            name = "branchDeliverableItems",
+            joinColumns = @JoinColumn(name = "BRANCH_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ITEM_ID")
+    )
+    private List<MenuItem> deliverableItems = new ArrayList<>();
 
 
     public Branch() {}
@@ -80,7 +84,10 @@ public class Branch implements Serializable  {
 
     public List<MenuItem> getBranchMenuItems() { return menuItems; }
     public void setBranchMenuItems(List<MenuItem> menuItems) { this.menuItems = menuItems; }
-
+    public void setDeliverableItems(List<MenuItem> deliverableItems) { this.deliverableItems = deliverableItems; }
+    public List<MenuItem> getDeliverableItems() { return deliverableItems; }
+    public void addMenuItem(MenuItem menuItem) { this.menuItems.add(menuItem); }
+    public void addDeliverableItem(MenuItem menuItem) { this.deliverableItems.add(menuItem); }
     public int getBranchID() {
         return branchID;
     }

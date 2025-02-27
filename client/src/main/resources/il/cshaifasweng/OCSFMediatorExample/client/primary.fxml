@@ -6,13 +6,13 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="623.0" prefWidth="854.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="782.0" prefWidth="1295.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryBoundary">
    <children>
-      <Button fx:id="MenuBtn" layoutX="17.0" layoutY="52.0" mnemonicParsing="false" onAction="#displayMenuFunc" prefHeight="44.0" prefWidth="136.0" styleClass="menu-btn" stylesheets="@style.css" text="Menu" />
-      <Label fx:id="HomePageLabel" layoutX="639.0" layoutY="348.0" text="Home Page" />
-      <Label fx:id="WelcomeLabel" layoutX="251.0" layoutY="24.0" text="Welcome to Mama's Kitchen">
+      <Label fx:id="HomePageLabel" layoutX="639.0" layoutY="348.0" />
+      <Label fx:id="WelcomeLabel" layoutX="503.0" layoutY="31.0" text="Welcome to Mama's Kitchen">
          <font>
             <Font size="19.0" />
          </font>
@@ -29,10 +29,24 @@
              </Pane>
            </items>
        </ToolBar>
-       <Button fx:id="toggleButtonBranch" layoutX="17.0" layoutY="237.0" onAction="#getPopup" prefHeight="44.0" prefWidth="142.0" styleClass="menu-btn" stylesheets="@style.css" text="our branches" />
-       <ImageView fx:id="MOMSImage" fitHeight="135.0" fitWidth="150.0" layoutX="682.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="loginBttn" layoutX="23.0" layoutY="299.0" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
-      <Button fx:id="logoutBttn" layoutX="23.0" layoutY="299.0" mnemonicParsing="false" onAction="#LogOut" text="Logout" />
-      <Button fx:id="UpdateMenuBtn" layoutX="22.0" layoutY="366.0" mnemonicParsing="false" onAction="#displayMenuFunc" text="Update Menu" />
+      <VBox layoutX="-4.0" layoutY="-2.0" prefHeight="782.0" prefWidth="194.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1101.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Pane prefHeight="177.0" prefWidth="190.0">
+               <children>
+                   <ImageView fx:id="MOMSImage" fitHeight="178.0" fitWidth="184.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </Pane>
+            <VBox prefHeight="32.0" prefWidth="190.0" />
+            <VBox prefHeight="231.0" prefWidth="190.0" styleClass="sidebar">
+               <children>
+                  <Button fx:id="MenuBtn" mnemonicParsing="false" onAction="#displayMenuFunc" prefHeight="44.0" prefWidth="136.0" styleClass="menu-btn" stylesheets="@style.css" text="Menu" />
+                   <Button fx:id="toggleButtonBranch" onAction="#getPopup" prefHeight="44.0" prefWidth="142.0" styleClass="menu-btn" stylesheets="@style.css" text="our branches" />
+                  <Button fx:id="UpdateMenuBtn" mnemonicParsing="false" onAction="#displayMenuFunc" text="Update Menu" />
+                  <Button fx:id="loginBttn" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
+                  <Button fx:id="logoutBttn" mnemonicParsing="false" onAction="#LogOut" text="Logout" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

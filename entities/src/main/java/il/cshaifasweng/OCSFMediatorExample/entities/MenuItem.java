@@ -3,8 +3,10 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Struct;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 
 @Entity
@@ -29,6 +31,9 @@ public class MenuItem implements Serializable {
     @Column
     private String preference;
 
+    @Column //stores a list of branch IDs where the menuItem cam be delivered from
+    private String deliverableBranchIds;
+
     @Lob
     private byte[] picture;
 
@@ -38,7 +43,14 @@ public class MenuItem implements Serializable {
 
 
     @ManyToMany(mappedBy = "menuItems", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Branch> branches = new ArrayList<>();
+   List<Branch> branches =new ArrayList<>();
+
+    @ManyToMany(mappedBy = "deliverableItems")
+    private List<Branch> deliverableBranches = new ArrayList<>();
+
+
+
+
 
 
     // Constructor with all fields except itemID (auto-generated)
@@ -111,6 +123,8 @@ public class MenuItem implements Serializable {
     }
     public List<Branch> getBranches() { return branches; }
     public void setBranches(List<Branch> branches) { this.branches = branches; }
+    public List<Branch> getDeliverableBranches() { return deliverableBranches; }
+    public void setDeliverableBranches(List<Branch> deliverableBranches) { this.deliverableBranches = deliverableBranches; }
 
     public void printMenuItem(){
         System.out.println("Name:"+this.name+" price:"+this.price+

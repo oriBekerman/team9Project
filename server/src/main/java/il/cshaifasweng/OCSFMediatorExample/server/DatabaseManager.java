@@ -67,10 +67,10 @@ private static void initialize(String password) {
             MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce",
                     "Low calorie", null, BASE);
 
-            MenuItem item2 = new MenuItem("Pizza ", 55.00, " Mushrooms, onions, tomatoes",
+            MenuItem item2 = new MenuItem("Pizza ", 45.00, " Mushrooms, onions, tomatoes",
                     " Includes vegan option ", null, BASE);
 
-            MenuItem item3 = new MenuItem("Pasta", 60.00, "Mushroom cream sauce",
+            MenuItem item3 = new MenuItem("Pasta", 70.00, "Mushroom cream sauce",
                     "Available gluten-free", null, BASE);
 
             MenuItem item4 = new MenuItem("Hamburger", 80.00, "Meatball, pickle, tomato, lettuce",
@@ -84,14 +84,26 @@ private static void initialize(String password) {
                     "Served with lemon", null, DishType.SPECIAL);
             List<MenuItem> menuItems1 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6));
             List<MenuItem> menuItems2 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item7));
+            List<MenuItem> deliverable1 = new ArrayList<>(List.of(item1, item2,item6));
+            List<MenuItem> deliverable2 = new ArrayList<>(List.of(item1,item4, item5, item7));
             Branch telAvivBranch = new Branch("Tel Aviv", "Tel Aviv", "9:00", "22:00");
             Branch haifaBranch = new Branch("Haifa", "Haifa port", "9:00", "19:00");
-            List<Branch> branches = List.of(haifaBranch,telAvivBranch);
+            List<Branch> branches2 = List.of(telAvivBranch);
+            List<Branch> branches1 = List.of(haifaBranch);
+            List<Branch> branches3 = List.of(haifaBranch,telAvivBranch);
+           for (MenuItem menuItem : deliverable1) {
+               menuItem.setDeliverableBranches(branches1);
+           }
+           for (MenuItem menuItem : deliverable2) {
+               menuItem.setDeliverableBranches(branches2);
+           }
             haifaBranch.setBranchMenuItems(menuItems1);
+           haifaBranch.setDeliverableItems(deliverable1);
             telAvivBranch.setBranchMenuItems(menuItems2);
+            telAvivBranch.setDeliverableItems(deliverable2);
             List<MenuItem> menuItems3= new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6, item7));
             menuItemsController.PopulateMenuItems(menuItems3);
-            branchController.populateBranches(branches);
+            branchController.populateBranches(branches3);
         }
     }
     MenuItemsController getMenuItemsController() {
