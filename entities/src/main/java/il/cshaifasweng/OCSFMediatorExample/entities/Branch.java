@@ -42,8 +42,8 @@ public class Branch implements Serializable  {
     @ManyToMany
     @JoinTable(
             name = "branchDeliverableItems",
-            joinColumns = @JoinColumn(name = "branchID"),
-            inverseJoinColumns = @JoinColumn(name = "ItemID")
+            joinColumns = @JoinColumn(name = "BRANCH_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ITEM_ID")
     )
     private List<MenuItem> deliverableItems = new ArrayList<>();
 
