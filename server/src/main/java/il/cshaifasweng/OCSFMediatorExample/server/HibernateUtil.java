@@ -32,7 +32,7 @@ public class HibernateUtil {
 //        closeSession();  // Ensure all sessions are closed
         if (sessionFactory != null) {
             sessionFactory.close();
-            System.out.println("✅ Hibernate SessionFactory closed.");
+            System.out.println("Hibernate SessionFactory closed.");
         }
     }
 
@@ -51,6 +51,7 @@ public class HibernateUtil {
                             configuration.addAnnotatedClass(Branch.class);
                             configuration.addAnnotatedClass(MenuItem.class);
                             configuration.addAnnotatedClass(Employee.class);
+                            configuration.addAnnotatedClass(RestTable.class);
 
 
                             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()

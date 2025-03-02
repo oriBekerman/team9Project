@@ -3,10 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Struct;
 import java.util.*;
-import java.util.stream.Collectors;
-
 
 
 @Entity

@@ -4,9 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 
@@ -31,12 +29,14 @@ public class Branch implements Serializable  {
     @Column(nullable = false)
     private String closingTime; // Closing hour
 
+
 //all branch menu items
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
     @JoinTable(name = "branchSpecialItems",
             joinColumns = @JoinColumn(name = "branch_id", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "menu_item_id", referencedColumnName = "ID"))
     private List<MenuItem> menuItems = new ArrayList<>();
+
 
     // only deliverable menu items
     @ManyToMany
@@ -46,6 +46,10 @@ public class Branch implements Serializable  {
             inverseJoinColumns = @JoinColumn(name = "ITEM_ID")
     )
     private List<MenuItem> deliverableItems = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RestTable> tables = new ArrayList<>();
 
 
     public Branch() {}
@@ -116,5 +120,13 @@ public class Branch implements Serializable  {
         }
         return special;
     }
+    public List<RestTable> getTables() {
+        return tables;
+    }
+
+    public void setRestTables(List<RestTable> tables) {
+        this.tables = tables;
+    }
+
 }
 

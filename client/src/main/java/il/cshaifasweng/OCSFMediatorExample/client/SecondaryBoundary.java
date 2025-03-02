@@ -12,6 +12,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
@@ -49,6 +51,8 @@ public class SecondaryBoundary {
 
     @FXML
     private TableColumn<MenuItem, Double> priceColumn;
+    @FXML
+    private TableColumn<MenuItem, ImageView> imageColum;
 
 //    @FXML
 //   private TableColumn<MenuItem,String> branchSpecialColumn;
@@ -165,6 +169,7 @@ public class SecondaryBoundary {
         preferenceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPreference()));
         priceColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getPrice()).asObject());
 //        branchSpecialColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDishType()));
+        // This section display the image of mamasKitchen
         // Set cell factories for price fields
         priceColumn.setCellFactory(col -> new TableCell<MenuItem, Double>() {
             @Override

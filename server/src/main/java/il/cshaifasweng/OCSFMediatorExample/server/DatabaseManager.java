@@ -12,6 +12,9 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,14 +94,31 @@ private static void initialize(String password) {
             List<Branch> branches2 = List.of(telAvivBranch);
             List<Branch> branches1 = List.of(haifaBranch);
             List<Branch> branches3 = List.of(haifaBranch,telAvivBranch);
+            RestTable restTable1=new RestTable("inside",2);
+            RestTable restTable2=new RestTable("inside",4);
+            RestTable restTable3=new RestTable("inside",3);
+            RestTable restTable4=new RestTable("outside",3);
+            RestTable restTable5=new RestTable("outside",2);
+            RestTable restTable6=new RestTable("inside",4);
+            Coordinates coordinates=new Coordinates(100,100);
+            restTable1.setCoordinates(coordinates);
+            LocalTime time1=LocalTime.of(9,0);
+            LocalTime time2=LocalTime.of(11,30);
+            List<LocalTime> unavailableTimes=List.of(time1,time2);
+            restTable1.setUnavailableFromTimes(unavailableTimes);
+            List<RestTable> restTables = List.of(restTable1,restTable2,restTable3,restTable4,restTable5,restTable6);
            for (MenuItem menuItem : deliverable1) {
                menuItem.setDeliverableBranches(branches1);
            }
            for (MenuItem menuItem : deliverable2) {
                menuItem.setDeliverableBranches(branches2);
            }
+           for (RestTable table: restTables) {
+               table.setBranch(haifaBranch);
+           }
             haifaBranch.setBranchMenuItems(menuItems1);
            haifaBranch.setDeliverableItems(deliverable1);
+           haifaBranch.setRestTables(restTables);
             telAvivBranch.setBranchMenuItems(menuItems2);
             telAvivBranch.setDeliverableItems(deliverable2);
             List<MenuItem> menuItems3= new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6, item7));
