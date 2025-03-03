@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import javax.persistence.Entity;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class Branch implements Serializable  {
     private List<MenuItem> deliverableItems = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     private List<RestTable> tables = new ArrayList<>();
 
 
@@ -97,7 +98,7 @@ public class Branch implements Serializable  {
     }
 
     public String getOpeningTime() {
-        return openingTime.toString();
+        return openingTime;
     }
 
     public void setOpeningTime(String openingTime) {
@@ -105,7 +106,7 @@ public class Branch implements Serializable  {
     }
 
     public String getClosingTime() {
-        return closingTime.toString();
+        return closingTime;
     }
 
     public void setClosingTime(String closingTime) {
@@ -127,6 +128,25 @@ public class Branch implements Serializable  {
     public void setRestTables(List<RestTable> tables) {
         this.tables = tables;
     }
-
+//    public List<RestTable> getAvailableTables(int capacity,LocalTime time)
+//    {
+//        List<RestTable> availableTables = new ArrayList<>();
+//        System.out.println("in getAvailableTables branch");
+//        for(RestTable table : tables){
+//            if(table.getCapacity()==capacity && table.isAvailableAt(time)){
+//                availableTables.add(table);
+//            }
+//        }
+//        return availableTables;
+//    }
+//    public void printAvailableTables(int capacity,LocalTime time)
+//    {
+//        System.out.println("Available Tables:");
+//        List<RestTable>availableTables = getAvailableTables(capacity,time);
+//        for(RestTable table : availableTables){
+//            table.print();
+//            System.out.println("available at "+time);
+//        }
+//    }
 }
 

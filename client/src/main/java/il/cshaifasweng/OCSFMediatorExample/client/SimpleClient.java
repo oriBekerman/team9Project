@@ -6,6 +6,7 @@ import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
@@ -43,7 +44,6 @@ public class SimpleClient extends AbstractClient {
 		}
 		// Safe cast
 		if (response.getResponseType().equals(RETURN_MENU)) {
-				System.out.println("Menu received, storing event...");
 				Menu menu = (Menu) response.getData();
 				MenuEvent menuEvent = new MenuEvent(menu);
 				// Store the event if SecondaryController is not initialized
@@ -52,7 +52,6 @@ public class SimpleClient extends AbstractClient {
 				} else {
 					// Post immediately if SecondaryController is ready
 					EventBus.getDefault().post(menuEvent);
-					System.out.println("menu event posted");
 				}
 			}
 //		if (response.getResponseType().equals(RETURN_BRANCH_MENU)) {
@@ -87,6 +86,13 @@ public class SimpleClient extends AbstractClient {
 					e.printStackTrace();
 				}
 			}
+			else if(response.getResponseType().equals(RETURN_DELIVERABLES))
+			{
+				List<MenuItem> deliverables = (ArrayList<MenuItem>) response.getData();
+				for (MenuItem item : deliverables) {
+					item.printMenuItem();
+				}
+			}
 		// Handle user authentication response
 		if (response.getResponseType().equals(CORRECTNESS_USER)) {
 			System.out.println("Handling CORRECTNESS_USER response with status: " + response.getStatus());
@@ -113,16 +119,6 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
-	public void displayNetworkMenu() throws IOException {
-		Request<Object> request=new Request<>(BASE_MENU,GET_BASE_MENU,null	);
-		client.sendToServer(request);
-		System.out.println("menu base req sent");
-	}
-	public void displayBranchMenu(Branch branch) throws IOException {
-		Request<Branch> request= new Request<>(BRANCH,GET_BRANCH_MENU,branch);
-		client.sendToServer(request);
-	}
-
 	//called by SecondaryController to notify when it is initialized
 	public static void setSecondaryControllerInitialized() {
 		isSecondaryControllerInitialized = true;
@@ -140,7 +136,6 @@ public class SimpleClient extends AbstractClient {
 		Request<String[]> request= new Request<>(BASE_MENU,UPDATE_PRICE,data);
 		client.sendToServer(request);
 	}
-
 	public void getBranchList(){
 		Request request=new Request(BRANCH,GET_BRANCHES,null);
         try {
@@ -150,7 +145,15 @@ public class SimpleClient extends AbstractClient {
         }
         System.out.println("getBranchList requested");
 	}
-
+	public void displayNetworkMenu() throws IOException {
+		Request<Object> request=new Request<>(BASE_MENU,GET_BASE_MENU,null	);
+		client.sendToServer(request);
+		System.out.println("menu base req sent");
+	}
+	public void displayBranchMenu(Branch branch) throws IOException {
+		Request<Branch> request= new Request<>(BRANCH,GET_BRANCH_MENU,branch);
+		client.sendToServer(request);
+	}
 	public static ActiveUser getActiveUser() {
 		return activeUser;
 	}
@@ -160,22 +163,10 @@ public class SimpleClient extends AbstractClient {
 	private static void clearActiveUser() {
 		activeUser = null;
 	}
-
 	public static void logout() {
 		clearActiveUser();  // Clear active user in SimpleClient
 	}
 
-//	public void showMenu(Menu menu) {
-//		MenuEvent menuEvent = new MenuEvent(menu);
-//		// Store the event if SecondaryController is not initialized
-//		if (!isSecondaryControllerInitialized) {
-//			pendingMenuEvent = menuEvent;
-//		} else {
-//			// Post immediately if SecondaryController is ready
-//			EventBus.getDefault().post(menuEvent);
-//			System.out.println("menu event posted");
-//		}
-//	}
 
 }
 

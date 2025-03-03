@@ -8,9 +8,11 @@ C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\i
 C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractConnectionFactory.java
 C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\MenuItemsRepository.java
 C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\SimpleServer.java
+C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\controllers\RestTableController.java
 C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\OriginatorMessage.java
 C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableServer.java
 C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\controllers\MenuItemsController.java
+C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\RestTableRepository.java
 C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\controllers\LogInController.java
 C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableOriginatorServer.java
 C:\university\2024-2025\semesterA\softwareeng\teamProject\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\ConnectionToClient.java

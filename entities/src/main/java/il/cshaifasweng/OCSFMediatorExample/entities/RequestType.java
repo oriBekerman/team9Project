@@ -13,5 +13,6 @@ public enum RequestType{
         //branch related requests
         GET_BRANCH_BY_NAME,
         GET_BRANCHES,
+        GET_DELIVERABLES,
         GET_BRANCH_MENU,//branch
     }

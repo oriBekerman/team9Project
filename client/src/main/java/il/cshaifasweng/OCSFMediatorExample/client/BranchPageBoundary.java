@@ -1,14 +1,18 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.net.URL;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.ResourceBundle;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.DeliverableItemsSentEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.greenrobot.eventbus.Subscribe;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
@@ -24,6 +28,7 @@ public class BranchPageBoundary {
     public Label openHour;
     public Label closeHour;
     public Button menuBtn;
+    public Button tableBtn;
 
     public BranchPageBoundary() {};
     public Branch branch;
@@ -124,6 +129,17 @@ public class BranchPageBoundary {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void getAvailableTables(ActionEvent actionEvent) {
+        Request request=new Request<>(ReqCategory.BRANCH, RequestType.GET_DELIVERABLES,branch);
+        try{
+            SimpleClient.getClient().sendToServer(request);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
 //change
