@@ -62,17 +62,16 @@ public class BranchRepository extends BaseRepository<Branch> {
         }
         return result;
     }
-//    public List<RestTable> getRestTables(Branch branch) {
-//        List<RestTable> result = new ArrayList<>();
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            Query<RestTable> query=session.createQuery("SELECT rt FROM RestTable rt WHERE rt.branch = :branch",RestTable.class);
-//            query.setParameter("branch", branch.getBranchID());
-//            result = query.getResultList();
-//        }
-//        catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//        return result;
-//    }
-
+    public List<RestTable> getRestTables(Branch branch) {
+        List<RestTable> result = new ArrayList<>();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<RestTable> query=session.createQuery("SELECT rt FROM RestTable rt WHERE rt.branch = :branch",RestTable.class);
+            query.setParameter("branch", branch.getBranchID());
+            result = query.getResultList();
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
 }

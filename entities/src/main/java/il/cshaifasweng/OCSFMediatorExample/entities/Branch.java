@@ -49,7 +49,7 @@ public class Branch implements Serializable  {
     private List<MenuItem> deliverableItems = new ArrayList<>();
 
 
-    @OneToMany
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RestTable> tables = new ArrayList<>();
 
 

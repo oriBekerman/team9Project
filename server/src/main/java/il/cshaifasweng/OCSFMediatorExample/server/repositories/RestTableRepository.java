@@ -30,15 +30,19 @@ public class RestTableRepository extends BaseRepository<RestTable> {
             save(table);
         }
     }
-//    public List<LocalTime> getUnavailableTimes() {
-//        List<LocalTime> times = new ArrayList<>();
-//        try (Session session = HibernateUtil.getSessionFactory().openSession())
-//        {
-//            Query<RestTable> query = session.createQuery("from RestTable");
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//        return result;
-//    }
+    public List<LocalTime> getUnavailableTimes() {
+        List<LocalTime> times = new ArrayList<>();
+        try (Session session = HibernateUtil.getSessionFactory().openSession())
+        {
+            Query query=session.createQuery(
+                            "SELECT t FROM RestTable t LEFT JOIN FETCH t.unavailableFromTimes WHERE t.id = :id",
+                            RestTable.class);
+                    query.setParameter("id", 1L);
+                    times= (List<LocalTime>) query.uniqueResult();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return times;
+    }
 
 }

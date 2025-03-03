@@ -29,6 +29,7 @@ public class DatabaseManager {
     private MenuItemsController menuItemsController;
     private BranchController branchController;
     private LogInController logInController;
+    private RestTableController restTableController;
 
     public DatabaseManager(String password) {
         initialize(password);
@@ -52,6 +53,7 @@ private static void initialize(String password) {
         this.menuItemsController = new MenuItemsController();
         this.branchController = new BranchController();
         this.logInController = new LogInController();
+        this.restTableController = new RestTableController();
     }
 
     //if  database tables are empty initialize them
@@ -94,44 +96,45 @@ private static void initialize(String password) {
             List<Branch> branches2 = List.of(telAvivBranch);
             List<Branch> branches1 = List.of(haifaBranch);
             List<Branch> branches3 = List.of(haifaBranch,telAvivBranch);
-//            RestTable restTable1=new RestTable("inside",2);
-//            RestTable restTable2=new RestTable("inside",4);
-//            RestTable restTable3=new RestTable("inside",3);
-//            RestTable restTable4=new RestTable("outside",3);
-//            RestTable restTable5=new RestTable("outside",2);
-//            RestTable restTable6=new RestTable("inside",4);
-//            Coordinates coordinates=new Coordinates(100,100);
-//            restTable1.setCoordinates(coordinates);
-//            LocalTime time1=LocalTime.of(9,0);
-//            LocalTime time2=LocalTime.of(10,30);
-//            LocalTime time3=LocalTime.of(11,0);
-//            LocalTime time4=LocalTime.of(12,30);
-//            LocalTime time5=LocalTime.of(14,30);
-//            List<LocalTime> unavailableTimes1=List.of(time1,time2,time3,time5);
-//            List<LocalTime> unavailableTimes2=List.of(time1,time4,time5);
-//            restTable1.setUnavailableFromTimes(unavailableTimes1);
-//            restTable2.setUnavailableFromTimes(unavailableTimes2);
-//            restTable3.addUnavailableFromTime(time3);
-//            restTable4.addUnavailableFromTime(time4);
-//            restTable5.addUnavailableFromTime(time5);
-//            List<RestTable> restTables = List.of(restTable1,restTable2,restTable3,restTable4,restTable5,restTable6);
+            RestTable restTable1=new RestTable("inside",2);
+            RestTable restTable2=new RestTable("inside",4);
+            RestTable restTable3=new RestTable("inside",3);
+            RestTable restTable4=new RestTable("outside",3);
+            RestTable restTable5=new RestTable("outside",2);
+            RestTable restTable6=new RestTable("inside",4);
+            Coordinates coordinates=new Coordinates(100,100);
+            restTable1.setCoordinates(coordinates);
+            LocalTime time1=LocalTime.of(9,0);
+            LocalTime time2=LocalTime.of(10,30);
+            LocalTime time3=LocalTime.of(11,0);
+            LocalTime time4=LocalTime.of(12,30);
+            LocalTime time5=LocalTime.of(14,30);
+            List<LocalTime> unavailableTimes1=List.of(time1,time2,time3,time5);
+            List<LocalTime> unavailableTimes2=List.of(time1,time4,time5);
+            restTable1.setUnavailableFromTimes(unavailableTimes1);
+            restTable2.setUnavailableFromTimes(unavailableTimes2);
+            restTable3.addUnavailableFromTime(time3);
+            restTable4.addUnavailableFromTime(time4);
+            restTable5.addUnavailableFromTime(time5);
+            List<RestTable> restTables = List.of(restTable1,restTable2,restTable3,restTable4,restTable5,restTable6);
            for (MenuItem menuItem : deliverable1) {
                menuItem.setDeliverableBranches(branches1);
            }
            for (MenuItem menuItem : deliverable2) {
                menuItem.setDeliverableBranches(branches2);
            }
-//           for (RestTable table: restTables) {
-//               table.setBranch(haifaBranch);
-//           }
+           for (RestTable table: restTables) {
+               table.setBranch(haifaBranch);
+           }
             haifaBranch.setBranchMenuItems(menuItems1);
            haifaBranch.setDeliverableItems(deliverable1);
-//           haifaBranch.setRestTables(restTables);
+           haifaBranch.setRestTables(restTables);
             telAvivBranch.setBranchMenuItems(menuItems2);
             telAvivBranch.setDeliverableItems(deliverable2);
             List<MenuItem> menuItems3= new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6, item7));
             menuItemsController.PopulateMenuItems(menuItems3);
             branchController.populateBranches(branches3);
+//            restTableController.populateTables(restTables);
         }
     }
     MenuItemsController getMenuItemsController() {
@@ -155,6 +158,12 @@ private static void initialize(String password) {
             logInController = new LogInController();
         }
         return logInController;
+    }
+    RestTableController getRestTableController() {
+        if (restTableController == null) {
+            restTableController = new RestTableController();
+        }
+        return restTableController;
     }
     // shuts down Hibernate.
     public static void shutdown() {

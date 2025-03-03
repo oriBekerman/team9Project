@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.server;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.BranchController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.RestTableController;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import java.io.IOException;
@@ -18,13 +19,15 @@ public class SimpleServer extends AbstractServer {
     private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 
     public static Session session;
-//    private Menu menu=new Menu();
+
+    //controllers
     private MenuItemsController menuItemsController =null;
-//    private MenusController menusController=null;
     private BranchController branchController=null;
+    private RestTableController restTableController=null;
+    private LogInController logInController = null;
+
     public static String dataBasePassword="Bekitnt26@";//change database password here
     public String password="";//used only when entering a new password through cmd
-    private LogInController logInController = null;
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {
         super(port);
@@ -90,5 +93,6 @@ public class SimpleServer extends AbstractServer {
         this.menuItemsController =databaseManager.getMenuItemsController();
         this.branchController=databaseManager.getBranchController();
         this.logInController = databaseManager.getLogInController();
+        this.restTableController = databaseManager.getRestTableController();
     }
 }
