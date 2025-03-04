@@ -29,23 +29,23 @@
              </Pane>
            </items>
        </ToolBar>
-      <VBox layoutX="-4.0" layoutY="-2.0" prefHeight="782.0" prefWidth="194.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1101.0" AnchorPane.topAnchor="0.0">
+      <VBox layoutX="-4.0" layoutY="-2.0" prefHeight="782.0" prefWidth="239.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1056.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Pane prefHeight="177.0" prefWidth="190.0">
+             <ImageView fx:id="MOMSImage" fitHeight="178.0" fitWidth="184.0" pickOnBounds="true" preserveRatio="true" />
+            <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                   <ImageView fx:id="MOMSImage" fitHeight="178.0" fitWidth="184.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </Pane>
-            <VBox prefHeight="32.0" prefWidth="190.0" />
-            <VBox prefHeight="231.0" prefWidth="190.0" styleClass="sidebar">
-               <children>
-                  <Button fx:id="MenuBtn" mnemonicParsing="false" onAction="#displayMenuFunc" prefHeight="44.0" prefWidth="136.0" styleClass="menu-btn" stylesheets="@style.css" text="Menu" />
-                   <Button fx:id="toggleButtonBranch" onAction="#getPopup" prefHeight="44.0" prefWidth="142.0" styleClass="menu-btn" stylesheets="@style.css" text="our branches" />
-                  <Button fx:id="UpdateMenuBtn" mnemonicParsing="false" onAction="#displayMenuFunc" text="Update Menu" />
-                  <Button fx:id="loginBttn" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
-                  <Button fx:id="logoutBttn" mnemonicParsing="false" onAction="#LogOut" text="Logout" />
+                  <VBox prefHeight="231.0" prefWidth="190.0" styleClass="sidebar">
+                     <children>
+                        <Button fx:id="MenuBtn" mnemonicParsing="false" onAction="#displayMenuFunc" prefHeight="44.0" prefWidth="136.0" styleClass="menu-btn" stylesheets="@style.css" text="Menu" />
+                         <Button fx:id="toggleButtonBranch" onAction="#getPopup" prefHeight="44.0" prefWidth="142.0" styleClass="menu-btn" stylesheets="@style.css" text="our branches" />
+                        <Button fx:id="UpdateMenuBtn" mnemonicParsing="false" onAction="#displayMenuFunc" text="Update Menu" />
+                        <Button fx:id="loginBttn" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
+                        <Button fx:id="logoutBttn" mnemonicParsing="false" onAction="#LogOut" text="Logout" />
+                     </children>
+                  </VBox>
                </children>
             </VBox>
+            <VBox prefHeight="32.0" prefWidth="190.0" />
          </children>
       </VBox>
    </children>

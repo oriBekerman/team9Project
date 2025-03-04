@@ -26,5 +26,7 @@
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Branch" />
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.MenuItem"/>
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Employee"/>
+        <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.RestTable"/>
+
     </session-factory>
 </hibernate-configuration>

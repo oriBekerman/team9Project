@@ -19,7 +19,9 @@ il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.class
 il\cshaifasweng\OCSFMediatorExample\client\LoginBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\SessionManager.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.class
+il\cshaifasweng\OCSFMediatorExample\client\TableMapBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\DeliverableItemsSentEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\WarningEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\updateDishEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.class
