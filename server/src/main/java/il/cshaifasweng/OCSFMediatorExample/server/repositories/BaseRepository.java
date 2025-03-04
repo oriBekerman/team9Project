@@ -1,138 +1,174 @@
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
 import com.sun.glass.ui.Clipboard;
+import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
+import org.hibernate.Transaction;
 import java.util.ArrayList;
 import java.util.List;
 
-import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
 
 
 public abstract class BaseRepository<T> {
-    protected final List<T> storage = new ArrayList<>(); // Simulated in-memory storage
-    protected final SessionFactory sessionFactory;
 
-    public BaseRepository(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
-    public void saveToStorage(T entity) {
-        storage.add(entity);
-    }
-
-    public void deleteFromStorage(T entity) {
-        storage.remove(entity);
-    }
+    public BaseRepository() {}
 
     public T findById(int id) {
-        // First, search in in-memory storage
-        T result = storage.stream()
-                .filter(entity -> getId(entity) == id)
-                .findFirst()
-                .orElse(null);
-
-        if (result != null) {
-            return result;
-        }
-
-        // If not found, search in the database
-        // If not found, search in the database
-        Session session = null;
-        try {
-            session = openSession();
-            return session.get(getEntityClass(), id);
-        } catch (Exception e) {
+        //search in the database
+       try (Session session = HibernateUtil.getSessionFactory().openSession())
+       {
+           return session.get(getEntityClass(),id);
+       }
+         catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to find entity by ID", e);
-        } finally {
-            closeSession(session);
         }
+//       finally {
+//           HibernateUtil.closeSession();  //ensure session is closed
+//       }
     }
+    protected abstract Class<T> getEntityClass();
 
     public List<T> findAll() {
-        // Merge in-memory and database storage
-        Session session = null;
-        try {
-            session =openSession();
-            List<T> databaseResults = session.createQuery("from " + getEntityClass().getName(), getEntityClass()).list();
-            List<T> combinedResults = new ArrayList<>(databaseResults);
-            combinedResults.addAll(storage);
-            return combinedResults;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            return session.createQuery("FROM " + getEntityClass().getSimpleName(), getEntityClass()).list();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to find all entities", e);
         }
+//        finally {
+//            HibernateUtil.closeSession();  //ensure session is closed
+//        }
     }
 
     public void deleteById(int id) {
-        // Remove from in-memory storage
-        storage.removeIf(entity -> getId(entity) == id);
-        Session session = null;
-        // Remove from the database
-        try {
-            session =openSession();
-            session.beginTransaction();
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            transaction=session.beginTransaction(); // Start transaction
+            // Fetch the entity to ensure it exists before attempting to delete
             T entity = session.get(getEntityClass(), id);
-            if (entity != null) {
-                session.delete(entity);
+            if (entity == null) {
+                System.out.println("Entity with ID " + id + " not found. skipping deletion.");
+                session.getTransaction().rollback(); // Rollback to prevent unnecessary commit
+                return;
             }
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to delete entity by ID", e);
+            session.delete(entity);
+            transaction.commit();
+            System.out.println("Entity with ID " + id + " deleted successfully.");
         }
+        catch (Exception e)
+        {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            throw new RuntimeException("Failed to delete entity by ID: " + id, e);
+        }
+//        finally {
+//            HibernateUtil.closeSession();  //ensure session is closed
+//        }
     }
 
     public abstract int getId(T entity);
 
-    protected abstract Class<T> getEntityClass();
 
-    protected void save(T entity) {
-        Session session = null;
-        try {
-            session =openSession();
-            session.beginTransaction();
-            session.save(entity);
-            session.getTransaction().commit();
+    public T getByName(String name) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            return session.get(getEntityClass(),name);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to save entity", e);
-        }finally {
-            closeSession(session);
+        }
+//        finally {
+//            HibernateUtil.closeSession();  //ensure session is closed
+//        }
+    }
+
+
+    protected void save(T entity) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(entity);
+            transaction.commit();
+        } catch (org.hibernate.exception.ConstraintViolationException e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Duplicate entry error: " + e.getMessage());
+        } catch (org.hibernate.exception.JDBCConnectionException e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Database connection failed! Please check MySQL.");
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("An unexpected error occurred: " + e.getMessage());
+//        } finally {
+//            HibernateUtil.closeSession();
+//        }
         }
     }
+
     public boolean checkIfEmpty()
     {
         return findAll().isEmpty();
     }
-    public void populate(List<T> entities) {
-        Session session = null;
-        try {
-            session =openSession();
-            session.beginTransaction();
-            for(T entity : entities) {
-                save(entity);
-            }
-            session.flush();
-            // Save items to the database
-            session.getTransaction().commit();
-            System.out.println("Data initialization completed!");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to initialize data", e);
-        }finally {
-            closeSession(session);
-        }
-    }
-    protected Session openSession() {
-        return sessionFactory.openSession();
-    }
 
-    protected void closeSession(Session session) {
-        if (session != null && session.isOpen()) {
-            session.close();
+//    public void populate(List<T> entities) {
+//        Transaction transaction = null;
+//        try (Session session = HibernateUtil.getSession())
+//        {
+//
+//            for(T entity : entities) {
+//                transaction=session.beginTransaction();
+//                save(entity);
+//                transaction.commit();
+//            }
+//            session.flush();
+//            // Save items to the database
+//            transaction.commit();
+//        } catch (org.hibernate.exception.ConstraintViolationException e) {
+//            if (transaction != null && transaction.isActive()) {
+//                transaction.rollback();
+//            }
+//            System.err.println("Duplicate entry error: " + e.getMessage());
+//        } catch (org.hibernate.exception.JDBCConnectionException e) {
+//            if (transaction != null && transaction.isActive()) {
+//                transaction.rollback();
+//            }
+//            System.err.println("Database connection failed! Please check MySQL.");
+//        } catch (Exception e) {
+//            if (transaction != null && transaction.isActive()) {
+//                transaction.rollback();
+//            }
+//            System.err.println("An unexpected error occurred: " + e.getMessage());
+//        } finally {
+//            HibernateUtil.closeSession();
+//        }
+//    }
+    protected void persist(T entity) {
+        Transaction transaction = null;
+            try (Session session = HibernateUtil.getSessionFactory().openSession())
+        {
+            transaction=session.beginTransaction();
+            session.persist(entity);
+            transaction.commit();
+        }  catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            throw new RuntimeException("Failed to save entity",e);
         }
+//        finally {
+//            HibernateUtil.closeSession();  //ensure session is closed
+//        }
     }
 }

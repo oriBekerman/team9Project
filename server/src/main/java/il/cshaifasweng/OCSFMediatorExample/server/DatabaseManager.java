@@ -1,114 +1,172 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE;
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePassword;
 
+
 //configures database,handles opening and closing sessions
 public class DatabaseManager {
-    private static SessionFactory sessionFactory;
-    private MenuItemsController menuItemsController=null;
-    private LogInController logInController = null;
-//    private boolean initializedFlag=false;
+    private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private MenuItemsController menuItemsController;
+    private BranchController branchController;
+    private LogInController logInController;
+    private RestTableController restTableController;
 
     public DatabaseManager(String password) {
         initialize(password);
-        if(sessionFactory!=null)
-        {
-            initControllers(sessionFactory);
-        }
-        if(sessionFactory==null)
-        {
-            System.out.println("SessionFactory is null");
-        }
-        System.out.println("in initialize database");
+        initControllers();
         checkAndPopulateTables();
-        System.out.println("in databaseManager populate");
-    };
-    public static void initialize(String password)throws HibernateException
-    {
-        System.out.println("in initialize database");
-        try {
-            sessionFactory = getSessionFactory(); // Create session factory
-            session = sessionFactory.openSession(); // Open session
-            session.beginTransaction(); // Start transaction
+        System.out.println("Database initialized & populated successfully!");
+    }
+private static void initialize(String password) {
+    System.out.println("initializing database...");
+    if (sessionFactory == null) {
+        System.err.println("failed to initialize Hibernate! SessionFactory is null.");
+        throw new HibernateException("SessionFactory creation failed.");
+    }
+    System.out.println("SessionFactory initialized successfully!");
+}
 
-        } catch (Exception exception) {
-            if (session != null) {
-                session.getTransaction().rollback(); // Rollback on failure
-            }
-            System.err.println("An error occurred, changes have been rolled back.");
-            exception.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.close(); // Always close the session
-            }
+
+
+    public void initControllers()
+    {
+        this.menuItemsController = new MenuItemsController();
+        this.branchController = new BranchController();
+        this.logInController = new LogInController();
+        this.restTableController = new RestTableController();
+    }
+
+    //if  database tables are empty initialize them
+    public void checkAndPopulateTables() {
+        //if there menuItem and branches are empty initialize them
+        if (menuItemsController.checkIfEmpty() && branchController.checkIfEmpty()) {
+
+            // Prepopulate with 5 employees, using enum for employeeType
+            Employee employee1 = new Employee(111111111, "Alice Manager", "1234 Maple St", "alice.manager@example.com", "alice.manager", "1234", EmployeeType.COMPANY_MANAGER, 1);
+            Employee employee2 = new Employee(222222222, "Bob Regular", "5678 Oak St", "bob.regular@example.com", "bob.regular", "1234", EmployeeType.RESTAURANT_SERVICE, 1);
+            Employee employee3 = new Employee(333333333, "Charlie Dietitian", "9101 Pine St", "charlie.dietitian@example.com", "charlie.dietitian", "1234", EmployeeType.DIETITIAN, 2);
+            Employee employee4 = new Employee(444444444, "Debbie Customer Service", "2345 Birch St", "debbie.cs@example.com", "debbie.cs", "1234", EmployeeType.CUSTOMER_SERVICE, 3);
+            Employee employee5 = new Employee(555555555, "Eva Admin", "6789 Cedar St", "eva.admin@example.com", "eva.admin", "1234", EmployeeType.CUSTOMER_SERVICE_MANAGER, 3);
+            List<Employee> employees = List.of(employee1, employee2, employee3, employee4, employee5);
+            logInController.checkAndPopulateUsers(employees);
+            MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce",
+                    "Low calorie", null, BASE);
+
+            MenuItem item2 = new MenuItem("Pizza ", 45.00, " Mushrooms, onions, tomatoes",
+                    " Includes vegan option ", null, BASE);
+
+            MenuItem item3 = new MenuItem("Pasta", 70.00, "Mushroom cream sauce",
+                    "Available gluten-free", null, BASE);
+
+            MenuItem item4 = new MenuItem("Hamburger", 80.00, "Meatball, pickle, tomato, lettuce",
+                    "Choice of meat or plant-based", null, BASE);
+
+            MenuItem item5 = new MenuItem("Edamame", 30.00, "Edamame",
+                    "Served with sea salt", null,BASE);
+            MenuItem item6 = new MenuItem("Fries", 15.00, "potato",
+                    "Served with sea salt", null, DishType.SPECIAL);
+            MenuItem item7 = new MenuItem("salmon", 70.00, "salmon",
+                    "Served with lemon", null, DishType.SPECIAL);
+            List<MenuItem> menuItems1 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6));
+            List<MenuItem> menuItems2 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item7));
+            List<MenuItem> deliverable1 = new ArrayList<>(List.of(item1, item2,item6));
+            List<MenuItem> deliverable2 = new ArrayList<>(List.of(item1,item4, item5, item7));
+            Branch telAvivBranch = new Branch("Tel Aviv", "Tel Aviv", "9:00", "22:00");
+            Branch haifaBranch = new Branch("Haifa", "Haifa port", "9:00", "19:00");
+            List<Branch> branches2 = List.of(telAvivBranch);
+            List<Branch> branches1 = List.of(haifaBranch);
+            List<Branch> branches3 = List.of(haifaBranch,telAvivBranch);
+            RestTable restTable1=new RestTable("inside",2);
+            RestTable restTable2=new RestTable("inside",4);
+            RestTable restTable3=new RestTable("inside",3);
+            RestTable restTable4=new RestTable("outside",3);
+            RestTable restTable5=new RestTable("outside",2);
+            RestTable restTable6=new RestTable("inside",4);
+            Coordinates coordinates=new Coordinates(100,100);
+            restTable1.setCoordinates(coordinates);
+            LocalTime time1=LocalTime.of(9,0);
+            LocalTime time2=LocalTime.of(10,30);
+            LocalTime time3=LocalTime.of(11,0);
+            LocalTime time4=LocalTime.of(12,30);
+            LocalTime time5=LocalTime.of(14,30);
+            List<LocalTime> unavailableTimes1=List.of(time1,time2,time3,time5);
+            List<LocalTime> unavailableTimes2=List.of(time1,time4,time5);
+            restTable1.setUnavailableFromTimes(unavailableTimes1);
+            restTable2.setUnavailableFromTimes(unavailableTimes2);
+            restTable3.addUnavailableFromTime(time3);
+            restTable4.addUnavailableFromTime(time4);
+            restTable5.addUnavailableFromTime(time5);
+            List<RestTable> restTables = List.of(restTable1,restTable2,restTable3,restTable4,restTable5,restTable6);
+           for (MenuItem menuItem : deliverable1) {
+               menuItem.setDeliverableBranches(branches1);
+           }
+           for (MenuItem menuItem : deliverable2) {
+               menuItem.setDeliverableBranches(branches2);
+           }
+           for (RestTable table: restTables) {
+               table.setBranch(haifaBranch);
+           }
+            haifaBranch.setBranchMenuItems(menuItems1);
+           haifaBranch.setDeliverableItems(deliverable1);
+           haifaBranch.setRestTables(restTables);
+            telAvivBranch.setBranchMenuItems(menuItems2);
+            telAvivBranch.setDeliverableItems(deliverable2);
+            List<MenuItem> menuItems3= new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6, item7));
+            menuItemsController.PopulateMenuItems(menuItems3);
+            branchController.populateBranches(branches3);
         }
-    }
-
-    public void initControllers(SessionFactory sessionFactory)
-    {
-        this.menuItemsController = new MenuItemsController(sessionFactory);
-        this.logInController = new LogInController(sessionFactory);
-    }
-    public void checkAndPopulateTables()
-    {
-        menuItemsController.checkAndPopulateMenuItems();
-        logInController.checkAndPopulateUsers();
-    }
-
-    private SessionFactory getSessionFactory(String password) throws HibernateException {
-        Configuration configuration = new Configuration();
-        configuration.setProperty("hibernate.connection.password",password);
-
-        // Add annotated classes
-        configuration.addAnnotatedClass(Menu.class);
-        configuration.addAnnotatedClass(MenuItem.class);
-        configuration.addAnnotatedClass(Employee.class);
-
-        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties())
-                .build();
-
-        return configuration.buildSessionFactory(serviceRegistry);
-    }
-    static SessionFactory getSessionFactory() throws HibernateException {
-        Configuration configuration = new Configuration();
-        configuration.setProperty("hibernate.connection.password",dataBasePassword);
-
-        // Add all entity classes here
-        configuration.addAnnotatedClass(Menu.class);
-        configuration.addAnnotatedClass(MenuItem.class);
-        configuration.addAnnotatedClass(Employee.class);
-
-        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties())
-                .build();
-
-        return configuration.buildSessionFactory(serviceRegistry);
     }
     MenuItemsController getMenuItemsController() {
         if(menuItemsController==null)
         {
-            menuItemsController=new MenuItemsController(getSessionFactory());
+            menuItemsController=new MenuItemsController();
         }
         return menuItemsController;
     }
 
+    BranchController getBranchController() {
+        if(branchController==null)
+        {
+            branchController=new BranchController();
+        }
+        return branchController;
+    }
+
     LogInController getLogInController() {
         if (logInController == null) {
-            logInController = new LogInController(getSessionFactory());
+            logInController = new LogInController();
         }
         return logInController;
     }
-
-
+    RestTableController getRestTableController() {
+        if (restTableController == null) {
+            restTableController = new RestTableController();
+        }
+        return restTableController;
+    }
+    // shuts down Hibernate.
+    public static void shutdown() {
+        HibernateUtil.shutdown();
+    }
 }
+

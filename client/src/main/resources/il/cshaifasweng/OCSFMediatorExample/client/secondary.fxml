@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="743.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="871.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryBoundary">
     <children>
-        <Button fx:id="BackToHPbtn" layoutX="14.0" layoutY="22.0" mnemonicParsing="false" onAction="#BackToHPfunc" text="Back to Home Page" />
-        <Button fx:id="UpdatePriceBtn" layoutX="14.0" layoutY="64.0" mnemonicParsing="false" onAction="#UpdateTheMenu" text="Update Price" />
-        <Button fx:id="SaveBtn" layoutX="14.0" layoutY="107.0" mnemonicParsing="false" onAction="#SaveTheUpdateMenu" text="Save" />
+        <Button fx:id="BackToHPbtn" layoutX="1019.0" layoutY="14.0" mnemonicParsing="false" onAction="#BackToHPfunc" styleClass="return-btn" text="Back to Home Page" />
+        <Button fx:id="UpdatePriceBtn" layoutX="28.0" layoutY="689.0" mnemonicParsing="false" onAction="#UpdateTheMenu" styleClass="cancel-btn" text="Update Price" />
+        <Button fx:id="SaveBtn" layoutX="28.0" layoutY="770.0" mnemonicParsing="false" onAction="#SaveTheUpdateMenu" prefHeight="49.0" prefWidth="124.0" styleClass="cancel-btn" text="Save" />
 
         <!-- TableView for MenuItems -->
-        <TableView fx:id="menuTableView" layoutX="143.0" layoutY="22.0" prefHeight="664.0" prefWidth="605.0">
+        <TableView fx:id="menuTableView" layoutX="301.0" layoutY="104.0" prefHeight="664.0" prefWidth="638.0">
             <columns>
-                <TableColumn fx:id="nameColumn" text="Name" />
-                <TableColumn fx:id="ingredientsColumn" text="Ingredients" />
-                <TableColumn fx:id="preferenceColumn" text="Preference" />
-                <TableColumn fx:id="priceColumn" text="Price" />
+                <TableColumn fx:id="nameColumn" prefWidth="131.0" styleClass="column-header-background" text="Name" />
+                <TableColumn fx:id="ingredientsColumn" prefWidth="171.0" styleClass="column-header-background" text="Ingredients" />
+                <TableColumn fx:id="preferenceColumn" prefWidth="225.0" styleClass="column-header-background" text="Preference" />
+                <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="108.0" styleClass="column-header-background" text="Price" />
+                <TableColumn fx:id="imageColum" minWidth="0.0" prefWidth="108.0" styleClass="column-header-background" text="image" />
             </columns>
         </TableView>
+      <Label fx:id="menuLabel" layoutX="589.0" layoutY="23.0" prefHeight="68.0" prefWidth="77.0" styleClass="menuPageTitle" text="Menu" />
     </children>
 </AnchorPane>

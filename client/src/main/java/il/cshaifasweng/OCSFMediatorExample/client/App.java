@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Events.WarningEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -8,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -38,8 +38,8 @@ public class App extends Application {
         client.setHost("localhost");//change later for two computer connection
         client.setPort(3000);//change later for two computer connection
     	client.openConnection();
-        stage.setTitle("Project Team 9 - Mom's kitchen");
-        scene = new Scene(loadFXML("primary"), 600, 600);
+        stage.setTitle("ProtoType Team 9 - Mom's kitchen");
+        scene = new Scene(loadFXML("primary"), 1295, 782);
         stage.setScene(scene);
         stage.show();
     }
@@ -90,7 +90,12 @@ public class App extends Application {
         appStage.setScene(scene);
         appStage.show();
     }
-    public static void switchScreen(String screenName) {
+    public static void setContent(Parent parent) throws IOException {
+        scene = new Scene(parent);
+        appStage.setScene(scene);
+        appStage.show();
+    }
+    public static void switchScreen (String screenName) {
         switch (screenName) {
             case "Home Page":
                 Platform.runLater(() -> {
@@ -104,7 +109,7 @@ public class App extends Application {
                 break;
             case "Branches":
                 Platform.runLater(() -> {
-                    setWindowTitle("Our Branches");
+                    setWindowTitle(" Our Branches");
                     try {
                         setContent("branches");
                     } catch (IOException e) {
@@ -174,5 +179,4 @@ public class App extends Application {
                 break;
         }
     }
-
 }

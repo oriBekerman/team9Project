@@ -2,38 +2,66 @@ package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
 import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.Request;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.EmployeeRepository;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.THIS_CLIENT;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.BRANCHES_SENT;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.CORRECTNESS_USER;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
+
 public class LogInController {
 
 
-    private EmployeeRepository employeeRepository;
+    private static EmployeeRepository employeeRepository;
 
     // Constructor to inject the repositories
-    public LogInController(SessionFactory sessionFactory) {
-        if (sessionFactory == null) {
-            throw new NullPointerException("In LoginController, sessionFactory is null");
-        }
-        System.out.println("In LoginController constructor");
-        this.employeeRepository = new EmployeeRepository(sessionFactory);
+    public LogInController() {
+        employeeRepository = new EmployeeRepository();
+    }
+    public Response handleRequest(Request request)
+    {
+        return switch (request.getRequestType())
+        {
+            case CHECK_USER->verifyUser(request);
+            default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
+        };
     }
 
-    public String verifyUser(String username, String password) {
+    public Response verifyUser(Request request) {
+        Response response=new Response<>(CORRECTNESS_USER,null,ERROR,THIS_CLIENT);
+        String data = (String) request.getData();
+        String[] credentials = data.split(" ");
+        String username = credentials[0];
+        String password = credentials[1];
         Employee employee = this.employeeRepository.findByUsername(username);
+        String loginResult;
 
         if (employee == null) {
-            return "User not found";
+            loginResult= "User not found";
         }
 
         if (!employee.getPassword().equals(password)) {
-            return "Wrong password";
+            loginResult= "Wrong password";
         }
+        loginResult= "Login successful";
+        if (loginResult.equals("Login successful"))
+        {
+            EmployeeType employeeType = getEmployeeTypeByUsername(username);
+            response.setStatus(SUCCESS);
+            response.setMessage(username + ":" + employeeType);
+        } else {
+            response.setStatus(ERROR);
+            response.setData(loginResult);
 
-        return "Login successful";
+        }
+        return response;
     }
 
     public EmployeeType getEmployeeTypeByUsername(String username) {
@@ -47,26 +75,13 @@ public class LogInController {
 
 
     // Method to populate Customer and Employee tables if they are empty
-    public void checkAndPopulateUsers() {
+    public void checkAndPopulateUsers(List<Employee> employees) {
         try {
+            System.out.println("In checkAndPopulateUsers 1");
             // Check if the Employee table is empty
             if (employeeRepository.checkIfEmpty()) {
-                List<Employee> employees = new ArrayList<>();
-
-                // Prepopulate with 5 employees, using enum for employeeType
-                Employee employee1 = new Employee(111111111, "Alice Manager", "1234 Maple St", "alice.manager@example.com", "alice.manager", "1234", EmployeeType.COMPANY_MANAGER, 1);
-                Employee employee2 = new Employee(222222222, "Bob Regular", "5678 Oak St", "bob.regular@example.com", "bob.regular", "1234", EmployeeType.RESTAURANT_SERVICE, 1);
-                Employee employee3 = new Employee(333333333, "Charlie Dietitian", "9101 Pine St", "charlie.dietitian@example.com", "charlie.dietitian", "1234", EmployeeType.DIETITIAN, 2);
-                Employee employee4 = new Employee(444444444, "Debbie Customer Service", "2345 Birch St", "debbie.cs@example.com", "debbie.cs", "1234", EmployeeType.CUSTOMER_SERVICE, 3);
-                Employee employee5 = new Employee(555555555, "Eva Admin", "6789 Cedar St", "eva.admin@example.com", "eva.admin", "1234", EmployeeType.CUSTOMER_SERVICE_MANAGER, 3);
-
-                employees.add(employee1);
-                employees.add(employee2);
-                employees.add(employee3);
-                employees.add(employee4);
-                employees.add(employee5);
-
                 // Save employees to the database
+                System.out.println("In checkAndPopulateUsers 2");
                 employeeRepository.populate(employees);
             }
 

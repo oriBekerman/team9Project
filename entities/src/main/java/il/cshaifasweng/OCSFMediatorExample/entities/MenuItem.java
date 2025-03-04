@@ -1,15 +1,20 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.*;
+
 
 @Entity
-@Table(name ="menuItems")
+@Table(name ="menuItems",uniqueConstraints = {
+        @UniqueConstraint(columnNames = "ID")})
 public class MenuItem implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  int itemID;
+    @Column(name = "ID", unique = true, nullable = false)
+    private Integer itemID;
 
     @Column(nullable = false)
     private String name;
@@ -23,16 +28,36 @@ public class MenuItem implements Serializable {
     @Column
     private String preference;
 
+    @Column //stores a list of branch IDs where the menuItem cam be delivered from
+    private String deliverableBranchIds;
+
     @Lob
     private byte[] picture;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DishType dishType;  // BASE or SPECIAL
+
+
+    @ManyToMany(mappedBy = "menuItems", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+   List<Branch> branches =new ArrayList<>();
+
+    @ManyToMany(mappedBy = "deliverableItems")
+    private List<Branch> deliverableBranches = new ArrayList<>();
+
+
+
+
+
+
     // Constructor with all fields except itemID (auto-generated)
-    public MenuItem(String name, double price, String ingredients, String preference, byte[] picture) {
+    public MenuItem(String name, double price, String ingredients, String preference, byte[] picture,DishType dishType) {
         this.name = name;
         this.price = price;
         this.ingredients = ingredients;
         this.preference = preference;
         this.picture = picture;
+        this.dishType = dishType;
     }
 
     public MenuItem() {
@@ -87,8 +112,19 @@ public class MenuItem implements Serializable {
     public void setPicture(byte[] picture) {
         this.picture = picture;
     }
+    public DishType getDishType() {
+        return dishType;
+    }
+    public void setDishType(DishType dishType) {
+        this.dishType = dishType;
+    }
+    public List<Branch> getBranches() { return branches; }
+    public void setBranches(List<Branch> branches) { this.branches = branches; }
+    public List<Branch> getDeliverableBranches() { return deliverableBranches; }
+    public void setDeliverableBranches(List<Branch> deliverableBranches) { this.deliverableBranches = deliverableBranches; }
+
     public void printMenuItem(){
-        System.out.println("name:"+this.name+" price:"+this.price+
+        System.out.println("Name:"+this.name+" price:"+this.price+
                 " ingredients:"+this.ingredients+" preference:"+this.preference);
 
     }
