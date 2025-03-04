@@ -132,14 +132,12 @@ public class BranchPageBoundary {
     }
 
     public void getAvailableTables(ActionEvent actionEvent) {
-        Request request=new Request<>(ReqCategory.BRANCH, RequestType.GET_DELIVERABLES,branch);
         try{
-            SimpleClient.getClient().sendToServer(request);
+            SimpleClient.getClient().fetchTables(branch);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
 //change

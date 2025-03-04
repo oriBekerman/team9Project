@@ -93,6 +93,13 @@ public class SimpleClient extends AbstractClient {
 					item.printMenuItem();
 				}
 			}
+			else if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
+			{
+				List<RestTable> tables = (ArrayList<RestTable>) response.getData();
+				for (RestTable table : tables) {
+					table.print();
+				}
+			}
 		// Handle user authentication response
 		if (response.getResponseType().equals(CORRECTNESS_USER)) {
 			System.out.println("Handling CORRECTNESS_USER response with status: " + response.getStatus());
@@ -165,6 +172,10 @@ public class SimpleClient extends AbstractClient {
 	}
 	public static void logout() {
 		clearActiveUser();  // Clear active user in SimpleClient
+	}
+	public void fetchTables(Branch branch) throws IOException {
+		Request request=new Request(BRANCH,FETCH_BRANCH_TABLES,branch);
+		client.sendToServer(request);
 	}
 
 

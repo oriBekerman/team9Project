@@ -90,7 +90,9 @@ public class Branch implements Serializable  {
     public List<MenuItem> getBranchMenuItems() { return menuItems; }
     public void setBranchMenuItems(List<MenuItem> menuItems) { this.menuItems = menuItems; }
     public void setDeliverableItems(List<MenuItem> deliverableItems) { this.deliverableItems = deliverableItems; }
-    public List<MenuItem> getDeliverableItems() { return deliverableItems; }
+    public List<MenuItem> getDeliverableItems() {
+        return deliverableItems;
+    }
     public void addMenuItem(MenuItem menuItem) { this.menuItems.add(menuItem); }
     public void addDeliverableItem(MenuItem menuItem) { this.deliverableItems.add(menuItem); }
     public int getBranchID() {

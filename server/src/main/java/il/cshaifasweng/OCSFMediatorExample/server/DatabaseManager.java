@@ -134,7 +134,6 @@ private static void initialize(String password) {
             List<MenuItem> menuItems3= new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6, item7));
             menuItemsController.PopulateMenuItems(menuItems3);
             branchController.populateBranches(branches3);
-//            restTableController.populateTables(restTables);
         }
     }
     MenuItemsController getMenuItemsController() {

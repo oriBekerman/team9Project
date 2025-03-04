@@ -87,6 +87,7 @@ public class Response<T> implements Serializable {
         BRANCHES_SENT,
         RETURN_BRANCH,
         RETURN_DELIVERABLES,
+        RETURN_BRANCH_TABLES,
         //login
         CORRECTNESS_USER
     }

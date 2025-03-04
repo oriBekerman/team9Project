@@ -126,6 +126,7 @@ public class RestTable implements Serializable {
         System.out.println("Table: "+tableId);
         System.out.println("Area: "+area);
         System.out.println("Capacity: "+capacity);
+        System.out.println("Branch: "+branch.getName());
     }
 }
 

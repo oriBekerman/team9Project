@@ -30,6 +30,7 @@ public class BranchController {
             case GET_BRANCHES->getALLBranches();
             case GET_BRANCH_MENU->getBranchMenu(request);
             case GET_DELIVERABLES -> getDeliverableItems(request);
+            case FETCH_BRANCH_TABLES -> getRestTables(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
@@ -99,6 +100,23 @@ public class BranchController {
            response.setData(deliverables);
        }
        return response;
+    }
+    public Response getRestTables(Request request)
+    {
+        Branch branch= (Branch) request.getData();
+        Response response=new Response<>(RETURN_BRANCH_TABLES,null,ERROR,THIS_CLIENT);
+        List<RestTable> restTables=new ArrayList<>();
+        restTables= branchRepository.getRestTables(branch);
+        if(restTables != null)
+        {
+            response.setStatus(SUCCESS);
+            response.setData(restTables);
+            for(RestTable restTable:restTables)
+            {
+                restTable.print();
+            }
+        }
+        return response;
     }
     
 }
