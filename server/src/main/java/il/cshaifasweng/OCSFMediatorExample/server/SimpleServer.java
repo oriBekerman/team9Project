@@ -26,7 +26,7 @@ public class SimpleServer extends AbstractServer {
     private RestTableController restTableController=null;
     private LogInController logInController = null;
 
-    public static String dataBasePassword="Bekitnt26@";//change database password here
+    public static String dataBasePassword="poolgirL1?";//change database password here
     public String password="";//used only when entering a new password through cmd
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {

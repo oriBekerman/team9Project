@@ -87,9 +87,13 @@ public class Response<T> implements Serializable {
         BRANCHES_SENT,
         RETURN_BRANCH,
         RETURN_DELIVERABLES,
+        GET_ALL_DELIVERIES,
+
         RETURN_BRANCH_TABLES,
         //login
-        CORRECTNESS_USER
+        CORRECTNESS_USER,
+
+        DELIVERY_CREATED
     }
 
     public enum Status {
