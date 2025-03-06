@@ -7,7 +7,9 @@ import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
@@ -23,6 +25,7 @@ public class SimpleClient extends AbstractClient {
 	public static String host="localhost";
 	public  static int port=3000;
 	private static ActiveUser activeUser = null;
+	public Map <String, String> mapReservation=new HashMap<String, String>();
 
 	private SimpleClient(String host, int port) {
 		super(host, port);

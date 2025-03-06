@@ -177,6 +177,17 @@ public class App extends Application {
                     }
                 });
                 break;
+
+            case "reservationCnt":
+                Platform.runLater(() -> {
+                    setWindowTitle("Reservation");
+                    try {
+                        setContent("reservationCnt");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
         }
     }
 }

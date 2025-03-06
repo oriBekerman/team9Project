@@ -1,4 +1,5 @@
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AbstractClient.class
+il\cshaifasweng\OCSFMediatorExample\client\ReservationCntBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\CreditCradInfoBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\App.class
