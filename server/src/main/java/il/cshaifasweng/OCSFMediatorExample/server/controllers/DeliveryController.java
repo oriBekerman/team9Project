@@ -22,6 +22,7 @@ public class DeliveryController {
         System.out.println("Handling delivery request: " + request.getRequestType());
         return switch (request.getRequestType()) {
             case CREATE_DELIVERY -> createDelivery(request);
+            case GET_DELIVERY -> getDeliveryByOrderNumber(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
@@ -78,6 +79,32 @@ public class DeliveryController {
         }
         return response;
     }
+
+    private Response<Delivery> getDeliveryByOrderNumber(Request request) {
+        // Default response with an error status
+        Response<Delivery> response = new Response<>(Response.ResponseType.SEND_DELIVERY, "Invalid request", Response.Status.ERROR, Response.Recipient.THIS_CLIENT);
+
+        // Extract order number from request
+        Integer orderNumber = (Integer) request.getData();
+
+        if (orderNumber == null) {
+            response.setMessage("Order number is missing");
+            return response;
+        }
+
+        // Fetch delivery from repository
+        Delivery delivery = deliveryRepository.getDeliveryByOrderNumber(orderNumber);
+
+        if (delivery != null) {
+            response = new Response<>(Response.ResponseType.SEND_DELIVERY, delivery, Response.Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+        } else {
+            response.setMessage("No delivery found for order number: " + orderNumber);
+        }
+
+        return response;
+    }
+
+
 
     public boolean checkIfEmpty()
     {

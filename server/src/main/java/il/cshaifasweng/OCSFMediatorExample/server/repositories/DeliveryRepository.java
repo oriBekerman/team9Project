@@ -56,10 +56,18 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         List<Delivery> data = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
+
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<Delivery> query = builder.createQuery(Delivery.class);
-            query.from(Delivery.class);
+            Root<Delivery> deliveryRoot = query.from(Delivery.class);
+
+            //  join customer and orderItems to fetch them along with the delivery
+            deliveryRoot.fetch("customer", JoinType.LEFT);  // Join with customer
+            deliveryRoot.fetch("orderItems", JoinType.LEFT);  // Join with orderItems
+
+            // Execute the query to fetch the results
             data = session.createQuery(query).getResultList();
+
             session.getTransaction().commit();  // Commit the transaction
             System.out.println("Getting all deliveries: " + data);
         } catch (Exception e) {
@@ -69,18 +77,38 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         return data;
     }
 
+
     // Get a delivery by order number
     public Delivery getDeliveryByOrderNumber(int orderNumber) {
         Delivery delivery = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            session.beginTransaction();
-            delivery = session.get(Delivery.class, orderNumber);  // Get the delivery by order number
-            session.getTransaction().commit();
-            System.out.println("Found delivery: " + delivery);
+            // Use CriteriaBuilder to create the query
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Delivery> query = builder.createQuery(Delivery.class);
+            Root<Delivery> deliveryRoot = query.from(Delivery.class);
+
+            // Eagerly fetch customer and orderItems
+            deliveryRoot.fetch("customer", JoinType.LEFT);  // Join with customer
+            deliveryRoot.fetch("orderItems", JoinType.LEFT);  // Join with orderItems
+
+            // Fetch the specific delivery by its order number (using ID)
+            query.select(deliveryRoot).where(builder.equal(deliveryRoot.get("orderNumber"), orderNumber));
+
+            // Execute the query and avoid NoResultException
+            List<Delivery> result = session.createQuery(query).getResultList();
+            delivery = result.stream().findFirst().orElse(null);
+
+            if (delivery != null) {
+                System.out.println("Found delivery: " + delivery);
+            } else {
+                System.out.println("No delivery found with order number: " + orderNumber);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to fetch delivery by order number", e);
         }
         return delivery;
     }
+
+
 }

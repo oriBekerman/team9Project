@@ -37,6 +37,12 @@ public class SimpleClient extends AbstractClient {
 	@Override
 	protected void handleMessageFromServer(Object msg) {
 		Response response=(Response)msg;
+		// Print the response type
+		System.out.println("ResponseType: " + response.getResponseType());
+
+		// Print the status
+		System.out.println("Status: " + response.getStatus());
+
 		if (msg.getClass().equals(Warning.class)) {
 			String message = msg.toString();
 			System.out.println(message);

@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import java.io.Serializable;
+import il.cshaifasweng.OCSFMediatorExample.entities.RequestType;
 
 public class Request<T> implements Serializable {
 

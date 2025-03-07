@@ -1,9 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
-import il.cshaifasweng.OCSFMediatorExample.server.controllers.BranchController;
-import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
-import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
-import il.cshaifasweng.OCSFMediatorExample.server.controllers.RestTableController;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import java.io.IOException;
@@ -26,6 +23,8 @@ public class SimpleServer extends AbstractServer {
     private RestTableController restTableController=null;
     private LogInController logInController = null;
 
+    private DeliveryController deliveryController = null;
+
     public static String dataBasePassword="poolgirL1?";//change database password here
     public String password="";//used only when entering a new password through cmd
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
@@ -42,8 +41,10 @@ public class SimpleServer extends AbstractServer {
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client){
         System.out.println("received request from client: ");
+
         String msgString = msg.toString();
         Request request=(Request)msg;
+
         //connect client
         if (msgString.startsWith("add client")) {
             SubscribedClient connection = new SubscribedClient(client);
@@ -61,6 +62,7 @@ public class SimpleServer extends AbstractServer {
             case BASE_MENU -> menuItemsController.handleRequest(request);
             case BRANCH -> branchController.handleRequest(request);
             case LOGIN -> logInController.handleRequest(request);
+            case DELIVERY -> deliveryController.handleRequest(request);
             default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
         };
         System.out.println(response.getResponseType().toString());
@@ -71,6 +73,7 @@ public class SimpleServer extends AbstractServer {
         if (response.getRecipient()==THIS_CLIENT)
         {
             try {
+                System.out.println("Sending response to client: " + response.getResponseType() + " with data: " + response.getData());
                 client.sendToClient(response);
             } catch (Exception e)
             {
@@ -94,5 +97,6 @@ public class SimpleServer extends AbstractServer {
         this.branchController=databaseManager.getBranchController();
         this.logInController = databaseManager.getLogInController();
         this.restTableController = databaseManager.getRestTableController();
+        this.deliveryController = databaseManager.getDeliveryController();
     }
 }

@@ -93,7 +93,9 @@ public class Response<T> implements Serializable {
         //login
         CORRECTNESS_USER,
 
-        DELIVERY_CREATED
+        DELIVERY_CREATED,
+
+        SEND_DELIVERY
     }
 
     public enum Status {
