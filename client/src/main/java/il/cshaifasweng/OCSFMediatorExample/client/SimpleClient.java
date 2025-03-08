@@ -18,7 +18,6 @@ public class SimpleClient extends AbstractClient {
 
 	private static SimpleClient client = null;
 	private static MenuEvent pendingMenuEvent = null;  // Store pending MenuEvent if SecondaryController isn't ready
-	private static ResInfoEvent pendingResInfoEvent = null;  // Store pending MenuEvent if SecondaryController isn't ready
 	private static boolean isSecondaryControllerInitialized = false;
 	public static String host="localhost";
 	public  static int port=3000;
@@ -112,19 +111,6 @@ public class SimpleClient extends AbstractClient {
 				EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 			}
 		}
-		if (response.getResponseType().equals(RETURN_RESERVATIONS)) {
-			try {
-				System.out.println("client got reservations sent");
-				//noinspection unchecked
-				List<ResInfo> reservations = (List<ResInfo>) response.getData();
-				ResInfoEvent resInfoEvent = new ResInfoEvent(reservations);
-				EventBus.getDefault().post(resInfoEvent);
-			}
-			catch (ClassCastException e) {
-				e.printStackTrace();
-			}
-		}
-
 	}
 
 	public void displayNetworkMenu() throws IOException {
@@ -163,25 +149,6 @@ public class SimpleClient extends AbstractClient {
             throw new RuntimeException(e);
         }
         System.out.println("getBranchList requested");
-	}
-
-	public void getReportsList() throws IOException {
-		// Create a request for fetching reports. The exact details depend on how your server expects it.
-		Request request = new Request(ReqCategory.REPORT, RequestType.GET_REPORTS, null);
-		sendToServer(request);
-		System.out.println("Request for reports list sent to server.");
-	}
-
-
-
-	public void getResInfoList(){
-		Request request=new Request(RESERVATION,GET_RESERVATIONS,null);
-		try {
-			client.sendToServer(request);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		System.out.println("getResInfoList requested");
 	}
 
 	public static ActiveUser getActiveUser() {

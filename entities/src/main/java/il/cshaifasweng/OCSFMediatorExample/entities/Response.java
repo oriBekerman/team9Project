@@ -11,7 +11,7 @@ public class Response<T> implements Serializable {
     private Recipient recipient = null;
 
     // Full Constructor
-    public Response(ResponseType responseType, T data, String message,Status status, Recipient recipient) {
+    public Response(ResponseType responseType, T data, String message, Status status, Recipient recipient) {
         this.status = status;
         this.data = data;
         this.message = message;
@@ -20,7 +20,7 @@ public class Response<T> implements Serializable {
     }
 
     // Constructor without message
-    public Response(ResponseType responseType,T data,Status status, Recipient recipient) {
+    public Response(ResponseType responseType, T data, Status status, Recipient recipient) {
         this.status = status;
         this.data = data;
         this.responseType = responseType;
@@ -28,7 +28,7 @@ public class Response<T> implements Serializable {
     }
 
     // Constructor without data
-    public Response(ResponseType responseType, String message ,Status status, Recipient recipient) {
+    public Response(ResponseType responseType, String message, Status status, Recipient recipient) {
         this.status = status;
         this.message = message;
         this.responseType = responseType;
@@ -68,12 +68,11 @@ public class Response<T> implements Serializable {
         this.responseType = responseType;
     }
 
-    public Recipient getRecipient()
-    {
+    public Recipient getRecipient() {
         return recipient;
     }
-    public void setRecipient(Recipient recipient)
-    {
+
+    public void setRecipient(Recipient recipient) {
         this.recipient = recipient;
     }
 
@@ -87,10 +86,17 @@ public class Response<T> implements Serializable {
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,
         RETURN_BRANCH,
+        RETURN_DELIVERABLES,
+        GET_ALL_DELIVERIES,
+
+        RETURN_BRANCH_TABLES,
 
         //login
         CORRECTNESS_USER,
 
+        DELIVERY_CREATED,
+
+        SEND_DELIVERY,
         // reservation
         RETURN_RES_REPORT,
 
@@ -100,6 +106,7 @@ public class Response<T> implements Serializable {
         //complaint
         RETURN_COMP_REPORT,
     }
+
 
     public enum Status {
         ERROR,

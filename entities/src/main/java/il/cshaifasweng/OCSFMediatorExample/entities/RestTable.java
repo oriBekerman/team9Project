@@ -95,6 +95,38 @@ public class RestTable implements Serializable {
     public void addUnavailableFromTime(LocalTime unavailableFromTime) {
         unavailableFromTimes.add(unavailableFromTime);
     }
+    public boolean isAvailableAt(LocalTime time)
+    {
+        return !(unavailableFromTimes.contains(time));
+    }
+    public List<LocalTime> getAvailableFromTimes() {
+        String start= branch.getOpeningTime();
+        String end= branch.getClosingTime();
+        LocalTime startTime = LocalTime.parse(start);
+        LocalTime endTime = LocalTime.parse(end);
+        List<LocalTime> availableFromTimes = new ArrayList<>();
+        LocalTime time = startTime;
+        while (time!=endTime)
+        {
+            if(!unavailableFromTimes.contains(time))
+            {
+                availableFromTimes.add(time);
+            }
+            if(unavailableFromTimes.contains(time))
+            {
+                time=time.plusHours(1).plusMinutes(15);
+            }
+            time=time.plusMinutes(15);
 
+        }
+        return availableFromTimes;
+    }
+
+    public void print() {
+        System.out.println("Table: "+tableId);
+        System.out.println("Area: "+area);
+        System.out.println("Capacity: "+capacity);
+        System.out.println("Branch: "+branch.getName());
+    }
 }
 

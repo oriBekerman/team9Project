@@ -89,5 +89,11 @@ public class LogInController {
             throw exception; // Rethrow to ensure rollback in case of an error
         }
     }
+
+    public boolean checkIfEmpty()
+    {
+        return (employeeRepository.checkIfEmpty());
+    }
+
 }
 

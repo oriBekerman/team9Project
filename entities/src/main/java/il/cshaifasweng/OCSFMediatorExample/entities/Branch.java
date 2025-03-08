@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import javax.persistence.Entity;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +89,9 @@ public class Branch implements Serializable  {
     public List<MenuItem> getBranchMenuItems() { return menuItems; }
     public void setBranchMenuItems(List<MenuItem> menuItems) { this.menuItems = menuItems; }
     public void setDeliverableItems(List<MenuItem> deliverableItems) { this.deliverableItems = deliverableItems; }
-    public List<MenuItem> getDeliverableItems() { return deliverableItems; }
+    public List<MenuItem> getDeliverableItems() {
+        return deliverableItems;
+    }
     public void addMenuItem(MenuItem menuItem) { this.menuItems.add(menuItem); }
     public void addDeliverableItem(MenuItem menuItem) { this.deliverableItems.add(menuItem); }
     public int getBranchID() {
@@ -96,7 +99,7 @@ public class Branch implements Serializable  {
     }
 
     public String getOpeningTime() {
-        return openingTime.toString();
+        return openingTime;
     }
 
     public void setOpeningTime(String openingTime) {
@@ -104,7 +107,7 @@ public class Branch implements Serializable  {
     }
 
     public String getClosingTime() {
-        return closingTime.toString();
+        return closingTime;
     }
 
     public void setClosingTime(String closingTime) {
@@ -126,6 +129,25 @@ public class Branch implements Serializable  {
     public void setRestTables(List<RestTable> tables) {
         this.tables = tables;
     }
-
+//    public List<RestTable> getAvailableTables(int capacity,LocalTime time)
+//    {
+//        List<RestTable> availableTables = new ArrayList<>();
+//        System.out.println("in getAvailableTables branch");
+//        for(RestTable table : tables){
+//            if(table.getCapacity()==capacity && table.isAvailableAt(time)){
+//                availableTables.add(table);
+//            }
+//        }
+//        return availableTables;
+//    }
+//    public void printAvailableTables(int capacity,LocalTime time)
+//    {
+//        System.out.println("Available Tables:");
+//        List<RestTable>availableTables = getAvailableTables(capacity,time);
+//        for(RestTable table : availableTables){
+//            table.print();
+//            System.out.println("available at "+time);
+//        }
+//    }
 }
 
