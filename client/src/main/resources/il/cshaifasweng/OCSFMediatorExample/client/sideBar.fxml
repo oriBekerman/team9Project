@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.image.ImageView?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SideBarBoundary">
+    <children>
+        <AnchorPane prefHeight="138.0" prefWidth="190.0">
+            <children>
+                <ImageView fitHeight="177.0" fitWidth="196.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
+            </children>
+        </AnchorPane>
+        <VBox prefHeight="329.0" prefWidth="190.0" spacing="10.0" styleClass="sidebar">
+            <Button fx:id="menuBtn" mnemonicParsing="false" onAction="#displayMenu" prefHeight="49.0" prefWidth="190.0" text="Menu" />
+            <Button fx:id="toggleButtonBranch" layoutX="25.0" layoutY="239.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="190.0" text="Our Branches" />
+            <Button fx:id="deliveryBtn" mnemonicParsing="false" onAction="#navToDeliveryPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="Make a Delivery">
+                <font>
+                    <Font size="10.0" />
+                </font>
+            </Button>
+            <Button fx:id="reservationBtn" mnemonicParsing="false" onAction="#navToReservationPage" prefHeight="49.0" prefWidth="181.0" styleClass="menu-btn" text="Make a Reservation">
+                <font>
+                    <Font size="10.0" />
+                </font>
+            </Button>
+            <Button fx:id="complaintBtn" mnemonicParsing="false" onAction="#navToComplaintPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="Make a Complaint">
+                <font>
+                    <Font size="10.0" />
+                </font>
+            </Button>
+        </VBox>
+    </children>
+</VBox>

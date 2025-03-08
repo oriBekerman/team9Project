@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 public class EmployeeRepository extends BaseRepository<Employee> {
 
-    public EmployeeRepository() {super();
-    }
+    public EmployeeRepository() {super();}
 
     @Override
     public int getId(Employee entity) {

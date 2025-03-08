@@ -8,8 +8,7 @@ import java.util.List;
 
 @Entity
 
-@Table(name = "branch", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "ID")})
+@Table(name = "branch", uniqueConstraints = {@UniqueConstraint(columnNames = "ID")})
 public class Branch implements Serializable  {
 
     @Id

@@ -10,5 +10,4 @@ public enum ReqCategory
     DELIVERY,
     RESERVATION,
     COMPLAINT,
-    REPORTS
 }

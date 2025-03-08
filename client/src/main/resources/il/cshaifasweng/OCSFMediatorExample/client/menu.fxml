@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="871.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.MenuBoundary">
+    <children>
+        <!-- Sidebar from Branch.fxml with potential orange design styles applied -->
+        <VBox fx:id="sideBar" prefHeight="871.0" prefWidth="226.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="999.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <AnchorPane prefHeight="138.0" prefWidth="199.0" styleClass="orange-background">
+                    <children>
+                        <ImageView fitHeight="175.0" fitWidth="188.0" layoutX="11.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                    </children>
+                </AnchorPane>
+                <VBox prefHeight="292.0" prefWidth="196.0" spacing="10.0" styleClass="sidebar orange-background">
+                    <Button fx:id="menuBtn" mnemonicParsing="false" onAction="#displayMenu" prefHeight="49.0" prefWidth="190.0" text="Menu" />
+                    <Button fx:id="toggleButtonBranch" layoutX="25.0" layoutY="239.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="190.0" text="Our Branches" />
+                    <Button fx:id="deliveryBtn" mnemonicParsing="false" onAction="#navToDeliveryPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="Make a Delivery">
+                        <font>
+                            <Font size="15.0" />
+                        </font>
+                    </Button>
+               <Button fx:id="reservationBtn" mnemonicParsing="false" onAction="#navToReservationPage" prefHeight="49.0" prefWidth="181.0" styleClass="menu-btn" text="Make a Reservation">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </Button>
+               <Button fx:id="complaintBtn" mnemonicParsing="false" onAction="#navToComplaintPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="Make a Complaint">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </Button>
+                </VBox>
+            </children>
+        </VBox>
+
+        <!-- Menu Page Content from menu.fxml -->
+        <Button fx:id="BackToHPbtn" layoutX="1019.0" layoutY="14.0" mnemonicParsing="false" onAction="#BackToHPfunc" styleClass="return-btn" text="Back to Home Page" />
+        <!-- TableView for MenuItems -->
+        <TableView fx:id="menuTableView" layoutX="297.0" layoutY="144.0" prefHeight="664.0" prefWidth="747.0">
+            <columns>
+                <TableColumn fx:id="imageColum" minWidth="0.0" prefWidth="108.0" styleClass="column-header-background" text="Image" />
+                <TableColumn fx:id="nameColumn" prefWidth="131.0" styleClass="column-header-background" text="Name" />
+                <TableColumn fx:id="ingredientsColumn" prefWidth="171.0" styleClass="column-header-background" text="Ingredients" />
+                <TableColumn fx:id="preferenceColumn" prefWidth="225.0" styleClass="column-header-background" text="Preference" />
+                <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="108.0" styleClass="column-header-background" text="Price" />
+            </columns>
+        </TableView>
+        <Label fx:id="menuLabel" layoutX="568.0" layoutY="27.0" prefHeight="68.0" prefWidth="77.0" styleClass="menuPageTitle" text="Menu">
+            <font>
+                <Font size="30.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>

@@ -14,4 +14,7 @@ public enum RequestType{
         GET_BRANCH_BY_NAME,
         GET_BRANCHES,
         GET_BRANCH_MENU,//branch
+        GET_RES_REPORT,
+        GET_DELIV_REPORT,
+        GET_COMP_REPORT,
     }

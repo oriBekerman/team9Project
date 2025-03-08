@@ -17,7 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
@@ -27,10 +26,9 @@ import javafx.stage.Popup;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.*;
 
-//
+
 public class PrimaryBoundary {
 
-	public Button MenuBtn;
 	@FXML
 	private ResourceBundle resources;
 
@@ -41,30 +39,40 @@ public class PrimaryBoundary {
 	private Label HomePageLabel;
 
 	@FXML
+	private ImageView MOMSImage;
+
+	@FXML
+	private Button MenuBtn;
+
+	@FXML
 	private Button UpdateMenuBtn;
 
 	@FXML
 	private Label WelcomeLabel;
 
 	@FXML
-	private ImageView MOMSImage;
+	private Button deliveryBtn;
 
 	@FXML
-	private Pane MenuBarPane;
+	private Button loginBtn;
+
+	@FXML
+	private Button logoutBtn;
 
 	@FXML
 	private Button toggleButtonBranch;
 	private Popup popup = new Popup();
-
 	public List<Branch> branchList = null;
 	public boolean branchListInit = false;
 	private final Object lock = new Object();
 
 	@FXML
-	private Button loginBttn;
+	private Button toggleButtonReports;
+	private Popup reportsPopup = new Popup();
+	public List<Report> reportList  = null;
+	public boolean reportsListInit  = false;
 
-	@FXML
-	private Button logoutBttn;
+
 
 	@FXML
 	void navToLoginP(ActionEvent event) {
@@ -72,18 +80,8 @@ public class PrimaryBoundary {
 	}
 
 	@FXML
-	void navToDeliv(ActionEvent event) {
+	void navToDelivery(ActionEvent event) {
 		switchScreen("Delivery");
-	}
-
-	@FXML
-	void navToHP(ActionEvent event) {
-		switchScreen("Home Page");
-	}
-
-	@FXML
-	void navToReservation(ActionEvent event) {
-		switchScreen("Reservation");
 	}
 
 	@FXML
@@ -91,27 +89,21 @@ public class PrimaryBoundary {
 		switchScreen("Branch");
 	}
 
+	@FXML
+	void navToMenu(ActionEvent event) {switchScreen("Menu");}
 
 	@FXML
-	void displayMenuFunc(ActionEvent event) throws IOException {
-		switchScreen("secondary");
-		try {
-			App.setRoot("secondary");
-			SimpleClient.getClient().displayNetworkMenu();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
+	void navToUpMenu(ActionEvent event) {switchScreen("Update Menu");}
 
 	@FXML
-	void LogOut(ActionEvent event) {
+	void navToLogOut(ActionEvent event) {
+		switchScreen("LogOut");
 		// Call the logout method in SimpleClient to clear active user
 		SimpleClient.getClient().logout();
 
 		// Hide the logout button and show the login button again
-		logoutBttn.setVisible(false);
-		loginBttn.setVisible(true);
+		logoutBtn.setVisible(false);
+		loginBtn.setVisible(true);
 		// Hide the Update button after logging out
 		UpdateMenuBtn.setVisible(false);
 	}
@@ -121,19 +113,17 @@ public class PrimaryBoundary {
 	void initialize() throws IOException {
 		assert HomePageLabel != null : "fx:id=\"HomePageLabel\" was not injected: check your FXML file 'primary.fxml'.";
 		assert MOMSImage != null : "fx:id=\"MOMSImage\" was not injected: check your FXML file 'primary.fxml'.";
-		assert MenuBarPane != null : "fx:id=\"MenuBarPane\" was not injected: check your FXML file 'primary.fxml'.";
+		assert MenuBtn != null : "fx:id=\"MenuBtn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert UpdateMenuBtn != null : "fx:id=\"UpdateMenuBtn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert WelcomeLabel != null : "fx:id=\"WelcomeLabel\" was not injected: check your FXML file 'primary.fxml'.";
-		assert loginBttn != null : "fx:id=\"loginBttn\" was not injected: check your FXML file 'primary.fxml'.";
-		assert logoutBttn != null : "fx:id=\"logoutBttn\" was not injected: check your FXML file 'primary.fxml'.";
-
+		assert deliveryBtn != null : "fx:id=\"deliveryBtn\" was not injected: check your FXML file 'primary.fxml'.";
+		assert loginBtn != null : "fx:id=\"loginBtn\" was not injected: check your FXML file 'primary.fxml'.";
+		assert logoutBtn != null : "fx:id=\"logoutBtn\" was not injected: check your FXML file 'primary.fxml'.";
+		assert toggleButtonBranch != null : "fx:id=\"toggleButtonBranch\" was not injected: check your FXML file 'primary.fxml'.";
 
 		EventBus.getDefault().register(this);
 		SimpleClient.getClient().getBranchList(); // Request branch list from server
-		// Menu bar (in the home page - this is the menu bar that is shown as "ALL")
-		Parent menuBarParent = App.loadFXML("MenuBar");
-		MenuBarPane.getChildren().clear();
-		MenuBarPane.getChildren().add(menuBarParent);
+		SimpleClient.getClient().getReportsList(); // Request reservations list from server
 
 		// This section display the image of mamasKitchen
 		String imagePath = "il/cshaifasweng/OCSFMediatorExample/client/mamasKitchen.jpg";
@@ -143,8 +133,8 @@ public class PrimaryBoundary {
 		// Check if the user is logged in (activeUser is not null)
 		if (SimpleClient.getClient().getActiveUser() != null) {
 			// If logged in, show logout button and hide login button
-			logoutBttn.setVisible(true);
-			loginBttn.setVisible(false);
+			logoutBtn.setVisible(true);
+			loginBtn.setVisible(false);
 			// Check if the user is a "DIETITIAN" and display the Update button if true
 			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN) {
 				System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
@@ -154,8 +144,8 @@ public class PrimaryBoundary {
 			}
 		} else {
 			// If not logged in, show login button and hide logout button
-			logoutBttn.setVisible(false);
-			loginBttn.setVisible(true);
+			logoutBtn.setVisible(false);
+			loginBtn.setVisible(true);
 			UpdateMenuBtn.setVisible(false); // Hide Update button if not logged in
 		}
 
@@ -171,6 +161,12 @@ public class PrimaryBoundary {
 			System.out.println("Button clicked - showing popup");
 			GetBranchListPopup();
 		});
+
+		toggleButtonReports.setOnAction(e -> {
+			System.out.println("Reports button clicked - showing reports popup");
+			getReportsListPopup();
+		});
+
 	}
 
 	//get list of brunches pop up
@@ -249,7 +245,6 @@ public class PrimaryBoundary {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	//handle branch list sent
@@ -262,4 +257,62 @@ public class PrimaryBoundary {
 			lock.notifyAll(); // Notify waiting threads that branches are initialized
 		}
 	}
+
+	private void getReportsListPopup() {
+		synchronized (this) {
+			if (!reportsListInit) {
+				try {
+					SimpleClient.getClient().getReportsList(); // Request reports list from server again if not initialized
+					while (!reportsListInit) {
+						wait();  // Wait until the reports are fetched and initialized
+					}
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					System.out.println("Thread interrupted while waiting for reports list.");
+					return;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ReportsList.fxml"));
+			Parent popupContent = loader.load();
+
+			// Assuming ReportsListController sets the reports list similar to branches
+			ReportsListBoundary controller = loader.getController();
+			controller.setReports(reportList);
+
+			reportsPopup.getContent().clear();
+			reportsPopup.getContent().add(popupContent);
+			reportsPopup.setAutoHide(true);
+			if (toggleButtonReports.getScene() != null) {
+				reportsPopup.show(toggleButtonReports.getScene().getWindow(),
+						toggleButtonReports.localToScreen(0, 0).getX(),
+						toggleButtonReports.localToScreen(0, 0).getY() + toggleButtonReports.getHeight());
+			} else {
+				System.out.println("toggleButtonReports scene is NULL - cannot display popup");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+
 }
+
+
+
+// im not sure if needed...
+//	@FXML
+//	void displayMenuFunc(ActionEvent event) throws IOException {
+//		switchScreen("Update Menu");
+//		try {
+//			//App.setRoot("updateMenu");
+//			SimpleClient.getClient().displayNetworkMenu();
+//		} catch (IOException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}

@@ -47,9 +47,6 @@ public class MenuItem implements Serializable {
 
 
 
-
-
-
     // Constructor with all fields except itemID (auto-generated)
     public MenuItem(String name, double price, String ingredients, String preference, byte[] picture,DishType dishType) {
         this.name = name;

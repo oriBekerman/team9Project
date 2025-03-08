@@ -83,11 +83,22 @@ public class Response<T> implements Serializable {
         RETURN_MENU,
         UPDATED_PRICE,
 
+        // branch
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,
         RETURN_BRANCH,
+
         //login
-        CORRECTNESS_USER
+        CORRECTNESS_USER,
+
+        // reservation
+        RETURN_RES_REPORT,
+
+        //delivery
+        RETURN_DELIV_REPORT,
+
+        //complaint
+        RETURN_COMP_REPORT,
     }
 
     public enum Status {

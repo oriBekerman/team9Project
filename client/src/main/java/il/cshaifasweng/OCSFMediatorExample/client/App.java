@@ -167,11 +167,51 @@ public class App extends Application {
                     }
                 });
                 break;
-            case "secondary":
+            case "LogOut":
                 Platform.runLater(() -> {
-                    setWindowTitle("Update Menu");
+                    setWindowTitle("LogOut");
                     try {
-                        setContent("secondary");
+                        setContent("login");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "Menu":
+                Platform.runLater(() -> {
+                    setWindowTitle("Menu");
+                    try {
+                        setContent("menu");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "Complaint ":
+                Platform.runLater(() -> {
+                    setWindowTitle("Complaint");
+                    try {
+                        setContent("complaint");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "Report":
+                Platform.runLater(() -> {
+                    setWindowTitle("Report");
+                    try {
+                        setContent("report");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "New":
+                Platform.runLater(() -> {
+                    setWindowTitle("New");
+                    try {
+                        setContent("new");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

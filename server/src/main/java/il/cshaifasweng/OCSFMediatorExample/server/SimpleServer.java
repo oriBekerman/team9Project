@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.server;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.BranchController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.ResInfoController;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import java.io.IOException;
@@ -22,7 +23,8 @@ public class SimpleServer extends AbstractServer {
     private MenuItemsController menuItemsController =null;
 //    private MenusController menusController=null;
     private BranchController branchController=null;
-    public static String dataBasePassword="Bekitnt26@";//change database password here
+    private ResInfoController resInfoController=null;
+    public static String dataBasePassword="282817SMAY";//change database password here
     public String password="";//used only when entering a new password through cmd
     private LogInController logInController = null;
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
@@ -58,6 +60,7 @@ public class SimpleServer extends AbstractServer {
             case BASE_MENU -> menuItemsController.handleRequest(request);
             case BRANCH -> branchController.handleRequest(request);
             case LOGIN -> logInController.handleRequest(request);
+            case RESERVATION-> resInfoController.handleRequest(request);
             default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
         };
         System.out.println(response.getResponseType().toString());
@@ -90,5 +93,6 @@ public class SimpleServer extends AbstractServer {
         this.menuItemsController =databaseManager.getMenuItemsController();
         this.branchController=databaseManager.getBranchController();
         this.logInController = databaseManager.getLogInController();
+        this.resInfoController = databaseManager.getResInfoController();
     }
 }
