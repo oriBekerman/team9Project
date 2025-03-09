@@ -171,16 +171,6 @@ public class PrimaryBoundary {
 			System.out.println("Button clicked - showing popup");
 			GetBranchListPopup();
 		});
-		// Create a request to get the delivery with order number 1
-		// Assuming ReqCategory is an enum like 'DELIVERY' or 'LOGIN', and data is the order number (Integer)
-		ReqCategory category = ReqCategory.DELIVERY;  // Just an example category
-		RequestType requestType = RequestType.GET_DELIVERY; // Enum constant for delivery request
-		Integer orderNumber = 1; // Example order number
-
-		// Create the request object
-		Request<Integer> request = new Request<>(category, requestType, orderNumber);
-		// Send the request to the server (this part depends on your communication system, e.g., via a socket or HTTP request)
-		SimpleClient.getClient().sendToServer(request);
 
 	}
 

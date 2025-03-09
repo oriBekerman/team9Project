@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import javafx.application.Platform;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
@@ -36,20 +37,35 @@ public class SimpleClient extends AbstractClient {
 	}
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		Response response=(Response)msg;
-		// Print the response type
-		System.out.println("ResponseType: " + response.getResponseType());
+		System.out.println("Message received from server: " + msg);
+		if (msg instanceof Response) {
+			Response response = (Response) msg;
 
-		// Print the status
-		System.out.println("Status: " + response.getStatus());
+			// Print the response type
+			System.out.println("ResponseType: " + response.getResponseType());
 
-		if (msg.getClass().equals(Warning.class)) {
-			String message = msg.toString();
-			System.out.println(message);
-			EventBus.getDefault().post(new WarningEvent((Warning) msg));
-		}
-		// Safe cast
-		if (response.getResponseType().equals(RETURN_MENU)) {
+			// Print the status
+			System.out.println("Status: " + response.getStatus());
+
+			if (msg.getClass().equals(Warning.class)) {
+				String message = msg.toString();
+				System.out.println(message);
+				EventBus.getDefault().post(new WarningEvent((Warning) msg));
+			}
+			// Safe cast
+			if (response.getResponseType().equals(RETURN_MENU)) {
+					Menu menu = (Menu) response.getData();
+					MenuEvent menuEvent = new MenuEvent(menu);
+					// Store the event if SecondaryController is not initialized
+					if (!isSecondaryControllerInitialized) {
+						pendingMenuEvent = menuEvent;
+					} else {
+						// Post immediately if SecondaryController is ready
+						EventBus.getDefault().post(menuEvent);
+					}
+				}
+			if (response.getResponseType().equals(RETURN_BRANCH_MENU)) {
+				System.out.println("Menu received, storing event...");
 				Menu menu = (Menu) response.getData();
 				MenuEvent menuEvent = new MenuEvent(menu);
 				// Store the event if SecondaryController is not initialized
@@ -58,21 +74,9 @@ public class SimpleClient extends AbstractClient {
 				} else {
 					// Post immediately if SecondaryController is ready
 					EventBus.getDefault().post(menuEvent);
+					System.out.println("menu event posted");
 				}
 			}
-//		if (response.getResponseType().equals(RETURN_BRANCH_MENU)) {
-//			System.out.println("Menu received, storing event...");
-//			Menu menu = (Menu) response.getData();
-//			MenuEvent menuEvent = new MenuEvent(menu);
-//			// Store the event if SecondaryController is not initialized
-//			if (!isSecondaryControllerInitialized) {
-//				pendingMenuEvent = menuEvent;
-//			} else {
-//				// Post immediately if SecondaryController is ready
-//				EventBus.getDefault().post(menuEvent);
-//				System.out.println("menu event posted");
-//			}
-//		}
 			if (response.getResponseType().equals(UPDATED_PRICE)) {
 				MenuItem menuItem = (MenuItem) response.getData();
 				// Post immediately if SecondaryController is ready
@@ -80,55 +84,70 @@ public class SimpleClient extends AbstractClient {
 				EventBus.getDefault().post(updateEvent);
 			}
 			//list of branches sent from server
-			else if (response.getResponseType().equals(BRANCHES_SENT)) {
+			if (response.getResponseType().equals(BRANCHES_SENT)) {
 				try {
 					System.out.println("client got branches sent");
-                    //noinspection unchecked
-                    List<Branch> branches = (List<Branch>) response.getData();
+					//noinspection unchecked
+					List<Branch> branches = (List<Branch>) response.getData();
 					BranchListSentEvent branchSentEvent = new BranchListSentEvent(branches);
-					EventBus.getDefault().post(branchSentEvent);
+					Platform.runLater(() -> {
+						EventBus.getDefault().post(branchSentEvent);
+					});
+
 				}
 				catch (ClassCastException e) {
 					e.printStackTrace();
 				}
 			}
-			else if(response.getResponseType().equals(RETURN_DELIVERABLES))
+			if(response.getResponseType().equals(RETURN_DELIVERABLES))
 			{
 				List<MenuItem> deliverables = (ArrayList<MenuItem>) response.getData();
 				for (MenuItem item : deliverables) {
 					item.printMenuItem();
 				}
 			}
-			else if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
+			if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
 			{
 				List<RestTable> tables = (ArrayList<RestTable>) response.getData();
 				for (RestTable table : tables) {
 					table.print();
 				}
 			}
-		// Handle user authentication response
-		if (response.getResponseType().equals(CORRECTNESS_USER)) {
-			System.out.println("Handling CORRECTNESS_USER response with status: " + response.getStatus());
+			// Handle user authentication response
+			if (response.getResponseType().equals(CORRECTNESS_USER)) {
+				System.out.println("Handling CORRECTNESS_USER response with status: " + response.getStatus());
 
-			if (response.getStatus() == SUCCESS) {
-				String responseData = response.getMessage();
-				System.out.println("Response Data: " + responseData);
-				String[] parts = responseData.split(":");
-				if (parts.length > 1) {
-					String username = parts[0];
-					String role = parts[1];
-					// Set the active user
-					SimpleClient.setActiveUser(new ActiveUser(username, EmployeeType.valueOf(role)));
-					//post to eventbus
-					EventBus.getDefault().post(new UserLoginSuccessEvent(username, role));
+				if (response.getStatus() == SUCCESS) {
+					String responseData = response.getMessage();
+					System.out.println("Response Data: " + responseData);
+					String[] parts = responseData.split(":");
+					if (parts.length > 1) {
+						String username = parts[0];
+						String role = parts[1];
+						// Set the active user
+						SimpleClient.setActiveUser(new ActiveUser(username, EmployeeType.valueOf(role)));
+						//post to eventbus
+						EventBus.getDefault().post(new UserLoginSuccessEvent(username, role));
+					} else {
+						System.out.println("Error: Response doesn't contain both username and role.");
+					}
 				} else {
-					System.out.println("Error: Response doesn't contain both username and role.");
+					String message = (String) response.getMessage();
+					System.out.println("Login failed with message: " + message);
+					EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 				}
-			} else {
-				String message = (String) response.getMessage();
-				System.out.println("Login failed with message: " + message);
-				EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 			}
+			if (response.getResponseType().equals(SEND_DELIVERY)) {
+				System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee");
+				Delivery delivery = (Delivery) response.getData();
+				if (delivery != null) {
+					System.out.println(delivery);
+				} else {
+					System.out.println("No delivery data received.");
+				}
+			}
+		} else {
+			System.out.println("Received message is not of type Response");
 		}
 	}
 

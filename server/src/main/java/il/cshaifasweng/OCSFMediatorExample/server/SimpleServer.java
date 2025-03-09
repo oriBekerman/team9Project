@@ -65,7 +65,15 @@ public class SimpleServer extends AbstractServer {
             case DELIVERY -> deliveryController.handleRequest(request);
             default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
         };
-        System.out.println(response.getResponseType().toString());
+
+
+        System.out.println("Response prepared for client:");
+        System.out.println("Response Type: " + response.getResponseType());
+        System.out.println("Response Status: " + response.getStatus());
+        System.out.println("Response Data: " + (response.getData() != null ? response.getData().toString() : "No data"));
+
+
+
         //check if the response should be sent to all clients or just one
         if (response.getRecipient()==ALL_CLIENTS) {
             sendToAllClients(response);
