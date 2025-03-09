@@ -99,6 +99,7 @@ public class SimpleClient extends AbstractClient {
 			else if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
 			{
 				List<RestTable> tables = (ArrayList<RestTable>) response.getData();
+				EventBus.getDefault().post(new BranchTablesReceivedEvent(tables));
 				for (RestTable table : tables) {
 					table.print();
 				}
