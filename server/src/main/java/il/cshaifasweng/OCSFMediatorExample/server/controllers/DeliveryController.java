@@ -94,6 +94,7 @@ public class DeliveryController {
 
         // Fetch delivery from repository
         Delivery delivery = deliveryRepository.getDeliveryByOrderNumber(orderNumber);
+        System.out.println(delivery);
 
         if (delivery != null) {
             response = new Response<>(Response.ResponseType.SEND_DELIVERY, delivery, Response.Status.SUCCESS, Response.Recipient.THIS_CLIENT);

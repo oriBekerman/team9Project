@@ -133,7 +133,7 @@ public class Delivery implements Serializable {
                 ", orderItems=" + orderItems +
                 ", customer=" + customer +
                 ", deliveryMethod=" + deliveryMethod +
-                ", branch=" + branch +
+                ", branch name=" + branch.getName() +
                 ", totalPrice=" + totalPrice +
                 '}';
     }

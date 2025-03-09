@@ -128,5 +128,17 @@ public class MenuItem implements Serializable {
                 " ingredients:"+this.ingredients+" preference:"+this.preference);
 
     }
+
+    @Override
+    public String toString() {
+        return "MenuItem{" +
+                "itemID=" + itemID +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", ingredients='" + ingredients + '\'' +
+                ", preference='" + preference + '\'' +
+                '}';
+    }
+
 }
 

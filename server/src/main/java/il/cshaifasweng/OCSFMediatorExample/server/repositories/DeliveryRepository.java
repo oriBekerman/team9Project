@@ -98,11 +98,6 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
             List<Delivery> result = session.createQuery(query).getResultList();
             delivery = result.stream().findFirst().orElse(null);
 
-            if (delivery != null) {
-                System.out.println("Found delivery: " + delivery);
-            } else {
-                System.out.println("No delivery found with order number: " + orderNumber);
-            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to fetch delivery by order number", e);
