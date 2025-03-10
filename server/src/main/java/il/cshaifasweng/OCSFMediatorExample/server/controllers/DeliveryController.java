@@ -5,8 +5,9 @@ import il.cshaifasweng.OCSFMediatorExample.server.repositories.DeliveryRepositor
 
 import java.util.List;
 
-import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
-import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.*;
+
 
 public class DeliveryController {
 
@@ -20,7 +21,8 @@ public class DeliveryController {
     // Method to handle requests for deliveries
     public Response handleRequest(Request request) {
         System.out.println("Handling delivery request: " + request.getRequestType());
-        return switch (request.getRequestType()) {
+        return switch (request.getRequestType())
+        {
             case CREATE_DELIVERY -> createDelivery(request);
             case GET_DELIVERY -> getDeliveryByOrderNumber(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
@@ -30,7 +32,7 @@ public class DeliveryController {
 
     // Method to create a new delivery
     public Response createDelivery(Request request) {
-        Response response = new Response(Response.ResponseType.DELIVERY_CREATED, null, null, Response.Recipient.THIS_CLIENT);
+        Response response = new Response(Response.ResponseType.DELIVERY_CREATED, null, ERROR, THIS_CLIENT);
         System.out.println("Creating delivery...");
 
         try {
@@ -65,7 +67,7 @@ public class DeliveryController {
 
     // Method to retrieve all deliveries
     public Response getAllDeliveries() {
-        Response response = new Response(Response.ResponseType.GET_ALL_DELIVERIES, null, null, Response.Recipient.THIS_CLIENT);
+        Response response = new Response(Response.ResponseType.GET_ALL_DELIVERIES, null, ERROR, THIS_CLIENT);
         System.out.println("Getting all deliveries...");
 
         List<Delivery> deliveries = deliveryRepository.getAllDeliveries();
@@ -82,7 +84,7 @@ public class DeliveryController {
 
     private Response<Delivery> getDeliveryByOrderNumber(Request request) {
         // Default response with an error status
-        Response<Delivery> response = new Response<>(Response.ResponseType.SEND_DELIVERY, "Invalid request", Response.Status.ERROR, Response.Recipient.THIS_CLIENT);
+        Response<Delivery> response = new Response<>(Response.ResponseType.SEND_DELIVERY, "Invalid request",ERROR, THIS_CLIENT);
 
         // Extract order number from request
         Integer orderNumber = (Integer) request.getData();
@@ -97,7 +99,7 @@ public class DeliveryController {
         System.out.println(delivery);
 
         if (delivery != null) {
-            response = new Response<>(Response.ResponseType.SEND_DELIVERY, delivery, Response.Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+            response = new Response<>(Response.ResponseType.SEND_DELIVERY, delivery,SUCCESS,THIS_CLIENT);
         } else {
             response.setMessage("No delivery found for order number: " + orderNumber);
         }
