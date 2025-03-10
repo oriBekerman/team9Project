@@ -22,7 +22,7 @@
                       <Font size="10.0" />
                   </font>
               </Button>
-              <Button fx:id="deliveryBtn" mnemonicParsing="false" onAction="#navTodeliveryPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="make a delivery">
+              <Button fx:id="deliveryBtn" mnemonicParsing="false" onAction="#navToDeliveryPage" prefHeight="49.0" prefWidth="185.0" styleClass="menu-btn" text="make a delivery">
                   <font>
                       <Font size="10.0" />
                   </font>

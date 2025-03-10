@@ -171,6 +171,7 @@ public class PrimaryBoundary {
 			System.out.println("Button clicked - showing popup");
 			GetBranchListPopup();
 		});
+
 	}
 
 	//get list of brunches pop up
