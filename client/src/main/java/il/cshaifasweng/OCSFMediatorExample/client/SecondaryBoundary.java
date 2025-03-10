@@ -6,6 +6,7 @@ import java.util.*;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.MenuEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.updateDishEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -171,6 +172,20 @@ public class SecondaryBoundary {
 //        branchSpecialColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDishType()));
         // This section display the image of mamasKitchen
         // Set cell factories for price fields
+        // Check if the active user is DIETITIAN
+        if (SimpleClient.getClient().getActiveUser() != null) {
+            if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN) {
+                System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
+                UpdatePriceBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
+                SaveBtn.setVisible(true);
+            } else {
+                UpdatePriceBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
+                SaveBtn.setVisible(false);
+            }
+        } else {
+            UpdatePriceBtn.setVisible(false); // Hide Update button if not logged in
+            SaveBtn.setVisible(false);
+        }
         priceColumn.setCellFactory(col -> new TableCell<MenuItem, Double>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
