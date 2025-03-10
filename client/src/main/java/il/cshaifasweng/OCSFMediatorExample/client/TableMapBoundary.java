@@ -27,7 +27,7 @@ public class TableMapBoundary {
     public GridPane insideGridPane;
     public Button tableBtn2;
     public Button tableBtn3;
-    private List<Node>buttons=new ArrayList<>();
+    private List<Button>buttons=new ArrayList<>();
 
 
     public TableMapBoundary()
@@ -36,7 +36,7 @@ public class TableMapBoundary {
     }
     public void initialize() {
         if (branch != null) {
-            buttons=insideGridPane.getChildren();
+//            buttons=insideGridPane.getChildren();
 //           setMap(branch);
         }
     }
@@ -73,15 +73,8 @@ public class TableMapBoundary {
 //                }
 //                buttons = insideGridPane.getChildren();
                 System.out.println("map is set  = " + String.valueOf(mapIsSet));
-                int i=0;
-                buttons=List.of(tableBtn1,tableBtn2,tableBtn3);
-//                while(i<buttons.size() && i<branch.getTables().size())
-//                {
-//                    setButton((Button) buttons.get(i),branch.getTables().get(i));
-//                }
-//                for (RestTable table : branch.getTables()) {
-//                    setButton(tableBtn1,table);
-//                }
+                List<RestTable> tables = branch.getTables(); // Assume this fetches the list of tables
+                tableBtn1.setText(String.valueOf(tables.getFirst().getId()));
                 this.mapIsSet = true;
                 System.out.println("Map is set");
                 // Notify all waiting threads in openBranchMap()
@@ -107,6 +100,7 @@ public class TableMapBoundary {
         int id=table.getId();
         String btnText= String.valueOf(id);
         button.setText(btnText);
+        button.setWrapText(true);
     }
 
     //get the branch tables from the event client posted
