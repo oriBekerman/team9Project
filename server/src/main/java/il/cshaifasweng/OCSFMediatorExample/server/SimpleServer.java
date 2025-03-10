@@ -67,13 +67,14 @@ public class SimpleServer extends AbstractServer {
 
         System.out.println("Response prepared for client:");
         System.out.println("Response Type: " + response.getResponseType());
-//        System.out.println("Response Status: " + response.getStatus());
-//        System.out.println("Response Data: " + (response.getData() != null ? response.getData().toString() : "No data"));
+        System.out.println("Response Status: " + response.getStatus());
+        System.out.println("Response Data: " + (response.getData() != null ? response.getData().toString() : "No data"));
 
 
         //check if the response should be sent to all clients or just one
         if (response.getRecipient()==ALL_CLIENTS) {
             sendToAllClients(response);
+            System.out.println("response sent to client "+ response.getResponseType().toString());
         }
         if (response.getRecipient()==THIS_CLIENT)
         {

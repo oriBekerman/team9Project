@@ -111,6 +111,7 @@ public class SimpleClient extends AbstractClient {
 			}
 			if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
 			{
+				System.out.println("branch tables received from server");
 				List<RestTable> tables = (ArrayList<RestTable>) response.getData();
 //				EventBus.getDefault().post(new BranchTablesReceivedEvent(tables));
 				for (RestTable table : tables) {

@@ -1,9 +1,10 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
-public class Coordinates {
+public class Coordinates implements Serializable {
     private double x;
     private double y;
 
