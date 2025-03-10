@@ -118,15 +118,7 @@ private static void initialize(String password) {
             restTable4.addUnavailableFromTime(time4);
             restTable5.addUnavailableFromTime(time5);
 
-            List<RestTable> restTables = List.of(restTable1, restTable2, restTable3, restTable4, restTable5, restTable6);
-            Coordinates coordinates = new Coordinates(100, 100);
-            restTable1.setCoordinates(coordinates);
-            for(RestTable table: restTables) {
-                table.setCoordinates(coordinates);
-                coordinates.setX(coordinates.getX() +20);
-                coordinates.setY(coordinates.getY() +20);
-            }
-
+            List<RestTable> restTables = List.of(restTable1,restTable2,restTable3,restTable4,restTable5,restTable6);
             // Assigning branches to menu items
             for (MenuItem menuItem : deliverable1) {
                 menuItem.setDeliverableBranches(branches1);

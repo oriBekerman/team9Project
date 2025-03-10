@@ -1,16 +1,20 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import com.google.protobuf.StringValue;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import javafx.css.StyleClass;
 import javafx.css.Stylesheet;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TableMapBoundary {
@@ -18,10 +22,12 @@ public class TableMapBoundary {
     public Pane outsideAreaPane;
     public Pane insideAreaPane;
     public Button tableBtn1;
-    public Button tableBtn2;
-    public Button tableBtn3;
     public Branch branch;
     public boolean mapIsSet=false;
+    public GridPane insideGridPane;
+    public Button tableBtn2;
+    public Button tableBtn3;
+    private List<Node>buttons=new ArrayList<>();
 
 
     public TableMapBoundary()
@@ -30,39 +36,9 @@ public class TableMapBoundary {
     }
     public void initialize() {
         if (branch != null) {
-           setMap(branch);
+            buttons=insideGridPane.getChildren();
+//           setMap(branch);
         }
-    }
-
-    //create table buttons for the map
-    private Button makeTableBtn(RestTable table)
-    {
-        Button tableBtn = new Button();
-        if(table.getCoordinates() != null)
-        {
-            tableBtn.setLayoutX(table.getCoordinates().getX());
-            tableBtn.setLayoutY(table.getCoordinates().getY());
-        }
-        int num=table.getId();
-        String tableId = Integer.toString(num);
-        tableBtn.setText(tableId);
-        switch (table.getCapacity()){
-            case 2->tableBtn.setPrefSize(52,49);
-            case 3->tableBtn.setPrefSize(77,74);
-            case 4->tableBtn.setPrefSize(102,98);
-            default -> tableBtn.setPrefSize(0,0);
-        }
-        tableBtn.setStyle("""
-                    -fx-font-size: 18px;
-                    -fx-font-weight: bold;
-                    -fx-text-fill: white;
-                    -fx-background-color: #8a6f48;
-                    -fx-alignment: center;
-                    -fx-padding: 10px 20px;
-                    -fx-border-radius: 6px;
-                    -fx-cursor: hand\
-                """);
-        return tableBtn;
     }
     // initialize the map before letting the map page be opened
     public void setMap(Branch branch) {
@@ -70,28 +46,43 @@ public class TableMapBoundary {
         synchronized (this) {
             if (branch != null)
             {
+                System.out.println("in set map after sync");
                 this.branch = branch;
-                if (!branch.tablesAreSet)
+                this.branch.tablesAreSet=false;
+                System.out.println("after branch = " + this.branch);
+                System.out.println("branch tables = " + String.valueOf(this.branch.tablesAreSet));
+                System.out.println("Fetching tables for branch...");
+                loadBranchTables();
+                System.out.println("after load ...");
+                try
                 {
-                    System.out.println("Fetching tables for branch...");
-                    loadBranchTables();
-                    try
+                    while (!branch.tablesAreSet) //wait for branch tables to be set in branch entity
                     {
-                        while (!branch.tablesAreSet) //wait for branch tables to be set in branch entity
-                        {
-                            wait();
-                        }
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                        System.out.println("Thread interrupted while waiting for tables.");
-                        return;
+                        wait();
                     }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    System.out.println("Thread interrupted while waiting for tables.");
+                    return;
                 }
                 // once the list of tables is loaded in branch make table buttons
-                for (RestTable table : branch.getTables()) {
-                    makeTableBtn(table);
-                }
-                mapIsSet = true;
+                System.out.println("in set map after if branchTables:");
+//                for(RestTable table :branch.getTables())
+//                {
+//                    table.print();
+//                }
+//                buttons = insideGridPane.getChildren();
+                System.out.println("map is set  = " + String.valueOf(mapIsSet));
+                int i=0;
+                buttons=List.of(tableBtn1,tableBtn2,tableBtn3);
+//                while(i<buttons.size() && i<branch.getTables().size())
+//                {
+//                    setButton((Button) buttons.get(i),branch.getTables().get(i));
+//                }
+//                for (RestTable table : branch.getTables()) {
+//                    setButton(tableBtn1,table);
+//                }
+                this.mapIsSet = true;
                 System.out.println("Map is set");
                 // Notify all waiting threads in openBranchMap()
                 notifyAll();
@@ -110,6 +101,12 @@ public class TableMapBoundary {
                 throw new RuntimeException(e);
             }
         }
+    }
+    private void setButton(Button button,RestTable table)
+    {
+        int id=table.getId();
+        String btnText= String.valueOf(id);
+        button.setText(btnText);
     }
 
     //get the branch tables from the event client posted

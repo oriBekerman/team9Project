@@ -126,13 +126,24 @@ public class Branch implements Serializable  {
         return special;
     }
     public List<RestTable> getTables() {
+        if(tables.isEmpty())
+        {
+            System.out.println("tables is empty");
+        }
+        if (tables==null)
+        {
+            System.out.println("tables is null");
+        }
         return tables;
     }
 
     public void setRestTables(List<RestTable> tables) {
         this.tables = tables;
-        if (tables != null && !tables.isEmpty()) {
-            this.tablesAreSet=true;
+        if (tables != null){
+            if(tables.size()>0)
+            {
+                this.tablesAreSet=true;
+            }
         }
     }
 //    public List<RestTable> getAvailableTables(int capacity,LocalTime time)
