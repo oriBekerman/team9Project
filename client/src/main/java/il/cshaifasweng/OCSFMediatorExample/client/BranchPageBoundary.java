@@ -92,7 +92,8 @@ public class BranchPageBoundary {
     public void navToReservationPage(ActionEvent actionEvent) {
     }
 
-    public void navTodeliveryPage(ActionEvent actionEvent) {
+    public void navToDeliveryPage(ActionEvent actionEvent) {
+        switchScreen("Delivery");
     }
 
     public void navToComplaintPage(ActionEvent actionEvent) {
