@@ -136,9 +136,8 @@ private static void initialize(String password) {
 
             // Setting up the menu and deliverable items for the branches
             haifaBranch.setBranchMenuItems(menuItems1);
-            haifaBranch.setDeliverableItems(deliverable1);
-            haifaBranch.setRestTables(restTables);
-
+           haifaBranch.setDeliverableItems(deliverable1);
+           haifaBranch.setRestTables(restTables);
             telAvivBranch.setBranchMenuItems(menuItems2);
             telAvivBranch.setDeliverableItems(deliverable2);
 

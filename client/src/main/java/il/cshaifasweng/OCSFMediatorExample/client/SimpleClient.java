@@ -8,7 +8,9 @@ import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
@@ -24,6 +26,7 @@ public class SimpleClient extends AbstractClient {
 	public static String host="localhost";
 	public  static int port=3000;
 	private static ActiveUser activeUser = null;
+	public Map <String, String> mapReservation=new HashMap<String, String>();
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
@@ -109,6 +112,7 @@ public class SimpleClient extends AbstractClient {
 			if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
 			{
 				List<RestTable> tables = (ArrayList<RestTable>) response.getData();
+				EventBus.getDefault().post(new BranchTablesReceivedEvent(tables));
 				for (RestTable table : tables) {
 					table.print();
 				}
@@ -137,7 +141,8 @@ public class SimpleClient extends AbstractClient {
 					EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 				}
 			}
-			if (response.getResponseType().equals(SEND_DELIVERY)) {
+			System.out.println("before send delivery handle");
+			 if (response.getResponseType().equals(SEND_DELIVERY)) {
 				System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee");
 				Delivery delivery = (Delivery) response.getData();
 				if (delivery != null) {

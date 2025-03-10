@@ -31,13 +31,22 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="189.0" layoutY="325.0" text="Mark the places you want to save :">
+      <Label layoutX="189.0" layoutY="325.0" text="where to sit?">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
       <ComboBox fx:id="hoursList" layoutX="323.0" layoutY="253.0" onAction="#chooseHour" prefWidth="150.0" />
-      <Pane fx:id="MapPane" layoutX="165.0" layoutY="380.0" prefHeight="301.0" prefWidth="467.0" />
+      <Pane fx:id="MapPane" layoutX="165.0" layoutY="380.0" prefHeight="301.0" prefWidth="467.0">
+         <children>
+            <ComboBox fx:id="numpeopleList" layoutX="159.0" layoutY="2.0" onAction="#chooseNumPeople" prefWidth="150.0" />
+            <Label layoutX="-1.0" layoutY="6.0" prefHeight="21.0" prefWidth="150.0" text="Number of people:">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </children></Pane>
       <Button fx:id="backBtn" layoutX="58.0" layoutY="580.0" mnemonicParsing="false" onAction="#backToHP" text="Back to HP" />
+      <ComboBox fx:id="InOutdoorList" layoutX="323.0" layoutY="323.0" onAction="#chooseInOutdoor" prefWidth="150.0" />
    </children>
 </AnchorPane>
