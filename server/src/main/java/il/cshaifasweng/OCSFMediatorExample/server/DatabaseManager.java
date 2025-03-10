@@ -102,8 +102,7 @@ private static void initialize(String password) {
             RestTable restTable4 = new RestTable("outside", 3);
             RestTable restTable5 = new RestTable("outside", 2);
             RestTable restTable6 = new RestTable("inside", 4);
-            Coordinates coordinates = new Coordinates(100, 100);
-            restTable1.setCoordinates(coordinates);
+
 
             // Setting unavailable times
             LocalTime time1 = LocalTime.of(9, 0);
@@ -120,6 +119,13 @@ private static void initialize(String password) {
             restTable5.addUnavailableFromTime(time5);
 
             List<RestTable> restTables = List.of(restTable1, restTable2, restTable3, restTable4, restTable5, restTable6);
+            Coordinates coordinates = new Coordinates(100, 100);
+            restTable1.setCoordinates(coordinates);
+            for(RestTable table: restTables) {
+                table.setCoordinates(coordinates);
+                coordinates.setX(coordinates.getX() +20);
+                coordinates.setY(coordinates.getY() +20);
+            }
 
             // Assigning branches to menu items
             for (MenuItem menuItem : deliverable1) {

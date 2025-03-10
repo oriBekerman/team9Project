@@ -112,7 +112,7 @@ public class SimpleClient extends AbstractClient {
 			if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
 			{
 				List<RestTable> tables = (ArrayList<RestTable>) response.getData();
-				EventBus.getDefault().post(new BranchTablesReceivedEvent(tables));
+//				EventBus.getDefault().post(new BranchTablesReceivedEvent(tables));
 				for (RestTable table : tables) {
 					table.print();
 				}
@@ -205,6 +205,7 @@ public class SimpleClient extends AbstractClient {
 	}
 	public void fetchTables(Branch branch) throws IOException {
 		Request request=new Request(BRANCH,FETCH_BRANCH_TABLES,branch);
+		System.out.println("fetch sent to server");
 		client.sendToServer(request);
 	}
 

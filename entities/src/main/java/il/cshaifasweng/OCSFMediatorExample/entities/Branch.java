@@ -52,6 +52,8 @@ public class Branch implements Serializable  {
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RestTable> tables = new ArrayList<>();
 
+    public boolean tablesAreSet=false;
+
 
     public Branch() {}
 
@@ -129,6 +131,9 @@ public class Branch implements Serializable  {
 
     public void setRestTables(List<RestTable> tables) {
         this.tables = tables;
+        if (tables != null && !tables.isEmpty()) {
+            this.tablesAreSet=true;
+        }
     }
 //    public List<RestTable> getAvailableTables(int capacity,LocalTime time)
 //    {
