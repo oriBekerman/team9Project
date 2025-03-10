@@ -15,7 +15,10 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static java.lang.Math.min;
 
 public class TableMapBoundary {
 
@@ -28,6 +31,7 @@ public class TableMapBoundary {
     public Button tableBtn2;
     public Button tableBtn3;
     private List<Button>buttons=new ArrayList<>();
+    
 
 
     public TableMapBoundary()
@@ -74,7 +78,19 @@ public class TableMapBoundary {
 //                buttons = insideGridPane.getChildren();
                 System.out.println("map is set  = " + String.valueOf(mapIsSet));
                 List<RestTable> tables = branch.getTables(); // Assume this fetches the list of tables
-                tableBtn1.setText(String.valueOf(tables.getFirst().getId()));
+                List<Button>buttons=new ArrayList<>();
+                buttons.add(tableBtn1);
+                buttons.add(tableBtn2);
+                buttons.add(tableBtn3);
+                for(int i=0;i<min(tables.size(),buttons.size());i++)
+                {
+                    String num=String.valueOf(tables.get(i).getId());
+                    setButton(buttons.get(i),num);
+                }
+//                tableBtn1.setText(String.valueOf(tables.getFirst().getId()));
+//                tableBtn1.getStyleClass().add("two-table-button");
+//                tableBtn2.setText(String.valueOf(tables.get(1).getId()));
+//                tableBtn3.setText(String.valueOf(tables.get(2).getId()));
                 this.mapIsSet = true;
                 System.out.println("Map is set");
                 // Notify all waiting threads in openBranchMap()
@@ -95,12 +111,18 @@ public class TableMapBoundary {
             }
         }
     }
-    private void setButton(Button button,RestTable table)
+    private void setButton(Button button,String num)
     {
-        int id=table.getId();
-        String btnText= String.valueOf(id);
-        button.setText(btnText);
+        button.setText(num);
         button.setWrapText(true);
+        button.setStyle(" -fx-font-size: 16px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-text-fill: white;\n" +
+                "    -fx-background-color: #8a6f48;\n" +
+                "    -fx-alignment: center;\n" +
+                "    -fx-padding: 8px 16px;\n" +
+                "    -fx-border-radius: 6px;\n" +
+                "    -fx-cursor: hand;");
     }
 
     //get the branch tables from the event client posted
