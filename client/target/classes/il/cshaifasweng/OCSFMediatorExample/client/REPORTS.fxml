@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<VBox fx:id="contentArea" xmlns:fx="http://javafx.com/fxml" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.REPORTSboundary">
+    <TableView fx:id="reportsTable" VBox.vgrow="ALWAYS">
+        <!-- Columns are added dynamically -->
+    </TableView>
+    <BarChart fx:id="complaintsChart" VBox.vgrow="ALWAYS" visible="false">
+        <xAxis>
+            <CategoryAxis label="Date"/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="Number of Complaints"/>
+        </yAxis>
+    </BarChart>
+</VBox>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="782.0" prefWidth="1295.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ReportBoundary">
+    <children>
+        <Label fx:id="HomePageLabel" layoutX="639.0" layoutY="348.0" />
+        <Label fx:id="WelcomeLabel" layoutX="564.0" layoutY="14.0" prefHeight="74.0" prefWidth="317.0" textAlignment="CENTER">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+        <VBox layoutX="-4.0" layoutY="-2.0" prefHeight="782.0" prefWidth="239.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1056.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <ImageView fx:id="MOMSImage" fitHeight="178.0" fitWidth="184.0" pickOnBounds="true" preserveRatio="true" />
+                <VBox prefHeight="299.0" prefWidth="209.0">
+                    <children>
+                        <VBox prefHeight="231.0" prefWidth="190.0" styleClass="sidebar">
+                            <children>
+                                <Button fx:id="MenuBtn" mnemonicParsing="false" onAction="#navToMenu" prefHeight="44.0" prefWidth="136.0" styleClass="menu-btn" stylesheets="@style.css" text="Menu" />
+                                <Button fx:id="toggleButtonBranch" prefHeight="44.0" prefWidth="142.0" styleClass="menu-btn" stylesheets="@style.css" text="Our Branches" />
+                                <Button fx:id="deliveryBtn" layoutX="25.0" layoutY="241.0" mnemonicParsing="false" onAction="#navToDelivery" text="Make a Delivery" />
+                                <Button fx:id="loginBtn" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
+                                <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#navToLogOut" text="Logout" />
+                                <Button fx:id="UpdateMenuBtn" mnemonicParsing="false" onAction="#navToUpMenu" text="Update Menu" />
+                                <Button fx:id="toggleButtonReports" mnemonicParsing="false" text="Reports" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+                <VBox prefHeight="32.0" prefWidth="190.0" />
+            </children>
+        </VBox>
+      <Button fx:id="BackToHPbtn" layoutX="1029.0" layoutY="24.0" mnemonicParsing="false" onAction="#BackToHPfunc" styleClass="return-btn" text="Back to Home Page" />
+      <VBox layoutX="351.0" layoutY="109.0" prefHeight="663.0" prefWidth="733.0">
+         <children>
+            <TableView fx:id="reportTableView" prefHeight="411.0" prefWidth="733.0" />
+            <BarChart fx:id="complaintsChart" visible="false" VBox.vgrow="ALWAYS">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </BarChart>
+         </children>
+      </VBox>
+    </children>
+</AnchorPane>
