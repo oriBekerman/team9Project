@@ -113,10 +113,11 @@ public class SimpleClient extends AbstractClient {
 			{
 				System.out.println("branch tables received from server");
 				List<RestTable> tables = (ArrayList<RestTable>) response.getData();
-//				EventBus.getDefault().post(new BranchTablesReceivedEvent(tables));
-				for (RestTable table : tables) {
-					table.print();
-				}
+				EventBus.getDefault().post(new BranchTablesReceivedEvent(tables));
+				System.out.println("branch tables posted");
+//				for (RestTable table : tables) {
+//					table.print();
+//				}
 			}
 			// Handle user authentication response
 			if (response.getResponseType().equals(CORRECTNESS_USER)) {
@@ -142,7 +143,6 @@ public class SimpleClient extends AbstractClient {
 					EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 				}
 			}
-			System.out.println("before send delivery handle");
 			 if (response.getResponseType().equals(SEND_DELIVERY)) {
 				System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee");
 				Delivery delivery = (Delivery) response.getData();

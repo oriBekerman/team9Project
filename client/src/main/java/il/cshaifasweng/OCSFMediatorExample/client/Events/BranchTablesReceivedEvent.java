@@ -8,6 +8,7 @@ public class BranchTablesReceivedEvent {
 
     public BranchTablesReceivedEvent(List<RestTable> tables) {
         this.tables = tables;
+        System.out.println(" new tables event ");
     }
 
     public List<RestTable> getTables() {

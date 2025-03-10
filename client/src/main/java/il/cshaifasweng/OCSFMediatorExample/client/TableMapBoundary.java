@@ -7,6 +7,7 @@ import javafx.css.StyleClass;
 import javafx.css.Stylesheet;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
@@ -23,6 +24,10 @@ public class TableMapBoundary {
     public boolean mapIsSet=false;
 
 
+    public TableMapBoundary()
+    {
+        EventBus.getDefault().register(this);
+    }
     public void initialize() {
         if (branch != null) {
            setMap(branch);
@@ -70,16 +75,24 @@ public class TableMapBoundary {
                 {
                     System.out.println("Fetching tables for branch...");
                     loadBranchTables();
-                    return;  // Exit and wait for event to update tables
+                    try
+                    {
+                        while (!branch.tablesAreSet) //wait for branch tables to be set in branch entity
+                        {
+                            wait();
+                        }
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        System.out.println("Thread interrupted while waiting for tables.");
+                        return;
+                    }
                 }
                 // once the list of tables is loaded in branch make table buttons
                 for (RestTable table : branch.getTables()) {
                     makeTableBtn(table);
                 }
-
                 mapIsSet = true;
                 System.out.println("Map is set");
-
                 // Notify all waiting threads in openBranchMap()
                 notifyAll();
             }
