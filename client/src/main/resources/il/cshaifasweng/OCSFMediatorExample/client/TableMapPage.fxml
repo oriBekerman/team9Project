@@ -23,15 +23,18 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="tableBtn1" mnemonicParsing="false" prefHeight="58.0" prefWidth="96.0" styleClass="two-table-button" text="0" />
+                  <Button fx:id="tableBtn1" mnemonicParsing="false" styleClass="two-table-button" text="0" />
                   <Button fx:id="tableBtn2" mnemonicParsing="false" styleClass="two-table-button" text="0" GridPane.rowIndex="1" />
                   <Button fx:id="tableBtn3" mnemonicParsing="false" styleClass="two-table-button" text="0" GridPane.rowIndex="2" />
+                  <Button fx:id="tableBtn4" mnemonicParsing="false" styleClass="two-table-button" text="0" GridPane.columnIndex="1" />
+                  <Button fx:id="tableBtn5" mnemonicParsing="false" styleClass="two-table-button" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="tableBtn6" mnemonicParsing="false" styleClass="two-table-button" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>
       </Pane>
       <Pane fx:id="outsideAreaPane" layoutX="24.0" layoutY="531.0" prefHeight="294.0" prefWidth="851.0" styleClass="outside-seating" />
       <Button fx:id="checkBtn" layoutX="24.0" layoutY="14.0" mnemonicParsing="false" onAction="#check" text="Button" />
-      <ComboBox fx:id="timesBox" layoutX="706.0" layoutY="26.0" onAction="#getMapAt" prefWidth="150.0" />
+      <ComboBox fx:id="timesBox" layoutX="706.0" layoutY="26.0" onAction="#chooseTime" prefWidth="150.0" />
    </children>
 </AnchorPane>

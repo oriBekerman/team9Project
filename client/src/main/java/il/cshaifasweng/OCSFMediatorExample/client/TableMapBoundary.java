@@ -31,7 +31,11 @@ public class TableMapBoundary {
     public Button tableBtn3;
     public Button checkBtn;
     public ComboBox<String> timesBox;
+    public Button tableBtn4;
+    public Button tableBtn5;
+    public Button tableBtn6;
     private List<Button>buttons=new ArrayList<>();
+    private Map<RestTable,Button>map=new HashMap<>();
     
 
 
@@ -74,14 +78,17 @@ public class TableMapBoundary {
                 System.out.println("in set map after if branchTables:");
                 System.out.println("map is set  = " + String.valueOf(mapIsSet));
                 Set<RestTable> tables = branch.getTables(); // Assume this fetches the list of tables
-                List<Button>buttons=new ArrayList<>();
                 buttons.add(tableBtn1);
                 buttons.add(tableBtn2);
                 buttons.add(tableBtn3);
+                buttons.add(tableBtn4);
+                buttons.add(tableBtn5);
+                buttons.add(tableBtn6);
                 List<RestTable> tableList = new ArrayList<>(tables); // Convert Set to List
                 for (int i = 0; i < Math.min(tableList.size(), buttons.size()); i++) {
-                    String num = String.valueOf(tableList.get(i).getId());
-                    setButton(buttons.get(i), num);
+//                    String num = String.valueOf(tableList.get(i).getId());
+                    map.put(tableList.get(i), buttons.get(i));
+                    setButton(buttons.get(i), String.valueOf(i));
                 }
                 setTimesBox();
                 this.mapIsSet = true;
@@ -153,7 +160,28 @@ public class TableMapBoundary {
             table.print();
         }
     }
-
-    public void getMapAt(ActionEvent actionEvent) {
+    public void chooseTime(ActionEvent actionEvent) {
+        String chosen = timesBox.getSelectionModel().getSelectedItem();
+        LocalTime localTime = LocalTime.parse(chosen);
+        displayMapAt(localTime);
     }
+
+    private void displayMapAt(LocalTime localTime) {
+        Set<RestTable> tables = branch.getAvailableTablesAt(localTime);
+        for (RestTable table: tables) {
+            setTableButtonAvailable(map.get(table));
+        }
+    }
+    private void setTableButtonAvailable(Button button)
+    {
+        button.setStyle(" -fx-font-size: 16px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-text-fill: white;\n" +
+                "    -fx-background-color: #5e8a75;\n" +
+                "    -fx-alignment: center;\n" +
+                "    -fx-padding: 8px 16px;\n" +
+                "    -fx-border-radius: 6px;\n" +
+                "    -fx-cursor: hand;");
+    }
+
 }
