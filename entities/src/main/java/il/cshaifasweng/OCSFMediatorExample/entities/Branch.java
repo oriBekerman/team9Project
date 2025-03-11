@@ -149,25 +149,36 @@ public class Branch implements Serializable  {
             }
         }
     }
-//    public List<RestTable> getAvailableTables(int capacity,LocalTime time)
-//    {
-//        List<RestTable> availableTables = new ArrayList<>();
-//        System.out.println("in getAvailableTables branch");
-//        for(RestTable table : tables){
-//            if(table.getCapacity()==capacity && table.isAvailableAt(time)){
-//                availableTables.add(table);
-//            }
-//        }
-//        return availableTables;
-//    }
-//    public void printAvailableTables(int capacity,LocalTime time)
-//    {
-//        System.out.println("Available Tables:");
-//        List<RestTable>availableTables = getAvailableTables(capacity,time);
-//        for(RestTable table : availableTables){
-//            table.print();
-//            System.out.println("available at "+time);
-//        }
-//    }
+    public List<RestTable> getAvailableTablesWithCapacity(int capacity,LocalTime time)
+    {
+        List<RestTable> availableTables = new ArrayList<>();
+        System.out.println("in getAvailableTables branch");
+        for(RestTable table : tables){
+            if(table.getCapacity()==capacity && table.isAvailableAt(time)){
+                availableTables.add(table);
+            }
+        }
+        return availableTables;
+    }
+    public void printAvailableTables(int capacity,LocalTime time)
+    {
+        System.out.println("Available Tables:");
+        List<RestTable>availableTables = getAvailableTablesWithCapacity(capacity,time);
+        for(RestTable table : availableTables){
+            table.print();
+            System.out.println("available at "+time);
+        }
+    }
+    public Set<RestTable> getAvailableTablesAt(LocalTime time)
+    {
+        Set<RestTable> availableTables = new HashSet<>();
+        for(RestTable table : tables){
+            if(table.isAvailableAt(time)){
+                availableTables.add(table);
+            }
+        }
+        return availableTables;
+    }
 }
+
 

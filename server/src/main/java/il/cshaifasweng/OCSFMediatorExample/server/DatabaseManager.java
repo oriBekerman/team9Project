@@ -107,8 +107,8 @@ private static void initialize(String password) {
             LocalTime time3 = LocalTime.of(11, 0);
             LocalTime time4 = LocalTime.of(12, 30);
             LocalTime time5 = LocalTime.of(14, 30);
-            List<LocalTime> unavailableTimes1 = List.of(time1, time2, time3, time5);
-            List<LocalTime> unavailableTimes2 = List.of(time1, time4, time5);
+            Set<LocalTime> unavailableTimes1 = Set.of(time1, time2, time3, time5);
+            Set<LocalTime> unavailableTimes2 = Set.of(time1, time4, time5);
             restTable1.setUnavailableFromTimes(unavailableTimes1);
             restTable2.setUnavailableFromTimes(unavailableTimes2);
             restTable3.addUnavailableFromTime(time3);

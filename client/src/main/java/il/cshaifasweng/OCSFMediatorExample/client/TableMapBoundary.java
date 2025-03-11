@@ -1,23 +1,22 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
-import com.google.protobuf.StringValue;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
-import javafx.css.StyleClass;
-import javafx.css.Stylesheet;
-import javafx.scene.Node;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 import static java.lang.Math.min;
 
@@ -31,7 +30,14 @@ public class TableMapBoundary {
     public GridPane insideGridPane;
     public Button tableBtn2;
     public Button tableBtn3;
+    public Button checkBtn;
+    public ComboBox<String> timesBox;
+    public Button tableBtn4;
+    public Button tableBtn5;
+    public Button tableBtn6;
+    public AnchorPane root;
     private List<Button>buttons=new ArrayList<>();
+    private Map<RestTable,Button>map=new HashMap<>();
     
 
 
@@ -72,31 +78,51 @@ public class TableMapBoundary {
                 }
                 // once the list of tables is loaded in branch make table buttons
                 System.out.println("in set map after if branchTables:");
-//                for(RestTable table :branch.getTables())
-//                {
-//                    table.print();
-//                }
-//                buttons = insideGridPane.getChildren();
                 System.out.println("map is set  = " + String.valueOf(mapIsSet));
                 Set<RestTable> tables = branch.getTables(); // Assume this fetches the list of tables
-                List<Button>buttons=new ArrayList<>();
                 buttons.add(tableBtn1);
                 buttons.add(tableBtn2);
                 buttons.add(tableBtn3);
+                buttons.add(tableBtn4);
+                buttons.add(tableBtn5);
+                buttons.add(tableBtn6);
                 List<RestTable> tableList = new ArrayList<>(tables); // Convert Set to List
                 for (int i = 0; i < Math.min(tableList.size(), buttons.size()); i++) {
-                    String num = String.valueOf(tableList.get(i).getId());
-                    setButton(buttons.get(i), num);
+//                    String num = String.valueOf(tableList.get(i).getId());
+                    map.put(tableList.get(i), buttons.get(i));
+                    setButton(buttons.get(i), String.valueOf(i));
                 }
-//                tableBtn1.setText(String.valueOf(tables.getFirst().getId()));
-//                tableBtn1.getStyleClass().add("two-table-button");
-//                tableBtn2.setText(String.valueOf(tables.get(1).getId()));
-//                tableBtn3.setText(String.valueOf(tables.get(2).getId()));
+                setTimesBox();
+                root.setStyle("-fx-background-color: #fbe9d0;");
+                outsideAreaPane.setStyle("-fx-background-color: #f6d7b0;\n" +
+                        "    -fx-border-color: #8a6f48;\n" +
+                        "    -fx-border-width: 2px;\n" +
+                        "    -fx-border-radius: 8px;\n" +
+                        "    -fx-padding: 12px;");
+                insideAreaPane.setStyle(" -fx-background-color: #e4c5a2;\n" +
+                        "    -fx-border-color: #8a6f48;\n" +
+                        "    -fx-border-width: 2px;\n" +
+                        "    -fx-border-radius: 8px;\n" +
+                        "    -fx-padding: 12px;");
                 this.mapIsSet = true;
                 System.out.println("Map is set");
                 // Notify all waiting threads in openBranchMap()
                 notifyAll();
             }
+        }
+    }
+
+    private void setTimesBox() {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm"); //good for both 09:00 and 9:00
+            LocalTime startTime = LocalTime.parse(branch.getOpeningTime(), formatter);
+            LocalTime endTime = LocalTime.parse(branch.getClosingTime(), formatter);
+            while (startTime.isBefore(endTime)) {//add to comboBox every 15 min
+                timesBox.getItems().add(startTime.toString());
+                startTime = startTime.plusMinutes(15);
+            }
+        } catch (DateTimeParseException e) {
+            System.err.println("Error parsing time: " + e.getMessage());
         }
     }
 
@@ -140,6 +166,35 @@ public class TableMapBoundary {
     }
 
 
+    public void check(ActionEvent actionEvent) {
+        Set<RestTable>tables=branch.getAvailableTablesAt(LocalTime.of(14,30));
+        for(RestTable table: tables)
+        {
+            table.print();
+        }
+    }
+    public void chooseTime(ActionEvent actionEvent) {
+        String chosen = timesBox.getSelectionModel().getSelectedItem();
+        LocalTime localTime = LocalTime.parse(chosen);
+        displayMapAt(localTime);
+    }
 
+    private void displayMapAt(LocalTime localTime) {
+        Set<RestTable> tables = branch.getAvailableTablesAt(localTime);
+        for (RestTable table: tables) {
+            setTableButtonAvailable(map.get(table));
+        }
+    }
+    private void setTableButtonAvailable(Button button)
+    {
+        button.setStyle(" -fx-font-size: 16px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-text-fill: white;\n" +
+                "    -fx-background-color: #5e8a75;\n" +
+                "    -fx-alignment: center;\n" +
+                "    -fx-padding: 8px 16px;\n" +
+                "    -fx-border-radius: 6px;\n" +
+                "    -fx-cursor: hand;");
+    }
 
 }
