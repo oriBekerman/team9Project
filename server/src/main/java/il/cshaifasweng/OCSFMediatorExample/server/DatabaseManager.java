@@ -15,10 +15,7 @@ import org.hibernate.service.ServiceRegistry;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE;
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
@@ -118,7 +115,7 @@ private static void initialize(String password) {
             restTable4.addUnavailableFromTime(time4);
             restTable5.addUnavailableFromTime(time5);
 
-            List<RestTable> restTables = List.of(restTable1,restTable2,restTable3,restTable4,restTable5,restTable6);
+            Set<RestTable> restTables = Set.of(restTable1,restTable2,restTable3,restTable4,restTable5,restTable6);
             // Assigning branches to menu items
             for (MenuItem menuItem : deliverable1) {
                 menuItem.setDeliverableBranches(branches1);

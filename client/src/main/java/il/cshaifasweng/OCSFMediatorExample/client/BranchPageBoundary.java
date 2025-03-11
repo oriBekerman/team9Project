@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
@@ -189,7 +190,7 @@ public class BranchPageBoundary {
     public void onBranchTablesEvent(BranchTablesReceivedEvent event) {
         synchronized (lock) {
             System.out.println("Tables received for branch: " + branch.getName());
-            List<RestTable> tables = event.getTables();
+            Set<RestTable> tables = event.getTables();
 
             if (tables != null && !tables.isEmpty()) {
                 branch.setRestTables(tables);

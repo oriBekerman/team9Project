@@ -5,7 +5,9 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 
@@ -50,7 +52,7 @@ public class Branch implements Serializable  {
 
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RestTable> tables = new ArrayList<>();
+    private Set<RestTable> tables = new HashSet<>();
 
     public boolean tablesAreSet=false;
 
@@ -125,7 +127,7 @@ public class Branch implements Serializable  {
         }
         return special;
     }
-    public List<RestTable> getTables() {
+    public Set<RestTable> getTables() {
         if(tables.isEmpty())
         {
             System.out.println("tables is empty");
@@ -137,7 +139,7 @@ public class Branch implements Serializable  {
         return tables;
     }
 
-    public void setRestTables(List<RestTable> tables) {
+    public void setRestTables(Set<RestTable> tables) {
         this.tables = tables;
         if (tables != null){
             if(tables.size()>0)

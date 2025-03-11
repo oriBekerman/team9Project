@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static java.lang.Math.min;
 
@@ -77,15 +78,15 @@ public class TableMapBoundary {
 //                }
 //                buttons = insideGridPane.getChildren();
                 System.out.println("map is set  = " + String.valueOf(mapIsSet));
-                List<RestTable> tables = branch.getTables(); // Assume this fetches the list of tables
+                Set<RestTable> tables = branch.getTables(); // Assume this fetches the list of tables
                 List<Button>buttons=new ArrayList<>();
                 buttons.add(tableBtn1);
                 buttons.add(tableBtn2);
                 buttons.add(tableBtn3);
-                for(int i=0;i<min(tables.size(),buttons.size());i++)
-                {
-                    String num=String.valueOf(tables.get(i).getId());
-                    setButton(buttons.get(i),num);
+                List<RestTable> tableList = new ArrayList<>(tables); // Convert Set to List
+                for (int i = 0; i < Math.min(tableList.size(), buttons.size()); i++) {
+                    String num = String.valueOf(tableList.get(i).getId());
+                    setButton(buttons.get(i), num);
                 }
 //                tableBtn1.setText(String.valueOf(tables.getFirst().getId()));
 //                tableBtn1.getStyleClass().add("two-table-button");
@@ -129,7 +130,7 @@ public class TableMapBoundary {
     @Subscribe
     public void onBranchTablesEvent(BranchTablesReceivedEvent event) {
         synchronized (this) {
-            List<RestTable> tables = event.getTables();
+            Set<RestTable> tables = event.getTables();
             branch.setRestTables(tables);
             branch.tablesAreSet = true;
 
