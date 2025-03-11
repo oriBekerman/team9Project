@@ -15,7 +15,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <VBox layoutX="-4.0" layoutY="-2.0" prefHeight="782.0" prefWidth="239.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1056.0" AnchorPane.topAnchor="0.0">
+      <VBox layoutX="-4.0" layoutY="45.0" prefHeight="737.0" prefWidth="239.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1056.0" AnchorPane.topAnchor="0.0">
          <children>
              <ImageView fx:id="MOMSImage" fitHeight="178.0" fitWidth="184.0" pickOnBounds="true" preserveRatio="true" />
             <VBox prefHeight="299.0" prefWidth="209.0">
@@ -28,7 +28,7 @@
                         <Button fx:id="loginBtn" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
                         <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#navToLogOut" text="Logout" />
                         <Button fx:id="UpdateMenuBtn" mnemonicParsing="false" onAction="#navToUpMenu" text="Update Menu" />
-                        <Button fx:id="toggleButtonReports" mnemonicParsing="false" text="Reports" />
+                        <Button fx:id="toggleButtonReports" mnemonicParsing="false" onAction="#navToReports" text="Reports" />
                      </children>
                   </VBox>
                </children>

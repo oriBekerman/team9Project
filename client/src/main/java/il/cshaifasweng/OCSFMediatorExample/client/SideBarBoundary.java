@@ -8,12 +8,15 @@ import java.util.ResourceBundle;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchListSentEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import org.greenrobot.eventbus.EventBus;
@@ -22,17 +25,8 @@ import org.greenrobot.eventbus.Subscribe;
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
 public class SideBarBoundary {
-
-    public boolean branchIsSet = false;
-    public Button reservationBtn;
-    public Button deliveryBtn;
-    public Button complaintBtn;
-    public Label branchTitle;
-    public VBox sideBar;
-    public Button menuBtn;
-
-    public SideBarBoundary() {};
     public Branch branch;
+
     @FXML
     private ResourceBundle resources;
 
@@ -40,20 +34,22 @@ public class SideBarBoundary {
     private URL location;
 
     @FXML
-    private Button backToHPBtn;
+    private ImageView MOMSImage;
 
     @FXML
-    private Button haifaBBtn;
+    private Button complaintBtn;
 
     @FXML
-    private Button jerusalemBtn;
+    private Button deliveryBtn;
 
     @FXML
-    private Button telAvivBtn;
+    private Button menuBtn;
 
     @FXML
-    private Button zikhronBtn;
+    private Button reservationBtn;
 
+    @FXML
+    private VBox sideBar;
 
     @FXML
     private Button toggleButtonBranch;
@@ -77,45 +73,10 @@ public class SideBarBoundary {
     @FXML
     void navToReservationPage(ActionEvent event) {switchScreen("Reservation");}
 
+
+
     @FXML
-    void initialize() {
-        updateUI();
-        assert backToHPBtn != null : "fx:id=\"backToHPBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
-        assert haifaBBtn != null : "fx:id=\"haifaBBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
-        assert jerusalemBtn != null : "fx:id=\"jerusalemBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
-        assert telAvivBtn != null : "fx:id=\"telAvivBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
-        assert zikhronBtn != null : "fx:id=\"zikhronBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
-        assert toggleButtonBranch != null : "fx:id=\"toggleButtonBranch\" was not injected: check your FXML file 'primary.fxml'.";
-
-        /// ///////////////////////////////////////////////////////////////
-        // I think this block of code is regarding the popup of the branchesList
-        // Set the button action here
-        EventBus.getDefault().register(this);
-        SimpleClient.getClient().getBranchList(); // Request branch list from server
-        toggleButtonBranch.setOnAction(e -> {
-            System.out.println("Button clicked - showing popup");
-            GetBranchListPopup();
-        });
-        /// ///////////////////////////////////////////////////////////////
-    }
-
-    // Method to set the branch data
-    public void setBranch(Branch branch) {
-        this.branch = branch;
-        branchTitle.setText("Branch: " + branch.getName());
-        branchIsSet = true;
-        System.out.println("in branch page controller");
-        System.out.println("opening: " + branch.getOpeningTime());
-    }
-
-    // Method to update UI based on the branch data
-    private void updateUI() {
-        if (branch != null && branchTitle != null) {
-            branchTitle.setText("Branch: " + branch.getName());
-        }
-    }
-
-    public void displayMenu(ActionEvent actionEvent) {
+    public void navToMenu(ActionEvent actionEvent) {
         switchScreen("secondary");
         try {
             App.setRoot("secondary");
@@ -128,6 +89,36 @@ public class SideBarBoundary {
             e.printStackTrace();
         }
     }
+
+
+    @FXML
+    void initialize() {
+        assert MOMSImage != null : "fx:id=\"MOMSImage\" was not injected: check your FXML file 'sideBar.fxml'.";
+        assert complaintBtn != null : "fx:id=\"complaintBtn\" was not injected: check your FXML file 'sideBar.fxml'.";
+        assert deliveryBtn != null : "fx:id=\"deliveryBtn\" was not injected: check your FXML file 'sideBar.fxml'.";
+        assert menuBtn != null : "fx:id=\"menuBtn\" was not injected: check your FXML file 'sideBar.fxml'.";
+        assert reservationBtn != null : "fx:id=\"reservationBtn\" was not injected: check your FXML file 'sideBar.fxml'.";
+        assert sideBar != null : "fx:id=\"sideBar\" was not injected: check your FXML file 'sideBar.fxml'.";
+        assert toggleButtonBranch != null : "fx:id=\"toggleButtonBranch\" was not injected: check your FXML file 'sideBar.fxml'.";
+
+
+        // Set the button action here
+        EventBus.getDefault().register(this);
+        SimpleClient.getClient().getBranchList(); // Request branch list from server
+
+        toggleButtonBranch.setOnAction(e -> {
+            System.out.println("Button clicked - showing popup");
+            GetBranchListPopup();
+        });
+
+
+        // This section display the image of mamasKitchen
+        String imagePath = "il/cshaifasweng/OCSFMediatorExample/client/mamasKitchen.jpg";
+        Image image = new Image(imagePath);
+        MOMSImage.setImage(image);
+    }
+
+
 
     // shir may - I duplicated those functions from the PrimaryBoundary
     // since I want the branch list to be also in the branch(es) page ( when clicking on the btn of " Our Branches")
@@ -223,4 +214,11 @@ public class SideBarBoundary {
         }
     }
 /// /////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 }
+
+
+

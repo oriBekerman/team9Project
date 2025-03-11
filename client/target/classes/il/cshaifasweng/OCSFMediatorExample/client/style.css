@@ -189,6 +189,7 @@
     -fx-font-family: "Serif";
 }
 
+
 /* Sidebar Buttons */
 .sidebar .button {
     -fx-background-color: transparent;
@@ -366,3 +367,5 @@
 .available-table:hover {
     -fx-background-color: #4a5a34;
 }
+
+

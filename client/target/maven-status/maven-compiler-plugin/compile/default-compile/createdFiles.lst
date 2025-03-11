@@ -17,6 +17,7 @@ il\cshaifasweng\OCSFMediatorExample\client\App.class
 il\cshaifasweng\OCSFMediatorExample\client\ActiveUser.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\MenuEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\ResInfoEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuBarBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchListBoundary.class

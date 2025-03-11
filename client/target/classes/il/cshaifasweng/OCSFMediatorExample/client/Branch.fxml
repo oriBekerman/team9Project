@@ -18,7 +18,7 @@
       <children>
           <AnchorPane prefHeight="138.0" prefWidth="190.0">
             <children>
-                 <ImageView fitHeight="177.0" fitWidth="196.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
+                 <ImageView fx:id="MOMSImage" fitHeight="177.0" fitWidth="196.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
             </children>
           </AnchorPane>
           <VBox prefHeight="329.0" prefWidth="190.0" spacing="10.0" styleClass="sidebar">

@@ -69,7 +69,7 @@ public class PrimaryBoundary {
 	@FXML
 	private Button toggleButtonReports;
 	private Popup reportsPopup = new Popup();
-	public List<Report> reportList  = null;
+//	public List<Report> reportList  = null;
 	public boolean reportsListInit  = false;
 
 
@@ -94,6 +94,11 @@ public class PrimaryBoundary {
 
 	@FXML
 	void navToUpMenu(ActionEvent event) {switchScreen("Update Menu");}
+
+	@FXML
+	void navToReports(ActionEvent event) {
+		switchScreen("New");
+	}
 
 	@FXML
 	void navToLogOut(ActionEvent event) {
@@ -123,7 +128,7 @@ public class PrimaryBoundary {
 
 		EventBus.getDefault().register(this);
 		SimpleClient.getClient().getBranchList(); // Request branch list from server
-		SimpleClient.getClient().getReportsList(); // Request reservations list from server
+//		SimpleClient.getClient().getReportsList(); // Request reservations list from server
 
 		// This section display the image of mamasKitchen
 		String imagePath = "il/cshaifasweng/OCSFMediatorExample/client/mamasKitchen.jpg";
@@ -162,10 +167,10 @@ public class PrimaryBoundary {
 			GetBranchListPopup();
 		});
 
-		toggleButtonReports.setOnAction(e -> {
-			System.out.println("Reports button clicked - showing reports popup");
-			getReportsListPopup();
-		});
+//		toggleButtonReports.setOnAction(e -> {
+//			System.out.println("Reports button clicked - showing reports popup");
+//			getReportsListPopup();
+//		});
 
 	}
 
@@ -258,48 +263,45 @@ public class PrimaryBoundary {
 		}
 	}
 
-	private void getReportsListPopup() {
-		synchronized (this) {
-			if (!reportsListInit) {
-				try {
-					SimpleClient.getClient().getReportsList(); // Request reports list from server again if not initialized
-					while (!reportsListInit) {
-						wait();  // Wait until the reports are fetched and initialized
-					}
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-					System.out.println("Thread interrupted while waiting for reports list.");
-					return;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("ReportsList.fxml"));
-			Parent popupContent = loader.load();
-
-			// Assuming ReportsListController sets the reports list similar to branches
-			ReportsListBoundary controller = loader.getController();
-			controller.setReports(reportList);
-
-			reportsPopup.getContent().clear();
-			reportsPopup.getContent().add(popupContent);
-			reportsPopup.setAutoHide(true);
-			if (toggleButtonReports.getScene() != null) {
-				reportsPopup.show(toggleButtonReports.getScene().getWindow(),
-						toggleButtonReports.localToScreen(0, 0).getX(),
-						toggleButtonReports.localToScreen(0, 0).getY() + toggleButtonReports.getHeight());
-			} else {
-				System.out.println("toggleButtonReports scene is NULL - cannot display popup");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-
-
+//	private void getReportsListPopup() {
+//		synchronized (this) {
+//			if (!reportsListInit) {
+//				try {
+//					SimpleClient.getClient().getReportsList(); // Request reports list from server again if not initialized
+//					while (!reportsListInit) {
+//						wait();  // Wait until the reports are fetched and initialized
+//					}
+//				} catch (InterruptedException e) {
+//					Thread.currentThread().interrupt();
+//					System.out.println("Thread interrupted while waiting for reports list.");
+//					return;
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//		try {
+//			FXMLLoader loader = new FXMLLoader(getClass().getResource("ReportsList.fxml"));
+//			Parent popupContent = loader.load();
+//
+//			// Assuming ReportsListController sets the reports list similar to branches
+//			ReportsListBoundary controller = loader.getController();
+//			controller.setReports(reportList);
+//
+//			reportsPopup.getContent().clear();
+//			reportsPopup.getContent().add(popupContent);
+//			reportsPopup.setAutoHide(true);
+//			if (toggleButtonReports.getScene() != null) {
+//				reportsPopup.show(toggleButtonReports.getScene().getWindow(),
+//						toggleButtonReports.localToScreen(0, 0).getX(),
+//						toggleButtonReports.localToScreen(0, 0).getY() + toggleButtonReports.getHeight());
+//			} else {
+//				System.out.println("toggleButtonReports scene is NULL - cannot display popup");
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 }
 

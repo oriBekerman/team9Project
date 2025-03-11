@@ -1,4 +1,4 @@
-package il.cshaifasweng.OCSFMediatorExample.client;
-
-public class REPORTSboundary {
-}
+//package il.cshaifasweng.OCSFMediatorExample.client;
+//
+//public class REPORTSboundary {
+//}

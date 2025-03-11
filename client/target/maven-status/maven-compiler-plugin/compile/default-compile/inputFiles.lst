@@ -1,8 +1,10 @@
+C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReportsListBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SessionManager.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Main.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginSuccessEvent.java
+C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReportDetail.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ComplaintBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\BranchPageBoundary.java
@@ -17,12 +19,15 @@ C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\App.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\BranchListBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\New.java
+C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ResInfoEvent.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\LoginBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\CreditCradInfoBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\MenuBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingBoundary.java
+C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\REPORTSboundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\updateDishEvent.java
+C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReportBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\WarningEvent.java
