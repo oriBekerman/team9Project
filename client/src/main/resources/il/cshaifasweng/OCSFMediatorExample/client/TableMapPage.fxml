@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -30,6 +31,7 @@
          </children>
       </Pane>
       <Pane fx:id="outsideAreaPane" layoutX="24.0" layoutY="531.0" prefHeight="294.0" prefWidth="851.0" styleClass="outside-seating" />
-      <Button fx:id="checkBtn" layoutX="786.0" layoutY="14.0" mnemonicParsing="false" onAction="#check" text="Button" />
+      <Button fx:id="checkBtn" layoutX="24.0" layoutY="14.0" mnemonicParsing="false" onAction="#check" text="Button" />
+      <ComboBox fx:id="timesBox" layoutX="706.0" layoutY="26.0" onAction="#getMapAt" prefWidth="150.0" />
    </children>
 </AnchorPane>

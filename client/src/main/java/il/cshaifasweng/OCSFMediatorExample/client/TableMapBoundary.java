@@ -1,14 +1,11 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
-import com.google.protobuf.StringValue;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
-import javafx.css.StyleClass;
-import javafx.css.Stylesheet;
 import javafx.event.ActionEvent;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.greenrobot.eventbus.EventBus;
@@ -16,10 +13,9 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 import static java.lang.Math.min;
 
@@ -34,6 +30,7 @@ public class TableMapBoundary {
     public Button tableBtn2;
     public Button tableBtn3;
     public Button checkBtn;
+    public ComboBox<String> timesBox;
     private List<Button>buttons=new ArrayList<>();
     
 
@@ -86,11 +83,26 @@ public class TableMapBoundary {
                     String num = String.valueOf(tableList.get(i).getId());
                     setButton(buttons.get(i), num);
                 }
+                setTimesBox();
                 this.mapIsSet = true;
                 System.out.println("Map is set");
                 // Notify all waiting threads in openBranchMap()
                 notifyAll();
             }
+        }
+    }
+
+    private void setTimesBox() {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm"); //good for both 09:00 and 9:00
+            LocalTime startTime = LocalTime.parse(branch.getOpeningTime(), formatter);
+            LocalTime endTime = LocalTime.parse(branch.getClosingTime(), formatter);
+            while (startTime.isBefore(endTime)) {//add to comboBox every 15 min
+                timesBox.getItems().add(startTime.toString());
+                startTime = startTime.plusMinutes(15);
+            }
+        } catch (DateTimeParseException e) {
+            System.err.println("Error parsing time: " + e.getMessage());
         }
     }
 
@@ -140,5 +152,8 @@ public class TableMapBoundary {
         {
             table.print();
         }
+    }
+
+    public void getMapAt(ActionEvent actionEvent) {
     }
 }
