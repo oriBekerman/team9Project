@@ -82,8 +82,8 @@ private static void initialize(String password) {
 
             List<MenuItem> menuItems1 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6));
             List<MenuItem> menuItems2 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item7));
-            List<MenuItem> deliverable1 = new ArrayList<>(List.of(item1, item2, item6));
-            List<MenuItem> deliverable2 = new ArrayList<>(List.of(item1, item4, item5, item7));
+            Set<MenuItem> deliverable1 = new HashSet<>(Set.of(item1, item2, item6));
+            Set<MenuItem> deliverable2 = new HashSet<>(Set.of(item1, item4, item5, item7));
 
             // Branches
             Branch telAvivBranch = new Branch("Tel Aviv", "Tel Aviv", "9:00", "22:00");

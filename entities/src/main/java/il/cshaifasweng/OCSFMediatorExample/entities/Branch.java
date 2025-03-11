@@ -48,7 +48,7 @@ public class Branch implements Serializable  {
             joinColumns = @JoinColumn(name = "BRANCH_ID"),
             inverseJoinColumns = @JoinColumn(name = "ITEM_ID")
     )
-    private List<MenuItem> deliverableItems = new ArrayList<>();
+    private Set<MenuItem> deliverableItems = new HashSet<>();
 
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -93,8 +93,8 @@ public class Branch implements Serializable  {
 
     public List<MenuItem> getBranchMenuItems() { return menuItems; }
     public void setBranchMenuItems(List<MenuItem> menuItems) { this.menuItems = menuItems; }
-    public void setDeliverableItems(List<MenuItem> deliverableItems) { this.deliverableItems = deliverableItems; }
-    public List<MenuItem> getDeliverableItems() {
+    public void setDeliverableItems(Set<MenuItem> deliverableItems) { this.deliverableItems = deliverableItems; }
+    public Set<MenuItem> getDeliverableItems() {
         return deliverableItems;
     }
     public void addMenuItem(MenuItem menuItem) { this.menuItems.add(menuItem); }
