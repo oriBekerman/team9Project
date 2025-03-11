@@ -68,7 +68,7 @@ public class PrimaryBoundary {
 
 	@FXML
 	void navToLoginP(ActionEvent event) {
-		switchScreen("Login");
+		switchScreen("New");
 	}
 
 	@FXML

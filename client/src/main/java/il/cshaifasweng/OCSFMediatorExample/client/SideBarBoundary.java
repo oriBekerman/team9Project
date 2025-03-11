@@ -97,6 +97,9 @@ public class SideBarBoundary {
             GetBranchListPopup();
         });
         /// ///////////////////////////////////////////////////////////////
+
+
+
     }
 
     // Method to set the branch data

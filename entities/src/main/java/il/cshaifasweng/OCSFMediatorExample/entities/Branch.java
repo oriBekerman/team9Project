@@ -61,6 +61,10 @@ public class Branch implements Serializable  {
         this.closingTime = closingTime;
     }
 
+    public Branch(String name) {
+        this.name = name;
+    }
+
     // Getters and Setters
     public int getId() {
         return branchID;

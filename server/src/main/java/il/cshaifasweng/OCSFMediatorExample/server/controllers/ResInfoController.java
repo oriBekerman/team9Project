@@ -52,4 +52,15 @@ public class ResInfoController {
         return resInfoRepository.getAllResSInfo();
     }
 
+    public Response<List<ResInfo>> getBranchMonthlyReservationsReport(int branchId, String monthYear) {
+        try {
+            List<ResInfo> reservations = resInfoRepository.getReservationsByBranchAndMonth(branchId, monthYear);
+            return new Response<>(RETURN_RES_REPORT, reservations, "Monthly reservations for branch", SUCCESS, THIS_CLIENT);
+        } catch (Exception e) {
+            return new Response<>(RETURN_RES_REPORT, "Failed to fetch monthly reservations: " + e.getMessage(), ERROR, THIS_CLIENT);
+        }
+    }
+
+
+
 }

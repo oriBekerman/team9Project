@@ -23,11 +23,12 @@
                   <VBox prefHeight="231.0" prefWidth="190.0" styleClass="sidebar">
                      <children>
                         <Button fx:id="MenuBtn" mnemonicParsing="false" onAction="#navToMenu" prefHeight="44.0" prefWidth="136.0" styleClass="menu-btn" stylesheets="@style.css" text="Menu" />
-                         <Button fx:id="toggleButtonBranch" onAction="#navToBranches" prefHeight="44.0" prefWidth="142.0" styleClass="menu-btn" stylesheets="@style.css" text="Our Branches" />
+                         <Button fx:id="toggleButtonBranch" prefHeight="44.0" prefWidth="142.0" styleClass="menu-btn" stylesheets="@style.css" text="Our Branches" />
                         <Button fx:id="deliveryBtn" layoutX="25.0" layoutY="241.0" mnemonicParsing="false" onAction="#navToDelivery" text="Make a Delivery" />
-                        <Button fx:id="loginBttn" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
-                        <Button fx:id="logoutBttn" mnemonicParsing="false" onAction="#navToLogOut" text="Logout" />
+                        <Button fx:id="loginBtn" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
+                        <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#navToLogOut" text="Logout" />
                         <Button fx:id="UpdateMenuBtn" mnemonicParsing="false" onAction="#navToUpMenu" text="Update Menu" />
+                        <Button fx:id="toggleButtonReports" mnemonicParsing="false" text="Reports" />
                      </children>
                   </VBox>
                </children>

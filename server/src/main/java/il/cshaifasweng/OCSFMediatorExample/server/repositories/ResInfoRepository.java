@@ -52,4 +52,25 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             save(res);
         }
     }
+
+    public List<ResInfo> getReservationsByBranchAndMonth(int branchId, String monthYear) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<ResInfo> cq = cb.createQuery(ResInfo.class);
+            Root<ResInfo> root = cq.from(ResInfo.class);
+
+            // Assuming 'monthYear' is in "MM/YYYY" format
+            Predicate branchPredicate = cb.equal(root.get("branch"), branchId);
+            Expression<String> monthExpression = cb.function("SUBSTRING", String.class, root.get("date"), cb.literal(4), cb.literal(7)); // Extracts "MM/YYYY" from "DD/MM/YYYY"
+            Predicate monthPredicate = cb.equal(monthExpression, monthYear);
+
+            cq.where(cb.and(branchPredicate, monthPredicate));
+            return session.createQuery(cq).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+
 }

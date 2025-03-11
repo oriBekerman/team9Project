@@ -12,9 +12,6 @@
             <Button fx:id="tableBtn1" layoutX="58.0" layoutY="51.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="52.0" styleClass="two-table-button" />
             <Button fx:id="tableBtn2" layoutX="58.0" layoutY="117.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="52.0" styleClass="two-table-button" />
             <Button fx:id="tableBtn3" layoutX="58.0" layoutY="183.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="52.0" styleClass="two-table-button" />
-            <Button layoutX="58.0" layoutY="51.0" mnemonicParsing="false" text="Button" />
-            <Button layoutX="58.0" layoutY="117.0" mnemonicParsing="false" text="Button" />
-            <Button layoutX="58.0" layoutY="196.0" mnemonicParsing="false" text="Button" />
          </children>
       </Pane>
       <Pane fx:id="outsideAreaPane" layoutX="24.0" layoutY="531.0" prefHeight="294.0" prefWidth="851.0" styleClass="outside-seating" />

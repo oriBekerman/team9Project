@@ -51,11 +51,10 @@ public class DatabaseManager {
     }
 
     //if  database tables are empty initialize them
-    public RestTableController checkAndPopulateTables() {
-        //if there menuItem and branches are empty initialize them
-        if (menuItemsController.checkIfEmpty() && branchController.checkIfEmpty() && resInfoController.checkIfEmpty()) {
-            // If there menuItem and branches are empty initialize them
-            if (menuItemsController.checkIfEmpty() && branchController.checkIfEmpty() && logInController.checkIfEmpty() && restTableController.checkIfEmpty() && deliveryController.checkIfEmpty()) {
+//    public RestTableController checkAndPopulateTables() {  this was before adapting the code according to Delivery_gal branch
+public void checkAndPopulateTables() {
+         // If there menuItem and branches are empty initialize them
+            if (menuItemsController.checkIfEmpty() && branchController.checkIfEmpty() && resInfoController.checkIfEmpty() && logInController.checkIfEmpty() && restTableController.checkIfEmpty() && deliveryController.checkIfEmpty()) {
 
                 // Prepopulate with 5 employees, using enum for employeeType
                 Employee employee1 = new Employee(111111111, "Alice Manager", "1234 Maple St", "alice.manager@example.com", "alice.manager", "1234", EmployeeType.COMPANY_MANAGER, 1);
@@ -67,13 +66,6 @@ public class DatabaseManager {
                 logInController.checkAndPopulateUsers(employees);
 
 
-//            MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce", "Low calorie", null, BASE);
-//            MenuItem item2 = new MenuItem("Pizza ", 45.00, " Mushrooms, onions, tomatoes", " Includes vegan option ", null, BASE);
-//            MenuItem item3 = new MenuItem("Pasta", 70.00, "Mushroom cream sauce", "Available gluten-free", null, BASE);
-//            MenuItem item4 = new MenuItem("Hamburger", 80.00, "Meatball, pickle, tomato, lettuce", "Choice of meat or plant-based", null, BASE);
-//            MenuItem item5 = new MenuItem("Edamame", 30.00, "Edamame", "Served with sea salt", null,BASE);
-//            MenuItem item6 = new MenuItem("Fries", 15.00, "potato", "Served with sea salt", null, DishType.SPECIAL);
-//            MenuItem item7 = new MenuItem("salmon", 70.00, "salmon", "Served with lemon", null, DishType.SPECIAL);
                 // Menu items and branches
                 MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce", "Low calorie", null, BASE);
                 MenuItem item2 = new MenuItem("Pizza", 45.00, "Mushrooms, onions, tomatoes", "Includes vegan option", null, BASE);
@@ -83,15 +75,7 @@ public class DatabaseManager {
                 MenuItem item6 = new MenuItem("Fries", 15.00, "potato", "Served with sea salt", null, DishType.SPECIAL);
                 MenuItem item7 = new MenuItem("Salmon", 70.00, "Salmon", "Served with lemon", null, DishType.SPECIAL);
 
-//            MenuItem item4 = new MenuItem("Hamburger", 80.00, "Meatball, pickle, tomato, lettuce",
-//                    "Choice of meat or plant-based", null, BASE);
-//
-//            MenuItem item5 = new MenuItem("Edamame", 30.00, "Edamame",
-//                    "Served with sea salt", null,BASE);
-//            MenuItem item6 = new MenuItem("Fries", 15.00, "potato",
-//                    "Served with sea salt", null, DishType.SPECIAL);
-//            MenuItem item7 = new MenuItem("salmon", 70.00, "salmon",
-//                    "Served with lemon", null, DishType.SPECIAL);
+
                 List<MenuItem> menuItems1 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6));
                 List<MenuItem> menuItems2 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item7));
                 List<MenuItem> menuItems3 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6));
@@ -114,6 +98,7 @@ public class DatabaseManager {
                 List<Branch> branches4 = List.of(zikhronBranch);
                 List<Branch> branches5 = List.of(haifaBranch, telAvivBranch, jerusalemBranch, zikhronBranch);
 
+                // Rest tables and availability times
                 RestTable restTable1 = new RestTable("inside", 2);
                 RestTable restTable2 = new RestTable("inside", 4);
                 RestTable restTable3 = new RestTable("inside", 3);
@@ -121,36 +106,39 @@ public class DatabaseManager {
                 RestTable restTable5 = new RestTable("outside", 2);
                 RestTable restTable6 = new RestTable("inside", 4);
 
-                ResInfo resInfo1 = new ResInfo("Shir May Rapaport", "0526222222", "shirMay@gmail.com", "000000",
-                        "01/01/2029", 888, "20/03/2025", "09:00-10:30", 4, "in");
+                Customer customer3 = new Customer(3,"Shir May Rapaport","Haifa","shir8may@gmail.com","0526222222","000000", "01/29","888");
+                Customer customer4 = new Customer(4,"Gal","Haifa","shir8may@gmail.com","0526222222","000000", "01/29","888");
+                Customer customer5 = new Customer(5,"Ori","Haifa","shir8may@gmail.com","0526222222","000000", "01/29","888");
 
-                ResInfo resInfo2 = new ResInfo("Shir May Rapaport", "0526222222", "shirMay@gmail.com", "000000",
-                        "01/01/2029", 888, "25/03/2025", "15:00-17:30", 2, "out");
+                Branch branch1 = new Branch("Tel-Aviv");
+                Branch branch2 = new Branch("Haifa");
 
-                ResInfo resInfo3 = new ResInfo("Shir May Rapaport", "0526222222", "shirMay@gmail.com", "000000",
-                        "01/01/2029", 888, "27/03/2025", "17:00-18:30", 8, "in");
+                ResInfo resInfo1 = new ResInfo(branch1,customer3, "23/03/2025", "09:00-10:30", 4, "in");
+                ResInfo resInfo2 = new ResInfo(branch2,customer4 ,"25/03/2025","15:00-17:30", 2, "out");
+                ResInfo resInfo3 = new ResInfo(branch2,customer5, "27/03/2025", "17:00-18:30", 8, "in");
                 List<ResInfo> resSInfo = List.of(resInfo1, resInfo2, resInfo3);
-
 
                 Coordinates coordinates = new Coordinates(100, 100);
 //            List<Branch> branches3 = List.of(haifaBranch, telAvivBranch);
 
-                // Rest tables and availability times
-//            RestTable restTable1 = new RestTable("inside", 2);
-//            RestTable restTable2 = new RestTable("inside", 4);
-//            RestTable restTable3 = new RestTable("inside", 3);
-//            RestTable restTable4 = new RestTable("outside", 3);
-//            RestTable restTable5 = new RestTable("outside", 2);
-//            RestTable restTable6 = new RestTable("inside", 4);
-//            Coordinates coordinates = new Coordinates(100, 100);
                 restTable1.setCoordinates(coordinates);
-
+                // Setting unavailable times
                 LocalTime time1 = LocalTime.of(9, 0);
-                LocalTime time2 = LocalTime.of(11, 30);
-                List<LocalTime> unavailableTimes = List.of(time1, time2);
+                LocalTime time2 = LocalTime.of(10, 30);
+                LocalTime time3 = LocalTime.of(11, 0);
+                LocalTime time4 = LocalTime.of(12, 30);
+                LocalTime time5 = LocalTime.of(14, 30);
+                List<LocalTime> unavailableTimes1 = List.of(time1, time2, time3, time5);
+                List<LocalTime> unavailableTimes2 = List.of(time1, time4, time5);
+                restTable1.setUnavailableFromTimes(unavailableTimes1);
+                restTable2.setUnavailableFromTimes(unavailableTimes2);
+                restTable3.addUnavailableFromTime(time3);
+                restTable4.addUnavailableFromTime(time4);
+                restTable5.addUnavailableFromTime(time5);
 
-                restTable1.setUnavailableFromTimes(unavailableTimes);
+                restTable1.setUnavailableFromTimes(unavailableTimes1);
                 List<RestTable> restTables = List.of(restTable1, restTable2, restTable3, restTable4, restTable5, restTable6);
+
 
                 for (MenuItem menuItem : deliverable1) {
                     menuItem.setDeliverableBranches(branches1);
@@ -168,21 +156,6 @@ public class DatabaseManager {
                     table.setBranch(haifaBranch);
                 }
 
-                // Setting unavailable times
-//            LocalTime time1 = LocalTime.of(9, 0);
-//            LocalTime time2 = LocalTime.of(10, 30);
-                LocalTime time3 = LocalTime.of(11, 0);
-                LocalTime time4 = LocalTime.of(12, 30);
-                LocalTime time5 = LocalTime.of(14, 30);
-                List<LocalTime> unavailableTimes1 = List.of(time1, time2, time3, time5);
-                List<LocalTime> unavailableTimes2 = List.of(time1, time4, time5);
-                restTable1.setUnavailableFromTimes(unavailableTimes1);
-                restTable2.setUnavailableFromTimes(unavailableTimes2);
-                restTable3.addUnavailableFromTime(time3);
-                restTable4.addUnavailableFromTime(time4);
-                restTable5.addUnavailableFromTime(time5);
-
-//            List<RestTable> restTables = List.of(restTable1, restTable2, restTable3, restTable4, restTable5, restTable6);
 
                 // Assigning branches to menu items
                 for (MenuItem menuItem : deliverable1) {
@@ -224,8 +197,8 @@ public class DatabaseManager {
 
                 // Populating some delivery orders
                 // Create Customer instances with associated credit card information
-                Customer customer1 = new Customer(1, "Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "1234-5678-9876-5432", "12/25", "123");
-                Customer customer2 = new Customer(2, "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
+                Customer customer1 = new Customer(1, "Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com","052-6290000", "1234-5678-9876-5432", "12/25", "123");
+                Customer customer2 = new Customer(2, "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com","000-1111111", "9876-5432-1234-5678", "11/24", "456");
 
                 // Create OrderItems from MenuItem and quantity
                 OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences
@@ -299,7 +272,6 @@ public class DatabaseManager {
             return resInfoController;
         }
 
-
         DeliveryController getDeliveryController () {
             if (deliveryController == null) {
                 deliveryController = new DeliveryController();
@@ -317,5 +289,3 @@ public class DatabaseManager {
             HibernateUtil.shutdown();
         }
     }
-}
-

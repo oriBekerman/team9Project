@@ -1,39 +1,25 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
-import javax.persistence.*;
-import javax.persistence.*;
-import java.io.Serializable;
 
-// old version without the Customer + Person entities considerations :
+import javax.persistence.*;
+
 @Entity
-@Table(name ="resSInfo",uniqueConstraints = {@UniqueConstraint(columnNames = "ID")})
-public class ResInfo implements Serializable {
+@Table(name = "resSInfo")
+public class ResInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    @Column(name = "ID", unique = true, nullable = false)
     private Integer resID;
 
-    @Column
-    private String fullName;
+    @ManyToOne  // Assuming Branch is an entity
+    @JoinColumn(name = "branch_id", referencedColumnName = "id")
+    private Branch branch;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    private Customer customer;
 
     @Column(nullable = false)
-    private String phoneNumber;
-
-    @Column(nullable = false)
-    private String mail;
-
-    @Column(nullable = false)
-    private String creditCardNum;
-
-    @Column(nullable = false)
-    private String creditCardED;
-
-    @Column(nullable = false)
-    private int creditCardCVV;
-
-    @Column(nullable = false)
-    private String date;
+    private String resDate;
 
     @Column(nullable = false)
     private String hours;
@@ -44,80 +30,79 @@ public class ResInfo implements Serializable {
     @Column(nullable = false)
     private String inOrOut;
 
+    // Default constructor
+    public ResInfo() {}
 
-    // Constructor with all fields except resID (auto-generated)
-    public ResInfo(String fullName, String phoneNumber, String mail, String creditCardNum, String creditCardED, int creditCardCVV, String date, String hours, int numOfGuests, String inOrOut) {
-        this.fullName = fullName;
-        this.phoneNumber = phoneNumber;
-        this.mail = mail;
-        this.creditCardNum = creditCardNum;
-        this.creditCardED = creditCardED;
-        this.creditCardCVV = creditCardCVV;
-        this.date = date;
-        this.hours =hours;
+    // Constructor with fields
+    public ResInfo(Branch branch,Customer customer, String resDate, String hours, int numOfGuests, String inOrOut) {
+        this.branch = branch;
+        this.customer = customer;
+        this.resDate = resDate;
+        this.hours = hours;
         this.numOfGuests = numOfGuests;
         this.inOrOut = inOrOut;
     }
 
-    public ResInfo() {
-        // בנאי ריק נדרש על ידי Hibernate
+    // Getters and Setters
+    public Integer getResID() {
+        return resID;
+    }
+    public void setResID(Integer resID) {
+        this.resID = resID;
     }
 
+    public Branch getBranch() {
+        return branch;
+    }
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
 
-    //Getters and Setters
-    public Integer getResID() {return resID;}
-    public void setResID(Integer resID) {this.resID = resID;}
+    public Customer getCustomer() {
+        return customer;
+    }
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
-    public String getFullName() {return fullName;}
-    public void setFullName(String fullName) {this.fullName = fullName;}
+    public String getResDate() {
+        return resDate;
+    }
+    public void setResDate(String date) {
+        this.resDate = date;
+    }
 
-    public String getPhoneNumber() {return phoneNumber;}
-    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+    public String getHours() {
+        return hours;
+    }
+    public void setHours(String hours) {
+        this.hours = hours;
+    }
 
-    public String getMail() {return mail;}
-    public void setMail(String mail) {this.mail = mail;}
+    public int getNumOfGuests() {
+        return numOfGuests;
+    }
+    public void setNumOfGuests(int numOfGuests) {
+        this.numOfGuests = numOfGuests;
+    }
 
-    public String getCreditCardNum() {return creditCardNum;}
-    public void setCreditCardNum(String creditCardNum) {this.creditCardNum = creditCardNum;}
+    public String getInOrOut() {
+        return inOrOut;
+    }
+    public void setInOrOut(String inOrOut) {
+        this.inOrOut = inOrOut;
+    }
 
-    public String getCreditCardED() {return creditCardED;}
-    public void setCreditCardED(String creditCardED) {this.creditCardED = creditCardED;}
-
-    public int getCreditCardCVV() {return creditCardCVV;}
-    public void setCreditCardCVV(int creditCardCVV) {this.creditCardCVV = creditCardCVV;}
-
-    public String getDate() {return date;}
-    public void setDate(String date) {this.date = date;}
-
-    public String getHours() {return hours;}
-    public void setHours(String hours) {this.hours = hours;}
-
-    public int getNumOfGuests() {return numOfGuests;}
-    public void setNumOfGuests(int numOfGuests) {this.numOfGuests = numOfGuests;}
-
-    public String getInOrOut() {return inOrOut;}
-    public void setInOrOut(String inOrOut) {this.inOrOut = inOrOut;}
-
-    public void printResInfo(){
-        System.out.println("ResInfo{" +
-                "resID=" + this.resID +
-                ", fullName='" + this.fullName + '\'' +
-                ", phoneNumber='" + this.phoneNumber + '\'' +
-                ", mail='" + this.mail + '\'' +
-                ", creditCardNum='" + this.creditCardNum + '\'' +
-                ", creditCardED='" + this.creditCardED + '\'' +
-                ", creditCardCVV=" + this.creditCardCVV +
-                ", date='" + this.date + '\'' +
-                ", hours='" + this.hours + '\'' +
-                ", numOfGuests=" + this.numOfGuests +
-                ", inOrOut='" + this.inOrOut + '\'' +
-                '}');
+    @Override
+    public String toString() {
+        return "ResInfo{" +
+                "resID=" + resID +
+                ", Branch=" + branch +
+                ", customer=" + customer +
+                ", resDate='" + resDate + '\'' +
+                ", hours='" + hours + '\'' +
+                ", numOfGuests=" + numOfGuests +
+                ", inOrOut='" + inOrOut + '\'' +
+                '}';
     }
 }
-
-
-
-
-
-
-

@@ -1,9 +1,12 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
+
 public class SessionManager {
     private static SessionManager instance;
     private String username;
     private String authorization;
+
 
     private SessionManager() {}
 
@@ -26,4 +29,5 @@ public class SessionManager {
     public String getAuthorization() {
         return authorization;
     }
+
 }

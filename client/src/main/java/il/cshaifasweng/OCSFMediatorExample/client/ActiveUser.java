@@ -24,11 +24,13 @@ public class ActiveUser {
 
     // Getter for employee type
     public EmployeeType getEmployeeType() {
-        return employeeType;
+        return this.employeeType;
     }
 
     // Setter for employee type
     public void setEmployeeType(EmployeeType employeeType) {
         this.employeeType = employeeType;
     }
+
+
 }

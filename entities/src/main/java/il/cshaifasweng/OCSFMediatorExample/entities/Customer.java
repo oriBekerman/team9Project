@@ -6,6 +6,9 @@ import javax.persistence.*;
 public class Customer extends Person {
 
     @Column(nullable = false)
+    private String phoneNumber;
+
+    @Column(nullable = false)
     private String creditCardNumber;
 
     @Column(nullable = false)
@@ -18,18 +21,22 @@ public class Customer extends Person {
     public Customer() {}
 
     // Constructor with fields
-    public Customer(int id, String name, String address, String email, String creditCardNumber, String expirationDate, String cvv) {
+    public Customer(int id, String name, String address, String email, String phoneNumber, String creditCardNumber, String expirationDate, String cvv) {
         super(id, name, address, email);  // Call the Person constructor
+        this.phoneNumber = phoneNumber;
         this.creditCardNumber = creditCardNumber;
         this.expirationDate = expirationDate;
         this.cvv = cvv;
     }
 
     // Getters and Setters
+
+    public String getPhoneNumber() {return phoneNumber;}
+    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+
     public String getCreditCardNumber() {
         return creditCardNumber;
     }
-
     public void setCreditCardNumber(String creditCardNumber) {
         this.creditCardNumber = creditCardNumber;
     }
@@ -37,15 +44,11 @@ public class Customer extends Person {
     public String getExpirationDate() {
         return expirationDate;
     }
-
     public void setExpirationDate(String expirationDate) {
         this.expirationDate = expirationDate;
     }
 
-    public String getCvv() {
-        return cvv;
-    }
-
+    public String getCvv() {return cvv;}
     public void setCvv(String cvv) {
         this.cvv = cvv;
     }
@@ -53,6 +56,7 @@ public class Customer extends Person {
     @Override
     public String toString() {
         return "Customer{" +
+                "phoneNumber='" + phoneNumber + '\'' +
                 "creditCardNumber='" + creditCardNumber + '\'' +
                 ", expirationDate='" + expirationDate + '\'' +
                 ", cvv='" + cvv + '\'' +
