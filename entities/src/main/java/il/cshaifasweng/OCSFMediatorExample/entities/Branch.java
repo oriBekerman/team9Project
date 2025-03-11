@@ -38,7 +38,7 @@ public class Branch implements Serializable  {
     @JoinTable(name = "branchSpecialItems",
             joinColumns = @JoinColumn(name = "branch_id", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "menu_item_id", referencedColumnName = "ID"))
-    private List<MenuItem> menuItems = new ArrayList<>();
+    private Set<MenuItem> menuItems = new HashSet<>();
 
 
     // only deliverable menu items
@@ -92,8 +92,8 @@ public class Branch implements Serializable  {
         this.location = location;
     }
 
-    public List<MenuItem> getBranchMenuItems() { return menuItems; }
-    public void setBranchMenuItems(List<MenuItem> menuItems) { this.menuItems = menuItems; }
+    public Set<MenuItem> getBranchMenuItems() { return menuItems; }
+    public void setBranchMenuItems(Set<MenuItem> menuItems) { this.menuItems = menuItems; }
     public void setDeliverableItems(Set<MenuItem> deliverableItems) { this.deliverableItems = deliverableItems; }
     public Set<MenuItem> getDeliverableItems() {
         return deliverableItems;

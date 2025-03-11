@@ -80,8 +80,8 @@ private static void initialize(String password) {
             MenuItem item6 = new MenuItem("Fries", 15.00, "potato", "Served with sea salt", null, DishType.SPECIAL);
             MenuItem item7 = new MenuItem("Salmon", 70.00, "Salmon", "Served with lemon", null, DishType.SPECIAL);
 
-            List<MenuItem> menuItems1 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6));
-            List<MenuItem> menuItems2 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item7));
+            Set<MenuItem> menuItems1 = new HashSet<>(Set.of(item1, item2, item3, item4, item5, item6));
+            Set<MenuItem> menuItems2 = new HashSet<>(Set.of(item1, item2, item3, item4, item5, item7));
             Set<MenuItem> deliverable1 = new HashSet<>(Set.of(item1, item2, item6));
             Set<MenuItem> deliverable2 = new HashSet<>(Set.of(item1, item4, item5, item7));
 
