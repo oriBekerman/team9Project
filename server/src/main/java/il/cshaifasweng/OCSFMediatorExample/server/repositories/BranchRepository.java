@@ -66,12 +66,13 @@ public class BranchRepository extends BaseRepository<Branch> {
         List<RestTable> result = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<RestTable> query=session.createQuery("SELECT rt FROM RestTable rt WHERE rt.branch = :branch",RestTable.class);
-            query.setParameter("branch", branch.getBranchID());
+            query.setParameter("branch", branch);
             result = query.getResultList();
         }
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+        System.out.println("fetch in rep");
         return result;
     }
 }

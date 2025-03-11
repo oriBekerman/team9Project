@@ -15,10 +15,7 @@ import org.hibernate.service.ServiceRegistry;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE;
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
@@ -83,10 +80,10 @@ private static void initialize(String password) {
             MenuItem item6 = new MenuItem("Fries", 15.00, "potato", "Served with sea salt", null, DishType.SPECIAL);
             MenuItem item7 = new MenuItem("Salmon", 70.00, "Salmon", "Served with lemon", null, DishType.SPECIAL);
 
-            List<MenuItem> menuItems1 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6));
-            List<MenuItem> menuItems2 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item7));
-            List<MenuItem> deliverable1 = new ArrayList<>(List.of(item1, item2, item6));
-            List<MenuItem> deliverable2 = new ArrayList<>(List.of(item1, item4, item5, item7));
+            Set<MenuItem> menuItems1 = new HashSet<>(Set.of(item1, item2, item3, item4, item5, item6));
+            Set<MenuItem> menuItems2 = new HashSet<>(Set.of(item1, item2, item3, item4, item5, item7));
+            Set<MenuItem> deliverable1 = new HashSet<>(Set.of(item1, item2, item6));
+            Set<MenuItem> deliverable2 = new HashSet<>(Set.of(item1, item4, item5, item7));
 
             // Branches
             Branch telAvivBranch = new Branch("Tel Aviv", "Tel Aviv", "9:00", "22:00");
@@ -102,8 +99,7 @@ private static void initialize(String password) {
             RestTable restTable4 = new RestTable("outside", 3);
             RestTable restTable5 = new RestTable("outside", 2);
             RestTable restTable6 = new RestTable("inside", 4);
-            Coordinates coordinates = new Coordinates(100, 100);
-            restTable1.setCoordinates(coordinates);
+
 
             // Setting unavailable times
             LocalTime time1 = LocalTime.of(9, 0);
@@ -119,8 +115,7 @@ private static void initialize(String password) {
             restTable4.addUnavailableFromTime(time4);
             restTable5.addUnavailableFromTime(time5);
 
-            List<RestTable> restTables = List.of(restTable1, restTable2, restTable3, restTable4, restTable5, restTable6);
-
+            Set<RestTable> restTables = Set.of(restTable1,restTable2,restTable3,restTable4,restTable5,restTable6);
             // Assigning branches to menu items
             for (MenuItem menuItem : deliverable1) {
                 menuItem.setDeliverableBranches(branches1);

@@ -37,17 +37,17 @@ public class RestTable implements Serializable {
     private List<LocalTime> unavailableFromTimes = new ArrayList<>();
 
 
-    //location for gui seating chart
-    @Embedded
-    private Coordinates coordinates=new Coordinates();
+//    //location for gui seating chart
+//    @Embedded
+//    private Coordinates coordinates=new Coordinates();
 
-    public RestTable(String area, int capacity, Branch branch, List<LocalTime> unavailableFromTimes, Coordinates coordinates)
+    public RestTable(String area, int capacity, Branch branch, List<LocalTime> unavailableFromTimes)
     {
         this.area = area;
         this.capacity = capacity;
         this.branch = branch;
         this.unavailableFromTimes = unavailableFromTimes;
-        this.coordinates = coordinates;
+//        this.coordinates = coordinates;
     }
     public RestTable(String area, int capacity)
     {
@@ -71,9 +71,9 @@ public class RestTable implements Serializable {
     public List<LocalTime> getUnavailableFromTimes() {
         return unavailableFromTimes;
     }
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
+//    public Coordinates getCoordinates() {
+//        return coordinates;
+//    }
     public void setTableId(Integer tableId) {
         this.tableId = tableId;
     }
@@ -89,9 +89,9 @@ public class RestTable implements Serializable {
     public void setUnavailableFromTimes(List<LocalTime> unavailableFromTimes) {
         this.unavailableFromTimes = unavailableFromTimes;
     }
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
-    }
+//    public void setCoordinates(Coordinates coordinates) {
+//        this.coordinates = coordinates;
+//    }
     public void addUnavailableFromTime(LocalTime unavailableFromTime) {
         unavailableFromTimes.add(unavailableFromTime);
     }

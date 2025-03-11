@@ -5,7 +5,9 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 
@@ -36,21 +38,24 @@ public class Branch implements Serializable  {
     @JoinTable(name = "branchSpecialItems",
             joinColumns = @JoinColumn(name = "branch_id", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "menu_item_id", referencedColumnName = "ID"))
-    private List<MenuItem> menuItems = new ArrayList<>();
+    private Set<MenuItem> menuItems = new HashSet<>();
 
 
     // only deliverable menu items
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "branchDeliverableItems",
             joinColumns = @JoinColumn(name = "BRANCH_ID"),
             inverseJoinColumns = @JoinColumn(name = "ITEM_ID")
     )
-    private List<MenuItem> deliverableItems = new ArrayList<>();
+    private Set<MenuItem> deliverableItems = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RestTable> tables = new ArrayList<>();
+
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<RestTable> tables = new HashSet<>();
+
+    public boolean tablesAreSet=false;
 
 
     public Branch() {}
@@ -87,10 +92,10 @@ public class Branch implements Serializable  {
         this.location = location;
     }
 
-    public List<MenuItem> getBranchMenuItems() { return menuItems; }
-    public void setBranchMenuItems(List<MenuItem> menuItems) { this.menuItems = menuItems; }
-    public void setDeliverableItems(List<MenuItem> deliverableItems) { this.deliverableItems = deliverableItems; }
-    public List<MenuItem> getDeliverableItems() {
+    public Set<MenuItem> getBranchMenuItems() { return menuItems; }
+    public void setBranchMenuItems(Set<MenuItem> menuItems) { this.menuItems = menuItems; }
+    public void setDeliverableItems(Set<MenuItem> deliverableItems) { this.deliverableItems = deliverableItems; }
+    public Set<MenuItem> getDeliverableItems() {
         return deliverableItems;
     }
     public void addMenuItem(MenuItem menuItem) { this.menuItems.add(menuItem); }
@@ -123,12 +128,26 @@ public class Branch implements Serializable  {
         }
         return special;
     }
-    public List<RestTable> getTables() {
+    public Set<RestTable> getTables() {
+        if(tables.isEmpty())
+        {
+            System.out.println("tables is empty");
+        }
+        if (tables==null)
+        {
+            System.out.println("tables is null");
+        }
         return tables;
     }
 
-    public void setRestTables(List<RestTable> tables) {
+    public void setRestTables(Set<RestTable> tables) {
         this.tables = tables;
+        if (tables != null){
+            if(tables.size()>0)
+            {
+                this.tablesAreSet=true;
+            }
+        }
     }
 //    public List<RestTable> getAvailableTables(int capacity,LocalTime time)
 //    {

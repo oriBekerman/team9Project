@@ -2,16 +2,31 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
-
+<?import javafx.scene.layout.RowConstraints?>
 
 <AnchorPane prefHeight="1000.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.TableMapBoundary">
    <children>
       <Pane fx:id="insideAreaPane" layoutX="24.0" layoutY="73.0" prefHeight="457.0" prefWidth="851.0" styleClass="inside-seating">
          <children>
-            <Button fx:id="tableBtn1" layoutX="58.0" layoutY="51.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="52.0" styleClass="two-table-button" />
-            <Button fx:id="tableBtn2" layoutX="58.0" layoutY="117.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="52.0" styleClass="two-table-button" />
-            <Button fx:id="tableBtn3" layoutX="58.0" layoutY="183.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="52.0" styleClass="two-table-button" />
+            <GridPane fx:id="insideGridPane" layoutX="274.0" layoutY="90.0" prefHeight="161.0" prefWidth="392.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Button fx:id="tableBtn1" mnemonicParsing="false" prefHeight="58.0" prefWidth="96.0" styleClass="two-table-button" text="0" />
+                  <Button fx:id="tableBtn2" mnemonicParsing="false" styleClass="two-table-button" text="0" GridPane.rowIndex="1" />
+                  <Button fx:id="tableBtn3" mnemonicParsing="false" styleClass="two-table-button" text="0" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
          </children>
       </Pane>
       <Pane fx:id="outsideAreaPane" layoutX="24.0" layoutY="531.0" prefHeight="294.0" prefWidth="851.0" styleClass="outside-seating" />

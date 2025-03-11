@@ -7,10 +7,7 @@ import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
@@ -111,11 +108,13 @@ public class SimpleClient extends AbstractClient {
 			}
 			if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
 			{
-				List<RestTable> tables = (ArrayList<RestTable>) response.getData();
+				System.out.println("branch tables received from server");
+				Set<RestTable> tables = new HashSet<>((Collection) response.getData());
 				EventBus.getDefault().post(new BranchTablesReceivedEvent(tables));
-				for (RestTable table : tables) {
-					table.print();
-				}
+				System.out.println("branch tables posted");
+//				for (RestTable table : tables) {
+//					table.print();
+//				}
 			}
 			// Handle user authentication response
 			if (response.getResponseType().equals(CORRECTNESS_USER)) {
@@ -141,7 +140,6 @@ public class SimpleClient extends AbstractClient {
 					EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 				}
 			}
-			System.out.println("before send delivery handle");
 			 if (response.getResponseType().equals(SEND_DELIVERY)) {
 				System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee");
 				Delivery delivery = (Delivery) response.getData();
@@ -205,6 +203,7 @@ public class SimpleClient extends AbstractClient {
 	}
 	public void fetchTables(Branch branch) throws IOException {
 		Request request=new Request(BRANCH,FETCH_BRANCH_TABLES,branch);
+		System.out.println("fetch sent to server");
 		client.sendToServer(request);
 	}
 

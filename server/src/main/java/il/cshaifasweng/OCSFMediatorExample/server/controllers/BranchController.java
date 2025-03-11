@@ -106,6 +106,7 @@ public class BranchController {
         Response response=new Response<>(RETURN_BRANCH_TABLES,null,ERROR,THIS_CLIENT);
         List<RestTable> restTables=new ArrayList<>();
         restTables= branchRepository.getRestTables(branch);
+        System.out.println("fetch table in cont after rep");
         if(restTables != null)
         {
             response.setStatus(SUCCESS);
