@@ -42,7 +42,7 @@ public class Branch implements Serializable  {
 
 
     // only deliverable menu items
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "branchDeliverableItems",
             joinColumns = @JoinColumn(name = "BRANCH_ID"),
@@ -51,7 +51,8 @@ public class Branch implements Serializable  {
     private Set<MenuItem> deliverableItems = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<RestTable> tables = new HashSet<>();
 
     public boolean tablesAreSet=false;
