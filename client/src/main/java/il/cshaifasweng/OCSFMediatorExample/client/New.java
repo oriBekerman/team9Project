@@ -38,7 +38,7 @@ public class New {
         assert branchTitle != null : "fx:id=\"branchTitle\" was not injected: check your FXML file 'new.fxml'.";
         assert sideBarPlace != null : "fx:id=\"sideBarPlace\" was not injected: check your FXML file 'new.fxml'.";
 
-        Parent sideBarParent = App.loadFXML("sideBar");
+        Parent sideBarParent = App.loadFXML("sideBarBranch");
         sideBarPlace.getChildren().clear();
         sideBarPlace.getChildren().add(sideBarParent);
     }

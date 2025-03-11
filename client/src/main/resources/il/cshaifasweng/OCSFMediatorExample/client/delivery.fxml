@@ -7,23 +7,23 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="632.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.DeliveryBoundary">
+<AnchorPane fx:id="priceColumn" prefHeight="871.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.DeliveryBoundary">
    <children>
-      <Label layoutX="283.0" layoutY="21.0" prefHeight="33.0" prefWidth="157.0" text=" Make a Delivery">
+      <Label fx:id="deliveryTitle" layoutX="431.0" layoutY="29.0" prefHeight="68.0" prefWidth="384.0" styleClass="main-title" text="Make a Delivery">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Button fx:id="payBtn" layoutX="647.0" layoutY="552.0" mnemonicParsing="false" onAction="#navToPay" text="Continue to payment" />
-      <TableView fx:id="deliveryTableView" layoutX="55.0" layoutY="61.0" prefHeight="553.0" prefWidth="583.0">
+       <Button fx:id="personalDITSBtn" layoutX="989.0" layoutY="786.0" mnemonicParsing="false" onAction="#navToPersonalDFill" prefHeight="49.0" prefWidth="222.0" styleClass="menu-btn" text="Continue" />
+       <TableView fx:id="deliveryTableView" layoutX="27.0" layoutY="108.0" prefHeight="727.0" prefWidth="933.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="Name" />
-          <TableColumn prefWidth="75.0" text="Ingredients" />
-            <TableColumn prefWidth="75.0" text="Preference" />
-            <TableColumn prefWidth="75.0" text="Price" />
-            <TableColumn prefWidth="75.0" text="Qoantity" />
+          <TableColumn fx:id="nameColumn" minWidth="0.0" prefWidth="108.0" styleClass="column-header-background" text="Name" />
+          <TableColumn fx:id="ingredientsColumn" prefWidth="292.0" styleClass="column-header-background" text="Ingredients" />
+            <TableColumn fx:id="preferenceColumn" prefWidth="222.0" styleClass="column-header-background" text="Preference" />
+            <TableColumn prefWidth="154.0" styleClass="column-header-background" text="Price" />
+            <TableColumn fx:id="quantityColumn" minWidth="0.0" prefWidth="154.0" styleClass="column-header-background" text="Qoantity" />
         </columns>
       </TableView>
-      <Button fx:id="backToHPBtn" layoutX="29.0" layoutY="25.0" mnemonicParsing="false" onAction="#navToHP" text="Back to HP" />
+       <Button fx:id="backToHPBtn" layoutX="1017.0" layoutY="14.0" mnemonicParsing="false" onAction="#navToHP" prefHeight="49.0" prefWidth="194.0" styleClass="menu-btn" text="Back To Home Page" />
    </children>
 </AnchorPane>

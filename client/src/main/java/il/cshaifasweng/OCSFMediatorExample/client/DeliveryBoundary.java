@@ -5,9 +5,14 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.AnchorPane;
+
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+
 
 public class DeliveryBoundary {
 
@@ -24,11 +29,28 @@ public class DeliveryBoundary {
     private TableView<?> deliveryTableView;
 
     @FXML
-    private Button payBtn;
+    private Label deliveryTitle;
 
     @FXML
-    void navToPay(ActionEvent event) {
-        switchScreen("Credit Card Info");
+    private TableColumn<?, ?> ingredientsColumn;
+
+    @FXML
+    private TableColumn<?, ?> nameColumn;
+
+    @FXML
+    private Button personalDITSBtn;
+
+    @FXML
+    private TableColumn<?, ?> preferenceColumn;
+
+    @FXML
+    private AnchorPane priceColumn;
+
+    @FXML
+    private TableColumn<?, ?> quantityColumn;
+    @FXML
+    void navToPersonalDFill(ActionEvent event) {
+        switchScreen("Personal Details Filling");
     }
 
     @FXML
@@ -36,12 +58,12 @@ public class DeliveryBoundary {
         switchScreen("Home Page");
     }
 
+
     @FXML
     void initialize() {
         assert backToHPBtn != null : "fx:id=\"backToHPBtn\" was not injected: check your FXML file 'delivery.fxml'.";
         assert deliveryTableView != null : "fx:id=\"deliveryTableView\" was not injected: check your FXML file 'delivery.fxml'.";
-        assert payBtn != null : "fx:id=\"payBtn\" was not injected: check your FXML file 'delivery.fxml'.";
-
+        assert deliveryTitle != null : "fx:id=\"deliveryTitle\" was not injected: check your FXML file 'delivery.fxml'.";
+        assert personalDITSBtn != null : "fx:id=\"personalDITSBtn\" was not injected: check your FXML file 'delivery.fxml'.";
     }
-
 }

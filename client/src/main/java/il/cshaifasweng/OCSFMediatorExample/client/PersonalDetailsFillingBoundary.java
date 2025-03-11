@@ -39,7 +39,7 @@ public class PersonalDetailsFillingBoundary {
 
     @FXML
     void backToReservation(ActionEvent event) {
-        switchScreen("Reservation");
+        switchScreen("Home Page");
     }
 
     @FXML

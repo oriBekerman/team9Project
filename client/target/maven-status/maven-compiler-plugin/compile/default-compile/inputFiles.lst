@@ -3,6 +3,7 @@ C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SessionManager.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Main.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.java
+C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SideBarPrimaryBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginSuccessEvent.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReportDetail.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ComplaintBoundary.java
@@ -27,10 +28,10 @@ C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\REPORTSboundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\updateDishEvent.java
+C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SideBarBranchBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReportBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\WarningEvent.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.java
-C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SideBarBoundary.java
 C:\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSelectedEvent.java

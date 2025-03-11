@@ -187,7 +187,7 @@ public class App extends Application {
                     }
                 });
                 break;
-            case "Complaint ":
+            case "Complaint":
                 Platform.runLater(() -> {
                     setWindowTitle("Complaint");
                     try {
@@ -202,6 +202,16 @@ public class App extends Application {
                     setWindowTitle("Report");
                     try {
                         setContent("report");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "Update Menu":
+                Platform.runLater(() -> {
+                    setWindowTitle("Update Menu");
+                    try {
+                        setContent("updateMenu");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
