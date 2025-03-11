@@ -6,6 +6,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import javafx.css.StyleClass;
 import javafx.css.Stylesheet;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -14,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +33,7 @@ public class TableMapBoundary {
     public GridPane insideGridPane;
     public Button tableBtn2;
     public Button tableBtn3;
+    public Button checkBtn;
     private List<Button>buttons=new ArrayList<>();
     
 
@@ -72,11 +75,6 @@ public class TableMapBoundary {
                 }
                 // once the list of tables is loaded in branch make table buttons
                 System.out.println("in set map after if branchTables:");
-//                for(RestTable table :branch.getTables())
-//                {
-//                    table.print();
-//                }
-//                buttons = insideGridPane.getChildren();
                 System.out.println("map is set  = " + String.valueOf(mapIsSet));
                 Set<RestTable> tables = branch.getTables(); // Assume this fetches the list of tables
                 List<Button>buttons=new ArrayList<>();
@@ -88,10 +86,6 @@ public class TableMapBoundary {
                     String num = String.valueOf(tableList.get(i).getId());
                     setButton(buttons.get(i), num);
                 }
-//                tableBtn1.setText(String.valueOf(tables.getFirst().getId()));
-//                tableBtn1.getStyleClass().add("two-table-button");
-//                tableBtn2.setText(String.valueOf(tables.get(1).getId()));
-//                tableBtn3.setText(String.valueOf(tables.get(2).getId()));
                 this.mapIsSet = true;
                 System.out.println("Map is set");
                 // Notify all waiting threads in openBranchMap()
@@ -140,6 +134,11 @@ public class TableMapBoundary {
     }
 
 
-
-
+    public void check(ActionEvent actionEvent) {
+        Set<RestTable>tables=branch.getAvailableTablesAt(LocalTime.of(14,30));
+        for(RestTable table: tables)
+        {
+            table.print();
+        }
+    }
 }

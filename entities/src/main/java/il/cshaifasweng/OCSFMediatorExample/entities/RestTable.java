@@ -6,7 +6,9 @@ import java.lang.reflect.Array;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table (name ="restTable",uniqueConstraints = {
@@ -31,17 +33,18 @@ public class RestTable implements Serializable {
 
 // Stores the start times when the table becomes unavailable.
 // Each unavailability period lasts for 1.5 hours from the recorded start time.
-    @ElementCollection
-    @CollectionTable(name = "table_unavailable_from", joinColumns = @JoinColumn(name = "rest_table_id"))
-    @Column(name = "start_time")
-    private List<LocalTime> unavailableFromTimes = new ArrayList<>();
+@ElementCollection(fetch = FetchType.EAGER)
+@CollectionTable(name = "table_unavailable_from", joinColumns = @JoinColumn(name = "rest_table_id"))
+@Column(name = "start_time")
+private Set<LocalTime> unavailableFromTimes = new HashSet<>();
+
 
 
 //    //location for gui seating chart
 //    @Embedded
 //    private Coordinates coordinates=new Coordinates();
 
-    public RestTable(String area, int capacity, Branch branch, List<LocalTime> unavailableFromTimes)
+    public RestTable(String area, int capacity, Branch branch, Set<LocalTime> unavailableFromTimes)
     {
         this.area = area;
         this.capacity = capacity;
@@ -68,7 +71,7 @@ public class RestTable implements Serializable {
     public Branch getBranch() {
         return branch;
     }
-    public List<LocalTime> getUnavailableFromTimes() {
+    public Set<LocalTime> getUnavailableFromTimes() {
         return unavailableFromTimes;
     }
 //    public Coordinates getCoordinates() {
@@ -86,7 +89,7 @@ public class RestTable implements Serializable {
     public void setBranch(Branch branch) {
         this.branch = branch;
     }
-    public void setUnavailableFromTimes(List<LocalTime> unavailableFromTimes) {
+    public void setUnavailableFromTimes(Set<LocalTime> unavailableFromTimes) {
         this.unavailableFromTimes = unavailableFromTimes;
     }
 //    public void setCoordinates(Coordinates coordinates) {
@@ -97,7 +100,15 @@ public class RestTable implements Serializable {
     }
     public boolean isAvailableAt(LocalTime time)
     {
-        return !(unavailableFromTimes.contains(time));
+        List<LocalTime> times=getTimeRange(time);
+        for(LocalTime t:times)
+        {
+            if(unavailableFromTimes.contains(t))
+            {
+                return false;
+            }
+        }
+        return true;
     }
     public List<LocalTime> getAvailableFromTimes() {
         String start= branch.getOpeningTime();
@@ -120,6 +131,17 @@ public class RestTable implements Serializable {
 
         }
         return availableFromTimes;
+    }
+    public List<LocalTime> getTimeRange(LocalTime time)
+    {
+        List<LocalTime>times=new ArrayList<>();
+        LocalTime t=time.minusHours(1).minusMinutes(15);
+        while(t.isBefore(time.plusHours(1).plusMinutes(15)))
+        {
+            times.add(t);
+            t=t.plusMinutes(15);
+        }
+        return times;
     }
 
     public void print() {
