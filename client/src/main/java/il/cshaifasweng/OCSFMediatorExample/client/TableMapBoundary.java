@@ -6,6 +6,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.greenrobot.eventbus.EventBus;
@@ -34,6 +35,7 @@ public class TableMapBoundary {
     public Button tableBtn4;
     public Button tableBtn5;
     public Button tableBtn6;
+    public AnchorPane root;
     private List<Button>buttons=new ArrayList<>();
     private Map<RestTable,Button>map=new HashMap<>();
     
@@ -91,6 +93,17 @@ public class TableMapBoundary {
                     setButton(buttons.get(i), String.valueOf(i));
                 }
                 setTimesBox();
+                root.setStyle("-fx-background-color: #fbe9d0;");
+                outsideAreaPane.setStyle("-fx-background-color: #f6d7b0;\n" +
+                        "    -fx-border-color: #8a6f48;\n" +
+                        "    -fx-border-width: 2px;\n" +
+                        "    -fx-border-radius: 8px;\n" +
+                        "    -fx-padding: 12px;");
+                insideAreaPane.setStyle(" -fx-background-color: #e4c5a2;\n" +
+                        "    -fx-border-color: #8a6f48;\n" +
+                        "    -fx-border-width: 2px;\n" +
+                        "    -fx-border-radius: 8px;\n" +
+                        "    -fx-padding: 12px;");
                 this.mapIsSet = true;
                 System.out.println("Map is set");
                 // Notify all waiting threads in openBranchMap()

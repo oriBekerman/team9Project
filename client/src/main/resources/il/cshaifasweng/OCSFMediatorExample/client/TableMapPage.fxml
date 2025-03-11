@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="1000.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.TableMapBoundary">
+<AnchorPane fx:id="root" prefHeight="1000.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.TableMapBoundary">
    <children>
       <Pane fx:id="insideAreaPane" layoutX="24.0" layoutY="73.0" prefHeight="457.0" prefWidth="851.0" styleClass="inside-seating">
          <children>
