@@ -184,6 +184,13 @@ public class TableMapBoundary {
         for (RestTable table: tables) {
             setTableButtonAvailable(map.get(table));
         }
+        for(RestTable t: branch.getTables())
+        {
+            if(!tables.contains(t))
+            {
+                setTableButtonsUnavailable(map.get(t));
+            }
+        }
     }
     private void setTableButtonAvailable(Button button)
     {
@@ -191,6 +198,16 @@ public class TableMapBoundary {
                 "    -fx-font-weight: bold;\n" +
                 "    -fx-text-fill: white;\n" +
                 "    -fx-background-color: #5e8a75;\n" +
+                "    -fx-alignment: center;\n" +
+                "    -fx-padding: 8px 16px;\n" +
+                "    -fx-border-radius: 6px;\n" +
+                "    -fx-cursor: hand;");
+    }
+    private void setTableButtonsUnavailable(Button button) {
+        button.setStyle(" -fx-font-size: 16px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-text-fill: white;\n" +
+                "    -fx-background-color: #8a6f48;\n" +
                 "    -fx-alignment: center;\n" +
                 "    -fx-padding: 8px 16px;\n" +
                 "    -fx-border-radius: 6px;\n" +
