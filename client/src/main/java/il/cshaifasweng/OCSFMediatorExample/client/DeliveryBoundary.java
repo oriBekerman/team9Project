@@ -23,6 +23,8 @@ import javafx.scene.layout.HBox;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 
+import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+
 public class DeliveryBoundary {
 
     public Label menuLabel;
@@ -51,9 +53,19 @@ public class DeliveryBoundary {
     @FXML
     private TableColumn<OrderItem, String> commentColumn;
 
+    @FXML
+    private RadioButton deliveryRadio;
+    @FXML
+    private RadioButton pickupRadio;
+    @FXML
+    private Label totalPriceLabel;
+    @FXML
+    private Label deliveryMessageLabel;
 
     private List<OrderItem> orderItems = new ArrayList<>();
     private Delivery currentDelivery= new Delivery();;
+
+    private static final double DELIVERY_COST = 15.0;
 
     // Event handler for MenuEvent
     @Subscribe
@@ -103,61 +115,25 @@ public class DeliveryBoundary {
         });
     }
 
-    // Event handler for MenuEvent
-    @Subscribe
-    public void onUpdateEvent(updateDishEvent event) {
-        try {
-//            Request request=new Request<>(GET_BASE_MENU);
-//            SimpleClient.getClient().sendToServer(request);
-            SimpleClient.getClient().displayNetworkMenu();
-            menuTableView.refresh();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    // Function to update the total price label
+    private void updateTotalPrice() {
+        double totalPrice = 0.0;
+
+        // Calculate the total price based on quantity and price for each item
+        for (OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getMenuItem().getPrice() * orderItem.getQuantity();
         }
-    }
 
-    // Back to home page button logic
-    @FXML
-    void BackToHPfunc(ActionEvent event) throws IOException {
-        App.setRoot("primary");  // Switch to the primary screen
-    }
-
-
-    // Initialize method to register for events
-    @FXML
-    void initialize() {
-        System.out.println("Delivery initialized");
-
-        // Register this class to listen for MenuEvent
-        EventBus.getDefault().register(this);
-//
-//        // Set the TableView's column resize policy
-//        menuTableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-
-        // Make the TableView editable
-        menuTableView.setEditable(true);
-
-        // Initialize TableColumns to bind MenuItem data
-        nameColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getMenuItem().getName()));
-        ingredientsColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getMenuItem().getIngredients()));
-        preferenceColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getMenuItem().getPreference()));
-        priceColumn.setCellValueFactory(cellData ->
-                new SimpleDoubleProperty(cellData.getValue().getMenuItem().getPrice()).asObject());
-        setupQuantityColumn(quantityColumn);
-        setupCommentColumn(commentColumn);
-
-        // Fetch menu data
-        try {
-            SimpleClient.getClient().displayNetworkMenu();
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Add delivery cost if delivery is selected
+        if (deliveryRadio.isSelected()) {
+            totalPrice += DELIVERY_COST;
         }
+
+        // Update the total price label
+        totalPriceLabel.setText("Total Price: " + totalPrice);
     }
 
-    // Function to set up the quantity column with a Spinner
+    // Function to handle changes in quantity
     private void setupQuantityColumn(TableColumn<OrderItem, Integer> quantityColumn) {
         quantityColumn.setCellFactory(column -> {
             return new TableCell<OrderItem, Integer>() {
@@ -173,6 +149,7 @@ public class DeliveryBoundary {
                         OrderItem orderItem = getTableRow().getItem();
                         if (orderItem != null) {
                             orderItem.setQuantity(newValue);  // Update quantity in the OrderItem
+                            updateTotalPrice(); // Update the total price when quantity changes
                         }
                     });
                 }
@@ -201,6 +178,84 @@ public class DeliveryBoundary {
             }
         });
     }
+
+    // Event handler for MenuEvent
+    @Subscribe
+    public void onUpdateEvent(updateDishEvent event) {
+        try {
+//            Request request=new Request<>(GET_BASE_MENU);
+//            SimpleClient.getClient().sendToServer(request);
+            SimpleClient.getClient().displayNetworkMenu();
+            menuTableView.refresh();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    void navToHP(ActionEvent event) {
+        switchScreen("Home Page");
+    }
+
+    @FXML
+    void navToPD(ActionEvent event) {
+        switchScreen("personalDetails");
+    }
+
+
+    // Initialize method to register for events
+    @FXML
+    void initialize() {
+        System.out.println("Delivery initialized");
+
+        // Register this class to listen for MenuEvent
+        EventBus.getDefault().register(this);
+
+        // Make the TableView editable
+        menuTableView.setEditable(true);
+
+        // Initialize TableColumns to bind MenuItem data
+        nameColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getMenuItem().getName()));
+        ingredientsColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getMenuItem().getIngredients()));
+        preferenceColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getMenuItem().getPreference()));
+        priceColumn.setCellValueFactory(cellData ->
+                new SimpleDoubleProperty(cellData.getValue().getMenuItem().getPrice()).asObject());
+        setupQuantityColumn(quantityColumn);
+        setupCommentColumn(commentColumn);
+
+        // Set up the RadioButton group for delivery/pickup
+        ToggleGroup deliveryGroup = new ToggleGroup();
+        deliveryRadio.setToggleGroup(deliveryGroup);
+        pickupRadio.setToggleGroup(deliveryGroup);
+
+        // Add listeners to the RadioButtons to update the total price when the selection changes
+        deliveryRadio.selectedProperty().addListener((observable, oldValue, newValue) -> updateTotalPrice());
+        pickupRadio.selectedProperty().addListener((observable, oldValue, newValue) -> updateTotalPrice());
+
+        // Listen for changes to the 'Delivery' radio button
+        deliveryRadio.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // If "Delivery" is selected, show the message
+                deliveryMessageLabel.setText("Delivery fee is 15 shekels.");
+                deliveryMessageLabel.setVisible(true);
+            } else {
+                // If "Delivery" is not selected, hide the message
+                deliveryMessageLabel.setVisible(false);
+            }
+        });
+
+
+        // Fetch menu data
+        try {
+            SimpleClient.getClient().displayNetworkMenu();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     // Function to set up the comment column with a TextField
 // Function to set up the comment column with a TextField that is always visible

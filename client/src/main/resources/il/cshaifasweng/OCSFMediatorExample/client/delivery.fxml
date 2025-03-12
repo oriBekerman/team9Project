@@ -2,15 +2,17 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="871.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.DeliveryBoundary">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="871.0" prefWidth="1194.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.DeliveryBoundary">
     <children>
-        <Button fx:id="BackToHPbtn" layoutX="30.0" layoutY="23.0" mnemonicParsing="false" onAction="#BackToHPfunc" styleClass="return-btn" text="Back to Home Page" />
+        <Button fx:id="BackToHPbtn" layoutX="30.0" layoutY="23.0" mnemonicParsing="false" onAction="#navToHP" styleClass="return-btn" text="Back to Home Page" />
 
-        <!-- TableView directly inside AnchorPane without ScrollPane -->
         <TableView fx:id="menuTableView" layoutY="104.0" prefHeight="498.0" prefWidth="883.0" styleClass="table-view" AnchorPane.bottomAnchor="269.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="192.0" AnchorPane.topAnchor="104.0">
             <columns>
                 <TableColumn fx:id="nameColumn" prefWidth="106.0" styleClass="column-header-background" text="Name" />
@@ -22,6 +24,35 @@
             </columns>
         </TableView>
 
-        <Label fx:id="menuLabel" layoutX="589.0" layoutY="23.0" prefHeight="68.0" prefWidth="77.0" styleClass="menuPageTitle" text="Menu" />
+        <!-- Delivery Method Choice -->
+        <HBox layoutX="150.0" layoutY="630.0" spacing="10.0" />
+
+        <!-- Total Price -->
+        <Label fx:id="totalPriceLabel" layoutX="524.0" layoutY="724.0" prefHeight="35.0" prefWidth="147.0" text="Total Price: 0.0">
+         <font>
+            <Font size="17.0" />
+         </font></Label>
+
+        <Button fx:id="Continue" layoutX="773.0" layoutY="729.0" mnemonicParsing="false" onAction="#navToPD" styleClass="return-btn" text="Continue" />
+         <Label layoutX="453.0" layoutY="632.0" text="Delivery Method:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+        <RadioButton fx:id="deliveryRadio" layoutX="573.0" layoutY="632.0" text="Delivery">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </RadioButton>
+         <RadioButton fx:id="pickupRadio" layoutX="658.0" layoutY="632.0" text="Pickup">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </RadioButton>
+        <Label fx:id="deliveryMessageLabel" layoutX="450.0" layoutY="670.0" prefHeight="11.0" prefWidth="285.0" text="" visible="false">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
     </children>
 </AnchorPane>

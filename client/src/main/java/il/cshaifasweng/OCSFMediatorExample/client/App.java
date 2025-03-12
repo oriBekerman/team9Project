@@ -188,6 +188,16 @@ public class App extends Application {
                     }
                 });
                 break;
+            case "personalDetails":
+                Platform.runLater(() -> {
+                    setWindowTitle("personal Details");
+                    try {
+                        setContent("personalDetailsFilling");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
         }
     }
 }
