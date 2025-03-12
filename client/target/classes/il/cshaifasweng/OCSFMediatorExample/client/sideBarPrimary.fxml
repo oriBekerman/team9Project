@@ -14,7 +14,7 @@
             <Button fx:id="loginBtn" mnemonicParsing="false" onAction="#navToLogin" prefHeight="49.0" prefWidth="190.0" styleClass="menu-btn" text="Login" />
             <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#navToLogOut" prefHeight="49.0" prefWidth="190.0" styleClass="menu-btn" text="Logout" />
             <Button fx:id="updateMenuBtn" layoutX="10.0" layoutY="187.0" mnemonicParsing="false" onAction="#navToUpdateMenu" prefHeight="49.0" prefWidth="190.0" styleClass="menu-btn" text="Update Menu" />
-            <Button fx:id="toggleButtonReports" layoutX="10.0" layoutY="246.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="190.0" styleClass="menu-btn" text="Reports" />
+            <Button fx:id="toggleButtonReports" layoutX="10.0" layoutY="246.0" mnemonicParsing="false" onAction="#navToReports" prefHeight="49.0" prefWidth="190.0" styleClass="menu-btn" text="Reports" />
          </children>
       </VBox>
       <VBox prefHeight="43.0" prefWidth="202.0" />

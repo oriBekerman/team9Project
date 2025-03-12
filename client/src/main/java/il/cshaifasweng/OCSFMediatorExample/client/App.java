@@ -197,9 +197,9 @@ public class App extends Application {
                     }
                 });
                 break;
-            case "Report":
+            case "Reports":
                 Platform.runLater(() -> {
-                    setWindowTitle("Report");
+                    setWindowTitle("Reports");
                     try {
                         setContent("report");
                     } catch (IOException e) {

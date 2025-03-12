@@ -30,5 +30,6 @@ il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.class
 il\cshaifasweng\OCSFMediatorExample\client\TableMapBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\SideBarBranchBoundary.class
+il\cshaifasweng\OCSFMediatorExample\client\ReportBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ComplaintBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchPageBoundary.class

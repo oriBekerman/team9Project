@@ -62,8 +62,8 @@ public class SideBarPrimaryBoundary {
     @FXML
     private Button toggleButtonReports;
 
-    @FXML
-    void navToMenu(ActionEvent event) {switchScreen("Menu");}
+//    @FXML
+//    void navToMenu(ActionEvent event) {switchScreen("Menu");}
 
     @FXML
     void navToLogin(ActionEvent event) {switchScreen("Login");}
@@ -73,21 +73,24 @@ public class SideBarPrimaryBoundary {
     @FXML
    void navToUpdateMenu(ActionEvent event) {switchScreen("Update Menu");}
 
+    @FXML
+    void navToReports(ActionEvent event) {switchScreen("Reports");}
 
-//    @FXML
-//    public void navToMenu(ActionEvent actionEvent) {
-//        switchScreen("menu");
-//        try {
-//            App.setRoot("menu");
-//            SimpleClient.getClient().displayBranchMenu(branch);
-////            Menu menu = new Menu(branch.getBranchMenuItems());
-////            menu.printMenu();
-////            SimpleClient.getClient().showMenu(menu);
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+
+    @FXML
+    public void navToMenu(ActionEvent actionEvent) {
+        switchScreen("menu");
+        try {
+            App.setRoot("menu");
+            SimpleClient.getClient().displayBranchMenu(branch);
+//            Menu menu = new Menu(branch.getBranchMenuItems());
+//            menu.printMenu();
+//            SimpleClient.getClient().showMenu(menu);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     void navToLogOut(ActionEvent event) {
@@ -101,8 +104,10 @@ public class SideBarPrimaryBoundary {
         updateMenuBtn.setVisible(false);
 
         // Hide the Reports button after logging out
-        toggleButtonReports.setVisible(false);
+//        toggleButtonReports.setVisible(false);
     }
+
+
 
     @FXML
     void initialize() {
@@ -136,7 +141,7 @@ public class SideBarPrimaryBoundary {
             // If logged in, show logout button and hide login button
             logoutBtn.setVisible(true);
             loginBtn.setVisible(false);
-            toggleButtonReports.setVisible(false);
+//            toggleButtonReports.setVisible(false);
             // Check if the user is a "DIETITIAN" and display the Update button if true
             if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN) {
                 System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
@@ -149,7 +154,7 @@ public class SideBarPrimaryBoundary {
             logoutBtn.setVisible(false);
             loginBtn.setVisible(true);
             updateMenuBtn.setVisible(false); // Hide Update button if not logged in
-            toggleButtonReports.setVisible(false); // Hide Reports button if not logged in
+//            toggleButtonReports.setVisible(false); // Hide Reports button if not logged in
         }
 
     }

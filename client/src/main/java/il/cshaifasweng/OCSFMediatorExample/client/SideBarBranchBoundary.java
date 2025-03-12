@@ -72,22 +72,22 @@ public class SideBarBranchBoundary {
         switchScreen("Reservation");
     }
 
-    @FXML
-    void navToMenu(ActionEvent event) {switchScreen("Menu");}
-
 //    @FXML
-//    public void navToMenu(ActionEvent actionEvent) {
-//        switchScreen("menu");
-//        try {
-//            App.setRoot("menu");
-//            SimpleClient.getClient().displayBranchMenu(branch);
-////            Menu menu = new Menu(branch.getBranchMenuItems());
-////            menu.printMenu();
-////            SimpleClient.getClient().showMenu(menu);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+//    void navToMenu(ActionEvent event) {switchScreen("Menu");}
+
+    @FXML
+    public void navToMenu(ActionEvent actionEvent) {
+        switchScreen("menu");
+        try {
+            App.setRoot("menu");
+            SimpleClient.getClient().displayBranchMenu(branch);
+//            Menu menu = new Menu(branch.getBranchMenuItems());
+//            menu.printMenu();
+//            SimpleClient.getClient().showMenu(menu);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 // im not sure if needed...
 //	@FXML
