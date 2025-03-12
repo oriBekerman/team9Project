@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalTime;
 import java.util.List;
@@ -93,6 +94,7 @@ public class BranchPageBoundary {
     }
 
     public void navToDeliveryPage(ActionEvent actionEvent) {
+        // Now switch to the Delivery page
         switchScreen("Delivery");
     }
 

@@ -74,6 +74,11 @@ public class PrimaryBoundary {
 	@FXML
 	void navToDeliv(ActionEvent event) {
 		switchScreen("Delivery");
+		try {
+			SimpleClient.getClient().displayNetworkMenu();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@FXML

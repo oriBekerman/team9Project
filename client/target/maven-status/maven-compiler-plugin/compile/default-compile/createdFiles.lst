@@ -8,6 +8,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Events\BranchListSentEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ActiveUser.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\MenuEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSelectedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuBarBoundary.class
@@ -23,6 +24,7 @@ il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.class
 il\cshaifasweng\OCSFMediatorExample\client\TableMapBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\DeliverableItemsSentEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary$2.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\WarningEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\updateDishEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchTablesReceivedEvent.class
