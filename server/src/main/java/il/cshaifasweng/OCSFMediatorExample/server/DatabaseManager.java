@@ -13,6 +13,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -160,20 +161,20 @@ private static void initialize(String password) {
 
             // First, create the deliveries and set their customer, date, method, etc.
             Delivery order1 = new Delivery(
-                    "2025-03-05", // Date
                     new ArrayList<>(), // Initialize empty OrderItems list for order1
                     customer1, // Customer
                     DeliveryMethod.DELIVERY, // Delivery method
                     telAvivBranch // Branch
             );
+            order1.setDate(LocalDateTime.now());
 
             Delivery order2 = new Delivery(
-                    "2025-03-05", // Date
                     new ArrayList<>(), // Initialize empty OrderItems list for order2
                     customer2, // Customer
                     DeliveryMethod.SELF_PICKUP, // Delivery method
                     haifaBranch // Branch
             );
+            order2.setDate(LocalDateTime.now());
 
             // Now associate the OrderItems with the Delivery orders
             orderItem1.setDelivery(order1); // Associate orderItem1 with order1

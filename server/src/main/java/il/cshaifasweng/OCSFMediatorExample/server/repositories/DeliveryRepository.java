@@ -19,7 +19,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
 
     @Override
     public int getId(Delivery entity) {
-        return entity.getOrderNumber();
+        return entity.getDeliveryNumber();
     }
 
     @Override

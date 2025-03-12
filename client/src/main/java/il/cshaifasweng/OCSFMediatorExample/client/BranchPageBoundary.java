@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import org.greenrobot.eventbus.Subscribe;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+import static il.cshaifasweng.OCSFMediatorExample.client.App.switchToDelivery;
 
 public class BranchPageBoundary {
 
@@ -95,7 +96,7 @@ public class BranchPageBoundary {
 
     public void navToDeliveryPage(ActionEvent actionEvent) {
         // Now switch to the Delivery page
-        switchScreen("Delivery");
+        switchToDelivery("Delivery", branch);
     }
 
     public void navToComplaintPage(ActionEvent actionEvent) {

@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.WarningEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -117,16 +118,6 @@ public class App extends Application {
                     }
                 });
                 break;
-            case "Delivery":
-                Platform.runLater(() -> {
-                    setWindowTitle("Delivery");
-                    try {
-                        setContent("delivery");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-                break;
             case "Reservation":
                 Platform.runLater(() -> {
                     setWindowTitle("Reservation");
@@ -188,16 +179,31 @@ public class App extends Application {
                     }
                 });
                 break;
-            case "personalDetails":
-                Platform.runLater(() -> {
-                    setWindowTitle("personal Details");
-                    try {
-                        setContent("personalDetailsFilling");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-                break;
         }
     }
+
+    public static void switchToDelivery(String screenName, Branch branch) {
+        Platform.runLater(() -> {
+            setWindowTitle("Delivery");
+            try {
+                // Load the FXML file for the delivery screen
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("delivery.fxml"));
+                Parent root = loader.load();
+
+                // Get the controller of the loaded FXML
+                DeliveryBoundary deliveryBoundary = loader.getController();
+
+                // Pass the branchId to the controller
+                deliveryBoundary.setBranchId(branch);
+
+                // Set the scene and show the stage
+                scene = new Scene(root);
+                appStage.setScene(scene);
+                appStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
 }

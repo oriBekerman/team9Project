@@ -67,6 +67,11 @@ public class DeliveryBoundary {
 
     private static final double DELIVERY_COST = 15.0;
 
+    // Setter method for setting the branch ID
+    public void setBranchId(Branch branch) {
+        currentDelivery.setBranch(branch);
+    }
+
     // Event handler for MenuEvent
     @Subscribe
     public void displayMenu(MenuEvent event) {
@@ -117,20 +122,33 @@ public class DeliveryBoundary {
 
     // Function to update the total price label
     private void updateTotalPrice() {
-        double totalPrice = 0.0;
+        // Ensure the menu table view is updated with the latest order items
+        if (orderItems != null) {
 
-        // Calculate the total price based on quantity and price for each item
-        for (OrderItem orderItem : orderItems) {
-            totalPrice += orderItem.getMenuItem().getPrice() * orderItem.getQuantity();
+            double totalPrice = 0.0;
+
+            // Calculate the total price based on quantity and price for each item
+            for (OrderItem orderItem : orderItems) {
+                totalPrice += orderItem.getMenuItem().getPrice() * orderItem.getQuantity();
+            }
+
+            // Add delivery cost if delivery is selected
+            if (deliveryRadio.isSelected()) {
+                totalPrice += DELIVERY_COST;
+                // Update currentDelivery for delivery method and total price
+                currentDelivery.setDeliveryMethod(DeliveryMethod.DELIVERY);
+            } else {
+                // Update currentDelivery for pickup method and total price
+                currentDelivery.setDeliveryMethod(DeliveryMethod.SELF_PICKUP);
+            }
+
+            // Update the total price regardless of the delivery method
+            currentDelivery.setTotalPrice(totalPrice);
+
+            // Update the total price label to reflect the calculated value
+            totalPriceLabel.setText("Total Price: " + totalPrice);
         }
-
-        // Add delivery cost if delivery is selected
-        if (deliveryRadio.isSelected()) {
-            totalPrice += DELIVERY_COST;
-        }
-
-        // Update the total price label
-        totalPriceLabel.setText("Total Price: " + totalPrice);
+        else return;
     }
 
     // Function to handle changes in quantity
@@ -140,11 +158,9 @@ public class DeliveryBoundary {
                 private final Spinner<Integer> quantitySpinner = new Spinner<>(0, 10, 0);  // Values between 0 and 10, starting at 0
 
                 {
-                    // Configure the Spinner
                     quantitySpinner.setEditable(true);  // Allow users to type a number
                     quantitySpinner.setPrefWidth(60);  // Set a preferred width for the spinner
 
-                    // When the value changes in the spinner, update the OrderItem's quantity
                     quantitySpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
                         OrderItem orderItem = getTableRow().getItem();
                         if (orderItem != null) {
@@ -160,7 +176,6 @@ public class DeliveryBoundary {
                     if (empty || quantity == null) {
                         setGraphic(null);  // Remove spinner if cell is empty
                     } else {
-                        // Make sure the spinner's value is set correctly
                         quantitySpinner.getValueFactory().setValue(quantity);  // Set the current quantity to the spinner
                         setGraphic(quantitySpinner);  // Display the spinner
                     }
@@ -168,7 +183,6 @@ public class DeliveryBoundary {
             };
         });
 
-        // Ensure the `quantityColumn` is set to the right property
         quantityColumn.setCellValueFactory(cellData -> {
             OrderItem orderItem = cellData.getValue();
             if (orderItem != null) {
@@ -178,6 +192,7 @@ public class DeliveryBoundary {
             }
         });
     }
+
 
     // Event handler for MenuEvent
     @Subscribe
@@ -199,7 +214,9 @@ public class DeliveryBoundary {
 
     @FXML
     void navToPD(ActionEvent event) {
-        switchScreen("personalDetails");
+        currentDelivery.setOrderItems(orderItems);
+        System.out.println(currentDelivery);
+        switchScreen("Personal Details Filling");
     }
 
 
@@ -300,9 +317,5 @@ public class DeliveryBoundary {
             }
         });
     }
-
-
-
-
 
 }
