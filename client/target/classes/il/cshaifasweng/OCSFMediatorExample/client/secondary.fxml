@@ -6,8 +6,16 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.scene.control.TextField?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="871.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryBoundary">
     <children>
+
+        <!-- Search Field -->
+        <TextField fx:id="searchField" layoutX="50" layoutY="10" prefWidth="200" promptText="Search..."/>
+
+        <!-- Search Button -->
+        <Button fx:id="searchButton" text="Search" layoutX="260" layoutY="10" onAction="#performSearch"/>
+
         <Button fx:id="BackToHPbtn" layoutX="1019.0" layoutY="14.0" mnemonicParsing="false" onAction="#BackToHPfunc" styleClass="return-btn" text="Back to Home Page" />
         <Button fx:id="UpdatePriceBtn" layoutX="28.0" layoutY="689.0" mnemonicParsing="false" onAction="#UpdateTheMenu" styleClass="cancel-btn" text="Update Price" />
         <Button fx:id="SaveBtn" layoutX="28.0" layoutY="770.0" mnemonicParsing="false" onAction="#SaveTheUpdateMenu" prefHeight="49.0" prefWidth="124.0" styleClass="cancel-btn" text="Save" />
