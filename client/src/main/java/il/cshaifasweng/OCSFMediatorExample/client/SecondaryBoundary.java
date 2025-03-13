@@ -10,6 +10,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -19,6 +20,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
+
 
 public class SecondaryBoundary {
 
@@ -55,8 +57,14 @@ public class SecondaryBoundary {
     @FXML
     private TableColumn<MenuItem, ImageView> imageColum;
 
+    @FXML
+    private TextField searchField;
+
+
+
 //    @FXML
 //   private TableColumn<MenuItem,String> branchSpecialColumn;
+    private ObservableList<MenuItem> allMenuItems = javafx.collections.FXCollections.observableArrayList();
 
     private Map<MenuItem, TextField> priceFieldMap = new HashMap<>();
 
@@ -64,15 +72,20 @@ public class SecondaryBoundary {
     @Subscribe
     public void onMenuEvent(MenuEvent event) {
         Menu menu = event.getMenu();
-        System.out.println("got menu event in second controller");
+        System.out.println("Got menu event in SecondaryBoundary");
         menu.printMenu();
+
         Platform.runLater(() -> {
-            // Clear the TableView before updating
             menuTableView.getItems().clear();
-            // Add new menu items to the TableView
             menuTableView.getItems().setAll(menu.getMenuItems());
+
+            // שמירה של כל הפריטים ברשימה קבועה לחיפוש
+            allMenuItems.setAll(menu.getMenuItems());
+
+            System.out.println("Menu items loaded: " + allMenuItems.size()); // Debugging
         });
     }
+
 
     // Event handler for MenuEvent
     @Subscribe
@@ -155,6 +168,44 @@ public class SecondaryBoundary {
         });
     }
 
+    @FXML
+    void performSearch(ActionEvent event) {
+        String query = searchField.getText().toLowerCase().trim();
+        System.out.println("Search Query: " + query); // Debugging
+
+        // אם השדה ריק – הצג את כל המנות
+        if (query.isEmpty()) {
+            System.out.println("Showing all items");
+            menuTableView.getItems().setAll(allMenuItems);
+            menuTableView.refresh();
+            return;
+        }
+
+        ObservableList<MenuItem> filteredList;
+
+        // בדיקה אם המשתמש הקליד מספר (חיפוש לפי מחיר)
+        try {
+            double maxPrice = Double.parseDouble(query);
+            System.out.println("Searching for items with price ≤ " + maxPrice);
+            filteredList = allMenuItems.filtered(item -> item.getPrice() <= maxPrice);
+        } catch (NumberFormatException e) {
+            // אם המשתמש הקליד טקסט – חיפוש לפי שם ורכיבים
+            filteredList = allMenuItems.filtered(item ->
+                    (item.getName() != null && item.getName().toLowerCase().contains(query)) ||
+                            (item.getIngredients() != null && item.getIngredients().toLowerCase().contains(query))
+            );
+        }
+
+        System.out.println("Found " + filteredList.size() + " matching items");
+        menuTableView.getItems().clear();
+        menuTableView.getItems().setAll(filteredList);
+        menuTableView.refresh();
+    }
+
+
+
+
+
     // Initialize method to register for events
     @FXML
     void initialize() {
@@ -200,6 +251,8 @@ public class SecondaryBoundary {
                 }
             }
         });
+
+
 
         Platform.runLater(() -> {
             // Clear the TableView and refresh it with the updated menu items

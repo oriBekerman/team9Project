@@ -2,7 +2,10 @@ package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
+import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.MenuItemsRepository;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
@@ -59,6 +62,35 @@ public class MenuItemsController {
         }
         return response;
     }
+
+    public List<MenuItem> searchMenuItems(String keyword, Double maxPrice, DishType type) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String hql = "FROM MenuItem m WHERE 1=1 ";
+        if (keyword != null && !keyword.isEmpty()) {
+            hql += "AND (m.name LIKE :kw OR m.ingredients LIKE :kw) ";
+        }
+        if (maxPrice != null) {
+            hql += "AND m.price <= :maxPrice ";
+        }
+        if (type != null) {
+            hql += "AND m.dishType = :type ";
+        }
+        Query<MenuItem> query = session.createQuery(hql, MenuItem.class);
+        if (keyword != null && !keyword.isEmpty()) {
+            query.setParameter("kw", "%" + keyword + "%");
+        }
+        if (maxPrice != null) {
+            query.setParameter("maxPrice", maxPrice);
+        }
+        if (type != null) {
+            query.setParameter("type", type);
+        }
+        List<MenuItem> results = query.list();
+        session.close();
+        return results;
+    }
+
+
     public Response updatePrice(Request request)
     {
         Response response=new Response(UPDATED_PRICE,null,null,ALL_CLIENTS);
