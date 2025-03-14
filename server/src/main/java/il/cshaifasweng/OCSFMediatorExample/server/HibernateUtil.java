@@ -55,6 +55,8 @@ public class HibernateUtil {
                             configuration.addAnnotatedClass(Delivery.class);
                             configuration.addAnnotatedClass(OrderItem.class);
                             configuration.addAnnotatedClass(Customer.class);
+                            configuration.addAnnotatedClass(ResInfo.class);
+
 
 
 

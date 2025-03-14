@@ -55,6 +55,9 @@ public class Branch implements Serializable  {
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<RestTable> tables = new HashSet<>();
 
+//    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+//    private Set<ResInfo> reservations = new HashSet<>();
+
     public boolean tablesAreSet=false;
 
 

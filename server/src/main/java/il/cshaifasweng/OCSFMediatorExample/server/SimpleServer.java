@@ -23,6 +23,7 @@ public class SimpleServer extends AbstractServer {
     private RestTableController restTableController=null;
     private LogInController logInController = null;
     private DeliveryController deliveryController = null;
+    private ResInfoController resInfoController = null;
 
     public static String dataBasePassword="Bekitnt26@";//change database password here
     public String password="";//used only when entering a new password through cmd
@@ -105,5 +106,6 @@ public class SimpleServer extends AbstractServer {
         this.logInController = databaseManager.getLogInController();
         this.restTableController = databaseManager.getRestTableController();
         this.deliveryController = databaseManager.getDeliveryController();
+        this.resInfoController=databaseManager.getResInfoController();
     }
 }

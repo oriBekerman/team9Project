@@ -13,6 +13,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -30,6 +31,7 @@ public class DatabaseManager {
     private LogInController logInController;
     private RestTableController restTableController;
     private DeliveryController deliveryController;
+    private ResInfoController resInfoController;
 
     public DatabaseManager(String password) {
         initialize(password);
@@ -55,6 +57,7 @@ private static void initialize(String password) {
         this.logInController = new LogInController();
         this.restTableController = new RestTableController();
         this.deliveryController = new DeliveryController();
+        this.resInfoController=new ResInfoController();
     }
 
     //if  database tables are empty initialize them
@@ -177,6 +180,13 @@ private static void initialize(String password) {
             // Populate delivery orders
             deliveryController.populateDelivery(order1);
             deliveryController.populateDelivery(order2);
+
+
+            ResInfo reservation = new ResInfo(LocalDate.of(2025, 3, 15), LocalTime.of(19, 30), 4, "Inside");
+            reservation.setBranch(haifaBranch);
+            reservation.setCustomer(customer1);
+            resInfoController.PopulateResSInfo(List.of(reservation));
+
         }
     }
 
@@ -214,6 +224,12 @@ private static void initialize(String password) {
             restTableController = new RestTableController();
         }
         return restTableController;
+    }
+    ResInfoController getResInfoController() {
+        if (resInfoController == null) {
+            resInfoController = new ResInfoController();
+        }
+        return resInfoController;
     }
     // shuts down Hibernate.
     public static void shutdown() {
