@@ -14,17 +14,19 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 
 
-public class SecondaryBoundary {
+public class MenuBoundary {
 
     public Label menuLabel;
+    public AnchorPane root;
+    public Button searchButton;
     @FXML
     private ResourceBundle resources;
 
@@ -81,8 +83,10 @@ public class SecondaryBoundary {
 
             // שמירה של כל הפריטים ברשימה קבועה לחיפוש
             allMenuItems.setAll(menu.getMenuItems());
-
+            setStyle();
             System.out.println("Menu items loaded: " + allMenuItems.size()); // Debugging
+
+
         });
     }
 
@@ -261,5 +265,21 @@ public class SecondaryBoundary {
             UpdatePriceBtn.setDisable(false);  // Re-enable the update button
             UpdatePriceBtn.requestFocus();  // Focus the update button
         });
+    }
+    public void setStyle()
+    {
+        root.setStyle("-fx-background-color: #fbe9d0;");
+        menuLabel.setStyle(" -fx-font-size: 24px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-text-fill: #4e453c;\n" +
+                "    -fx-alignment: center;\n" +
+                "    -fx-padding: 20px 0;\n" +
+                "    -fx-font-family: \"Serif\";");
+        menuTableView.setStyle("-fx-background-color: #ffffff;\n" +
+                "    -fx-border-color: #8a6f48;\n" +
+                "    -fx-border-width: 2px;\n" +
+                "    -fx-border-radius: 6px;");
+        BackToHPbtn.setStyle("  -fx-background-color: #8a6f48;\n" +
+                "    -fx-text-fill: white;");
     }
 }
