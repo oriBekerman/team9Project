@@ -3,7 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-
+import il.cshaifasweng.OCSFMediatorExample.entities.DishType;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.MenuEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.updateDishEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
@@ -60,9 +60,120 @@ public class SecondaryBoundary {
     @FXML
     private TextField searchField;
 
+    @FXML
+    private Button UpdateingridientsBtn;
+
+    @FXML
+    private Button addDishBtn;
+
+    @FXML
+    private Button removeDishBtn;
 
 
-//    @FXML
+    @FXML
+    void UpdateIngridients(ActionEvent event) {
+        // Get the selected MenuItem from the table view
+        MenuItem selectedItem = menuTableView.getSelectionModel().getSelectedItem();
+
+        // If no item is selected, show a message
+        if (selectedItem == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a dish to update ingredients.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Open a dialog or prompt to update ingredients (you can create a separate method for this if needed)
+        TextInputDialog dialog = new TextInputDialog(selectedItem.getIngredients());
+        dialog.setTitle("Update Ingredients");
+        dialog.setHeaderText("Edit the ingredients for: " + selectedItem.getName());
+        dialog.setContentText("Ingredients:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(newIngredients -> {
+            // Update the selected item’s ingredients
+            selectedItem.setIngredients(newIngredients);
+            menuTableView.refresh();  // Refresh the TableView to show the updated ingredients
+        });
+    };
+
+    @FXML
+    void addDish(ActionEvent event) {
+        // Prompt the user to enter a new dish's details
+        TextInputDialog nameDialog = new TextInputDialog();
+        nameDialog.setTitle("Add New Dish");
+        nameDialog.setHeaderText("Enter the name of the new dish:");
+        Optional<String> nameResult = nameDialog.showAndWait();
+
+        if (nameResult.isPresent() && !nameResult.get().trim().isEmpty()) {
+            String dishName = nameResult.get();
+
+            // Continue with ingredients, preference, and price input as before...
+            TextInputDialog ingredientsDialog = new TextInputDialog();
+            ingredientsDialog.setTitle("Add Ingredients");
+            ingredientsDialog.setHeaderText("Enter the ingredients for: " + dishName);
+            Optional<String> ingredientsResult = ingredientsDialog.showAndWait();
+
+            if (ingredientsResult.isPresent() && !ingredientsResult.get().trim().isEmpty()) {
+                String dishIngredients = ingredientsResult.get();
+
+                TextInputDialog preferenceDialog = new TextInputDialog();
+                preferenceDialog.setTitle("Add Preference");
+                preferenceDialog.setHeaderText("Enter any preference for: " + dishName);
+                Optional<String> preferenceResult = preferenceDialog.showAndWait();
+
+                String dishPreference = preferenceResult.orElse("");  // Default to empty if not provided
+
+                TextInputDialog priceDialog = new TextInputDialog("0.0");
+                priceDialog.setTitle("Add Price");
+                priceDialog.setHeaderText("Enter the price for: " + dishName);
+                Optional<String> priceResult = priceDialog.showAndWait();
+
+                if (priceResult.isPresent() && !priceResult.get().trim().isEmpty()) {
+                    try {
+                        double price = Double.parseDouble(priceResult.get());
+
+                        // Create a default byte[] for the picture (empty for now)
+                        byte[] defaultPicture = new byte[0];  // Empty byte array for now
+
+                        // Create a new MenuItem and add it to the menu
+                        MenuItem newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, DishType.BASE);
+                        allMenuItems.add(newDish);  // Add to the list
+                        menuTableView.getItems().add(newDish);  // Add to the TableView
+                    } catch (NumberFormatException e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid price format.");
+                        alert.showAndWait();
+                    }
+                }
+            }
+        }
+    }
+
+    @FXML
+    void removeDish(ActionEvent event) {
+        // Get the selected MenuItem from the table view
+        MenuItem selectedItem = menuTableView.getSelectionModel().getSelectedItem();
+
+        // If no item is selected, show a message
+        if (selectedItem == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a dish to remove.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Ask for confirmation before removing the item
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to remove this dish?");
+        confirmAlert.setTitle("Remove Dish");
+        confirmAlert.setHeaderText("You are about to remove: " + selectedItem.getName());
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            allMenuItems.remove(selectedItem);  // Remove the dish from the list
+            menuTableView.getItems().remove(selectedItem);  // Remove the dish from the TableView
+        }
+    };
+
+
+    //    @FXML
 //   private TableColumn<MenuItem,String> branchSpecialColumn;
     private ObservableList<MenuItem> allMenuItems = javafx.collections.FXCollections.observableArrayList();
 
@@ -157,7 +268,8 @@ public class SecondaryBoundary {
 
     // Update the menu (enable price fields)
     @FXML
-    void UpdateTheMenu(ActionEvent event) {
+    void UpdateThePrice(ActionEvent event)
+    {
         // Enable all price fields
         Platform.runLater(() -> {
             for (TextField priceField : priceFieldMap.values()) {
@@ -167,6 +279,9 @@ public class SecondaryBoundary {
             UpdatePriceBtn.setDisable(true); // Disable update button
         });
     }
+
+
+
 
     @FXML
     void performSearch(ActionEvent event) {
@@ -228,14 +343,23 @@ public class SecondaryBoundary {
             if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN) {
                 System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
                 UpdatePriceBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
+                UpdateingridientsBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
+                addDishBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
+                removeDishBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
                 SaveBtn.setVisible(true);
             } else {
                 UpdatePriceBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
                 SaveBtn.setVisible(false);
+                UpdateingridientsBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
+                addDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
+                removeDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
             }
         } else {
             UpdatePriceBtn.setVisible(false); // Hide Update button if not logged in
             SaveBtn.setVisible(false);
+            UpdateingridientsBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
+            addDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
+            removeDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
         }
         priceColumn.setCellFactory(col -> new TableCell<MenuItem, Double>() {
             @Override

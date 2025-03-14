@@ -79,9 +79,9 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
         }
         return items;
     }
-    public MenuItem updatePrice(int id,double price)
+    public MenuItem updateThePrice(int id,double price)
     {
-        System.out.println("in MenuRepository updatePrice");
+        System.out.println("in MenuRepository updateThePrice");
         MenuItem item=findById(id);
         try (Session session = HibernateUtil.getSessionFactory().openSession())
         {

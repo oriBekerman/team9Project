@@ -26,7 +26,7 @@ public class MenuItemsController {
         return switch (request.getRequestType())
         {
             case GET_BASE_MENU->getBaseItems();
-             case UPDATE_PRICE->updatePrice(request);
+             case UPDATE_PRICE->updateThePrice(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
@@ -63,6 +63,7 @@ public class MenuItemsController {
         return response;
     }
 
+
     public List<MenuItem> searchMenuItems(String keyword, Double maxPrice, DishType type) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "FROM MenuItem m WHERE 1=1 ";
@@ -91,15 +92,15 @@ public class MenuItemsController {
     }
 
 
-    public Response updatePrice(Request request)
+    public Response updateThePrice(Request request)
     {
         Response response=new Response(UPDATED_PRICE,null,null,ALL_CLIENTS);
-        System.out.println("in MenuController updatePrice1");
+        System.out.println("in MenuController updateThePrice1");
         String[] data = (String[]) request.getData();
         int id = Integer.parseInt(data[0]);
         double price =Double.parseDouble(data[1]);
-        System.out.println("in MenuController updatePrice2");
-        MenuItem item= menuItemsRepository.updatePrice(id, price);
+        System.out.println("in MenuController updateThePrice2");
+        MenuItem item= menuItemsRepository.updateThePrice(id, price);
         if(item == null)
         {
             response.setStatus(ERROR);
