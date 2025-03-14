@@ -21,13 +21,13 @@
         <Button fx:id="SaveBtn" layoutX="28.0" layoutY="770.0" mnemonicParsing="false" onAction="#SaveTheUpdateMenu" prefHeight="49.0" prefWidth="124.0" styleClass="cancel-btn" text="Save" />
 
         <!-- TableView for MenuItems -->
-        <TableView fx:id="menuTableView" layoutX="301.0" layoutY="104.0" prefHeight="664.0" prefWidth="638.0">
+        <TableView fx:id="menuTableView" layoutX="148.0" layoutY="104.0" prefHeight="664.0" prefWidth="907.0">
             <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="131.0" styleClass="column-header-background" text="Name" />
-                <TableColumn fx:id="ingredientsColumn" prefWidth="171.0" styleClass="column-header-background" text="Ingredients" />
-                <TableColumn fx:id="preferenceColumn" prefWidth="225.0" styleClass="column-header-background" text="Preference" />
-                <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="108.0" styleClass="column-header-background" text="Price" />
-                <TableColumn fx:id="imageColum" minWidth="0.0" prefWidth="108.0" styleClass="column-header-background" text="image" />
+                <TableColumn fx:id="nameColumn" prefWidth="108.80000305175781" styleClass="column-header-background" text="Name" />
+                <TableColumn fx:id="ingredientsColumn" prefWidth="299.1999816894531" styleClass="column-header-background" text="Ingredients" />
+                <TableColumn fx:id="preferenceColumn" prefWidth="205.60003662109375" styleClass="column-header-background" text="Preference" />
+                <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="88.79998779296875" styleClass="column-header-background" text="Price" />
+                <TableColumn fx:id="imageColum" minWidth="0.0" prefWidth="204.800048828125" styleClass="column-header-background" text="image" />
             </columns>
         </TableView>
       <Label fx:id="menuLabel" layoutX="589.0" layoutY="23.0" prefHeight="68.0" prefWidth="77.0" styleClass="menuPageTitle" text="Menu" />

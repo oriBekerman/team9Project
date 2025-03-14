@@ -1,5 +1,6 @@
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\App.java
+C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\MenuBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Main.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginSuccessEvent.java
@@ -16,7 +17,6 @@ C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.java
-C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\BranchPageBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\DeliverableItemsSentEvent.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.java
