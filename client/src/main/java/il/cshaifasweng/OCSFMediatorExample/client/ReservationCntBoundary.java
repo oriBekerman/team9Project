@@ -60,6 +60,16 @@ public class ReservationCntBoundary {
     void chooseHours(ActionEvent event) {
         chosen = hoursList.getSelectionModel().getSelectedItem();
         SimpleClient.getClient().mapReservation.put("Hours",chosen);
+        String area = SimpleClient.getClient().mapReservation.get("Area");
+        String numPeople = SimpleClient.getClient().mapReservation.get("num");
+        Set<RestTable> availableTables = new HashSet<>();
+
+        // Parse the time from string to LocalTime
+        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+        availableTables = this.branch.getAvailableTablesWithNumPeople(Integer.parseInt(numPeople), time,area);
+        for (RestTable table: availableTables)
+            table.setUnavailableFromTimes();
+
     }
 
     @FXML
