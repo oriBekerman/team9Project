@@ -160,6 +160,18 @@ public class Branch implements Serializable  {
         }
         return availableTables;
     }
+
+    public Set<RestTable> getAvailableTablesWithArea(String area,LocalTime time)
+    {
+        Set<RestTable> availableTables = new HashSet<>();
+        System.out.println("in getAvailableTables branch");
+        for(RestTable table : tables){
+            if(table.getArea().equals(area) && table.isAvailableAt(time)){
+                availableTables.add(table);
+            }
+        }
+        return availableTables;
+    }
     public void printAvailableTables(int capacity,LocalTime time)
     {
         System.out.println("Available Tables:");
@@ -179,6 +191,75 @@ public class Branch implements Serializable  {
         }
         return availableTables;
     }
+
+    public Set<RestTable> getAvailableTablesWithNumPeople(int numPeople, LocalTime time, String area) {
+        Set<RestTable> availableTables = new HashSet<>();
+
+        // Get available tables at the given time in the area
+        Set<RestTable> availableAtTime = getAvailableTablesWithArea(area, time);
+        if (availableAtTime.isEmpty()) {
+            System.out.println("No available tables in area " + area + " at time " + time);
+            return availableTables;
+        }
+
+        // Convert to list for easier sorting and processing
+        List<RestTable> sortedTables = new ArrayList<>(availableAtTime);
+
+        // Step 1: Try to find a single exact match
+        for (RestTable table : sortedTables) {
+            if (table.getCapacity() == numPeople) {
+                availableTables.add(table);
+                System.out.println("Exact match found: Table ID " + table.getId() + ", Capacity: " + table.getCapacity());
+                return availableTables;
+            }
+        }
+
+        // Step 2: Try to find a combination of tables that sum exactly to numPeople
+        Set<RestTable> bestCombination = null;
+        int minWastedCapacity = Integer.MAX_VALUE;
+
+        // Power set approach to find best fit
+        int n = sortedTables.size();
+        for (int mask = 0; mask < (1 << n); mask++) {
+            Set<RestTable> currentCombination = new HashSet<>();
+            int totalCapacity = 0;
+
+            for (int i = 0; i < n; i++) {
+                if ((mask & (1 << i)) != 0) { // Check if this table is included
+                    RestTable table = sortedTables.get(i);
+                    currentCombination.add(table);
+                    totalCapacity += table.getCapacity();
+                }
+            }
+
+            // Check if it's an exact match
+            if (totalCapacity == numPeople) {
+                System.out.println("Exact combination found!");
+                return currentCombination;
+            }
+
+            // If it's not an exact match, check how much we waste
+            int wasted = totalCapacity - numPeople;
+            if (wasted >= 0 && wasted < minWastedCapacity) {
+                minWastedCapacity = wasted;
+                bestCombination = currentCombination;
+            }
+        }
+
+        // Step 3: If we didn't find an exact match, return the best fit
+        if (bestCombination != null) {
+            availableTables.addAll(bestCombination);
+            System.out.println("Best fit found with minimum wasted capacity of " + minWastedCapacity);
+        } else {
+            System.out.println("No suitable table combination found.");
+        }
+
+        return availableTables;
+    }
+
+
+
+
 }
 
 
