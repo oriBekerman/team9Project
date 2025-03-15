@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SubscribedClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import javafx.util.Pair;
 import org.hibernate.Session;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
@@ -24,6 +25,7 @@ public class SimpleServer extends AbstractServer {
     private LogInController logInController = null;
     private DeliveryController deliveryController = null;
     private ResInfoController resInfoController = null;
+    private ComplaintController complaintController=null;
 
     public static String dataBasePassword="Bekitnt26@";//change database password here
     public String password="";//used only when entering a new password through cmd
@@ -88,6 +90,33 @@ public class SimpleServer extends AbstractServer {
                 throw new RuntimeException(e);
             }
         }
+        //server needs to send one response to all clients and one to a specific client
+        //the response.data from the controller has both responses
+        if(response.getRecipient()==BOTH)
+        {
+            List<Response> responses= (List<Response>) response.getData();
+            if(responses.get(0).getRecipient()==ALL_CLIENTS)
+            {
+                try {
+                    sendToAllClients(responses.get(0));
+                    client.sendToClient(responses.get(1));
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
+            else {
+                try {
+                    sendToAllClients(responses.get(1));
+                    client.sendToClient(responses.get(0));
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
     public void sendToAllClients(String message) {
@@ -107,5 +136,7 @@ public class SimpleServer extends AbstractServer {
         this.restTableController = databaseManager.getRestTableController();
         this.deliveryController = databaseManager.getDeliveryController();
         this.resInfoController=databaseManager.getResInfoController();
+        this.complaintController=databaseManager.getComplaintController();
+
     }
 }

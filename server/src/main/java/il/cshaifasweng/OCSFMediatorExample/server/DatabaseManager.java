@@ -16,9 +16,12 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.*;
 
-import static il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE;
+import static il.cshaifasweng.OCSFMediatorExample.entities.ComplaintStatus.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.DishType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.ResInfo.Status.APPROVED;
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
 import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePassword;
 
@@ -32,6 +35,7 @@ public class DatabaseManager {
     private RestTableController restTableController;
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
+    private ComplaintController complaintController;
 
     public DatabaseManager(String password) {
         initialize(password);
@@ -47,9 +51,6 @@ private static void initialize(String password) {
     }
     System.out.println("SessionFactory initialized successfully!");
 }
-
-
-
     public void initControllers()
     {
         this.menuItemsController = new MenuItemsController();
@@ -58,8 +59,8 @@ private static void initialize(String password) {
         this.restTableController = new RestTableController();
         this.deliveryController = new DeliveryController();
         this.resInfoController=new ResInfoController();
+        this.complaintController=new ComplaintController();
     }
-
     //if  database tables are empty initialize them
     public void checkAndPopulateTables() {
         // If database tables are empty, initialize them
@@ -67,7 +68,8 @@ private static void initialize(String password) {
                 branchController.checkIfEmpty() &&
                 logInController.checkIfEmpty() &&
                 restTableController.checkIfEmpty() &&
-                deliveryController.checkIfEmpty()) {
+                deliveryController.checkIfEmpty() &&
+                complaintController.checkIfEmpty()) {
 
             // ==========================
             // 1. Populate Employees
@@ -185,12 +187,17 @@ private static void initialize(String password) {
             ResInfo reservation = new ResInfo(LocalDate.of(2025, 3, 15), LocalTime.of(19, 30), 4, "Inside");
             reservation.setBranch(haifaBranch);
             reservation.setCustomer(customer1);
+            reservation.setStatus(APPROVED);
             resInfoController.PopulateResSInfo(List.of(reservation));
+            // Create a Complaint instance without a Branch
+            Complaint complaint = new Complaint( "Delayed order delivery",NEW);
+            complaint.setBranch(telAvivBranch);
+            complaint.setCustomer(customer1);
+            complaintController.populateComplaints(List.of(complaint));
 
         }
     }
-
-
+    //get controllers
     MenuItemsController getMenuItemsController() {
         if(menuItemsController==null)
         {
@@ -198,7 +205,6 @@ private static void initialize(String password) {
         }
         return menuItemsController;
     }
-
     BranchController getBranchController() {
         if(branchController==null)
         {
@@ -206,7 +212,6 @@ private static void initialize(String password) {
         }
         return branchController;
     }
-
     LogInController getLogInController() {
         if (logInController == null) {
             logInController = new LogInController();
@@ -230,6 +235,12 @@ private static void initialize(String password) {
             resInfoController = new ResInfoController();
         }
         return resInfoController;
+    }
+    ComplaintController getComplaintController() {
+        if(complaintController==null){
+            complaintController=new ComplaintController();
+        }
+        return complaintController;
     }
     // shuts down Hibernate.
     public static void shutdown() {

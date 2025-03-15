@@ -1,13 +1,19 @@
 
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
+import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static il.cshaifasweng.OCSFMediatorExample.entities.ResInfo.Status.APPROVED;
 
 
 public class ResInfoRepository extends BaseRepository<ResInfo>
@@ -49,8 +55,25 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
     }
 
     public void populate(List<ResInfo> resSInfo) {
-        for (ResInfo res : resSInfo) {
-            save(res);
+        for (ResInfo resInfo : resSInfo) {
+            populateResInfo(resInfo);
+        }
+    }
+    public void populateResInfo(ResInfo resSInfo)
+    {
+        Transaction tx = null;
+        try(Session session = HibernateUtil.getSessionFactory().openSession())
+        {
+            tx = session.beginTransaction();
+            if (resSInfo.getCustomer() != null) {
+                session.saveOrUpdate(resSInfo.getCustomer());  // Ensure the customer is saved or updated
+            }
+            session.save(resSInfo);
+            tx.commit();
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
         }
     }
 
@@ -71,6 +94,20 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+    public ResInfo addReservation(ResInfo reservation)
+    {
+        if(reservation.branchIsSet && reservation.customerIsSet
+                && reservation.tableIsSet && reservation.getStatus().equals(APPROVED))
+        {
+           save(reservation);
+
+        }
+        return reservation;
+    }
+    public void deleteReservation(ResInfo reservation)
+    {
+        deleteById(reservation.getResID());
     }
 
 

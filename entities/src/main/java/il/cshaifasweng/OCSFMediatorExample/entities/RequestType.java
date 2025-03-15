@@ -13,15 +13,17 @@ public enum RequestType{
      //branch related requests
      GET_BRANCH_BY_NAME,
      GET_BRANCHES,
+
      GET_DELIVERABLES,
      CREATE_DELIVERY,
-
      GET_DELIVERY,
 
      GET_BRANCH_MENU,
      FETCH_BRANCH_TABLES,
 
-    GET_RES_REPORT
+    GET_RES_REPORT,
+
+    CANCEL_RESERVATION
 
 
 }

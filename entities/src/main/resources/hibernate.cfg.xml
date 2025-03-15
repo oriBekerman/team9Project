@@ -31,6 +31,7 @@
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Customer" />
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.OrderItem" />
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.ResInfo" />
+        <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Complaint" />
 
 
     </session-factory>

@@ -20,6 +20,10 @@ public class ResInfo {
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
+    @ManyToOne
+    @JoinColumn(name="tableId", referencedColumnName = "id")
+    RestTable table;
+
     @Column(nullable = false)
     private LocalDate resDate;
 
@@ -32,20 +36,29 @@ public class ResInfo {
     @Column(nullable = false)
     private String inOrOut;
 
-    boolean customerIsSet=false;
-    boolean branchIsSet=false;
+    @Column(nullable = false)
+    private Status status;
+
+    public boolean customerIsSet=false;
+    public boolean branchIsSet=false;
+    public boolean tableIsSet=false;
+
 
     // Default constructor
     public ResInfo() {}
 
     // Constructor with fields
-    public ResInfo(Branch branch, Customer customer, LocalDate resDate, LocalTime hours, int numOfGuests, String inOrOut) {
+    public ResInfo(Branch branch, Customer customer, LocalDate resDate, LocalTime hours, int numOfGuests, String inOrOut, RestTable table) {
         this.branch = branch;
         this.customer = customer;
         this.resDate = resDate;
         this.hours = hours;
         this.numOfGuests = numOfGuests;
         this.inOrOut = inOrOut;
+        this.table = table;
+        branchIsSet=true;
+        customerIsSet=true;
+        tableIsSet=true;
     }
     public ResInfo(LocalDate resDate, LocalTime hours, int numOfGuests, String inOrOut) {
         this.resDate = resDate;
@@ -105,7 +118,19 @@ public class ResInfo {
     public void setInOrOut(String inOrOut) {
         this.inOrOut = inOrOut;
     }
-
+    public Status getStatus() {
+        return status;
+    }
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+    public void setTable(RestTable table) {
+        this.table = table;
+        tableIsSet=true;
+    }
+    public RestTable getTable() {
+        return table;
+    }
     @Override
     public String toString() {
         return "ResInfo{" +
@@ -117,5 +142,11 @@ public class ResInfo {
                 ", numOfGuests=" + numOfGuests +
                 ", inOrOut='" + inOrOut + '\'' +
                 '}';
+    }
+    public enum Status {
+        APPROVED,
+        DENIED,
+        WAIT,
+        COMPLETED,
     }
 }

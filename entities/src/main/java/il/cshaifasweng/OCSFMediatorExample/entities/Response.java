@@ -96,7 +96,9 @@ public class Response<T> implements Serializable {
         DELIVERY_CREATED,
         SEND_DELIVERY,
 
-        RETURN_RES_REPORT
+        RETURN_RES_REPORT,
+
+        CANCELED_RESERVATION
     }
 
     public enum Status {
@@ -105,6 +107,7 @@ public class Response<T> implements Serializable {
     }
     public enum Recipient {
         ALL_CLIENTS,
-        THIS_CLIENT
+        THIS_CLIENT,
+        BOTH
     }
 }
