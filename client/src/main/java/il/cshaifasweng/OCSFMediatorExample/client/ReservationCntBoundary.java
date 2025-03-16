@@ -36,6 +36,7 @@ public class ReservationCntBoundary {
     public String chosen;
     public SimpleClient client;
     private Branch branch;
+    Set<RestTable> availableTables = new HashSet<>();
 
 
 
@@ -55,6 +56,11 @@ public class ReservationCntBoundary {
 
     @FXML
     void BackAct(ActionEvent event) {
+        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+
+        for (RestTable table: availableTables)
+            table.removeUnavailableFromTime(time);
+
         switchScreen("Reservation");
     }
 
@@ -64,7 +70,7 @@ public class ReservationCntBoundary {
         SimpleClient.getClient().mapReservation.put("Hours",chosen);
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
-        Set<RestTable> availableTables = new HashSet<>();
+
 
         // Parse the time from string to LocalTime
         LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));

@@ -110,6 +110,7 @@ public class SimpleServer extends AbstractServer {
             for (SubscribedClient subscribedClient : SubscribersList) {
                 if (!subscribedClient.getClient().equals(client)) { // Exclude sender
                     subscribedClient.getClient().sendToClient(message);
+                    System.out.println("abcabcd ");
                 }
             }
         } catch (IOException e) {
