@@ -38,6 +38,7 @@
                      <children>
                         <Button fx:id="MenuBtn" mnemonicParsing="false" onAction="#displayMenuFunc" prefHeight="44.0" prefWidth="136.0" styleClass="menu-btn" stylesheets="@style.css" text="Menu" />
                          <Button fx:id="toggleButtonBranch" onAction="#getPopup" prefHeight="44.0" prefWidth="142.0" styleClass="menu-btn" stylesheets="@style.css" text="our branches" />
+                        <Button fx:id="subCompBtn" mnemonicParsing="false" onAction="#goToSubCompPage" text="submit a complaint" />
                         <Button fx:id="UpdateMenuBtn" mnemonicParsing="false" onAction="#displayMenuFunc" text="Update Menu" />
                         <Button fx:id="loginBttn" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
                         <Button fx:id="logoutBttn" mnemonicParsing="false" onAction="#LogOut" text="Logout" />

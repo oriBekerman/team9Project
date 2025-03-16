@@ -1,29 +1,21 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employees.Employee;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employees.EmployeeType;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 
-import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.util.*;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.ComplaintStatus.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.DishType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ResInfo.Status.APPROVED;
-import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
-import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePassword;
 
 
 //configures database,handles opening and closing sessions

@@ -25,7 +25,7 @@
         <!-- מיפוי מחלקות  -->
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Branch" />
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.MenuItem"/>
-        <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Employee"/>
+        <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Employees.Employee"/>
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.RestTable"/>
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Delivery"/>
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Customer" />

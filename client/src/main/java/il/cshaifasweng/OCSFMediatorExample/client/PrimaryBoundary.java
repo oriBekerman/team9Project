@@ -9,7 +9,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchListSentEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employees.EmployeeType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.*;
 public class PrimaryBoundary {
 
 	public Button MenuBtn;
+	public Button subCompBtn;
 	@FXML
 	private ResourceBundle resources;
 
@@ -262,5 +263,8 @@ public class PrimaryBoundary {
 			System.out.println("onBranchesSentEvent");
 			lock.notifyAll(); // Notify waiting threads that branches are initialized
 		}
+	}
+	public void goToSubCompPage(ActionEvent actionEvent) {
+		switchScreen("SubComplaint");
 	}
 }

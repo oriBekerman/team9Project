@@ -1,5 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Employees.Employee;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -34,6 +36,9 @@ public class Complaint implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
     private Branch branch; // Branch associated with the complaint
+
+    @Column
+    long compensation;
 
     public boolean customerIsSet=false;
 
@@ -103,5 +108,11 @@ public class Complaint implements Serializable {
         System.out.println("Message: "+complaintText);
         System.out.println("Status: "+String.valueOf(status));
         System.out.println("Date: "+String.valueOf(complaintDate));
+    }
+    public long getCompensation() {
+        return compensation;
+    }
+    public void setCompensation(long compensation) {
+        this.compensation = compensation;
     }
 }
