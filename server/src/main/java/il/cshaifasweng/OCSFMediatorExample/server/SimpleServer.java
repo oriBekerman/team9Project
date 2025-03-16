@@ -76,6 +76,10 @@ public class SimpleServer extends AbstractServer {
             sendToAllClients(response);
             System.out.println("response sent to client "+ response.getResponseType().toString());
         }
+        if (response.getRecipient()==ALL_CLIENTS_EXCEPT_SENDER) {
+            sendToAllClientsExceptSender(response,client);
+            System.out.println("response sent to client "+ response.getResponseType().toString());
+        }
         if (response.getRecipient()==THIS_CLIENT)
         {
             try {
@@ -96,6 +100,18 @@ public class SimpleServer extends AbstractServer {
             }
         } catch (IOException e1) {
             e1.printStackTrace();
+        }
+    }
+
+    public void sendToAllClientsExceptSender(Object message, ConnectionToClient sender) {
+        try {
+            for (SubscribedClient subscribedClient : SubscribersList) {
+                if (!subscribedClient.getClient().equals(sender)) { // Exclude sender
+                    subscribedClient.getClient().sendToClient(message);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     private void getControllers()

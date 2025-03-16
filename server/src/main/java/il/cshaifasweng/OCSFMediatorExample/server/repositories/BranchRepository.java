@@ -90,4 +90,26 @@ public class BranchRepository extends BaseRepository<Branch> {
         return branch;
     }
 
+    public Branch updateBranch(Branch branch) {
+        System.out.println("finally!!!!!!!!!!!!!!");
+        Branch mergedBranch = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+
+                // Merge the branch entity, which will either update or insert it
+                mergedBranch = (Branch) session.merge(branch);
+
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                throw new RuntimeException("Error updating branch", e);
+            }
+        }
+        return mergedBranch;
+    }
+
 }

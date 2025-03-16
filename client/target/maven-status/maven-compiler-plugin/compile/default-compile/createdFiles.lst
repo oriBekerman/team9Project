@@ -5,6 +5,7 @@ il\cshaifasweng\OCSFMediatorExample\client\CreditCradInfoBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\App.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchListSentEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateBranchResEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ActiveUser.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\MenuEvent.class

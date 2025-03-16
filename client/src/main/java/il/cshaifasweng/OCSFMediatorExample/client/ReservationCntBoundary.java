@@ -4,6 +4,7 @@ import java.time.LocalTime;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import org.greenrobot.eventbus.EventBus;
@@ -15,6 +16,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateBranchResEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class ReservationCntBoundary {
     }
 
     @FXML
-    void chooseHours(ActionEvent event) {
+    void chooseHours(ActionEvent event) throws IOException {
         chosen = hoursList.getSelectionModel().getSelectedItem();
         SimpleClient.getClient().mapReservation.put("Hours",chosen);
         String area = SimpleClient.getClient().mapReservation.get("Area");
@@ -68,7 +70,9 @@ public class ReservationCntBoundary {
         LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
         availableTables = this.branch.getAvailableTablesWithNumPeople(Integer.parseInt(numPeople), time,area);
         for (RestTable table: availableTables)
-            table.setUnavailableFromTimes();
+            table.addUnavailableFromTime(time);
+        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
+        SimpleClient.getClient().sendToServer(request);
 
     }
 
@@ -87,8 +91,6 @@ public class ReservationCntBoundary {
         //getBranch and then set hours list
         Request<String> request2 = new Request<>(BRANCH,GET_BRANCH_BY_NAME, SimpleClient.getClient().mapReservation.get("Branch"));
        SimpleClient.getClient().sendToServer(request2);
-
-
 
     }
 
@@ -112,6 +114,25 @@ public class ReservationCntBoundary {
     public void onBranchSelected(BranchSelectedEvent event) {
         this.branch = event.getBranch();
         updateAvailableTimesAndUI();
+    }
+
+    @Subscribe
+    public void OnUpdateBranchResEvent(UpdateBranchResEvent event) {
+        System.out.println("Received UpdateBranchResEvent!!!!!!!!!!!");
+        this.branch = event.getBranch();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("hours occupied");
+            alert.setHeaderText(null);
+            alert.setContentText("Please press OK to refresh to see the latest changes.");
+            alert.showAndWait();
+            try {
+                setHoursList();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
     }
     private void updateAvailableTimesAndUI() {
         // Get values from SimpleClient
