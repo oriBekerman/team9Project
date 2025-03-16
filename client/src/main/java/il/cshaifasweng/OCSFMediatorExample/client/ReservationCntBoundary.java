@@ -55,11 +55,13 @@ public class ReservationCntBoundary {
     }
 
     @FXML
-    void BackAct(ActionEvent event) {
+    void BackAct(ActionEvent event) throws IOException {
         LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
 
         for (RestTable table: availableTables)
             table.removeUnavailableFromTime(time);
+        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
+        SimpleClient.getClient().sendToServer(request);
 
         switchScreen("Reservation");
     }
