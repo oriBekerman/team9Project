@@ -1,6 +1,9 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.ComplaintCustomerEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
+import il.cshaifasweng.OCSFMediatorExample.entities.ComplaintStatus;
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +14,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
+import java.util.List;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
@@ -83,13 +87,20 @@ public class SubComplaintBoundary {
             errorMessage.setText("Please fill all the fields.");
             return; // Stop execution if any field is empty
         }
-
-        // Proceed with complaint submission
-        String name = nameText.getText();
-        String email = emailText.getText();
-        String phone = phoneText.getText();
-        String message = complaintTextArea.getText();
-        System.out.println("compalint:"+ name);
+        try {
+            // Proceed with complaint submission
+            String name = nameText.getText();
+            String email = emailText.getText();
+            String phone = phoneText.getText();
+            String message = complaintTextArea.getText();
+            List<String> details = List.of(name, email, phone);
+            Complaint complaint = new Complaint(message, ComplaintStatus.NEW);
+            complaint.customerIsSet = false;
+            SimpleClient.getClient().submitComplaint(details,complaint);
+        }
+        catch (Exception e) {
+            errorMessage.setText(e.getMessage());
+        }
 
     }
 

@@ -23,7 +23,9 @@ public enum RequestType{
 
     GET_RES_REPORT,
 
-    CANCEL_RESERVATION
+    CANCEL_RESERVATION,
+
+    SUBMIT_COMPLAINT
 
 
 }

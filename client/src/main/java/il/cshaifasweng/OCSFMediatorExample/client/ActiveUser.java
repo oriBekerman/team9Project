@@ -1,6 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employees.EmployeeType;
 
 public class ActiveUser {
     private String username;
