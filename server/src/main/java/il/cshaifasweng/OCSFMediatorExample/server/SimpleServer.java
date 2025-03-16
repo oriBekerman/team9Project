@@ -24,7 +24,7 @@ public class SimpleServer extends AbstractServer {
     private LogInController logInController = null;
     private DeliveryController deliveryController = null;
 
-    public static String dataBasePassword="1234";//change database password here
+    public static String dataBasePassword="abcd1234";//change database password here
     public String password="";//used only when entering a new password through cmd
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {
@@ -39,15 +39,16 @@ public class SimpleServer extends AbstractServer {
     }
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client){
-        System.out.println("received request from client: ");
-
+        System.out.println("received request from client: " +msg.toString());
         String msgString = msg.toString();
-        Request request=(Request)msg;
+
 
         //connect client
         if (msgString.startsWith("add client")) {
+            System.out.println("Client added successfully");
             SubscribedClient connection = new SubscribedClient(client);
             SubscribersList.add(connection);
+
             try {
                 client.sendToClient("client added successfully");
                 System.out.println("Client added successfully");
@@ -55,6 +56,7 @@ public class SimpleServer extends AbstractServer {
                 throw new RuntimeException(e);
             }
         }
+        Request request=(Request)msg;
         //navigate client's request to the appropriate controller and sent the controller's response to the client
         Response response = switch (request.getCategory())
         {
@@ -74,6 +76,10 @@ public class SimpleServer extends AbstractServer {
         //check if the response should be sent to all clients or just one
         if (response.getRecipient()==ALL_CLIENTS) {
             sendToAllClients(response);
+            System.out.println("response sent to client "+ response.getResponseType().toString());
+        }
+        if (response.getRecipient()==ALL_CLIENTS_EXCEPT_SENDER) {
+            sendToAllClientsExceptSender(response,client);
             System.out.println("response sent to client "+ response.getResponseType().toString());
         }
         if (response.getRecipient()==THIS_CLIENT)
@@ -96,6 +102,19 @@ public class SimpleServer extends AbstractServer {
             }
         } catch (IOException e1) {
             e1.printStackTrace();
+        }
+    }
+
+    public void sendToAllClientsExceptSender(Object message, ConnectionToClient client) {
+        try {
+            for (SubscribedClient subscribedClient : SubscribersList) {
+                if (!subscribedClient.getClient().equals(client)) { // Exclude sender
+                    subscribedClient.getClient().sendToClient(message);
+                    System.out.println("abcabcd ");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     private void getControllers()

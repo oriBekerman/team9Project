@@ -98,6 +98,10 @@ private Set<LocalTime> unavailableFromTimes = new HashSet<>();
     public void addUnavailableFromTime(LocalTime unavailableFromTime) {
         unavailableFromTimes.add(unavailableFromTime);
     }
+
+    public void removeUnavailableFromTime(LocalTime unavailableFromTime) {
+        unavailableFromTimes.remove(unavailableFromTime);
+    }
     public boolean isAvailableAt(LocalTime time)
     {
         List<LocalTime> times=getTimeRange(time);

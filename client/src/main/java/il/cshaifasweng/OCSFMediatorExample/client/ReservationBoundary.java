@@ -110,18 +110,42 @@ public class ReservationBoundary {
         hoursList.getItems().add("14:45");
 
         hoursList.getItems().add("15:00");
+
+        hoursList.getItems().add("15:15");
+        hoursList.getItems().add("15:30");
+        hoursList.getItems().add("15:45");
+        hoursList.getItems().add("16:00");
+        hoursList.getItems().add("16:15");
+        hoursList.getItems().add("16:30");
+        hoursList.getItems().add("16:45");
+        hoursList.getItems().add("17:00");
+        hoursList.getItems().add("17:15");
+        hoursList.getItems().add("17:30");
+        hoursList.getItems().add("17:45");
+        hoursList.getItems().add("18:00");
+        hoursList.getItems().add("18:15");
+        hoursList.getItems().add("18:30");
+        hoursList.getItems().add("18:45");
+        hoursList.getItems().add("19:00");
+        hoursList.getItems().add("19:15");
+        hoursList.getItems().add("19:30");
+        hoursList.getItems().add("19:45");
+        hoursList.getItems().add("20:00");
+        hoursList.getItems().add("20:15");
+        hoursList.getItems().add("20:30");
+
     }
     void setBranchesList(){
         branchesList.getItems().add("Haifa");
-        branchesList.getItems().add("Tel-Aviv");
+        branchesList.getItems().add("Tel Aviv");
         branchesList.getItems().add("Jerusalem");
         branchesList.getItems().add("Zikhron Ya'akov");
     }
 
     void setInOutdoorList()
     {
-        InOutdoorList.getItems().add("indoor");
-        InOutdoorList.getItems().add("outdoor");
+        InOutdoorList.getItems().add("inside");
+        InOutdoorList.getItems().add("outside");
     }
 
     void setNumpeopleList()
