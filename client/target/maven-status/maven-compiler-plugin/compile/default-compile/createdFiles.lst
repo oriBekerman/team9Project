@@ -20,6 +20,7 @@ il\cshaifasweng\OCSFMediatorExample\client\LoginBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\SessionManager.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.class
 il\cshaifasweng\OCSFMediatorExample\client\TableMapBoundary.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\ComplaintCustomerEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\DeliverableItemsSentEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuBoundary.class
@@ -29,3 +30,4 @@ il\cshaifasweng\OCSFMediatorExample\client\Events\BranchTablesReceivedEvent.clas
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\UserLoginSuccessEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchPageBoundary.class
+il\cshaifasweng\OCSFMediatorExample\client\SubComplaintBoundary.class

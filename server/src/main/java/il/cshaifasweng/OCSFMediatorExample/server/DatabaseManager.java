@@ -151,8 +151,10 @@ private static void initialize(String password) {
             // ==========================
             // 6. Define Customers & Delivery Orders
             // ==========================
-            Customer customer1 = new Customer(1, "Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "1234-5678-9876-5432", "12/25", "123");
-            Customer customer2 = new Customer(2, "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
+//            Customer customer1 = new Customer(1, "Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "1234-5678-9876-5432", "12/25", "123");
+//            Customer customer2 = new Customer(2, "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
+            Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "1234-5678-9876-5432", "12/25", "123");
+           Customer customer2 = new Customer("Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
 
             List<OrderItem> orderItems1 = List.of(
                     new OrderItem(item1, 2, "No dressing", null),

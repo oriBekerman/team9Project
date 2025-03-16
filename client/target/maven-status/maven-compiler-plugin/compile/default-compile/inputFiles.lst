@@ -12,6 +12,7 @@ C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReservationBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\TableMapBoundary.java
+C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SubComplaintBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\MenuBarBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\CreditCradInfoBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.java
@@ -23,6 +24,7 @@ C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSelectedEvent.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SessionManager.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchTablesReceivedEvent.java
+C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ComplaintCustomerEvent.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\updateDishEvent.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\WarningEvent.java
 C:\university\2024-2025\semesterA\softwareeng\projectTables\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\BranchListBoundary.java
