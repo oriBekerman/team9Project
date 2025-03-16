@@ -2,7 +2,9 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employees.EmployeeType;
 import javafx.application.Platform;
+import javafx.util.Pair;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
@@ -218,7 +220,18 @@ public class SimpleClient extends AbstractClient {
 		System.out.println("fetch sent to server");
 		client.sendToServer(request);
 	}
+	public void submitComplaint(List<String> customerDetails,Complaint complaint) throws IOException
+	{
+		Pair<Complaint,List<String>> pair=new Pair<>(complaint, customerDetails);
+		Request request=new Request(COMPLAINT,SUBMIT_COMPLAINT,pair);
+		try {
+			sendToServer(request);
+			System.out.println("complaint sent to server");
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-
+	}
 }
 

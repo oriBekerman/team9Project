@@ -1,17 +1,14 @@
 package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
-import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employees.Employee;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employees.EmployeeType;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.entities.Response;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.EmployeeRepository;
-import org.hibernate.SessionFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.THIS_CLIENT;
-import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.BRANCHES_SENT;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.CORRECTNESS_USER;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;

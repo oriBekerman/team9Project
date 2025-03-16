@@ -123,9 +123,9 @@ public class BranchPageBoundary {
         }
     }
     public void displayMenu(ActionEvent actionEvent) {
-        switchScreen("secondary");
+        switchScreen("menuPage");
         try {
-            App.setRoot("secondary");
+            App.setRoot("menuPage");
             SimpleClient.getClient().displayBranchMenu(branch);
 //            Menu menu = new Menu(branch.getBranchMenuItems());
 //            menu.printMenu();

@@ -11,6 +11,7 @@ import java.io.Serializable;
 public abstract class Person implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String address;
@@ -22,6 +23,12 @@ public abstract class Person implements Serializable {
     // Constructor with fields
     public Person(int id, String name, String address, String email) {
         this.id =id;
+        this.name = name;
+        this.address = address;
+        this.email = email;
+    }
+    // Constructor with fields
+    public Person(String name, String address, String email) {
         this.name = name;
         this.address = address;
         this.email = email;

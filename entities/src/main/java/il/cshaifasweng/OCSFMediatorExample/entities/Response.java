@@ -88,15 +88,17 @@ public class Response<T> implements Serializable {
         RETURN_BRANCH,
         RETURN_DELIVERABLES,
         GET_ALL_DELIVERIES,
-        UPDATE_BRANCH_RESERVATION,
 
         RETURN_BRANCH_TABLES,
         //login
         CORRECTNESS_USER,
 
         DELIVERY_CREATED,
+        SEND_DELIVERY,
 
-        SEND_DELIVERY
+        RETURN_RES_REPORT,
+
+        CANCELED_RESERVATION
     }
 
     public enum Status {
@@ -105,7 +107,7 @@ public class Response<T> implements Serializable {
     }
     public enum Recipient {
         ALL_CLIENTS,
-        THIS_CLIENT
-        ,ALL_CLIENTS_EXCEPT_SENDER
+        THIS_CLIENT,
+        BOTH
     }
 }

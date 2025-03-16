@@ -190,7 +190,16 @@ public class App extends Application {
                     }
                 });
                 break;
-        }
 
+            case "SubComplaint":
+                Platform.runLater(() -> {
+                    try {
+                        setContent("SubComplaint");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+        }
     }
 }

@@ -1,9 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employees.Employee;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import javax.persistence.criteria.CriteriaBuilder;

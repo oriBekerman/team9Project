@@ -4,6 +4,8 @@ import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEve
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
@@ -30,12 +32,12 @@ public class TableMapBoundary {
     public GridPane insideGridPane;
     public Button tableBtn2;
     public Button tableBtn3;
-    public Button checkBtn;
     public ComboBox<String> timesBox;
     public Button tableBtn4;
     public Button tableBtn5;
     public Button tableBtn6;
     public AnchorPane root;
+    public Button backBtn;
     private List<Button>buttons=new ArrayList<>();
     private Map<RestTable,Button>map=new HashMap<>();
     
@@ -165,14 +167,6 @@ public class TableMapBoundary {
         }
     }
 
-
-    public void check(ActionEvent actionEvent) {
-        Set<RestTable>tables=branch.getAvailableTablesAt(LocalTime.of(14,30));
-        for(RestTable table: tables)
-        {
-            table.print();
-        }
-    }
     public void chooseTime(ActionEvent actionEvent) {
         String chosen = timesBox.getSelectionModel().getSelectedItem();
         LocalTime localTime = LocalTime.parse(chosen);
@@ -214,4 +208,29 @@ public class TableMapBoundary {
                 "    -fx-cursor: hand;");
     }
 
+    public void BackToBranch(ActionEvent actionEvent) {
+        openBranchPage(branch);
+
+    }
+
+    //open selected branch page
+    private void openBranchPage(Branch branch) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Branch.fxml"));
+            Parent branchPageRoot = loader.load();
+            // Get the controller and pass the branch
+            BranchPageBoundary controller = loader.getController();
+            controller.setBranch(branch);
+            if (controller.branchIsSet) {
+                System.out.println("branch is already set");
+            }
+            while (!controller.branchIsSet) {
+                System.out.println("Waiting for branch to be set");
+            }
+            App.setContent(branchPageRoot);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
