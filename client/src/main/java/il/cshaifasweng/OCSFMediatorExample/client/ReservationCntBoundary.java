@@ -140,7 +140,7 @@ public class ReservationCntBoundary {
                 throw new RuntimeException(e);
             }
         });
-
+        updateAvailableTimesAndUI();
     }
     private void updateAvailableTimesAndUI() {
         // Get values from SimpleClient
