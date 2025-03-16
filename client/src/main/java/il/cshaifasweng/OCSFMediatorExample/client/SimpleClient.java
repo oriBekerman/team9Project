@@ -156,6 +156,7 @@ public class SimpleClient extends AbstractClient {
 			}
 
 			if (response.getResponseType().equals(UPDATE_BRANCH_RESERVATION)) {
+				System.out.println("updateRES!!!!!");
 				Branch branch = (Branch) response.getData();
 				UpdateBranchResEvent updateBranchRes= new UpdateBranchResEvent(branch);
 				EventBus.getDefault().post(updateBranchRes);
