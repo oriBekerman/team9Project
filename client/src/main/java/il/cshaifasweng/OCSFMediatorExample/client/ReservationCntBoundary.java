@@ -37,6 +37,7 @@ public class ReservationCntBoundary {
     public SimpleClient client;
     private Branch branch;
     Set<RestTable> availableTables = new HashSet<>();
+    boolean flag=false;
 
 
 
@@ -56,18 +57,22 @@ public class ReservationCntBoundary {
 
     @FXML
     void BackAct(ActionEvent event) throws IOException {
-        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+        if (flag==true) {
+            chooseCancel();
 
-        for (RestTable table: availableTables)
-            table.removeUnavailableFromTime(time);
-        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
-        SimpleClient.getClient().sendToServer(request);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Cancellation in Progress");
+            alert.setHeaderText(null);
+            alert.setContentText("Reservation has been canceled. Press OK to continue.");
 
+            alert.showAndWait();
+        }
         switchScreen("Reservation");
     }
 
     @FXML
     void chooseHours(ActionEvent event) throws IOException {
+        flag=true;
         chosen = hoursList.getSelectionModel().getSelectedItem();
         SimpleClient.getClient().mapReservation.put("Hours",chosen);
         String area = SimpleClient.getClient().mapReservation.get("Area");
@@ -107,6 +112,16 @@ public class ReservationCntBoundary {
         System.out.println("finally!!!!!!!!!!!!!!");
 
         setHoursList();
+
+//        Platform.runLater(() -> {
+//            hoursList.getScene().getWindow().setOnCloseRequest(event -> {
+//                try {
+//                    chooseCancel();
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
+//        });
     }
 
     @Subscribe
@@ -140,14 +155,14 @@ public class ReservationCntBoundary {
                 throw new RuntimeException(e);
             }
         });
-        updateAvailableTimesAndUI();
+
     }
     private void updateAvailableTimesAndUI() {
         // Get values from SimpleClient
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String timeString = SimpleClient.getClient().mapReservation.get("Hours");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
-        Set<RestTable> availableTables = new HashSet<>();
+
 
         // Parse the time from string to LocalTime
         LocalTime time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"));
@@ -175,6 +190,16 @@ public class ReservationCntBoundary {
             hoursList.getItems().clear();  // Clear existing items
             hoursList.getItems().addAll(availableTimes);  // Add all available times
         });
+    }
+
+    private void chooseCancel() throws IOException
+    {
+        LocalTime time = LocalTime.parse(SimpleClient.getClient().mapReservation.get("Hours"), DateTimeFormatter.ofPattern("HH:mm"));
+
+        for (RestTable table: availableTables)
+            table.removeUnavailableFromTime(time);
+        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
+        SimpleClient.getClient().sendToServer(request);
     }
 
 

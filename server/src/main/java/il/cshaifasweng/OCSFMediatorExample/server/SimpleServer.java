@@ -49,6 +49,7 @@ public class SimpleServer extends AbstractServer {
             SubscribedClient connection = new SubscribedClient(client);
             SubscribersList.add(connection);
 
+
             try {
                 client.sendToClient("client added successfully");
                 System.out.println("Client added successfully");
@@ -107,6 +108,7 @@ public class SimpleServer extends AbstractServer {
 
     public void sendToAllClientsExceptSender(Object message, ConnectionToClient client) {
         try {
+            System.out.println("this is!!!" +SubscribersList.size());
             for (SubscribedClient subscribedClient : SubscribersList) {
                 if (!subscribedClient.getClient().equals(client)) { // Exclude sender
                     subscribedClient.getClient().sendToClient(message);

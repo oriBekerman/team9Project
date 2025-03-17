@@ -156,6 +156,9 @@ public class ReservationBoundary {
         numpeopleList.getItems().add("4");
         numpeopleList.getItems().add("5");
         numpeopleList.getItems().add("6");
+        numpeopleList.getItems().add("7");
+        numpeopleList.getItems().add("8");
+        numpeopleList.getItems().add("9");
     }
 
 
