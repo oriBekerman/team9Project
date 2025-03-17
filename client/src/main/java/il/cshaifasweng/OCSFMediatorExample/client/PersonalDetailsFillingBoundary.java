@@ -1,17 +1,24 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.ComplaintCustomerEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.ReservationPersonalInfoSet;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.greenrobot.eventbus.EventBus;
 
@@ -19,6 +26,7 @@ import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
 public class PersonalDetailsFillingBoundary {
 
+    public Label errorLabel;
     @FXML
     private ResourceBundle resources;
 
@@ -43,6 +51,7 @@ public class PersonalDetailsFillingBoundary {
     private String type;
     public boolean typeIsSet=false;
 
+
     public PersonalDetailsFillingBoundary(String type) {
         this.type = type;
         this.typeIsSet=true;
@@ -51,11 +60,28 @@ public class PersonalDetailsFillingBoundary {
     public PersonalDetailsFillingBoundary() {}
     @FXML
     void contToCCinfoFill(ActionEvent event) {
-        switchScreen("Credit Card Info");
-//        if(!type.isEmpty())
-//        {
-//            postDetails();
-//        }
+        String name=nameTextField.getText();
+        String phone=phoneTextField.getText();
+        String mail=mailTextField.getText();
+        if(name.isEmpty() || phone.isEmpty() || mail.isEmpty())
+        {
+            errorLabel.setText("Please enter all the fields.");
+        }
+        else if(!isValidPhone(phone))
+        {
+            errorLabel.setText("Please enter a valid phone number.");
+        }
+       else if (!isValidEmail(mail))
+       {
+           errorLabel.setText("Please enter a valid email address.");
+       }
+       else if(type =="reservation")
+       {
+           SimpleClient.getClient().mapReservation.put("name",name);
+           SimpleClient.getClient().mapReservation.put("phone",phone);
+           SimpleClient.getClient().mapReservation.put("mail",mail);
+           openCreditCardPage();
+       }
     }
 
     @FXML
@@ -71,11 +97,8 @@ public class PersonalDetailsFillingBoundary {
         assert nameTextField != null : "fx:id=\"nameTextField\" was not injected: check your FXML file 'personalDetailsFilling.fxml'.";
         assert phoneTextField != null : "fx:id=\"phoneTextField\" was not injected: check your FXML file 'personalDetailsFilling.fxml'.";
 
+
     }
-//    public void setType(String type) {
-//        this.type = type;
-//        this.typeIsSet=true;
-//    }
 // initialize the map before letting the map page be opened
     public void setType(String type) {
         System.out.println("in set type before sync");
@@ -89,6 +112,38 @@ public class PersonalDetailsFillingBoundary {
         }
     }
 
+    public static boolean isValidPhone(String phone) {
+        return Pattern.compile("^(\\+\\d{1,3})?\\d{10,15}$").matcher(phone).matches();
+    }
 
+    public static boolean isValidEmail(String email) {
+        return Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$").matcher(email).matches();
+    }
+    public void openCreditCardPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("creditCardInfo.fxml"));
+            Parent creditCardInfoPageRoot = loader.load();
+            // Get the controller and set the type before waiting
+            CreditCradInfoBoundary boundary = loader.getController();
+            boundary.setType("reservation");  // This should be set before waiting
+            synchronized (boundary) {
+                while (!boundary.typeIsSet) {
+                    System.out.println("Waiting for type to be set...");
+                    boundary.wait();  // Waits until notifyAll() is called
+                }
+            }
+            Platform.runLater(() -> {
+                try {
+                    App.setContent(creditCardInfoPageRoot);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();  // Restore interrupted state
+        }
+    }
 
 }

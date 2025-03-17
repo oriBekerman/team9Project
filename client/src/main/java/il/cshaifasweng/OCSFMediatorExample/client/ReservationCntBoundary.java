@@ -187,42 +187,19 @@ public class ReservationCntBoundary {
         });
     }
 
-//    private void openPersonalFillingPage()
-//    {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("personalDetailsFilling.fxml"));
-//            Parent personalDetailsRoot = loader.load();
-//            // Get the controller and pass the branch
-//            PersonalDetailsFillingBoundary controller = loader.getController();
-//            controller.setType("Reservation");
-//            if (controller.typeIsSet) {
-//                System.out.println("branch is already set");
-//            }
-//            while (!controller.typeIsSet) {
-//                System.out.println("Waiting for branch to be set");
-//            }
-//            App.setContent(personalDetailsRoot);
-//        }
-//        catch (IOException e){
-//            e.printStackTrace();
-//        }
-//    }
     public void openPersonalDetailsPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("personalDetailsFilling.fxml"));
             Parent PersonalInfoPageRoot = loader.load();
-
             // Get the controller and set the type before waiting
             PersonalDetailsFillingBoundary boundary = loader.getController();
             boundary.setType("reservation");  // This should be set before waiting
-
             synchronized (boundary) {
                 while (!boundary.typeIsSet) {
                     System.out.println("Waiting for type to be set...");
                     boundary.wait();  // Waits until notifyAll() is called
                 }
             }
-
             Platform.runLater(() -> {
                 try {
                     App.setContent(PersonalInfoPageRoot);
@@ -236,7 +213,5 @@ public class ReservationCntBoundary {
             Thread.currentThread().interrupt();  // Restore interrupted state
         }
     }
-
-
 
 }
