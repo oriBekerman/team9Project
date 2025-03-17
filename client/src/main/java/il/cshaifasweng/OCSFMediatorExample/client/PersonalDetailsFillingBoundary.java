@@ -1,9 +1,14 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.ComplaintCustomerEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -67,17 +72,23 @@ public class PersonalDetailsFillingBoundary {
         assert phoneTextField != null : "fx:id=\"phoneTextField\" was not injected: check your FXML file 'personalDetailsFilling.fxml'.";
 
     }
-    public void setType(String type) {
-        this.type = type;
-        this.typeIsSet=true;
-    }
-//    public void postDetails()
-//    {
-//        if(type.equals("complaint"))
-//        {
-//            ComplaintCustomerEvent event=new ComplaintCustomerEvent(nameTextField.getText(),mailTextField.getText(),phoneTextField.getText());
-//            EventBus.getDefault().post(event);
-//        }
+//    public void setType(String type) {
+//        this.type = type;
+//        this.typeIsSet=true;
 //    }
+// initialize the map before letting the map page be opened
+    public void setType(String type) {
+        System.out.println("in set type before sync");
+        synchronized (this) {
+            if (this.type == null || !this.type.equals(type)) {
+                System.out.println("in type map after sync");
+                this.type = type;
+                this.typeIsSet = true;
+                notifyAll();
+            }
+        }
+    }
+
+
 
 }

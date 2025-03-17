@@ -14,6 +14,8 @@ import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
+//get reservation details from user and stores in map in simpleClient -> on continue go to ReservationCntPage
+
 public class ReservationBoundary {
     public SimpleClient client;
     public AnchorPane root;

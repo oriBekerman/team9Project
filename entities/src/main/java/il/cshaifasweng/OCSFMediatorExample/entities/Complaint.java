@@ -1,7 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Employees.Employee;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package il.cshaifasweng.OCSFMediatorExample.entities.Employees;
+package il.cshaifasweng.OCSFMediatorExample.entities;
 
 public class EmployeeFactory {
     public static Employee createEmployee(EmployeeType type, int id, String name, String address,

@@ -1,6 +1,4 @@
-package il.cshaifasweng.OCSFMediatorExample.entities.Employees;
-
-import il.cshaifasweng.OCSFMediatorExample.entities.Person;
+package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;

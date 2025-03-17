@@ -4,6 +4,8 @@ import java.time.LocalTime;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -66,6 +68,8 @@ public class ReservationCntBoundary {
         switchScreen("Reservation");
     }
 
+
+    //gets tables in  chosen hour,updates those tables to be unavailable at in branch and request branch to update database
     @FXML
     void chooseHours(ActionEvent event) throws IOException {
         chosen = hoursList.getSelectionModel().getSelectedItem();
@@ -91,9 +95,12 @@ public class ReservationCntBoundary {
         client = SimpleClient.getClient();
         client.mapReservation.put("Hours",chosen);
         //client.post (let everyone know the hour was taken)
-        switchScreen("Personal Details Filling");
+//        switchScreen("Personal Details Filling");
+        openPersonalDetailsPage();
 
     }
+
+    //requests branch instance from server
 @Subscribe
     void setHoursList() throws IOException {
         //getBranch and then set hours list
@@ -118,6 +125,7 @@ public class ReservationCntBoundary {
         }
     }
 
+    //initialize branch received after request in setHours
     @Subscribe
     public void onBranchSelected(BranchSelectedEvent event) {
         this.branch = event.getBranch();
@@ -142,8 +150,10 @@ public class ReservationCntBoundary {
         });
         updateAvailableTimesAndUI();
     }
+
+    //sets a list of time when there are available tables fitting the user input in the second hours comboBox
     private void updateAvailableTimesAndUI() {
-        // Get values from SimpleClient
+        //initialize reservation data from map in simpleClient (data in map init in reservationBoundaryPage)
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String timeString = SimpleClient.getClient().mapReservation.get("Hours");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
@@ -176,6 +186,57 @@ public class ReservationCntBoundary {
             hoursList.getItems().addAll(availableTimes);  // Add all available times
         });
     }
+
+//    private void openPersonalFillingPage()
+//    {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("personalDetailsFilling.fxml"));
+//            Parent personalDetailsRoot = loader.load();
+//            // Get the controller and pass the branch
+//            PersonalDetailsFillingBoundary controller = loader.getController();
+//            controller.setType("Reservation");
+//            if (controller.typeIsSet) {
+//                System.out.println("branch is already set");
+//            }
+//            while (!controller.typeIsSet) {
+//                System.out.println("Waiting for branch to be set");
+//            }
+//            App.setContent(personalDetailsRoot);
+//        }
+//        catch (IOException e){
+//            e.printStackTrace();
+//        }
+//    }
+    public void openPersonalDetailsPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("personalDetailsFilling.fxml"));
+            Parent PersonalInfoPageRoot = loader.load();
+
+            // Get the controller and set the type before waiting
+            PersonalDetailsFillingBoundary boundary = loader.getController();
+            boundary.setType("reservation");  // This should be set before waiting
+
+            synchronized (boundary) {
+                while (!boundary.typeIsSet) {
+                    System.out.println("Waiting for type to be set...");
+                    boundary.wait();  // Waits until notifyAll() is called
+                }
+            }
+
+            Platform.runLater(() -> {
+                try {
+                    App.setContent(PersonalInfoPageRoot);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();  // Restore interrupted state
+        }
+    }
+
 
 
 }

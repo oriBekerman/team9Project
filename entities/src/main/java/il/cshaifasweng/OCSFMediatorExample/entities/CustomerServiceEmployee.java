@@ -1,6 +1,4 @@
-package il.cshaifasweng.OCSFMediatorExample.entities.Employees;
-
-import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
+package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import java.util.List;
 

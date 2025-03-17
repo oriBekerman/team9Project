@@ -1,7 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Employees.Employee;
-import il.cshaifasweng.OCSFMediatorExample.entities.Employees.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.entities.Response;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.EmployeeRepository;

@@ -1,4 +1,4 @@
-package il.cshaifasweng.OCSFMediatorExample.entities.Employees;
+package il.cshaifasweng.OCSFMediatorExample.entities;
 
 public enum EmployeeType {
     DIETITIAN,

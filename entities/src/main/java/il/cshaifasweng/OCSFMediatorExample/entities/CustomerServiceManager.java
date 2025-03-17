@@ -1,4 +1,4 @@
-package il.cshaifasweng.OCSFMediatorExample.entities.Employees;
+package il.cshaifasweng.OCSFMediatorExample.entities;
 
 public class CustomerServiceManager extends Employee{
     // Constructor ensures that employee type is only customer service

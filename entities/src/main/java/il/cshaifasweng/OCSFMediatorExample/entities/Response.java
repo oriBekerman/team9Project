@@ -90,6 +90,7 @@ public class Response<T> implements Serializable {
         GET_ALL_DELIVERIES,
 
         RETURN_BRANCH_TABLES,
+        UPDATE_BRANCH_RESERVATION,
         //login
         CORRECTNESS_USER,
 
@@ -108,6 +109,7 @@ public class Response<T> implements Serializable {
     public enum Recipient {
         ALL_CLIENTS,
         THIS_CLIENT,
-        BOTH
+        BOTH,
+        ALL_CLIENTS_EXCEPT_SENDER
     }
 }

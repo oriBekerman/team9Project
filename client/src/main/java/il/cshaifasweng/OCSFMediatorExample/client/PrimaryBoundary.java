@@ -9,7 +9,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchListSentEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Employees.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;

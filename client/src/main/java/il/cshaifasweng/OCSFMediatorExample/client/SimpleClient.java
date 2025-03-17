@@ -2,7 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
-import il.cshaifasweng.OCSFMediatorExample.entities.Employees.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
 import javafx.application.Platform;
 import javafx.util.Pair;
 import org.greenrobot.eventbus.EventBus;

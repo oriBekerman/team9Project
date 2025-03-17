@@ -106,19 +106,15 @@ public class Branch implements Serializable  {
     public int getBranchID() {
         return branchID;
     }
-
     public String getOpeningTime() {
         return openingTime;
     }
-
     public void setOpeningTime(String openingTime) {
         this.openingTime = openingTime;
     }
-
     public String getClosingTime() {
         return closingTime;
     }
-
     public void setClosingTime(String closingTime) {
         this.closingTime = closingTime;
     }
@@ -142,7 +138,6 @@ public class Branch implements Serializable  {
         }
         return tables;
     }
-
     public void setRestTables(Set<RestTable> tables) {
         this.tables = tables;
         if (tables != null){
@@ -163,7 +158,6 @@ public class Branch implements Serializable  {
         }
         return availableTables;
     }
-
     public Set<RestTable> getAvailableTablesWithArea(String area,LocalTime time)
     {
         Set<RestTable> availableTables = new HashSet<>();
@@ -195,6 +189,7 @@ public class Branch implements Serializable  {
         return availableTables;
     }
 
+    //returns the best table/ combination of tables for the given time and number of people and sitting area
     public Set<RestTable> getAvailableTablesWithNumPeople(int numPeople, LocalTime time, String area) {
         Set<RestTable> availableTables = new HashSet<>();
 

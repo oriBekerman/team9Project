@@ -1,8 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
-import il.cshaifasweng.OCSFMediatorExample.entities.Employees.Employee;
-import il.cshaifasweng.OCSFMediatorExample.entities.Employees.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
