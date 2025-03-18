@@ -5,6 +5,7 @@ C:\university\2024-2025\semesterA\softwareeng\lironTable\client\src\main\java\il
 C:\university\2024-2025\semesterA\softwareeng\lironTable\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\BranchPageBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\lironTable\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\lironTable\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSelectedEvent.java
+C:\university\2024-2025\semesterA\softwareeng\lironTable\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationAddedEvent.java
 C:\university\2024-2025\semesterA\softwareeng\lironTable\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\WarningEvent.java
 C:\university\2024-2025\semesterA\softwareeng\lironTable\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\lironTable\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReservationCntBoundary.java

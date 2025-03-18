@@ -50,7 +50,13 @@ public class ResInfoController {
         resInfoRepository.addReservation(reservation,false);
         response.setData(reservation);
         response.setStatus(SUCCESS);
-        response.setMessage("your reservation for "+reservation.getNumOfGuests()+" at "+reservation.getHours()+" has been approved");
+        response.setMessage("Dear " + customer.getName() + ",\n" +
+                "Your reservation has been confirmed.\n" +
+                "Here are the details:\n\n" +
+                "Time: " + reservation.getHours() + "\n" +
+                "Guests: " + reservation.getNumOfGuests() + "\n" +
+                "Branch: " + reservation.getBranch().getName() + "\n" +
+                "Enjoy your meal!");
         return response;
     }
 

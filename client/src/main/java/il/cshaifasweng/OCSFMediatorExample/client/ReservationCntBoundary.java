@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import il.cshaifasweng.OCSFMediatorExample.client.Events.CreditCardInfoSet;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,9 +18,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
-import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
-import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateBranchResEvent;
-import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
+
 import java.util.ArrayList;
 import javafx.application.Platform;
 
@@ -249,6 +247,19 @@ public class ReservationCntBoundary {
             e.printStackTrace();
        }
 
+    }
+
+    //display message that the reservation is approved
+    @Subscribe
+    public void reservationAddedEvent(ReservationAddedEvent event) {
+        String message=event.getMessage();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.NONE);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.show();
+        });
     }
 
 }

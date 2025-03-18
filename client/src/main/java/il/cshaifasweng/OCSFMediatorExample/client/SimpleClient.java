@@ -165,7 +165,8 @@ public class SimpleClient extends AbstractClient {
 			}
 			if(response.getResponseType().equals(ADDED_RESERVATION))
 			{
-				System.out.println("reservation received in simple client");
+				ReservationAddedEvent event=new ReservationAddedEvent((ResInfo) response.getData(),response.getMessage());
+				EventBus.getDefault().post(event);
 			}
 		} else {
 			System.out.println("Received message is not of type Response");
