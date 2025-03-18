@@ -44,8 +44,6 @@ public class SimpleServer extends AbstractServer {
     protected void handleMessageFromClient(Object msg, ConnectionToClient client){
         System.out.println("received request from client: " +msg.toString());
         String msgString = msg.toString();
-
-
         //connect client
         if (msgString.startsWith("add client")) {
             System.out.println("Client added successfully");
@@ -75,6 +73,12 @@ public class SimpleServer extends AbstractServer {
         System.out.println("Response Type: " + response.getResponseType());
         System.out.println("Response Status: " + response.getStatus());
         System.out.println("Response Data: " + (response.getData() != null ? response.getData().toString() : "No data"));
+
+        // Check if the client is still connected
+        if (client == null || client.getInetAddress() == null) {
+            System.err.println("Client socket appears to be closed. Skipping response.");
+            return;
+        }
 
 
         //check if the response should be sent to all clients or just one
@@ -137,17 +141,23 @@ public class SimpleServer extends AbstractServer {
     }
 
     public void sendToAllClientsExceptSender(Object message, ConnectionToClient client) {
-        try {
-            for (SubscribedClient subscribedClient : SubscribersList) {
-                if (!subscribedClient.getClient().equals(client)) { // Exclude sender
-                    subscribedClient.getClient().sendToClient(message);
-                    System.out.println("abcabcd ");
+        synchronized (SubscribersList) {  // Ensures thread safety
+            Iterator<SubscribedClient> iterator = SubscribersList.iterator();
+            while (iterator.hasNext()) {
+                SubscribedClient subscribedClient = iterator.next();
+                try {
+                    if (!subscribedClient.getClient().equals(client) && subscribedClient.getClient().getInetAddress() != null) {
+                        subscribedClient.getClient().sendToClient(message);
+                    }
+                } catch (IOException e) {
+                    System.err.println("Client disconnected. Removing from list.");
+                    iterator.remove();  // Remove disconnected clients
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
+
+
     private void getControllers()
     {
         this.menuItemsController =databaseManager.getMenuItemsController();

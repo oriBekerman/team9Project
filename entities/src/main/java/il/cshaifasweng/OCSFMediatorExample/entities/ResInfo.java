@@ -26,8 +26,8 @@ public class ResInfo implements Serializable {
     @JoinColumn(name="tableId", referencedColumnName = "id")
     Set<RestTable> tables;
 
-    @Column(nullable = false)
-    private LocalDate resDate;
+//    @Column(nullable = false)
+//    private LocalDate resDate;
 
     @Column(nullable = false)
     private LocalTime hours;
@@ -50,18 +50,18 @@ public class ResInfo implements Serializable {
     public ResInfo() {}
 
     // Constructor with fields
-    public ResInfo(Branch branch, Customer customer, LocalDate resDate, LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
-        this.branch = branch;
-        this.customer = customer;
-        this.resDate = resDate;
-        this.hours = hours;
-        this.numOfGuests = numOfGuests;
-        this.inOrOut = inOrOut;
-        this.tables = table;
-        branchIsSet=true;
-        customerIsSet=true;
-        tableIsSet=true;
-    }
+//    public ResInfo(Branch branch, Customer customer,LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
+//        this.branch = branch;
+//        this.customer = customer;
+////        this.resDate = resDate;
+//        this.hours = hours;
+//        this.numOfGuests = numOfGuests;
+//        this.inOrOut = inOrOut;
+//        this.tables = table;
+//        branchIsSet=true;
+//        customerIsSet=true;
+//        tableIsSet=true;
+//    }
     public ResInfo(Branch branch, Customer customer,LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
         this.branch = branch;
         this.customer = customer;
@@ -73,8 +73,7 @@ public class ResInfo implements Serializable {
         customerIsSet=true;
         tableIsSet=true;
     }
-    public ResInfo(LocalDate resDate, LocalTime hours, int numOfGuests, String inOrOut) {
-        this.resDate = resDate;
+    public ResInfo(LocalTime hours, int numOfGuests, String inOrOut) {
         this.hours = hours;
         this.numOfGuests = numOfGuests;
         this.inOrOut = inOrOut;
@@ -104,12 +103,12 @@ public class ResInfo implements Serializable {
         customerIsSet=true;
     }
 
-    public LocalDate getResDate() {
-        return resDate;
-    }
-    public void setResDate(LocalDate date) {
-        this.resDate = date;
-    }
+//    public LocalDate getResDate() {
+//        return resDate;
+//    }
+//    public void setResDate(LocalDate date) {
+//        this.resDate = date;
+//    }
 
     public LocalTime getHours() {
         return hours;
@@ -144,13 +143,13 @@ public class ResInfo implements Serializable {
     public Set<RestTable> getTable() {
         return tables;
     }
+
     @Override
     public String toString() {
         return "ResInfo{" +
                 "resID=" + resID +
                 ", Branch=" + branch +
                 ", customer=" + customer +
-                ", resDate='" + resDate + '\'' +
                 ", hours='" + hours + '\'' +
                 ", numOfGuests=" + numOfGuests +
                 ", inOrOut='" + inOrOut + '\'' +

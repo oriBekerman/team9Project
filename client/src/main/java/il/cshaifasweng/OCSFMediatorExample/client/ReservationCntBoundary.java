@@ -235,9 +235,12 @@ public class ReservationCntBoundary {
         String expDate=SimpleClient.getClient().mapReservation.get("expDate");
         LocalTime time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"));
         int numOfGuests=Integer.parseInt(numPeople);
-        Customer customer = new Customer(name,email,phone,cardNum,cvv,expDate);
+        Customer customer = new Customer(name,email,phone,cardNum,expDate,cvv);
         ResInfo reservation=new ResInfo(branch,customer,time,numOfGuests,area,availableTables);
         reservation.setStatus(ResInfo.Status.APPROVED);
+        reservation.setCustomer(customer);
+        reservation.setBranch(branch);
+        reservation.setTable(availableTables);
         Request request=new Request<>(RESERVATION,ADD_RESERVATION,reservation);
         try{
             SimpleClient.getClient().sendToServer(request);

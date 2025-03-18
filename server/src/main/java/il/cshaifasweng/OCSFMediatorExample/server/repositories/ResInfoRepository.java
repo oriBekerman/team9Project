@@ -1,10 +1,8 @@
 
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
-import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -95,19 +93,46 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             return new ArrayList<>();
         }
     }
-    public ResInfo addReservation(ResInfo reservation)
+    public void addReservation(ResInfo reservation, boolean customerInDatabase)
     {
+        Transaction tx = null;
         if(reservation.branchIsSet && reservation.customerIsSet
                 && reservation.tableIsSet && reservation.getStatus().equals(APPROVED))
         {
-           save(reservation);
-
+            if(!customerInDatabase)
+            {
+                saveCustomer(reservation.getCustomer());
+            }
+            try(Session session = HibernateUtil.getSessionFactory().openSession())
+            {
+                tx=session.beginTransaction();
+                session.save(reservation);
+                tx.commit();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return reservation;
     }
+
+
     public void deleteReservation(ResInfo reservation)
     {
         deleteById(reservation.getResID());
+    }
+    public void saveCustomer(Customer customer)
+    {
+        Transaction tx = null;
+        try(Session session = HibernateUtil.getSessionFactory().openSession())
+        {
+            tx = session.beginTransaction();
+            session.saveOrUpdate(customer);
+            tx.commit();
+        }
+        catch (Exception e) {
+            System.out.println("customer save failed");
+            e.printStackTrace();
+        }
     }
 
 

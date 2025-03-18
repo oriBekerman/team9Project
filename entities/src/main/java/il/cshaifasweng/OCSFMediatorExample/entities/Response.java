@@ -99,7 +99,8 @@ public class Response<T> implements Serializable {
 
         RETURN_RES_REPORT,
 
-        CANCELED_RESERVATION
+        CANCELED_RESERVATION,
+        ADDED_RESERVATION
     }
 
     public enum Status {

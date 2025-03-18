@@ -163,6 +163,10 @@ public class SimpleClient extends AbstractClient {
 				UpdateBranchResEvent updateBranchRes= new UpdateBranchResEvent(branch);
 				EventBus.getDefault().post(updateBranchRes);
 			}
+			if(response.getResponseType().equals(ADDED_RESERVATION))
+			{
+				System.out.println("reservation received in simple client");
+			}
 		} else {
 			System.out.println("Received message is not of type Response");
 		}

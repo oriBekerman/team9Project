@@ -16,6 +16,8 @@ public abstract class Person implements Serializable {
     private String name;
     private String address;
     private String email;
+    private String phone;
+
 
     // Default constructor (important for JPA)
     public Person() {}
@@ -28,16 +30,17 @@ public abstract class Person implements Serializable {
         this.email = email;
     }
     // Constructor with fields
-    public Person(String name, String address, String email) {
+    public Person(String name, String address, String email, String phone) {
         this.name = name;
         this.address = address;
         this.email = email;
     }
     // Constructor with fields
-    public Person(String name, String email) {
+    public Person(String name, String email,String phoneNumber) {
         this.name = name;
         this.address = null;
         this.email = email;
+        this.phone = phoneNumber;
     }
 
     // Getters and Setters
