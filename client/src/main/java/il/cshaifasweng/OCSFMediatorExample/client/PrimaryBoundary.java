@@ -149,8 +149,13 @@ public class PrimaryBoundary {
 			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN) {
 				System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
 				UpdateMenuBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
+
+
+
+
 			} else {
 				UpdateMenuBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
+
 			}
 		} else {
 			// If not logged in, show login button and hide logout button
