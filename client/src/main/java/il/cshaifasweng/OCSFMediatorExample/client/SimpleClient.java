@@ -158,8 +158,8 @@ public class SimpleClient extends AbstractClient {
 			if (response.getResponseType().equals(UPDATE_BRANCH_RESERVATION)) {
 				System.out.println("updateRES!!!!!");
 				Branch branch = (Branch) response.getData();
-				UpdateBranchResEvent updateBranchRes= new UpdateBranchResEvent(branch);
-				EventBus.getDefault().post(updateBranchRes);
+				EventBus.getDefault().removeStickyEvent(UpdateBranchResEvent.class); // Remove old events
+				EventBus.getDefault().post(new UpdateBranchResEvent(branch));
 			}
 		} else {
 			System.out.println("Received message is not of type Response");

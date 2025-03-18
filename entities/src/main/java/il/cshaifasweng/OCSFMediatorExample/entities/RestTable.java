@@ -33,10 +33,13 @@ public class RestTable implements Serializable {
 
 // Stores the start times when the table becomes unavailable.
 // Each unavailability period lasts for 1.5 hours from the recorded start time.
-@ElementCollection(fetch = FetchType.EAGER)
-@CollectionTable(name = "table_unavailable_from", joinColumns = @JoinColumn(name = "rest_table_id"))
-@Column(name = "start_time")
-private Set<LocalTime> unavailableFromTimes = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "table_unavailable_from", joinColumns = @JoinColumn(name = "rest_table_id"))
+    @Column(name = "start_time")
+    @org.hibernate.annotations.Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Set<LocalTime> unavailableFromTimes = new HashSet<>();
+
 
 
 
@@ -100,7 +103,15 @@ private Set<LocalTime> unavailableFromTimes = new HashSet<>();
     }
 
     public void removeUnavailableFromTime(LocalTime unavailableFromTime) {
-        unavailableFromTimes.remove(unavailableFromTime);
+        System.out.println("Trying to remove time: " + unavailableFromTime);
+        System.out.println("Before removal: " + unavailableFromTimes);
+
+        boolean removed = unavailableFromTimes.remove(unavailableFromTime);
+
+        System.out.println("After removal: " + unavailableFromTimes);
+        if (!removed) {
+            System.out.println("Failed to remove " + unavailableFromTime);
+        }
     }
     public boolean isAvailableAt(LocalTime time)
     {

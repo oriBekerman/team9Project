@@ -38,6 +38,7 @@ public class ReservationCntBoundary {
     private Branch branch;
     Set<RestTable> availableTables = new HashSet<>();
     boolean flag=false;
+    
 
 
 
@@ -58,6 +59,7 @@ public class ReservationCntBoundary {
     @FXML
     void BackAct(ActionEvent event) throws IOException {
         if (flag==true) {
+
             chooseCancel();
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -66,7 +68,9 @@ public class ReservationCntBoundary {
             alert.setContentText("Reservation has been canceled. Press OK to continue.");
 
             alert.showAndWait();
+            flag=false;
         }
+        EventBus.getDefault().unregister(this);
         switchScreen("Reservation");
     }
 
@@ -143,6 +147,7 @@ public class ReservationCntBoundary {
     public void OnUpdateBranchResEvent(UpdateBranchResEvent event) {
         System.out.println("Received UpdateBranchResEvent!!!!!!!!!!!");
         this.branch = event.getBranch();
+        System.out.println("12345");
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("hours occupied");
@@ -190,17 +195,25 @@ public class ReservationCntBoundary {
             hoursList.getItems().clear();  // Clear existing items
             hoursList.getItems().addAll(availableTimes);  // Add all available times
         });
+
     }
 
     private void chooseCancel() throws IOException
     {
-        LocalTime time = LocalTime.parse(SimpleClient.getClient().mapReservation.get("Hours"), DateTimeFormatter.ofPattern("HH:mm"));
+        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
 
-        for (RestTable table: availableTables)
-            table.removeUnavailableFromTime(time);
+        for (RestTable table : availableTables) {
+            Set<LocalTime> updatedTimes = new HashSet<>(table.getUnavailableFromTimes());
+            updatedTimes.remove(time);
+            table.setUnavailableFromTimes(updatedTimes);
+        }
         Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
         SimpleClient.getClient().sendToServer(request);
+
+
     }
+
+
 
 
 }
