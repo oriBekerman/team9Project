@@ -75,6 +75,10 @@ public class CreditCradInfoBoundary {
                 SimpleClient.getClient().mapReservation.put("cardNum", cardNum);
                 SimpleClient.getClient().mapReservation.put("expDate", expDate);
                 SimpleClient.getClient().mapReservation.put("cvv", cvv);
+
+                // stop reservation timer since pay is pressed and reservation will be saved
+                TimerManager.getInstance().cancelTimer("reservationTimeout");
+
                 CreditCardInfoSet events = new CreditCardInfoSet();
                 EventBus.getDefault().post(events);
             }

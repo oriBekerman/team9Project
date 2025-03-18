@@ -2,15 +2,15 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.ComplaintCustomerEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.ReservationPersonalInfoSet;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -23,6 +23,8 @@ import javafx.scene.control.TextField;
 import org.greenrobot.eventbus.EventBus;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.BRANCH;
+import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.UPDATE_BRANCH;
 
 public class PersonalDetailsFillingBoundary {
 
@@ -86,9 +88,8 @@ public class PersonalDetailsFillingBoundary {
 
     @FXML
     void backToReservation(ActionEvent event) {
-        switchScreen("Reservation");
-    }
 
+    }
     @FXML
     void initialize() {
         assert backBtn != null : "fx:id=\"backBtn\" was not injected: check your FXML file 'personalDetailsFilling.fxml'.";

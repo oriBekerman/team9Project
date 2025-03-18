@@ -41,6 +41,7 @@ public class ReservationCntBoundary {
 
 
 
+
     @FXML
     private ComboBox<String> hoursList;
 
@@ -69,11 +70,15 @@ public class ReservationCntBoundary {
 
         switchScreen("Reservation");
     }
-
-
     //gets tables in  chosen hour,updates those tables to be unavailable at in branch and request branch to update database
     @FXML
     void chooseHours(ActionEvent event) throws IOException {
+
+        // Ensure the client is initialized
+        if (client == null) {
+            client = SimpleClient.getClient();
+        }
+
         chosen = hoursList.getSelectionModel().getSelectedItem();
         SimpleClient.getClient().mapReservation.put("Hours",chosen);
         String area = SimpleClient.getClient().mapReservation.get("Area");
@@ -83,8 +88,20 @@ public class ReservationCntBoundary {
         // Parse the time from string to LocalTime
         LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
         availableTables = this.branch.getAvailableTablesWithNumPeople(Integer.parseInt(numPeople), time,area);
+        String tableIDS="";
         for (RestTable table: availableTables)
+        {
             table.addUnavailableFromTime(time);
+            if(tableIDS.isEmpty())
+            {
+                tableIDS=String.valueOf(table.getId());
+            }
+            else
+            {
+                tableIDS=tableIDS+","+table.getId();
+            }
+        }
+        client.mapReservation.put("tableIDS",tableIDS);
         Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
         SimpleClient.getClient().sendToServer(request);
 
@@ -92,12 +109,19 @@ public class ReservationCntBoundary {
 
     @FXML
     void continueAct(ActionEvent event) {
-
-
         client = SimpleClient.getClient();
         client.mapReservation.put("Hours",chosen);
-        //client.post (let everyone know the hour was taken)
-//        switchScreen("Personal Details Filling");
+
+        // Start a 15-minute timer to ensure the user fills personal details in time
+        // if the user does not fill details within 15 min cancel table allocation
+        TimerManager.getInstance().startTimer("reservationTimeout", () -> {
+            System.out.println("Reservation expired! Taking action...");
+            try {
+                BackAct(new ActionEvent()); // Automatically cancel table allocation
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }, 15);
         openPersonalDetailsPage();
 
     }
