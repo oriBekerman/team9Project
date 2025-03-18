@@ -100,7 +100,7 @@ public class BranchRepository extends BaseRepository<Branch> {
 
                 // Merge the branch entity, which will either update or insert it
                 mergedBranch = (Branch) session.merge(branch);
-
+                session.flush();
                 transaction.commit();
             } catch (Exception e) {
                 if (transaction != null) {

@@ -23,10 +23,17 @@ public class ResInfoController {
         System.out.println("Handling request: " + request.getRequestType());
         return switch (request.getRequestType())
         {
+            case ADD_RESERVATION -> addReservation(request);
             case CANCEL_RESERVATION-> cancelReservation(request);
             case GET_RES_REPORT -> getAllReservations();
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
+    }
+
+    private Response addReservation(Request request) {
+        System.out.println("Handling request: " + request.getRequestType());
+        Response response=null;
+        return response;
     }
 
     //constructor

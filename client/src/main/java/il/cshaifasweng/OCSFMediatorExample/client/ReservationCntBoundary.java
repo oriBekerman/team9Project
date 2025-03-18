@@ -1,7 +1,10 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Events.CreditCardInfoSet;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,13 +16,10 @@ import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
-import il.cshaifasweng.OCSFMediatorExample.entities.Request;
-import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateBranchResEvent;
-import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
 import java.util.ArrayList;
 import javafx.application.Platform;
@@ -60,8 +60,12 @@ public class ReservationCntBoundary {
     void BackAct(ActionEvent event) throws IOException {
         LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
 
-        for (RestTable table: availableTables)
-            table.removeUnavailableFromTime(time);
+        // Ensure unavailable times are removed correctly
+        for (RestTable table : availableTables) {
+            Set<LocalTime> updatedTimes = new HashSet<>(table.getUnavailableFromTimes());
+            updatedTimes.remove(time);
+            table.setUnavailableFromTimes(updatedTimes);
+        }
         Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
         SimpleClient.getClient().sendToServer(request);
 
@@ -212,6 +216,36 @@ public class ReservationCntBoundary {
             e.printStackTrace();
             Thread.currentThread().interrupt();  // Restore interrupted state
         }
+    }
+
+    @Subscribe
+    public void onDetailsSetEvent(CreditCardInfoSet event) {
+        makeReservation();
+    }
+
+    private void makeReservation() {
+        String area = SimpleClient.getClient().mapReservation.get("Area");
+        String numPeople = SimpleClient.getClient().mapReservation.get("num");
+        String timeString = SimpleClient.getClient().mapReservation.get("Hours");
+        String name=SimpleClient.getClient().mapReservation.get("name");
+        String email=SimpleClient.getClient().mapReservation.get("mail");
+        String phone=SimpleClient.getClient().mapReservation.get("phone");
+        String cardNum=SimpleClient.getClient().mapReservation.get("cardNum");
+        String cvv=SimpleClient.getClient().mapReservation.get("cvv");
+        String expDate=SimpleClient.getClient().mapReservation.get("expDate");
+        LocalTime time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"));
+        int numOfGuests=Integer.parseInt(numPeople);
+        Customer customer = new Customer(name,email,phone,cardNum,cvv,expDate);
+        ResInfo reservation=new ResInfo(branch,customer,time,numOfGuests,area,availableTables);
+        reservation.setStatus(ResInfo.Status.APPROVED);
+        Request request=new Request<>(RESERVATION,ADD_RESERVATION,reservation);
+        try{
+            SimpleClient.getClient().sendToServer(request);
+        }
+       catch (Exception e){
+            e.printStackTrace();
+       }
+
     }
 
 }

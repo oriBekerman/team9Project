@@ -67,6 +67,7 @@ public class SimpleServer extends AbstractServer {
             case BRANCH -> branchController.handleRequest(request);
             case LOGIN -> logInController.handleRequest(request);
             case DELIVERY -> deliveryController.handleRequest(request);
+            case RESERVATION -> resInfoController.handleRequest(request);
             default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
         };
 

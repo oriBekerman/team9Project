@@ -33,6 +33,12 @@ public abstract class Person implements Serializable {
         this.address = address;
         this.email = email;
     }
+    // Constructor with fields
+    public Person(String name, String email) {
+        this.name = name;
+        this.address = null;
+        this.email = email;
+    }
 
     // Getters and Setters
     public int getId() {

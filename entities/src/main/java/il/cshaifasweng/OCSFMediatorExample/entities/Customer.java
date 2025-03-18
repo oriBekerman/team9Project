@@ -31,6 +31,13 @@ public class Customer extends Person {
         this.expirationDate = expirationDate;
         this.cvv = cvv;
     }
+    // Constructor with fields
+    public Customer(String name,String email, String creditCardNumber, String expirationDate, String cvv) {
+        super(name,email);  // Call the Person constructor
+        this.creditCardNumber = creditCardNumber;
+        this.expirationDate = expirationDate;
+        this.cvv = cvv;
+    }
 
 
     // Getters and Setters

@@ -1,12 +1,14 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "resSInfo")
-public class ResInfo {
+public class ResInfo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +22,9 @@ public class ResInfo {
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name="tableId", referencedColumnName = "id")
-    RestTable table;
+    Set<RestTable> tables;
 
     @Column(nullable = false)
     private LocalDate resDate;
@@ -48,14 +50,25 @@ public class ResInfo {
     public ResInfo() {}
 
     // Constructor with fields
-    public ResInfo(Branch branch, Customer customer, LocalDate resDate, LocalTime hours, int numOfGuests, String inOrOut, RestTable table) {
+    public ResInfo(Branch branch, Customer customer, LocalDate resDate, LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
         this.branch = branch;
         this.customer = customer;
         this.resDate = resDate;
         this.hours = hours;
         this.numOfGuests = numOfGuests;
         this.inOrOut = inOrOut;
-        this.table = table;
+        this.tables = table;
+        branchIsSet=true;
+        customerIsSet=true;
+        tableIsSet=true;
+    }
+    public ResInfo(Branch branch, Customer customer,LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
+        this.branch = branch;
+        this.customer = customer;
+        this.hours = hours;
+        this.numOfGuests = numOfGuests;
+        this.inOrOut = inOrOut;
+        this.tables = table;
         branchIsSet=true;
         customerIsSet=true;
         tableIsSet=true;
@@ -124,12 +137,12 @@ public class ResInfo {
     public void setStatus(Status status) {
         this.status = status;
     }
-    public void setTable(RestTable table) {
-        this.table = table;
+    public void setTable(Set<RestTable> tables) {
+        this.tables = tables;
         tableIsSet=true;
     }
-    public RestTable getTable() {
-        return table;
+    public Set<RestTable> getTable() {
+        return tables;
     }
     @Override
     public String toString() {
