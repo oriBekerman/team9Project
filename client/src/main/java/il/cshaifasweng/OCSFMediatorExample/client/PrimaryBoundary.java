@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.*;
 public class PrimaryBoundary {
 
 	public Button MenuBtn;
+	public Button subCompBtn;
 	@FXML
 	private ResourceBundle resources;
 
@@ -267,5 +268,8 @@ public class PrimaryBoundary {
 			System.out.println("onBranchesSentEvent");
 			lock.notifyAll(); // Notify waiting threads that branches are initialized
 		}
+	}
+	public void goToSubCompPage(ActionEvent actionEvent) {
+		switchScreen("SubComplaint");
 	}
 }
