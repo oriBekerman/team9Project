@@ -1,25 +1,21 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 
-import java.sql.Time;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
-import static il.cshaifasweng.OCSFMediatorExample.entities.DishType.BASE;
-import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.session;
-import static il.cshaifasweng.OCSFMediatorExample.server.SimpleServer.dataBasePassword;
+import static il.cshaifasweng.OCSFMediatorExample.entities.ComplaintStatus.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.DishType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.ResInfo.Status.APPROVED;
 
 
 //configures database,handles opening and closing sessions
@@ -30,6 +26,8 @@ public class DatabaseManager {
     private LogInController logInController;
     private RestTableController restTableController;
     private DeliveryController deliveryController;
+    private ResInfoController resInfoController;
+    private ComplaintController complaintController;
 
     public DatabaseManager(String password) {
         initialize(password);
@@ -55,23 +53,34 @@ private static void initialize(String password) {
         this.logInController = new LogInController();
         this.restTableController = new RestTableController();
         this.deliveryController = new DeliveryController();
+        this.resInfoController=new ResInfoController();
+        this.complaintController=new ComplaintController();
     }
-
     //if  database tables are empty initialize them
     public void checkAndPopulateTables() {
-        // If there menuItem and branches are empty initialize them
-        if (menuItemsController.checkIfEmpty() && branchController.checkIfEmpty() && logInController.checkIfEmpty() && restTableController.checkIfEmpty() && deliveryController.checkIfEmpty()) {
+        // If database tables are empty, initialize them
+        if (menuItemsController.checkIfEmpty() &&
+                branchController.checkIfEmpty() &&
+                logInController.checkIfEmpty() &&
+                restTableController.checkIfEmpty() &&
+                deliveryController.checkIfEmpty() &&
+                complaintController.checkIfEmpty()) {
 
-            // Prepopulate with 5 employees, using enum for employeeType
-            Employee employee1 = new Employee(111111111, "Alice Manager", "1234 Maple St", "alice.manager@example.com", "alice.manager", "1234", EmployeeType.COMPANY_MANAGER, 1);
-            Employee employee2 = new Employee(222222222, "Bob Regular", "5678 Oak St", "bob.regular@example.com", "bob.regular", "1234", EmployeeType.RESTAURANT_SERVICE, 1);
-            Employee employee3 = new Employee(333333333, "Charlie Dietitian", "9101 Pine St", "charlie.dietitian@example.com", "charlie.dietitian", "1234", EmployeeType.DIETITIAN, 2);
-            Employee employee4 = new Employee(444444444, "Debbie Customer Service", "2345 Birch St", "debbie.cs@example.com", "debbie.cs", "1234", EmployeeType.CUSTOMER_SERVICE, 3);
-            Employee employee5 = new Employee(555555555, "Eva Admin", "6789 Cedar St", "eva.admin@example.com", "eva.admin", "1234", EmployeeType.CUSTOMER_SERVICE_MANAGER, 3);
-            List<Employee> employees = List.of(employee1, employee2, employee3, employee4, employee5);
+            // ==========================
+            // 1. Populate Employees
+            // ==========================
+            List<Employee> employees = List.of(
+                    new Employee(111111111, "Alice Manager", "1234 Maple St", "alice.manager@example.com", "alice.manager", "1234", EmployeeType.COMPANY_MANAGER, 1),
+                    new Employee(222222222, "Bob Regular", "5678 Oak St", "bob.regular@example.com", "bob.regular", "1234", EmployeeType.RESTAURANT_SERVICE, 1),
+                    new Employee(333333333, "Charlie Dietitian", "9101 Pine St", "charlie.dietitian@example.com", "charlie.dietitian", "1234", EmployeeType.DIETITIAN, 2),
+                    new Employee(444444444, "Debbie Customer Service", "2345 Birch St", "debbie.cs@example.com", "debbie.cs", "1234", EmployeeType.CUSTOMER_SERVICE, 3),
+                    new Employee(555555555, "Eva Admin", "6789 Cedar St", "eva.admin@example.com", "eva.admin", "1234", EmployeeType.CUSTOMER_SERVICE_MANAGER, 3)
+            );
             logInController.checkAndPopulateUsers(employees);
 
-            // Menu items and branches
+            // ==========================
+            // 2. Define Menu Items
+            // ==========================
             MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce", "Low calorie", null, BASE);
             MenuItem item2 = new MenuItem("Pizza", 45.00, "Mushrooms, onions, tomatoes", "Includes vegan option", null, BASE);
             MenuItem item3 = new MenuItem("Pasta", 70.00, "Mushroom cream sauce", "Available gluten-free", null, BASE);
@@ -80,117 +89,112 @@ private static void initialize(String password) {
             MenuItem item6 = new MenuItem("Fries", 15.00, "potato", "Served with sea salt", null, DishType.SPECIAL);
             MenuItem item7 = new MenuItem("Salmon", 70.00, "Salmon", "Served with lemon", null, DishType.SPECIAL);
 
-            Set<MenuItem> menuItems1 = new HashSet<>(Set.of(item1, item2, item3, item4, item5, item6));
-            Set<MenuItem> menuItems2 = new HashSet<>(Set.of(item1, item2, item3, item4, item5, item7));
-            Set<MenuItem> deliverable1 = new HashSet<>(Set.of(item1, item2, item6));
-            Set<MenuItem> deliverable2 = new HashSet<>(Set.of(item1, item4, item5, item7));
+            Set<MenuItem> menuItems1 = Set.of(item1, item2, item3, item4, item5, item6);
+            Set<MenuItem> menuItems2 = Set.of(item1, item2, item3, item4, item5, item7);
+            Set<MenuItem> deliverable1 = Set.of(item1, item2, item6);
+            Set<MenuItem> deliverable2 = Set.of(item1, item4, item5, item7);
 
-            // Branches
+            // ==========================
+            // 3. Define Branches
+            // ==========================
             Branch telAvivBranch = new Branch("Tel Aviv", "Tel Aviv", "9:00", "22:00");
             Branch haifaBranch = new Branch("Haifa", "Haifa port", "9:00", "19:00");
-            List<Branch> branches2 = List.of(telAvivBranch);
-            List<Branch> branches1 = List.of(haifaBranch);
-            List<Branch> branches3 = List.of(haifaBranch, telAvivBranch);
+            List<Branch> branches = List.of(haifaBranch, telAvivBranch);
 
-            // Rest tables and availability times
-            RestTable restTable1 = new RestTable("inside", 2);
-            RestTable restTable2 = new RestTable("inside", 4);
-            RestTable restTable3 = new RestTable("inside", 3);
-            RestTable restTable4 = new RestTable("outside", 3);
-            RestTable restTable5 = new RestTable("outside", 2);
-            RestTable restTable6 = new RestTable("outside", 4);
+            // ==========================
+            // 4. Define Restaurant Tables & Availability
+            // ==========================
+            List<RestTable> restTables = List.of(
+                    new RestTable("inside", 2),
+                    new RestTable("inside", 4),
+                    new RestTable("inside", 3),
+                    new RestTable("outside", 3),
+                    new RestTable("outside", 2),
+                    new RestTable("inside", 4)
+            );
 
-
-            // Setting unavailable times
+            // Set unavailable times
             LocalTime time1 = LocalTime.of(9, 0);
             LocalTime time2 = LocalTime.of(10, 30);
             LocalTime time3 = LocalTime.of(11, 0);
             LocalTime time4 = LocalTime.of(12, 30);
             LocalTime time5 = LocalTime.of(14, 30);
-            Set<LocalTime> unavailableTimes1 = Set.of(time1, time2, time3, time5);
-            Set<LocalTime> unavailableTimes2 = Set.of(time1, time4, time5);
-            restTable1.setUnavailableFromTimes(unavailableTimes1);
-            restTable2.setUnavailableFromTimes(unavailableTimes2);
-            restTable3.addUnavailableFromTime(time3);
-            restTable4.addUnavailableFromTime(time4);
-            restTable5.addUnavailableFromTime(time5);
 
-            Set<RestTable> restTables = Set.of(restTable1,restTable2,restTable3,restTable4,restTable5,restTable6);
-            // Assigning branches to menu items
-            for (MenuItem menuItem : deliverable1) {
-                menuItem.setDeliverableBranches(branches1);
-            }
-            for (MenuItem menuItem : deliverable2) {
-                menuItem.setDeliverableBranches(branches2);
-            }
+            restTables.get(0).setUnavailableFromTimes(Set.of(time1, time2, time3, time5));
+            restTables.get(1).setUnavailableFromTimes(Set.of(time1, time4, time5));
+            restTables.get(2).addUnavailableFromTime(time3);
+            restTables.get(3).addUnavailableFromTime(time4);
+            restTables.get(4).addUnavailableFromTime(time5);
 
-            // Assigning branches to tables
+            // Assign tables to Haifa branch
             for (RestTable table : restTables) {
                 table.setBranch(haifaBranch);
             }
+            haifaBranch.setRestTables(new HashSet<>(restTables));
 
-            // Setting up the menu and deliverable items for the branches
+            // ==========================
+            // 5. Assign Menu Items & Deliverables to Branches
+            // ==========================
             haifaBranch.setBranchMenuItems(menuItems1);
-           haifaBranch.setDeliverableItems(deliverable1);
-           haifaBranch.setRestTables(restTables);
+            haifaBranch.setDeliverableItems(deliverable1);
             telAvivBranch.setBranchMenuItems(menuItems2);
             telAvivBranch.setDeliverableItems(deliverable2);
 
-            // Populating menu items and branches controllers
-            List<MenuItem> menuItems3 = new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6, item7));
-            menuItemsController.PopulateMenuItems(menuItems3);
-            branchController.populateBranches(branches3);
+            for (MenuItem menuItem : deliverable1) {
+                menuItem.setDeliverableBranches(List.of(haifaBranch));
+            }
+            for (MenuItem menuItem : deliverable2) {
+                menuItem.setDeliverableBranches(List.of(telAvivBranch));
+            }
 
+            // Populate controllers
+            menuItemsController.PopulateMenuItems(new ArrayList<>(List.of(item1, item2, item3, item4, item5, item6, item7)));
+            branchController.populateBranches(branches);
 
-            // Populating some delivery orders
-            // Create Customer instances with associated credit card information
-            Customer customer1 = new Customer(1, "Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "1234-5678-9876-5432", "12/25", "123");
-            Customer customer2 = new Customer(2, "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
+            // ==========================
+            // 6. Define Customers & Delivery Orders
+            // ==========================
+//            Customer customer1 = new Customer(1, "Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "1234-5678-9876-5432", "12/25", "123");
+//            Customer customer2 = new Customer(2, "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
+            Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com","0547088039", "1234-5678-9876-5432", "12/25", "123");
+           Customer customer2 = new Customer("Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com","0503664889", "9876-5432-1234-5678", "11/24", "456");
 
-            // Create OrderItems from MenuItem and quantity
-            OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences
-            OrderItem orderItem2 = new OrderItem(item4, 1, "Extra ketchup", null); // 1 of "Hamburger" with preferences
-            OrderItem orderItem3 = new OrderItem(item6, 3, "No salt", null); // 3 of "Fries" with preferences
-            OrderItem orderItem4 = new OrderItem(item7, 1, "Well done", null); // 1 of "Salmon" with preferences
-
-            // First, create the deliveries and set their customer, date, method, etc.
-            Delivery order1 = new Delivery(
-                    "2025-03-05", // Date
-                    new ArrayList<>(), // Initialize empty OrderItems list for order1
-                    customer1, // Customer
-                    DeliveryMethod.DELIVERY, // Delivery method
-                    telAvivBranch // Branch
+            List<OrderItem> orderItems1 = List.of(
+                    new OrderItem(item1, 2, "No dressing", null),
+                    new OrderItem(item4, 1, "Extra ketchup", null)
             );
 
-            Delivery order2 = new Delivery(
-                    "2025-03-05", // Date
-                    new ArrayList<>(), // Initialize empty OrderItems list for order2
-                    customer2, // Customer
-                    DeliveryMethod.SELF_PICKUP, // Delivery method
-                    haifaBranch // Branch
+            List<OrderItem> orderItems2 = List.of(
+                    new OrderItem(item6, 3, "No salt", null),
+                    new OrderItem(item7, 1, "Well done", null)
             );
 
-            // Now associate the OrderItems with the Delivery orders
-            orderItem1.setDelivery(order1); // Associate orderItem1 with order1
-            orderItem2.setDelivery(order1); // Associate orderItem2 with order1
-            orderItem3.setDelivery(order2); // Associate orderItem3 with order2
-            orderItem4.setDelivery(order2); // Associate orderItem4 with order2
+            // Create deliveries
+            Delivery order1 = new Delivery("2025-03-05", new ArrayList<>(orderItems1), customer1, DeliveryMethod.DELIVERY, telAvivBranch);
+            Delivery order2 = new Delivery("2025-03-05", new ArrayList<>(orderItems2), customer2, DeliveryMethod.SELF_PICKUP, haifaBranch);
 
-            // Create lists of OrderItems for the delivery orders
-            List<OrderItem> orderItems1 = List.of(orderItem1, orderItem2);
-            List<OrderItem> orderItems2 = List.of(orderItem3, orderItem4);
+            orderItems1.forEach(item -> item.setDelivery(order1));
+            orderItems2.forEach(item -> item.setDelivery(order2));
 
-            // Set the OrderItems in the respective Delivery objects
-            order1.setOrderItems(orderItems1);
-            order2.setOrderItems(orderItems2);
-
-            // Adding delivery orders to the delivery controller
+            // Populate delivery orders
             deliveryController.populateDelivery(order1);
             deliveryController.populateDelivery(order2);
+
+
+            ResInfo reservation = new ResInfo(LocalTime.of(19, 30), 4, "Inside");
+            reservation.setBranch(haifaBranch);
+            reservation.setCustomer(customer1);
+            reservation.setStatus(APPROVED);
+            resInfoController.PopulateResSInfo(List.of(reservation));
+            // Create a Complaint instance without a Branch
+            Complaint complaint = new Complaint( "Delayed order delivery",NEW);
+            complaint.setBranch(telAvivBranch);
+            complaint.setCustomer(customer1);
+            complaintController.populateComplaints(List.of(complaint));
+
         }
-
     }
-
+    //get controllers
     MenuItemsController getMenuItemsController() {
         if(menuItemsController==null)
         {
@@ -198,7 +202,6 @@ private static void initialize(String password) {
         }
         return menuItemsController;
     }
-
     BranchController getBranchController() {
         if(branchController==null)
         {
@@ -206,7 +209,6 @@ private static void initialize(String password) {
         }
         return branchController;
     }
-
     LogInController getLogInController() {
         if (logInController == null) {
             logInController = new LogInController();
@@ -224,6 +226,18 @@ private static void initialize(String password) {
             restTableController = new RestTableController();
         }
         return restTableController;
+    }
+    ResInfoController getResInfoController() {
+        if (resInfoController == null) {
+            resInfoController = new ResInfoController();
+        }
+        return resInfoController;
+    }
+    ComplaintController getComplaintController() {
+        if(complaintController==null){
+            complaintController=new ComplaintController();
+        }
+        return complaintController;
     }
     // shuts down Hibernate.
     public static void shutdown() {

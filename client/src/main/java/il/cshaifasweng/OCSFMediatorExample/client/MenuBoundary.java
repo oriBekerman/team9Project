@@ -14,17 +14,19 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 
 
-public class SecondaryBoundary {
+public class MenuBoundary {
 
     public Label menuLabel;
+    public AnchorPane root;
+    public Button searchButton;
     @FXML
     private ResourceBundle resources;
 
@@ -192,8 +194,10 @@ public class SecondaryBoundary {
 
             // שמירה של כל הפריטים ברשימה קבועה לחיפוש
             allMenuItems.setAll(menu.getMenuItems());
-
+            setStyle();
             System.out.println("Menu items loaded: " + allMenuItems.size()); // Debugging
+
+
         });
     }
 
@@ -385,5 +389,54 @@ public class SecondaryBoundary {
             UpdatePriceBtn.setDisable(false);  // Re-enable the update button
             UpdatePriceBtn.requestFocus();  // Focus the update button
         });
+    }
+    public void setStyle()
+    {
+        root.setStyle("-fx-background-color: #fbe9d0;");
+        menuLabel.setStyle(" -fx-font-size: 24px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-text-fill: #4e453c;\n" +
+                "    -fx-alignment: center;\n" +
+                "    -fx-padding: 20px 0;\n" +
+                "    -fx-font-family: \"Serif\";");
+
+        // TableView Styling - Lighter Background and No Column Lines
+        menuTableView.setStyle("-fx-background-color: #fffaf0;" + // Light cream background
+                "-fx-border-color: #8a6f48;" +
+                "-fx-border-width: 2px;" +
+                "-fx-border-radius: 8px;" +
+                "-fx-table-cell-border-color: transparent;"); // Remove grid lines
+
+        // Make Columns Fit to Text Size Dynamically
+        menuTableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+
+        // TableColumn Headers Styling (Cream Color, No Border)
+        menuTableView.getColumns().forEach(column -> column.setStyle(
+                "-fx-background-color: #f5e6cc;" + // Soft cream color
+                        "-fx-border-color: transparent;" + // Remove border
+                        "-fx-font-size: 16px;" +
+                        "-fx-text-fill: #4e453c;" +
+                        "-fx-padding: 8px;" +
+                        "-fx-font-weight: bold;"
+        ));
+
+        // Buttons Styling
+        String buttonStyle = "-fx-background-color: #8a6f48;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 14px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-padding: 8px 16px;" +
+                "-fx-border-radius: 5px;";
+
+        BackToHPbtn.setStyle(buttonStyle);
+        SaveBtn.setStyle(buttonStyle);
+        UpdatePriceBtn.setStyle(buttonStyle);
+
+        // Search Bar Styling
+        searchField.setStyle("-fx-background-color: #ffffff;" +
+                "-fx-border-color: #8a6f48;" +
+                "-fx-border-radius: 5px;" +
+                "-fx-padding: 6px;" +
+                "-fx-font-size: 14px;");
     }
 }

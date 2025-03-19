@@ -22,7 +22,7 @@
           <TableColumn prefWidth="75.0" text="Ingredients" />
             <TableColumn prefWidth="75.0" text="Preference" />
             <TableColumn prefWidth="75.0" text="Price" />
-            <TableColumn prefWidth="75.0" text="Qoantity" />
+            <TableColumn prefWidth="75.0" text="Quantity" />
         </columns>
       </TableView>
       <Button fx:id="backToHPBtn" layoutX="29.0" layoutY="25.0" mnemonicParsing="false" onAction="#navToHP" text="Back to HP" />

@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -55,6 +56,10 @@ public class HibernateUtil {
                             configuration.addAnnotatedClass(Delivery.class);
                             configuration.addAnnotatedClass(OrderItem.class);
                             configuration.addAnnotatedClass(Customer.class);
+                            configuration.addAnnotatedClass(ResInfo.class);
+                            configuration.addAnnotatedClass(Complaint.class);
+
+
 
 
 
