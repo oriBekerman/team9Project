@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
@@ -22,13 +23,12 @@ import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEve
 import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateBranchResEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
-import java.util.ArrayList;
+
+import java.util.*;
+
 import javafx.application.Platform;
 
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -297,6 +297,10 @@ public class ReservationCntBoundary {
         reservation.setStatus(ResInfo.Status.APPROVED);
         reservation.setCustomer(customer);
         reservation.setBranch(branch);
+        if(availableTables.isEmpty() || availableTables==null)
+        {
+            System.out.println("available tables are null or empty");
+        }
         reservation.setTable(availableTables);
         Request request=new Request<>(RESERVATION,ADD_RESERVATION,reservation);
         try{
@@ -308,17 +312,28 @@ public class ReservationCntBoundary {
 
     }
 
-    //display message that the reservation is approved
     @Subscribe
     public void reservationAddedEvent(ReservationAddedEvent event) {
-        String message=event.getMessage();
+        String message = event.getMessage();
         Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.NONE);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Confirmation");
             alert.setHeaderText(null);
             alert.setContentText(message);
-            alert.show();
+            alert.getButtonTypes().setAll(ButtonType.OK);
+            Optional<ButtonType> result = alert.showAndWait();
+            // on OK
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                performAdditionalAction();
+            }
         });
     }
+    // return to primary page after OK
+    private void performAdditionalAction() {
+        System.out.println("in preform addi");
+        switchScreen("Home Page");
+    }
+
+
 
 }

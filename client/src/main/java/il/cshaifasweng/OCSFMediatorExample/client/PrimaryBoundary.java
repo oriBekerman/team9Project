@@ -95,9 +95,9 @@ public class PrimaryBoundary {
 
 	@FXML
 	void displayMenuFunc(ActionEvent event) throws IOException {
-		switchScreen("menuPage");
+		switchScreen("secondary");
 		try {
-			App.setRoot("menuPage");
+			App.setRoot("secondary");
 			SimpleClient.getClient().displayNetworkMenu();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
