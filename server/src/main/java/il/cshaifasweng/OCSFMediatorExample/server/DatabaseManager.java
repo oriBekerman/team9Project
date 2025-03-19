@@ -98,7 +98,7 @@ private static void initialize(String password) {
             RestTable restTable3 = new RestTable("inside", 3);
             RestTable restTable4 = new RestTable("outside", 3);
             RestTable restTable5 = new RestTable("outside", 2);
-            RestTable restTable6 = new RestTable("inside", 4);
+            RestTable restTable6 = new RestTable("outside", 4);
 
 
             // Setting unavailable times
