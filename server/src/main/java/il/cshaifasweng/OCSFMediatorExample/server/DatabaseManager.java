@@ -104,27 +104,26 @@ private static void initialize(String password) {
             // ==========================
             // 4. Define Restaurant Tables & Availability
             // ==========================
-            List<RestTable> restTables = List.of(
-                    new RestTable("inside", 2),
-                    new RestTable("inside", 4),
-                    new RestTable("inside", 3),
-                    new RestTable("outside", 3),
-                    new RestTable("outside", 2),
-                    new RestTable("inside", 4)
-            );
+            RestTable table1= new RestTable("inside", 2);
+            RestTable table2= new RestTable("inside", 4);
+            RestTable table3= new RestTable("inside", 3);
+            RestTable table4= new RestTable("outside", 4);
+            RestTable table5= new RestTable("outside", 3);
+            RestTable table6= new RestTable("outside", 2);
+           List<RestTable> restTables = List.of(table1, table2, table3, table4);
 
-            // Set unavailable times
-            LocalTime time1 = LocalTime.of(9, 0);
-            LocalTime time2 = LocalTime.of(10, 30);
-            LocalTime time3 = LocalTime.of(11, 0);
-            LocalTime time4 = LocalTime.of(12, 30);
-            LocalTime time5 = LocalTime.of(14, 30);
-
-            restTables.get(0).setUnavailableFromTimes(Set.of(time1, time2, time3, time5));
-            restTables.get(1).setUnavailableFromTimes(Set.of(time1, time4, time5));
-            restTables.get(2).addUnavailableFromTime(time3);
-            restTables.get(3).addUnavailableFromTime(time4);
-            restTables.get(4).addUnavailableFromTime(time5);
+//            // Set unavailable times
+//            LocalTime time1 = LocalTime.of(9, 0);
+//            LocalTime time2 = LocalTime.of(10, 30);
+//            LocalTime time3 = LocalTime.of(11, 0);
+//            LocalTime time4 = LocalTime.of(12, 30);
+//            LocalTime time5 = LocalTime.of(14, 30);
+//
+//            restTables.get(0).setUnavailableFromTimes(Set.of(time1, time2, time3, time5));
+//            restTables.get(1).setUnavailableFromTimes(Set.of(time1, time4, time5));
+//            restTables.get(2).addUnavailableFromTime(time3);
+//            restTables.get(3).addUnavailableFromTime(time4);
+//            restTables.get(4).addUnavailableFromTime(time5);
 
             // Assign tables to Haifa branch
             for (RestTable table : restTables) {
@@ -181,11 +180,11 @@ private static void initialize(String password) {
             deliveryController.populateDelivery(order2);
 
 
-            ResInfo reservation = new ResInfo(LocalTime.of(19, 30), 4, "Inside");
-            reservation.setBranch(haifaBranch);
-            reservation.setCustomer(customer1);
-            reservation.setStatus(APPROVED);
-            resInfoController.PopulateResSInfo(List.of(reservation));
+            ResInfo reservation1 = new ResInfo(haifaBranch,customer1,LocalTime.of(19, 30), 4, "Inside",Set.of(table2));
+            reservation1.setStatus(APPROVED);
+            ResInfo reservation2 = new ResInfo(haifaBranch,customer2,LocalTime.of(10, 30), 2, "Inside",Set.of(table1));
+            reservation2.setStatus(APPROVED);
+            resInfoController.PopulateResSInfo(List.of(reservation1, reservation2));
             // Create a Complaint instance without a Branch
             Complaint complaint = new Complaint( "Delayed order delivery",NEW);
             complaint.setBranch(telAvivBranch);

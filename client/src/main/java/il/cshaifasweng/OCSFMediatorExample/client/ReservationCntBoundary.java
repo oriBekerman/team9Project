@@ -124,12 +124,8 @@ public class ReservationCntBoundary {
         // if the user does not fill details within 15 min cancel table allocation
         TimerManager.getInstance().startTimer("reservationTimeout", () -> {
             System.out.println("Reservation expired! Taking action...");
-            try {
-                BackAct(new ActionEvent()); // Automatically cancel table allocation
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }, 15);
+            timeViolation();
+        }, 1);
         openPersonalDetailsPage();
 
     }
@@ -233,6 +229,7 @@ public class ReservationCntBoundary {
 
     private void chooseCancel() throws IOException
     {
+        System.out.println("in choose cancel");
         LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
 
         for (RestTable table : availableTables) {
@@ -333,6 +330,37 @@ public class ReservationCntBoundary {
         System.out.println("in preform addi");
         switchScreen("Home Page");
     }
+    public void timeViolation()
+    {
+        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+        // Ensure unavailable times are removed correctly
+        for (RestTable table : availableTables) {
+            Set<LocalTime> updatedTimes = new HashSet<>(table.getUnavailableFromTimes());
+            updatedTimes.remove(time);
+            table.setUnavailableFromTimes(updatedTimes);
+        }
+        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
+        try {
+            SimpleClient.getClient().sendToServer(request);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Time violation");
+            alert.setHeaderText(null);
+            alert.setContentText("Your reservation was canceled as personal details and payment were not provided within 15 minutes. You can start over anytime!");
+            alert.getButtonTypes().setAll(ButtonType.OK);
+            Optional<ButtonType> result = alert.showAndWait();
+            // on OK
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                performAdditionalAction();
+            };
+        });
+
+    }
+
 
 
 
