@@ -59,26 +59,13 @@ public class SimpleClient extends AbstractClient {
 			if (response.getResponseType().equals(RETURN_MENU)) {
 					Menu menu = (Menu) response.getData();
 					MenuEvent menuEvent = new MenuEvent(menu);
-					// Store the event if SecondaryController is not initialized
-					if (!isSecondaryControllerInitialized) {
-						pendingMenuEvent = menuEvent;
-					} else {
-						// Post immediately if SecondaryController is ready
-						EventBus.getDefault().post(menuEvent);
-					}
+					EventBus.getDefault().post(menuEvent);
 				}
 			if (response.getResponseType().equals(RETURN_BRANCH_MENU)) {
 				System.out.println("Menu received, storing event...");
 				Menu menu = (Menu) response.getData();
 				MenuEvent menuEvent = new MenuEvent(menu);
-				// Store the event if SecondaryController is not initialized
-				if (!isSecondaryControllerInitialized) {
-					pendingMenuEvent = menuEvent;
-				} else {
-					// Post immediately if SecondaryController is ready
-					EventBus.getDefault().post(menuEvent);
-					System.out.println("menu event posted");
-				}
+				EventBus.getDefault().post(menuEvent);
 			}
 			if (response.getResponseType().equals(UPDATED_PRICE)) {
 				MenuItem menuItem = (MenuItem) response.getData();
@@ -144,7 +131,6 @@ public class SimpleClient extends AbstractClient {
 				}
 			}
 			 if (response.getResponseType().equals(SEND_DELIVERY)) {
-				System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee");
 				Delivery delivery = (Delivery) response.getData();
 				if (delivery != null) {
 					System.out.println(delivery);

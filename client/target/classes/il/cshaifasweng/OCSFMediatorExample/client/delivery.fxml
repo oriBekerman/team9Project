@@ -2,29 +2,57 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="632.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.DeliveryBoundary">
-   <children>
-      <Label layoutX="283.0" layoutY="21.0" prefHeight="33.0" prefWidth="157.0" text=" Make a Delivery">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="871.0" prefWidth="1194.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.DeliveryBoundary">
+    <children>
+        <Button fx:id="BackToHPbtn" layoutX="30.0" layoutY="23.0" mnemonicParsing="false" onAction="#navToHP" styleClass="return-btn" text="Back to Home Page" />
+
+        <TableView fx:id="menuTableView" layoutY="104.0" prefHeight="498.0" prefWidth="883.0" styleClass="table-view" AnchorPane.bottomAnchor="269.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="192.0" AnchorPane.topAnchor="104.0">
+            <columns>
+                <TableColumn fx:id="nameColumn" prefWidth="106.0" styleClass="column-header-background" text="Name" />
+                <TableColumn fx:id="ingredientsColumn" prefWidth="175.0" styleClass="column-header-background" text="Ingredients" />
+                <TableColumn fx:id="preferenceColumn" prefWidth="198.0" styleClass="column-header-background" text="Options" />
+                <TableColumn fx:id="priceColumn" minWidth="0.0" styleClass="column-header-background" text="Price" />
+                <TableColumn fx:id="quantityColumn" prefWidth="95.0" styleClass="column-header-background" text="Quantity" />
+                <TableColumn fx:id="commentColumn" maxWidth="227.0" prefWidth="227.0" styleClass="column-header-background" text="Preferences" />
+            </columns>
+        </TableView>
+
+        <!-- Delivery Method Choice -->
+        <HBox layoutX="150.0" layoutY="630.0" spacing="10.0" />
+
+        <!-- Total Price -->
+        <Label fx:id="totalPriceLabel" layoutX="524.0" layoutY="724.0" prefHeight="35.0" prefWidth="147.0" text="Total Price: 0.0">
          <font>
-            <Font size="20.0" />
+            <Font size="17.0" />
+         </font></Label>
+
+        <Button fx:id="Continue" layoutX="773.0" layoutY="729.0" mnemonicParsing="false" onAction="#navToPD" styleClass="return-btn" text="Continue" />
+         <Label layoutX="453.0" layoutY="632.0" text="Delivery Method:">
+         <font>
+            <Font size="15.0" />
          </font>
       </Label>
-      <Button fx:id="payBtn" layoutX="647.0" layoutY="552.0" mnemonicParsing="false" onAction="#navToPay" text="Continue to payment" />
-       <Button fx:id="getDeliveryBtn" text="Get Delivery" onAction="#getDeliveryRequest"/>
-       <TableView fx:id="deliveryTableView" layoutX="55.0" layoutY="61.0" prefHeight="553.0" prefWidth="583.0">
-        <columns>
-          <TableColumn prefWidth="75.0" text="Name" />
-          <TableColumn prefWidth="75.0" text="Ingredients" />
-            <TableColumn prefWidth="75.0" text="Preference" />
-            <TableColumn prefWidth="75.0" text="Price" />
-            <TableColumn prefWidth="75.0" text="Quantity" />
-        </columns>
-      </TableView>
-      <Button fx:id="backToHPBtn" layoutX="29.0" layoutY="25.0" mnemonicParsing="false" onAction="#navToHP" text="Back to HP" />
-   </children>
+        <RadioButton fx:id="deliveryRadio" layoutX="573.0" layoutY="632.0" text="Delivery">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </RadioButton>
+         <RadioButton fx:id="pickupRadio" layoutX="658.0" layoutY="632.0" text="Pickup">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </RadioButton>
+        <Label fx:id="deliveryMessageLabel" layoutX="450.0" layoutY="670.0" prefHeight="11.0" prefWidth="285.0" text="" visible="false">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+    </children>
 </AnchorPane>
