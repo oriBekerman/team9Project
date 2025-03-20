@@ -22,6 +22,6 @@
                 <TableColumn fx:id="imageColum" minWidth="0.0" prefWidth="108.0" styleClass="column-header-background" text="image" />
             </columns>
         </TableView>
-      <Label fx:id="menuLabel" layoutX="589.0" layoutY="23.0" prefHeight="68.0" prefWidth="77.0" styleClass="menuPageTitle" text="Menu" />
+        <Label fx:id="menuLabel" layoutX="589.0" layoutY="23.0" prefHeight="68.0" prefWidth="77.0" styleClass="menuPageTitle" text="Menu" />
     </children>
 </AnchorPane>
