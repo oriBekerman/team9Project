@@ -56,6 +56,9 @@ public class SecondaryBoundary {
     private TableColumn<MenuItem, Double> priceColumn;
     @FXML
     private TableColumn<MenuItem, ImageView> imageColum;
+    @FXML
+    private TableColumn<il.cshaifasweng.OCSFMediatorExample.entities.MenuItem, String> dishTypeColumn;
+
 
     @FXML
     private TextField searchField;
@@ -335,7 +338,8 @@ public class SecondaryBoundary {
         ingredientsColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIngredients()));
         preferenceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPreference()));
         priceColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getPrice()).asObject());
-//        branchSpecialColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDishType()));
+        dishTypeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDishTypeString ()));
+
         // This section display the image of mamasKitchen
         // Set cell factories for price fields
         // Check if the active user is DIETITIAN

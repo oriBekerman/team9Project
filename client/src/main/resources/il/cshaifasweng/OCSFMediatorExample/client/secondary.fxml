@@ -28,7 +28,7 @@
                 <TableColumn fx:id="preferenceColumn" prefWidth="132.0" styleClass="column-header-background" text="Preference" />
                 <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="76.0" styleClass="column-header-background" text="Price" />
                 <TableColumn fx:id="imageColum" minWidth="0.0" prefWidth="85.60009765625" styleClass="column-header-background" text="image" />
-            <TableColumn fx:id="BranchDishColumn" prefWidth="104.7999267578125" text="Branch dish" />
+            <TableColumn fx:id="dishTypeColumn" prefWidth="104.7999267578125" text="Branch dish" />
             </columns>
         </TableView>
       <Label fx:id="menuLabel" layoutX="589.0" layoutY="23.0" prefHeight="68.0" prefWidth="77.0" styleClass="menuPageTitle" text="Menu" />
