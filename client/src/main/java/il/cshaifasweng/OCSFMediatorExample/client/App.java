@@ -228,10 +228,10 @@ public class App extends Application {
                 Parent root = loader.load();
 
                 // Get the controller of the loaded FXML
-                PersonalDetailsFillingdDeliveryBoundary boundary = loader.getController();
-
-                // Pass the branchId to the controller
-                boundary.setDelivery(delivery);
+//                PersonalDetailsFillingdDeliveryBoundary boundary = loader.getController();
+//
+//                // Pass the branchId to the controller
+//                boundary.setDelivery(delivery);
 
                 // Set the scene and show the stage
                 scene = new Scene(root);

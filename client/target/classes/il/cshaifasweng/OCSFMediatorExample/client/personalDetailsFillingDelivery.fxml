@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="335.0" prefWidth="523.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PersonalDetailsFillingdDeliveryBoundary">
+<AnchorPane prefHeight="335.0" prefWidth="523.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PersonalDetailsFillingDeliveryBoundary">
    <children>
       <Label layoutX="68.0" layoutY="68.0" text="Full name :">
          <font>
@@ -23,8 +23,11 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <TextField fx:id="nameTextField" layoutX="188.0" layoutY="66.0" />
+      <TextField fx:id="nameTextField" layoutX="188.0" layoutY="66.0"/>
       <TextField fx:id="phoneTextField" layoutX="188.0" layoutY="110.0" />
-      <TextField fx:id="mailTextField" layoutX="188.0" layoutY="150.0" />
+      <TextField fx:id="mailTextField" layoutX="188.0" layoutY="150.0"/>
+      <Button fx:id="contToCCInfoBtn" layoutX="405.0" layoutY="242.0" mnemonicParsing="false" onAction="#contToCCinfoFill" text="Continue" />
+      <Button fx:id="backBtn" layoutX="34.0" layoutY="249.0" mnemonicParsing="false" onAction="#backToReservation" text="Back" />
+      <Label fx:id="errorLabel" layoutX="65.0" layoutY="212.0" prefHeight="17.0" prefWidth="329.0" />
    </children>
 </AnchorPane>
