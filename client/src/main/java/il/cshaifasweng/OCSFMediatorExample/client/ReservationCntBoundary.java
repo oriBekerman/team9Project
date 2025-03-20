@@ -108,7 +108,7 @@ public class ReservationCntBoundary {
 
         client = SimpleClient.getClient();
         client.mapReservation.put("Hours",chosen);
-        //client.post (let everyone know the hour was taken)
+
         switchScreen("Personal Details Filling");
 
     }
