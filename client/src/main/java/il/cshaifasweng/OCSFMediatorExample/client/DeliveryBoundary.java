@@ -23,7 +23,7 @@ import javafx.scene.layout.HBox;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 
-import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+import static il.cshaifasweng.OCSFMediatorExample.client.App.*;
 
 public class DeliveryBoundary {
 
@@ -216,7 +216,7 @@ public class DeliveryBoundary {
     void navToPD(ActionEvent event) {
         currentDelivery.setOrderItems(orderItems);
         System.out.println(currentDelivery);
-        switchScreen("Personal Details Filling");
+        switchToPDDelivery("personalDetailsFillingDelivery", currentDelivery);
     }
 
 
