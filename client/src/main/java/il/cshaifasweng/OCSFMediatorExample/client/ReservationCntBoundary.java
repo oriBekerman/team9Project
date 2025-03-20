@@ -38,7 +38,7 @@ public class ReservationCntBoundary {
     private Branch branch;
     Set<RestTable> availableTables = new HashSet<>();
     boolean flag=false;
-    
+
 
 
 
@@ -81,15 +81,24 @@ public class ReservationCntBoundary {
         SimpleClient.getClient().mapReservation.put("Hours",chosen);
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
+        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+
+        SimpleClient.getClient().resInfo.setBranch(branch);
+        SimpleClient.getClient().resInfo.setHours(time);
+
+
+
 
 
         // Parse the time from string to LocalTime
-        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+
         availableTables = this.branch.getAvailableTablesWithNumPeople(Integer.parseInt(numPeople), time,area);
         for (RestTable table: availableTables)
             table.addUnavailableFromTime(time);
-        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
-        SimpleClient.getClient().sendToServer(request);
+        SimpleClient.getClient().resInfo.setTable(availableTables);
+
+//        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
+//        SimpleClient.getClient().sendToServer(request);
 
     }
 
@@ -127,6 +136,7 @@ public class ReservationCntBoundary {
 //            });
 //        });
     }
+
 
     @Subscribe
     public void onBranchTablesReceived(BranchTablesReceivedEvent event) {
@@ -200,15 +210,15 @@ public class ReservationCntBoundary {
 
     private void chooseCancel() throws IOException
     {
-        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
-
-        for (RestTable table : availableTables) {
-            Set<LocalTime> updatedTimes = new HashSet<>(table.getUnavailableFromTimes());
-            updatedTimes.remove(time);
-            table.setUnavailableFromTimes(updatedTimes);
-        }
-        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
-        SimpleClient.getClient().sendToServer(request);
+//        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+//
+//        for (RestTable table : availableTables) {
+//            Set<LocalTime> updatedTimes = new HashSet<>(table.getUnavailableFromTimes());
+//            updatedTimes.remove(time);
+//            table.setUnavailableFromTimes(updatedTimes);
+//        }
+//        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
+//        SimpleClient.getClient().sendToServer(request);
 
 
     }
