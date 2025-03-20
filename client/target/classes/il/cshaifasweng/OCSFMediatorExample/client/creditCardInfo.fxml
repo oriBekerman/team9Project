@@ -24,9 +24,10 @@
          </font>
       </Label>
       <Button fx:id="paymentBtn" layoutX="496.0" layoutY="327.0" mnemonicParsing="false" onAction="#checkPayment" text="Pay" />
-      <TextField layoutX="300.0" layoutY="54.0" />
-      <TextField layoutX="300.0" layoutY="105.0" />
-      <TextField layoutX="300.0" layoutY="152.0" />
+      <TextField fx:id="cardNumText" layoutX="300.0" layoutY="54.0" />
+      <TextField fx:id="expDateText" layoutX="300.0" layoutY="105.0" />
+      <TextField fx:id="cvvText" layoutX="300.0" layoutY="152.0" />
       <Button fx:id="backBtn" layoutX="41.0" layoutY="327.0" mnemonicParsing="false" onAction="#backToPersonalD" text="Back" />
+      <Label fx:id="errorLabel" layoutX="73.0" layoutY="250.0" prefHeight="17.0" prefWidth="384.0" />
    </children>
 </AnchorPane>

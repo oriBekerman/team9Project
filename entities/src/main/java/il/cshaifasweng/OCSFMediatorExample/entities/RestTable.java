@@ -95,9 +95,6 @@ public class RestTable implements Serializable {
     public void setUnavailableFromTimes(Set<LocalTime> unavailableFromTimes) {
         this.unavailableFromTimes = unavailableFromTimes;
     }
-//    public void setCoordinates(Coordinates coordinates) {
-//        this.coordinates = coordinates;
-//    }
     public void addUnavailableFromTime(LocalTime unavailableFromTime) {
         unavailableFromTimes.add(unavailableFromTime);
     }
