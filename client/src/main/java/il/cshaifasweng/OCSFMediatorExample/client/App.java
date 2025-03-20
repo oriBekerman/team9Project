@@ -40,6 +40,8 @@ public class App extends Application {
         client.setHost("localhost");//change later for two computer connection
         client.setPort(3000);//change later for two computer connection
     	client.openConnection();
+        System.out.println("try client add");
+
         stage.setTitle("Team 9 - Mom's kitchen");
         scene = new Scene(loadFXML("primary"), 1295, 782);
         stage.setScene(scene);
@@ -175,6 +177,16 @@ public class App extends Application {
                     setWindowTitle("Reservation");
                     try {
                         setContent("reservationCnt");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+
+            case "SubComplaint":
+                Platform.runLater(() -> {
+                    try {
+                        setContent("SubComplaint");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

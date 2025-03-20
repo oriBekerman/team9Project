@@ -1,60 +1,236 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
-import javafx.css.StyleClass;
-import javafx.css.Stylesheet;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
-import java.util.List;
+import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
+
+import static java.lang.Math.min;
 
 public class TableMapBoundary {
 
     public Pane outsideAreaPane;
     public Pane insideAreaPane;
     public Button tableBtn1;
+    public Branch branch;
+    public boolean mapIsSet=false;
+    public GridPane insideGridPane;
     public Button tableBtn2;
     public Button tableBtn3;
-    public Branch branch;
+    public ComboBox<String> timesBox;
+    public Button tableBtn4;
+    public Button tableBtn5;
+    public Button tableBtn6;
+    public AnchorPane root;
+    public Button backBtn;
+    private List<Button>buttons=new ArrayList<>();
+    private Map<RestTable,Button>map=new HashMap<>();
+    
 
+
+    public TableMapBoundary()
+    {
+        EventBus.getDefault().register(this);
+    }
     public void initialize() {
         if (branch != null) {
-            List<RestTable>tables = branch.getTables();
-            for (RestTable table : tables) {
-                makeTableBtn(table);
+//            buttons=insideGridPane.getChildren();
+//           setMap(branch);
+        }
+    }
+    // initialize the map before letting the map page be opened
+    public void setMap(Branch branch) {
+        System.out.println("in set map before sync");
+        synchronized (this) {
+            if (branch != null)
+            {
+                System.out.println("in set map after sync");
+                this.branch = branch;
+                this.branch.tablesAreSet=false;
+                System.out.println("after branch = " + this.branch);
+                System.out.println("branch tables = " + String.valueOf(this.branch.tablesAreSet));
+                System.out.println("Fetching tables for branch...");
+                loadBranchTables();
+                System.out.println("after load ...");
+                try
+                {
+                    while (!branch.tablesAreSet) //wait for branch tables to be set in branch entity
+                    {
+                        wait();
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    System.out.println("Thread interrupted while waiting for tables.");
+                    return;
+                }
+                // once the list of tables is loaded in branch make table buttons
+                System.out.println("in set map after if branchTables:");
+                System.out.println("map is set  = " + String.valueOf(mapIsSet));
+                Set<RestTable> tables = branch.getTables(); // Assume this fetches the list of tables
+                buttons.add(tableBtn1);
+                buttons.add(tableBtn2);
+                buttons.add(tableBtn3);
+                buttons.add(tableBtn4);
+                buttons.add(tableBtn5);
+                buttons.add(tableBtn6);
+                List<RestTable> tableList = new ArrayList<>(tables); // Convert Set to List
+                for (int i = 0; i < Math.min(tableList.size(), buttons.size()); i++) {
+//                    String num = String.valueOf(tableList.get(i).getId());
+                    map.put(tableList.get(i), buttons.get(i));
+                    setButton(buttons.get(i), String.valueOf(i));
+                }
+                setTimesBox();
+                root.setStyle("-fx-background-color: #fbe9d0;");
+                outsideAreaPane.setStyle("-fx-background-color: #f6d7b0;\n" +
+                        "    -fx-border-color: #8a6f48;\n" +
+                        "    -fx-border-width: 2px;\n" +
+                        "    -fx-border-radius: 8px;\n" +
+                        "    -fx-padding: 12px;");
+                insideAreaPane.setStyle(" -fx-background-color: #e4c5a2;\n" +
+                        "    -fx-border-color: #8a6f48;\n" +
+                        "    -fx-border-width: 2px;\n" +
+                        "    -fx-border-radius: 8px;\n" +
+                        "    -fx-padding: 12px;");
+                this.mapIsSet = true;
+                System.out.println("Map is set");
+                // Notify all waiting threads in openBranchMap()
+                notifyAll();
             }
         }
     }
-    private Button makeTableBtn(RestTable table)
-    {
-        Button tableBtn = new Button();
-        if(table.getCoordinates() != null)
-        {
-            tableBtn.setLayoutX(table.getCoordinates().getX());
-            tableBtn.setLayoutY(table.getCoordinates().getY());
+
+    private void setTimesBox() {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm"); //good for both 09:00 and 9:00
+            LocalTime startTime = LocalTime.parse(branch.getOpeningTime(), formatter);
+            LocalTime endTime = LocalTime.parse(branch.getClosingTime(), formatter);
+            while (startTime.isBefore(endTime)) {//add to comboBox every 15 min
+                timesBox.getItems().add(startTime.toString());
+                startTime = startTime.plusMinutes(15);
+            }
+        } catch (DateTimeParseException e) {
+            System.err.println("Error parsing time: " + e.getMessage());
         }
-        int num=table.getId();
-        String tableId = Integer.toString(num);
-        tableBtn.setText(tableId);
-        switch (table.getCapacity()){
-            case 2->tableBtn.setPrefSize(52,49);
-            case 3->tableBtn.setPrefSize(77,74);
-            case 4->tableBtn.setPrefSize(102,98);
-            default -> tableBtn.setPrefSize(0,0);
-        }
-        tableBtn.setStyle("""
-                    -fx-font-size: 18px;
-                    -fx-font-weight: bold;
-                    -fx-text-fill: white;
-                    -fx-background-color: #8a6f48;
-                    -fx-alignment: center;
-                    -fx-padding: 10px 20px;
-                    -fx-border-radius: 6px;
-                    -fx-cursor: hand\
-                """);
-        return tableBtn;
     }
 
+    //get branch tables from server
+    private void loadBranchTables()
+    {
+        if (branch != null) {
+            try {
+                System.out.println("in load branches before fetch...");
+                SimpleClient.getClient().fetchTables(branch);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    private void setButton(Button button,String num)
+    {
+        button.setText(num);
+        button.setWrapText(true);
+        button.setStyle(" -fx-font-size: 16px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-text-fill: white;\n" +
+                "    -fx-background-color: #8a6f48;\n" +
+                "    -fx-alignment: center;\n" +
+                "    -fx-padding: 8px 16px;\n" +
+                "    -fx-border-radius: 6px;\n" +
+                "    -fx-cursor: hand;");
+    }
 
+    //get the branch tables from the event client posted
+    @Subscribe
+    public void onBranchTablesEvent(BranchTablesReceivedEvent event) {
+        synchronized (this) {
+            Set<RestTable> tables = event.getTables();
+            branch.setRestTables(tables);
+            branch.tablesAreSet = true;
+
+            System.out.println("Tables received! Notifying all waiting threads...");
+            notifyAll();  // Wake up threads waiting for tables
+        }
+    }
+
+    public void chooseTime(ActionEvent actionEvent) {
+        String chosen = timesBox.getSelectionModel().getSelectedItem();
+        LocalTime localTime = LocalTime.parse(chosen);
+        displayMapAt(localTime);
+    }
+
+    private void displayMapAt(LocalTime localTime) {
+        Set<RestTable> tables = branch.getAvailableTablesAt(localTime);
+        for (RestTable table: tables) {
+            setTableButtonAvailable(map.get(table));
+        }
+        for(RestTable t: branch.getTables())
+        {
+            if(!tables.contains(t))
+            {
+                setTableButtonsUnavailable(map.get(t));
+            }
+        }
+    }
+    private void setTableButtonAvailable(Button button)
+    {
+        button.setStyle(" -fx-font-size: 16px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-text-fill: white;\n" +
+                "    -fx-background-color: #5e8a75;\n" +
+                "    -fx-alignment: center;\n" +
+                "    -fx-padding: 8px 16px;\n" +
+                "    -fx-border-radius: 6px;\n" +
+                "    -fx-cursor: hand;");
+    }
+    private void setTableButtonsUnavailable(Button button) {
+        button.setStyle(" -fx-font-size: 16px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-text-fill: white;\n" +
+                "    -fx-background-color: #8a6f48;\n" +
+                "    -fx-alignment: center;\n" +
+                "    -fx-padding: 8px 16px;\n" +
+                "    -fx-border-radius: 6px;\n" +
+                "    -fx-cursor: hand;");
+    }
+
+    public void BackToBranch(ActionEvent actionEvent) {
+        openBranchPage(branch);
+
+    }
+
+    //open selected branch page
+    private void openBranchPage(Branch branch) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Branch.fxml"));
+            Parent branchPageRoot = loader.load();
+            // Get the controller and pass the branch
+            BranchPageBoundary controller = loader.getController();
+            controller.setBranch(branch);
+            if (controller.branchIsSet) {
+                System.out.println("branch is already set");
+            }
+            while (!controller.branchIsSet) {
+                System.out.println("Waiting for branch to be set");
+            }
+            App.setContent(branchPageRoot);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

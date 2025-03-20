@@ -2,15 +2,14 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
 import javafx.application.Platform;
+import javafx.util.Pair;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
@@ -65,14 +64,7 @@ public class SimpleClient extends AbstractClient {
 				System.out.println("Menu received, storing event...");
 				Menu menu = (Menu) response.getData();
 				MenuEvent menuEvent = new MenuEvent(menu);
-				// Store the event if SecondaryController is not initialized
-				if (!isSecondaryControllerInitialized) {
-					pendingMenuEvent = menuEvent;
-				} else {
-					// Post immediately if SecondaryController is ready
-					EventBus.getDefault().post(menuEvent);
-					System.out.println("menu event posted");
-				}
+				EventBus.getDefault().post(menuEvent);
 			}
 			if (response.getResponseType().equals(UPDATED_PRICE)) {
 				MenuItem menuItem = (MenuItem) response.getData();
@@ -105,11 +97,13 @@ public class SimpleClient extends AbstractClient {
 			}
 			if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
 			{
-				List<RestTable> tables = (ArrayList<RestTable>) response.getData();
+				System.out.println("branch tables received from server");
+				Set<RestTable> tables = new HashSet<>((Collection) response.getData());
 				EventBus.getDefault().post(new BranchTablesReceivedEvent(tables));
-				for (RestTable table : tables) {
-					table.print();
-				}
+				System.out.println("branch tables posted");
+//				for (RestTable table : tables) {
+//					table.print();
+//				}
 			}
 			// Handle user authentication response
 			if (response.getResponseType().equals(CORRECTNESS_USER)) {
@@ -142,6 +136,23 @@ public class SimpleClient extends AbstractClient {
 				} else {
 					System.out.println("No delivery data received.");
 				}
+			}
+			if (response.getResponseType().equals(RETURN_BRANCH)) {
+				System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee");
+				Branch branch= (Branch) response.getData();
+			EventBus.getDefault().post(new BranchSelectedEvent(branch));
+			}
+
+			if (response.getResponseType().equals(UPDATE_BRANCH_RESERVATION)) {
+				System.out.println("updateRES!!!!!");
+				Branch branch = (Branch) response.getData();
+				EventBus.getDefault().removeStickyEvent(UpdateBranchResEvent.class); // Remove old events
+				EventBus.getDefault().post(new UpdateBranchResEvent(branch));
+			}
+			if(response.getResponseType().equals(ADDED_RESERVATION))
+			{
+				ReservationAddedEvent event=new ReservationAddedEvent((ResInfo) response.getData(),response.getMessage());
+				EventBus.getDefault().post(event);
 			}
 		} else {
 			System.out.println("Received message is not of type Response");
@@ -197,9 +208,22 @@ public class SimpleClient extends AbstractClient {
 	}
 	public void fetchTables(Branch branch) throws IOException {
 		Request request=new Request(BRANCH,FETCH_BRANCH_TABLES,branch);
+		System.out.println("fetch sent to server");
 		client.sendToServer(request);
 	}
+	public void submitComplaint(List<String> customerDetails,Complaint complaint) throws IOException
+	{
+		Pair<Complaint,List<String>> pair=new Pair<>(complaint, customerDetails);
+		Request request=new Request(COMPLAINT,SUBMIT_COMPLAINT,pair);
+		try {
+			sendToServer(request);
+			System.out.println("complaint sent to server");
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-
+	}
+	
 }
 

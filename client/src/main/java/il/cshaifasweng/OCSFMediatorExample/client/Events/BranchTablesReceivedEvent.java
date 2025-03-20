@@ -2,15 +2,17 @@ package il.cshaifasweng.OCSFMediatorExample.client.Events;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import java.util.List;
+import java.util.Set;
 
 public class BranchTablesReceivedEvent {
-    private final List<RestTable> tables;
+    private final Set<RestTable> tables;
 
-    public BranchTablesReceivedEvent(List<RestTable> tables) {
+    public BranchTablesReceivedEvent(Set<RestTable> tables) {
         this.tables = tables;
+        System.out.println(" new tables event ");
     }
 
-    public List<RestTable> getTables() {
+    public Set<RestTable> getTables() {
         return tables;
     }
 }
