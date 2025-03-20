@@ -216,7 +216,7 @@ public class App extends Application {
                 Parent root = loader.load();
 
                 // Get the controller of the loaded FXML
-                PersonalDetailsFillingDeliveryBoundary boundary = loader.getController();
+                PersonalDetailsFillingdDeliveryBoundary boundary = loader.getController();
 
                 // Pass the branchId to the controller
                 boundary.setDelivery(delivery);

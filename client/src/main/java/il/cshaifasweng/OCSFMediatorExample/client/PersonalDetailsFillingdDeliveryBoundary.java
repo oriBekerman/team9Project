@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
-public class PersonalDetailsFillingDeliveryBoundary {
+public class PersonalDetailsFillingdDeliveryBoundary {
 
     @FXML
     private ResourceBundle resources;
@@ -40,11 +40,19 @@ public class PersonalDetailsFillingDeliveryBoundary {
     }
 
     @FXML
-    void backToDelivery(ActionEvent event) {
+    void backToReservation(ActionEvent event) {
         switchScreen("Reservation");
     }
 
     private Delivery delivery = null;
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+        if (delivery != null) {
+            System.out.println("Setting delivery details: " + delivery.toString());
+        }
+    }
+
+
 
     @FXML
     void initialize() {
@@ -55,14 +63,5 @@ public class PersonalDetailsFillingDeliveryBoundary {
         assert phoneTextField != null : "fx:id=\"phoneTextField\" was not injected: check your FXML file 'personalDetailsFilling.fxml'.";
 
     }
-
-    public void setDelivery(Delivery delivery) {
-        this.delivery = delivery;
-        if (delivery != null) {
-            System.out.println("Setting delivery details: " + delivery.toString());
-        }
-    }
-
-
 
 }
