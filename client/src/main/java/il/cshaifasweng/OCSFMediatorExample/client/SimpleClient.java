@@ -26,6 +26,7 @@ public class SimpleClient extends AbstractClient {
 	public  static int port=3000;
 	private static ActiveUser activeUser = null;
 	public Map <String, String> mapReservation=new HashMap<String, String>();
+	public ResInfo resInfo=new ResInfo();
 
 	private SimpleClient(String host, int port) {
 		super(host, port);

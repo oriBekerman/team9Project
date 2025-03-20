@@ -115,6 +115,12 @@ public class MenuItem implements Serializable {
     public DishType getDishType() {
         return dishType;
     }
+    public String getDishTypeString ()
+    {
+        if (dishType == DishType.SPECIAL)
+            return "YES";
+        return "NO";
+    }
     public void setDishType(DishType dishType) {
         this.dishType = dishType;
     }
