@@ -75,6 +75,8 @@ public class ReservationBoundary {
         String chosen = InOutdoorList.getSelectionModel().getSelectedItem();
         client = SimpleClient.getClient();
         client.mapReservation.put("Area",chosen);
+
+        SimpleClient.getClient().resInfo.setInOrOut(chosen);
     }
 
     @FXML
@@ -82,6 +84,8 @@ public class ReservationBoundary {
         String chosen = numpeopleList.getSelectionModel().getSelectedItem();
         client = SimpleClient.getClient();
         client.mapReservation.put("num",chosen);
+
+        SimpleClient.getClient().resInfo.setNumOfGuests(Integer.parseInt(chosen));
     }
 
     @FXML

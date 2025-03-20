@@ -53,7 +53,7 @@ public class ResInfo implements Serializable {
 //    public ResInfo(Branch branch, Customer customer,LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
 //        this.branch = branch;
 //        this.customer = customer;
-////        this.resDate = resDate;
+    ////        this.resDate = resDate;
 //        this.hours = hours;
 //        this.numOfGuests = numOfGuests;
 //        this.inOrOut = inOrOut;
