@@ -138,10 +138,15 @@ public class SecondaryBoundary {
                         // Create a default byte[] for the picture (empty for now)
                         byte[] defaultPicture = new byte[0];  // Empty byte array for now
 
-                        // Create a new MenuItem and add it to the menu
+                        // Create a new MenuItem
                         MenuItem newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, DishType.BASE);
-                        allMenuItems.add(newDish);  // Add to the list
-                        menuTableView.getItems().add(newDish);  // Add to the TableView
+
+                        // Send the new dish to the server for saving
+                        SimpleClient.getClient().addDishToDatabase(newDish);
+
+                        // Add to the local menu and TableView
+                        allMenuItems.add(newDish);
+                        menuTableView.getItems().add(newDish);
                     } catch (NumberFormatException e) {
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid price format.");
                         alert.showAndWait();
@@ -150,6 +155,7 @@ public class SecondaryBoundary {
             }
         }
     }
+
 
     @FXML
     void removeDish(ActionEvent event) {
@@ -263,7 +269,7 @@ public class SecondaryBoundary {
 
         Platform.runLater(() -> {
             menuTableView.refresh();
-            SaveBtn.setDisable(true);
+            //SaveBtn.setDisable(true);
             UpdatePriceBtn.setDisable(false);
             UpdatePriceBtn.requestFocus();
         });
@@ -278,7 +284,7 @@ public class SecondaryBoundary {
             for (TextField priceField : priceFieldMap.values()) {
                 priceField.setDisable(false);  // Enable the TextField
             }
-            SaveBtn.setDisable(false); // Enable save button
+            //SaveBtn.setDisable(false); // Enable save button
             UpdatePriceBtn.setDisable(true); // Disable update button
         });
     }
@@ -350,17 +356,17 @@ public class SecondaryBoundary {
                 UpdateingridientsBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
                 addDishBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
                 removeDishBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
-                SaveBtn.setVisible(true);
+                //SaveBtn.setVisible(true);
             } else {
                 UpdatePriceBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
-                SaveBtn.setVisible(false);
+                //SaveBtn.setVisible(false);
                 UpdateingridientsBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
                 addDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
                 removeDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
             }
         } else {
             UpdatePriceBtn.setVisible(false); // Hide Update button if not logged in
-            SaveBtn.setVisible(false);
+            //SaveBtn.setVisible(false);
             UpdateingridientsBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
             addDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
             removeDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
@@ -385,7 +391,7 @@ public class SecondaryBoundary {
         Platform.runLater(() -> {
             // Clear the TableView and refresh it with the updated menu items
             menuTableView.getItems().clear(); // Clear previous items
-            SaveBtn.setDisable(true);  // Disable the save button
+            //SaveBtn.setDisable(true);  // Disable the save button
             UpdatePriceBtn.setDisable(false);  // Re-enable the update button
             UpdatePriceBtn.requestFocus();  // Focus the update button
         });

@@ -2,6 +2,10 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 public enum RequestType{
 
+      ADD_DISH,
+      REMOVE_DISH,
+      UPDATE_INGREDIENTS,
+
       //base menu related requests
       GET_BASE_MENU,//menuItems
       UPDATE_PRICE,//need two one for branch one for base

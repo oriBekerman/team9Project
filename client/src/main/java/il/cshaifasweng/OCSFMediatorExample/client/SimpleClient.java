@@ -225,6 +225,15 @@ public class SimpleClient extends AbstractClient {
 		}
 
 	}
-	
+	public void addDishToDatabase(MenuItem newDish) {
+		// Assuming you have a way to send requests to the server:
+		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);
+		try {
+			SimpleClient.getClient().sendToServer(request);
+			System.out.println("Dish added to database: " + newDish.getName());
+		} catch (IOException e) {
+			System.out.println("Error adding dish to database: " + e.getMessage());
+		}
+	}
 }
 

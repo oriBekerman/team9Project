@@ -12,7 +12,6 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MenuItemsRepository extends BaseRepository<MenuItem>
 {
 
@@ -41,25 +40,25 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
         try (Session session = HibernateUtil.getSessionFactory().openSession())
         {
             session.beginTransaction();
-                //get items from database
-                CriteriaBuilder builder = session.getCriteriaBuilder();
-                CriteriaQuery<MenuItem> query = builder.createQuery(MenuItem.class);
-                query.from(MenuItem.class);
-                data = session.createQuery(query).getResultList();
-                System.out.println("getting menu items");
-                System.out.println(data);
-                session.getTransaction().commit(); // Save everything.
-            }
-            return data;
+            //get items from database
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<MenuItem> query = builder.createQuery(MenuItem.class);
+            query.from(MenuItem.class);
+            data = session.createQuery(query).getResultList();
+            System.out.println("getting menu items");
+            System.out.println(data);
+            session.getTransaction().commit(); // Save everything.
+        }
+        return data;
     }
 
-    public List<MenuItem>getBaseItems()
+    public List<MenuItem> getBaseItems()
     {
         List<MenuItem> items;
         try (Session session = HibernateUtil.getSessionFactory().openSession())
         {
             session.beginTransaction();
-            if(session==null)
+            if(session == null)
             {
                 System.out.println("session is null");
             }
@@ -79,10 +78,11 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
         }
         return items;
     }
-    public MenuItem updateThePrice(int id,double price)
+
+    public MenuItem updateThePrice(int id, double price)
     {
         System.out.println("in MenuRepository updateThePrice");
-        MenuItem item=findById(id);
+        MenuItem item = findById(id);
         try (Session session = HibernateUtil.getSessionFactory().openSession())
         {
             session.beginTransaction();
@@ -103,5 +103,30 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
             save(menuItem);
         }
     }
-    //change
+
+    // Add a new MenuItem (Dish) to the database
+    public boolean addMenuItem(MenuItem newDish) {
+        Transaction transaction = null;  // Declare a transaction object
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Start the transaction
+            transaction = session.beginTransaction();
+
+            // Save the new dish to the database
+            session.save(newDish);
+
+            // Commit the transaction
+            transaction.commit();
+
+            System.out.println("Dish added successfully: " + newDish.getName());  // Optional logging
+            return true;
+        } catch (Exception e) {
+            // Rollback if there was an error and the transaction is not null
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();  // Log the error
+            return false;
+        }
+    }
 }
+

@@ -16,20 +16,36 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.TH
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response.Status;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType;
 
 public class MenuItemsController {
 
     private MenuItemsRepository menuItemsRepository;
-    public Response handleRequest(Request request)
-    {
+    public Response handleRequest(Request request) {
         System.out.println("Handling request: " + request.getRequestType());
-        return switch (request.getRequestType())
-        {
-            case GET_BASE_MENU->getBaseItems();
-             case UPDATE_PRICE->updateThePrice(request);
+        return switch (request.getRequestType()) {
+            case GET_BASE_MENU -> getBaseItems();
+            case UPDATE_PRICE -> updateThePrice(request);
+            case ADD_DISH -> handleAddDishRequest(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
+
+
     }
+    public Response handleAddDishRequest(Request<MenuItem> request) {
+        MenuItem newDish = request.getData();  // Retrieve the new dish from the request
+        // Add the new dish to the database
+        boolean success = menuItemsRepository.addMenuItem(newDish);
+
+        if (success) {
+            return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+        } else {
+            return new Response<>(ResponseType.ADD_DISH, null, "Failed to add dish", Status.ERROR, Response.Recipient.THIS_CLIENT);
+        }
+    }
+
+
     //constructor
     public MenuItemsController() {
         this.menuItemsRepository = new MenuItemsRepository();

@@ -12,39 +12,33 @@ import org.hibernate.Session;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 
-
 public class SimpleServer extends AbstractServer {
     private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
 
     public static Session session;
 
     //controllers
-    private MenuItemsController menuItemsController =null;
-    private BranchController branchController=null;
-    private RestTableController restTableController=null;
+    private MenuItemsController menuItemsController = null;
+    private BranchController branchController = null;
+    private RestTableController restTableController = null;
     private LogInController logInController = null;
     private DeliveryController deliveryController = null;
     private ResInfoController resInfoController = null;
-    private ComplaintController complaintController=null;
+    private ComplaintController complaintController = null;
 
-    public static String dataBasePassword="poolgirL1?";//change database password here
-    public String password="";//used only when entering a new password through cmd
-    private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
+    public static String dataBasePassword = "1234"; //change database password here
+    public String password = ""; //used only when entering a new password through cmd
+    private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
+
     public SimpleServer(int port) {
         super(port);
-        //change to password and remove comments if we want to enter another database passwords
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Please enter the database password: ");
-//        this.password = scanner.nextLine();
-//        System.out.println("after password ");
-//        DatabaseManager.initialize();// (if we want a different password to be entered when running change databasePassword-> password
         getControllers();
     }
-    @Override
-    protected void handleMessageFromClient(Object msg, ConnectionToClient client){
-        System.out.println("received request from client: " +msg.toString());
-        String msgString = msg.toString();
 
+    @Override
+    protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
+        System.out.println("received request from client: " + msg.toString());
+        String msgString = msg.toString();
 
         //connect client
         if (msgString.startsWith("add client")) {
@@ -59,10 +53,10 @@ public class SimpleServer extends AbstractServer {
                 throw new RuntimeException(e);
             }
         }
-        Request request=(Request)msg;
-        //navigate client's request to the appropriate controller and sent the controller's response to the client
-        Response response = switch (request.getCategory())
-        {
+
+        Request request = (Request) msg;
+        //navigate client's request to the appropriate controller and send the controller's response to the client
+        Response response = switch (request.getCategory()) {
             case BASE_MENU -> menuItemsController.handleRequest(request);
             case BRANCH -> branchController.handleRequest(request);
             case LOGIN -> logInController.handleRequest(request);
@@ -82,50 +76,39 @@ public class SimpleServer extends AbstractServer {
             return;
         }
 
-
         //check if the response should be sent to all clients or just one
-        if (response.getRecipient()==ALL_CLIENTS) {
+        if (response.getRecipient() == ALL_CLIENTS) {
             sendToAllClients(response);
-            System.out.println("response sent to client "+ response.getResponseType().toString());
+            System.out.println("response sent to client " + response.getResponseType().toString());
         }
-        if (response.getRecipient()==ALL_CLIENTS_EXCEPT_SENDER) {
-            sendToAllClientsExceptSender(response,client);
-            System.out.println("response sent to client "+ response.getResponseType().toString());
+        if (response.getRecipient() == ALL_CLIENTS_EXCEPT_SENDER) {
+            sendToAllClientsExceptSender(response, client);
+            System.out.println("response sent to client " + response.getResponseType().toString());
         }
-        if (response.getRecipient()==THIS_CLIENT)
-        {
+        if (response.getRecipient() == THIS_CLIENT) {
             try {
-//                System.out.println("Sending response to client: " + response.getResponseType() + " with data: " + response.getData());
                 client.sendToClient(response);
                 System.out.println("response sent to client: " + response.getResponseType() + " with data: " + response.getData());
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
+
         //server needs to send one response to all clients and one to a specific client
-        //the response.data from the controller has both responses
-        if(response.getRecipient()==BOTH)
-        {
-            List<Response> responses= (List<Response>) response.getData();
-            if(responses.get(0).getRecipient()==ALL_CLIENTS)
-            {
+        if (response.getRecipient() == BOTH) {
+            List<Response> responses = (List<Response>) response.getData();
+            if (responses.get(0).getRecipient() == ALL_CLIENTS) {
                 try {
                     sendToAllClients(responses.get(0));
                     client.sendToClient(responses.get(1));
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            }
-            else {
+            } else {
                 try {
                     sendToAllClients(responses.get(1));
                     client.sendToClient(responses.get(0));
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -159,16 +142,13 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
-
-    private void getControllers()
-    {
-        this.menuItemsController =databaseManager.getMenuItemsController();
-        this.branchController=databaseManager.getBranchController();
+    private void getControllers() {
+        this.menuItemsController = databaseManager.getMenuItemsController();
+        this.branchController = databaseManager.getBranchController();
         this.logInController = databaseManager.getLogInController();
         this.restTableController = databaseManager.getRestTableController();
         this.deliveryController = databaseManager.getDeliveryController();
-        this.resInfoController=databaseManager.getResInfoController();
-        this.complaintController=databaseManager.getComplaintController();
-
+        this.resInfoController = databaseManager.getResInfoController();
+        this.complaintController = databaseManager.getComplaintController();
     }
 }
