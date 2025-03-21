@@ -9,6 +9,7 @@ import il.cshaifasweng.OCSFMediatorExample.server.repositories.ResInfoRepository
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
@@ -32,33 +33,33 @@ public class ResInfoController {
         };
     }
 
-    private Response addReservation(Request request) {
-        Response response=new Response(ADDED_RESERVATION,null,null,THIS_CLIENT);
-        ResInfo reservation= (ResInfo) request.getData();
-        Customer customer= reservation.getCustomer();
-//        String email= customer.getEmail();
-//        Customer customer1=getCustomer(email);
-//        if(customer1!=null) //customer is already in database no need to save it again
-//        {
-//            reservation.setCustomer(customer1);
-//            resInfoRepository.addReservation(reservation,true);
-//        }
-//        //customer is not in database need to save it
-//        else {
-//            resInfoRepository.addReservation(reservation,false);
-//        }
-        resInfoRepository.addReservation(reservation,false);
-        response.setData(reservation);
-        response.setStatus(SUCCESS);
-        response.setMessage("Dear " + customer.getName() + ",\n" +
-                "Your reservation has been confirmed.\n" +
-                "Here are the details:\n\n" +
-                "Time: " + reservation.getHours() + "\n" +
-                "Guests: " + reservation.getNumOfGuests() + "\n" +
-                "Branch: " + reservation.getBranch().getName() + "\n" +
-                "Enjoy your meal!");
-        return response;
-    }
+//    private Response addReservation(Request request) {
+//        Response response=new Response(ADDED_RESERVATION,null,null,THIS_CLIENT);
+//        ResInfo reservation= (ResInfo) request.getData();
+//        Customer customer= reservation.getCustomer();
+////        String email= customer.getEmail();
+////        Customer customer1=getCustomer(email);
+////        if(customer1!=null) //customer is already in database no need to save it again
+////        {
+////            reservation.setCustomer(customer1);
+////            resInfoRepository.addReservation(reservation,true);
+////        }
+////        //customer is not in database need to save it
+////        else {
+////            resInfoRepository.addReservation(reservation,false);
+////        }
+//        resInfoRepository.addReservation(reservation,false);
+//        response.setData(reservation);
+//        response.setStatus(SUCCESS);
+//        response.setMessage("Dear " + customer.getName() + ",\n" +
+//                "Your reservation has been confirmed.\n" +
+//                "Here are the details:\n\n" +
+//                "Time: " + reservation.getHours() + "\n" +
+//                "Guests: " + reservation.getNumOfGuests() + "\n" +
+//                "Branch: " + reservation.getBranch().getName() + "\n" +
+//                "Enjoy your meal!");
+//        return response;
+//    }
 
     //constructor
     public ResInfoController() {this.resInfoRepository = new ResInfoRepository();};
@@ -96,6 +97,58 @@ public class ResInfoController {
             return new Response<>(RETURN_RES_REPORT, "Failed to fetch monthly reservations: " + e.getMessage(), ERROR, THIS_CLIENT);
         }
     }
+
+    public Response addReservation(Request request) {
+        Response response=new Response(ADDED_RESERVATION,null,null,THIS_CLIENT);
+        ResInfo reservation = (ResInfo) request.getData();
+        Branch branch = reservation.getBranch();
+        Customer customer = reservation.getCustomer();
+        Set<RestTable> tables = reservation.getTable();
+        LocalTime time = reservation.getHours();
+
+        // 1. Validate table list
+        if (tables == null || tables.isEmpty()) {
+            return new Response(ADDED_RESERVATION, null, "No tables provided for reservation", ERROR, THIS_CLIENT);
+        }
+
+        // 2. Mark each table as unavailable
+        for (RestTable table : tables) {
+            table.addUnavailableFromTime(time);
+        }
+
+        // 3. Set status and link relationships
+        reservation.setStatus(ResInfo.Status.APPROVED);
+        branch.addReservation(reservation);  // sets branch on reservation and adds to branch.reservations
+
+        // 4. Save reservation
+        resInfoRepository.addReservation(reservation);
+        response.setData(reservation);
+        response.setStatus(SUCCESS);
+        response.setMessage("Dear " + customer.getName() + ",\n" +
+                "Your reservation has been confirmed.\n" +
+                "Here are the details:\n\n" +
+                "Time: " + reservation.getHours() + "\n" +
+                "Guests: " + reservation.getNumOfGuests() + "\n" +
+                "Branch: " + reservation.getBranch().getName() + "\n" +
+                "Enjoy your meal!");
+
+        return new Response(ADDED_RESERVATION, reservation, "Reservation created successfully", SUCCESS, THIS_CLIENT);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //    public Response<List<Response>>cancelReservation(Request request)
 //    {
 //        int fine=0;

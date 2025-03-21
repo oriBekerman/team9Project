@@ -180,10 +180,19 @@ private static void initialize(String password) {
             deliveryController.populateDelivery(order2);
 
 
-            ResInfo reservation1 = new ResInfo(haifaBranch,customer1,LocalTime.of(19, 30), 4, "Inside",Set.of(table2));
+            LocalTime time1 = LocalTime.of(19, 30);
+            LocalTime time2 = LocalTime.of(10, 30);
+
+            ResInfo reservation1 = new ResInfo(haifaBranch, customer1, time1, 4, "Inside", Set.of(table2));
             reservation1.setStatus(APPROVED);
-            ResInfo reservation2 = new ResInfo(haifaBranch,customer2,LocalTime.of(10, 30), 2, "Inside",Set.of(table1));
+            table2.addUnavailableFromTime(time1);
+            haifaBranch.addReservation(reservation1);
+
+            ResInfo reservation2 = new ResInfo(haifaBranch, customer2, time2, 2, "Inside", Set.of(table1));
             reservation2.setStatus(APPROVED);
+            table1.addUnavailableFromTime(time2);
+            haifaBranch.addReservation(reservation2);
+
             resInfoController.PopulateResSInfo(List.of(reservation1, reservation2));
             // Create a Complaint instance without a Branch
             Complaint complaint = new Complaint( "Delayed order delivery",NEW);

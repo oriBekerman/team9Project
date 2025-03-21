@@ -125,7 +125,7 @@ public class ReservationCntBoundary {
         TimerManager.getInstance().startTimer("reservationTimeout", () -> {
             System.out.println("Reservation expired! Taking action...");
             timeViolation();
-        }, 1);
+        }, 15);
         openPersonalDetailsPage();
 
     }

@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -23,8 +24,13 @@ public class ResInfo implements Serializable {
     private Customer customer;
 
     @ManyToMany
-    @JoinColumn(name="tableId", referencedColumnName = "id")
-    Set<RestTable> tables;
+    @JoinTable(
+            name = "reservation_tables",
+            joinColumns = @JoinColumn(name = "reservation_id"),
+            inverseJoinColumns = @JoinColumn(name = "table_id")
+    )
+    private Set<RestTable> tables = new HashSet<>();
+
 
 //    @Column(nullable = false)
 //    private LocalDate resDate;
@@ -72,6 +78,10 @@ public class ResInfo implements Serializable {
         branchIsSet=true;
         customerIsSet=true;
         tableIsSet=true;
+        for(RestTable t: table)
+        {
+            t.addUnavailableFromTime(hours);
+        }
     }
     public ResInfo(LocalTime hours, int numOfGuests, String inOrOut) {
         this.hours = hours;
@@ -139,6 +149,10 @@ public class ResInfo implements Serializable {
     public void setTable(Set<RestTable> tables) {
         this.tables = tables;
         tableIsSet=true;
+        for (RestTable t: tables)
+        {
+            t.addUnavailableFromTime(hours);
+        }
     }
     public Set<RestTable> getTable() {
         return tables;

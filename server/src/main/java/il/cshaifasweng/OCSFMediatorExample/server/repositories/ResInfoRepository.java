@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
+import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -57,21 +58,33 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             populateResInfo(resInfo);
         }
     }
-    public void populateResInfo(ResInfo resSInfo)
-    {
+    public void populateResInfo(ResInfo resSInfo) {
         Transaction tx = null;
-        try(Session session = HibernateUtil.getSessionFactory().openSession())
-        {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
+
+            // 1. Save or update customer
             if (resSInfo.getCustomer() != null) {
-                session.saveOrUpdate(resSInfo.getCustomer());  // Ensure the customer is saved or updated
+                session.saveOrUpdate(resSInfo.getCustomer());
             }
+            // 2. Save or update branch
+            if (resSInfo.getBranch() != null) {
+                session.saveOrUpdate(resSInfo.getBranch());
+            }
+            // 3. Save or update each table and update unavailable times
+            if (resSInfo.getTable() != null && !resSInfo.getTable().isEmpty()) {
+                for (RestTable table : resSInfo.getTable()) {
+                    table.addUnavailableFromTime(resSInfo.getHours());  // update availability
+                    session.saveOrUpdate(table); // persist the change to table & its collection
+                }
+            }
+            // 4. Save the reservation itself
             session.save(resSInfo);
             tx.commit();
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            throw new RuntimeException("Failed to populate reservation", e);
         }
     }
 
@@ -93,27 +106,43 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             return new ArrayList<>();
         }
     }
-    public void addReservation(ResInfo reservation, boolean customerInDatabase)
-    {
+    public ResInfo addReservation(ResInfo reservation) {
         Transaction tx = null;
-        if(reservation.branchIsSet && reservation.customerIsSet
-                && reservation.tableIsSet && reservation.getStatus().equals(APPROVED))
-        {
-            if(!customerInDatabase)
-            {
-                saveCustomer(reservation.getCustomer());
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+
+            // Save or update customer if needed
+            if (reservation.getCustomer() != null) {
+                session.saveOrUpdate(reservation.getCustomer());
             }
-            try(Session session = HibernateUtil.getSessionFactory().openSession())
-            {
-                tx=session.beginTransaction();
-                session.save(reservation);
-                tx.commit();
+
+            // Save or update the branch only if necessary
+            if (reservation.getBranch() != null) {
+                session.saveOrUpdate(reservation.getBranch());
             }
-            catch (Exception e) {
-                e.printStackTrace();
+
+            // Save or update each table and mark them unavailable at the reservation time
+            if (reservation.getTable() != null) {
+                for (RestTable table : reservation.getTable()) {
+                    table.addUnavailableFromTime(reservation.getHours());
+                    session.saveOrUpdate(table);
+                }
             }
+
+            // Save the reservation itself
+            session.save(reservation);
+            tx.commit();
+
+            return reservation;
+
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            throw new RuntimeException("Failed to add reservation", e);
         }
     }
+
 
 
     public void deleteReservation(ResInfo reservation)

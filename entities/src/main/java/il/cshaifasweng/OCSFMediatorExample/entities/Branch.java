@@ -55,8 +55,9 @@ public class Branch implements Serializable  {
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<RestTable> tables = new HashSet<>();
 
-//    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-//    private Set<ResInfo> reservations = new HashSet<>();
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ResInfo> reservations = new HashSet<>();
+
 
     public boolean tablesAreSet=false;
 
@@ -255,7 +256,26 @@ public class Branch implements Serializable  {
         return availableTables;
     }
 
+    public ResInfo createReservation(Customer customer, int numGuests, String area, LocalTime time) {
+        Set<RestTable> tables = getAvailableTablesWithNumPeople(numGuests, time, area);
 
+        if (tables.isEmpty()) return null;
+
+        ResInfo reservation = new ResInfo(this, customer, time, numGuests, area, tables);
+        reservation.setStatus(ResInfo.Status.APPROVED);
+
+        for (RestTable table : tables) {
+            table.addUnavailableFromTime(time);
+        }
+
+        addReservation(reservation);
+        return reservation;
+    }
+
+    public void addReservation(ResInfo reservation) {
+        reservations.add(reservation);
+        reservation.setBranch(this);
+    }
 
 
 }
