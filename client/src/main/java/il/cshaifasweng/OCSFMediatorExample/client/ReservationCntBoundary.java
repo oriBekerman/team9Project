@@ -1,34 +1,31 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalTime;
 
-import il.cshaifasweng.OCSFMediatorExample.client.Events.*;
-import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+import il.cshaifasweng.OCSFMediatorExample.entities.Request;
+import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateBranchResEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
-
-import java.util.*;
-
+import java.util.ArrayList;
 import javafx.application.Platform;
 
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -80,21 +77,22 @@ public class ReservationCntBoundary {
 
     @FXML
     void chooseHours(ActionEvent event) throws IOException {
-
-        // Ensure the client is initialized
-        if (client == null) {
-            client = SimpleClient.getClient();
-        }
-
         flag=true;
         chosen = hoursList.getSelectionModel().getSelectedItem();
         SimpleClient.getClient().mapReservation.put("Hours",chosen);
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
+        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+
+        SimpleClient.getClient().resInfo.setBranch(branch);
+        SimpleClient.getClient().resInfo.setHours(time);
+
+
+
 
 
         // Parse the time from string to LocalTime
-        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+
         availableTables = this.branch.getAvailableTablesWithNumPeople(Integer.parseInt(numPeople), time,area);
         String tableIDS="";
         for (RestTable table: availableTables)
@@ -125,7 +123,7 @@ public class ReservationCntBoundary {
         TimerManager.getInstance().startTimer("reservationTimeout", () -> {
             System.out.println("Reservation expired! Taking action...");
             timeViolation();
-        }, 15);
+        }, 1);
         openPersonalDetailsPage();
 
     }

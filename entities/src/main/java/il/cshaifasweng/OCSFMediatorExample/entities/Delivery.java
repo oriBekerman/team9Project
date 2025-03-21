@@ -7,18 +7,19 @@ import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "Deliveries")
 public class Delivery implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderNumber;
+    @Column(name = "orderNumber", unique = true, nullable = false)
+    private Integer orderNumber;
 
-    @Column(nullable = false)
-    private String date;
+    @Column(name = "date")
+    private LocalDateTime date; // Change to LocalDateTime
 
     // One-to-many relationship with OrderItem
     @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
@@ -45,8 +46,7 @@ public class Delivery implements Serializable {
     public Delivery() {}
 
     // Constructor
-    public Delivery(String date, List<OrderItem> orderItems, Customer customer, DeliveryMethod deliveryMethod, Branch branch) {
-        this.date = date;
+    public Delivery(List<OrderItem> orderItems, Customer customer, DeliveryMethod deliveryMethod, Branch branch) {
         this.orderItems = orderItems;
         this.customer = customer;
         this.deliveryMethod = deliveryMethod;
@@ -67,20 +67,23 @@ public class Delivery implements Serializable {
     }
 
     // Getters and Setters
-    public int getOrderNumber() {
+    public int getDeliveryNumber() {
         return orderNumber;
     }
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
 
     public void setOrderNumber(int orderNumber) {
         this.orderNumber = orderNumber;
     }
-
-    public String getDate() {
-        return date;
+    public Integer getOrderNumber() {
+        return orderNumber;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public LocalDateTime getDate() {
+        return date;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -106,7 +109,6 @@ public class Delivery implements Serializable {
 
     public void setDeliveryMethod(DeliveryMethod deliveryMethod) {
         this.deliveryMethod = deliveryMethod;
-        this.totalPrice = calculateTotalPrice(); // Recalculate total price when delivery method changes
     }
 
     public Branch getBranch() {

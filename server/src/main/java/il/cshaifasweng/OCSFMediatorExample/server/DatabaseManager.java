@@ -10,6 +10,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -151,31 +152,49 @@ private static void initialize(String password) {
             branchController.populateBranches(branches);
 
             // ==========================
-            // 6. Define Customers & Delivery Orders
-            // ==========================
-//            Customer customer1 = new Customer(1, "Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "1234-5678-9876-5432", "12/25", "123");
-//            Customer customer2 = new Customer(2, "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
-            Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com","0547088039", "1234-5678-9876-5432", "12/25", "123");
-           Customer customer2 = new Customer("Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com","0503664889", "9876-5432-1234-5678", "11/24", "456");
+            // Populating some delivery orders
+            // Create Customer instances with associated credit card information
+            Customer customer1 = new Customer(1, "Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "1234-5678-9876-5432", "12/25", "123");
+            Customer customer2 = new Customer(2, "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
 
-            List<OrderItem> orderItems1 = List.of(
-                    new OrderItem(item1, 2, "No dressing", null),
-                    new OrderItem(item4, 1, "Extra ketchup", null)
+            // Create OrderItems from MenuItem and quantity
+            OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences
+            OrderItem orderItem2 = new OrderItem(item4, 1, "Extra ketchup", null); // 1 of "Hamburger" with preferences
+            OrderItem orderItem3 = new OrderItem(item6, 3, "No salt", null); // 3 of "Fries" with preferences
+            OrderItem orderItem4 = new OrderItem(item7, 1, "Well done", null); // 1 of "Salmon" with preferences
+
+            // First, create the deliveries and set their customer, date, method, etc.
+            Delivery order1 = new Delivery(
+                    new ArrayList<>(), // Initialize empty OrderItems list for order1
+                    customer1, // Customer
+                    DeliveryMethod.DELIVERY, // Delivery method
+                    telAvivBranch // Branch
             );
+            order1.setDate(LocalDateTime.now());
 
-            List<OrderItem> orderItems2 = List.of(
-                    new OrderItem(item6, 3, "No salt", null),
-                    new OrderItem(item7, 1, "Well done", null)
+            Delivery order2 = new Delivery(
+                    new ArrayList<>(), // Initialize empty OrderItems list for order2
+                    customer2, // Customer
+                    DeliveryMethod.SELF_PICKUP, // Delivery method
+                    haifaBranch // Branch
             );
+            order2.setDate(LocalDateTime.now());
 
-            // Create deliveries
-            Delivery order1 = new Delivery("2025-03-05", new ArrayList<>(orderItems1), customer1, DeliveryMethod.DELIVERY, telAvivBranch);
-            Delivery order2 = new Delivery("2025-03-05", new ArrayList<>(orderItems2), customer2, DeliveryMethod.SELF_PICKUP, haifaBranch);
+            // Now associate the OrderItems with the Delivery orders
+            orderItem1.setDelivery(order1); // Associate orderItem1 with order1
+            orderItem2.setDelivery(order1); // Associate orderItem2 with order1
+            orderItem3.setDelivery(order2); // Associate orderItem3 with order2
+            orderItem4.setDelivery(order2); // Associate orderItem4 with order2
 
-            orderItems1.forEach(item -> item.setDelivery(order1));
-            orderItems2.forEach(item -> item.setDelivery(order2));
+            // Create lists of OrderItems for the delivery orders
+            List<OrderItem> orderItems1 = List.of(orderItem1, orderItem2);
+            List<OrderItem> orderItems2 = List.of(orderItem3, orderItem4);
 
-            // Populate delivery orders
+            // Set the OrderItems in the respective Delivery objects
+            order1.setOrderItems(orderItems1);
+            order2.setOrderItems(orderItems2);
+
+            // Adding delivery orders to the delivery controller
             deliveryController.populateDelivery(order1);
             deliveryController.populateDelivery(order2);
 

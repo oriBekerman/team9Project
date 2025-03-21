@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+import static il.cshaifasweng.OCSFMediatorExample.client.App.switchToDelivery;
 
 public class BranchPageBoundary {
 
@@ -101,7 +102,8 @@ public class BranchPageBoundary {
     public void navToReservationPage(ActionEvent actionEvent) {
     }
     public void navToDeliveryPage(ActionEvent actionEvent) {
-        switchScreen("Delivery");
+        // Now switch to the Delivery page
+        switchToDelivery("Delivery", branch);
     }
     public void navToComplaintPage(ActionEvent actionEvent) {
     }

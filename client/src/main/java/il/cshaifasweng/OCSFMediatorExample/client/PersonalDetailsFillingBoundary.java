@@ -73,17 +73,17 @@ public class PersonalDetailsFillingBoundary {
         {
             errorLabel.setText("Please enter a valid phone number.");
         }
-       else if (!isValidEmail(mail))
-       {
-           errorLabel.setText("Please enter a valid email address.");
-       }
-       else if(type =="reservation")
-       {
-           SimpleClient.getClient().mapReservation.put("name",name);
-           SimpleClient.getClient().mapReservation.put("phone",phone);
-           SimpleClient.getClient().mapReservation.put("mail",mail);
-           openCreditCardPage();
-       }
+        else if (!isValidEmail(mail))
+        {
+            errorLabel.setText("Please enter a valid email address.");
+        }
+        else if(type =="reservation")
+        {
+            SimpleClient.getClient().mapReservation.put("name",name);
+            SimpleClient.getClient().mapReservation.put("phone",phone);
+            SimpleClient.getClient().mapReservation.put("mail",mail);
+            openCreditCardPage();
+        }
     }
 
     @FXML
@@ -100,7 +100,7 @@ public class PersonalDetailsFillingBoundary {
 
 
     }
-// initialize the map before letting the map page be opened
+    // initialize the map before letting the map page be opened
     public void setType(String type) {
         System.out.println("in set type before sync");
         synchronized (this) {
