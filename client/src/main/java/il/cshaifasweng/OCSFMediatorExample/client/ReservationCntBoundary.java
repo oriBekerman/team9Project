@@ -409,9 +409,6 @@ public class ReservationCntBoundary {
 //                hoursList.getItems().remove(reservation.getHours());
 //            }
 //        }
-        if(flag)
-        {
             updateAvailableTimesAndUI();
-        }
     }
 }
