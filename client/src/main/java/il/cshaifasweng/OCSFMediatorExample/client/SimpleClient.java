@@ -157,6 +157,8 @@ public class SimpleClient extends AbstractClient {
 			if(response.getResponseType().equals(UPDATE_BRANCH_TABLES))
 			{
 				System.out.println("in updateBRANCH_TABLES");
+				UpdateBranchTablesEvent event=new UpdateBranchTablesEvent((ResInfo) response.getData());
+				EventBus.getDefault().post(event);
 			}
 		} else {
 			System.out.println("Received message is not of type Response");

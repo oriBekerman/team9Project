@@ -370,6 +370,11 @@ public class ReservationCntBoundary {
 
     }
 
+    @Subscribe
+    public void onUpdateBranchTablesEvent(UpdateBranchTablesEvent event) {
+        System.out.println("in onUpdateBranchTables");
+    }
+
 
 
 
