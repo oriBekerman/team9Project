@@ -11,6 +11,7 @@ import javafx.util.Pair;
 import org.hibernate.Session;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
+import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SubscribedClient;
 
 public class SimpleServer extends AbstractServer {
     private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
@@ -36,7 +37,8 @@ public class SimpleServer extends AbstractServer {
     }
 
     @Override
-    protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
+    protected void handleMessageFromClient(Object msg, ConnectionToClient client)
+    {
         System.out.println("received request from client: " + msg.toString());
         String msgString = msg.toString();
 
@@ -55,13 +57,15 @@ public class SimpleServer extends AbstractServer {
         }
 
         Request request = (Request) msg;
-        //navigate client's request to the appropriate controller and send the controller's response to the client
+
+        // Handle the client's request based on the category
         Response response = switch (request.getCategory()) {
             case BASE_MENU -> menuItemsController.handleRequest(request);
             case BRANCH -> branchController.handleRequest(request);
             case LOGIN -> logInController.handleRequest(request);
             case DELIVERY -> deliveryController.handleRequest(request);
             case RESERVATION -> resInfoController.handleRequest(request);
+            case REMOVE_DISH -> menuItemsController.handleRequest(request);  // Added for REMOVE_DISH
             default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
         };
 
@@ -76,7 +80,7 @@ public class SimpleServer extends AbstractServer {
             return;
         }
 
-        //check if the response should be sent to all clients or just one
+        // Check if the response should be sent to all clients or just one
         if (response.getRecipient() == ALL_CLIENTS) {
             sendToAllClients(response);
             System.out.println("response sent to client " + response.getResponseType().toString());
@@ -94,7 +98,7 @@ public class SimpleServer extends AbstractServer {
             }
         }
 
-        //server needs to send one response to all clients and one to a specific client
+        // Handle BOTH response case
         if (response.getRecipient() == BOTH) {
             List<Response> responses = (List<Response>) response.getData();
             if (responses.get(0).getRecipient() == ALL_CLIENTS) {

@@ -79,26 +79,30 @@ public class Response<T> implements Serializable {
 
     public enum ResponseType {
         NO_ACTION,
-        // menu related responses
+        //menu related responses
         RETURN_MENU,
         UPDATED_PRICE,
+        REMOVE_DISH,
+        ADD_DISH,
+
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,
         RETURN_BRANCH,
         RETURN_DELIVERABLES,
         GET_ALL_DELIVERIES,
+
         RETURN_BRANCH_TABLES,
         UPDATE_BRANCH_RESERVATION,
-        // login
+        //login
         CORRECTNESS_USER,
+
         DELIVERY_CREATED,
         SEND_DELIVERY,
-        RETURN_RES_REPORT,
-        CANCELED_RESERVATION,
-        ADDED_RESERVATION,
 
-        // Add the ADD_DISH response type
-        ADD_DISH
+        RETURN_RES_REPORT,
+
+        CANCELED_RESERVATION,
+        ADDED_RESERVATION
     }
 
     public enum Status {

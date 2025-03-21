@@ -225,6 +225,18 @@ public class SimpleClient extends AbstractClient {
 		}
 
 	}
+
+	public void removeDishFromDatabase(MenuItem dishToRemove) {
+		// Assuming the category for removing a dish is BASE_MENU (similar to addDishToDatabase)
+		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.REMOVE_DISH, dishToRemove);
+		try {
+			SimpleClient.getClient().sendToServer(request);
+			System.out.println("Dish removed from database: " + dishToRemove.getName());
+		} catch (IOException e) {
+			System.out.println("Error removing dish from database: " + e.getMessage());
+		}
+	}
+
 	public void addDishToDatabase(MenuItem newDish) {
 		// Assuming you have a way to send requests to the server:
 		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);

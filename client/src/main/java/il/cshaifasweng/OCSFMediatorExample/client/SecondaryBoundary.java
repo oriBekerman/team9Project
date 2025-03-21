@@ -176,10 +176,22 @@ public class SecondaryBoundary {
         Optional<ButtonType> result = confirmAlert.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            allMenuItems.remove(selectedItem);  // Remove the dish from the list
-            menuTableView.getItems().remove(selectedItem);  // Remove the dish from the TableView
+            // Remove the dish from the local menu (observable list)
+            allMenuItems.remove(selectedItem);
+
+            // Remove the dish from the TableView
+            menuTableView.getItems().remove(selectedItem);
+
+            // Optionally, send a request to the server to remove the dish
+            // You can use something like SimpleClient.getClient().removeDishFromDatabase(selectedItem);
+            SimpleClient.getClient().removeDishFromDatabase(selectedItem);
+
+            // Optionally, you can show a confirmation message after removing the dish
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Dish removed successfully.");
+            successAlert.showAndWait();
         }
-    };
+    }
+
 
 
     //    @FXML

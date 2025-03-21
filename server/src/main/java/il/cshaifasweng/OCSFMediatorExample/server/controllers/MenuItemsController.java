@@ -7,8 +7,8 @@ import il.cshaifasweng.OCSFMediatorExample.server.repositories.MenuItemsReposito
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
-import java.util.ArrayList;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response.Status;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType;
 import java.util.List;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.ALL_CLIENTS;
@@ -16,23 +16,22 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.TH
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
-import il.cshaifasweng.OCSFMediatorExample.entities.Response.Status;
-import il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType;
 
 public class MenuItemsController {
 
     private MenuItemsRepository menuItemsRepository;
+
     public Response handleRequest(Request request) {
         System.out.println("Handling request: " + request.getRequestType());
         return switch (request.getRequestType()) {
             case GET_BASE_MENU -> getBaseItems();
             case UPDATE_PRICE -> updateThePrice(request);
             case ADD_DISH -> handleAddDishRequest(request);
+            case REMOVE_DISH -> handleRemoveDishRequest(request);  // Handle REMOVE_DISH here
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
-
-
     }
+
     public Response handleAddDishRequest(Request<MenuItem> request) {
         MenuItem newDish = request.getData();  // Retrieve the new dish from the request
         // Add the new dish to the database
@@ -45,32 +44,42 @@ public class MenuItemsController {
         }
     }
 
+    public Response handleRemoveDishRequest(Request<MenuItem> request) {
+        MenuItem dishToRemove = request.getData();  // Retrieve the dish to be removed from the request
+        boolean success = menuItemsRepository.removeDish(dishToRemove);  // Remove the dish from the repository
 
-    //constructor
+        if (success) {
+            return new Response<>(ResponseType.REMOVE_DISH, dishToRemove, "Dish removed successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+        } else {
+            return new Response<>(ResponseType.REMOVE_DISH, null, "Failed to remove dish", Status.ERROR, Response.Recipient.THIS_CLIENT);
+        }
+    }
+
+    // Constructor
     public MenuItemsController() {
         this.menuItemsRepository = new MenuItemsRepository();
-    };
-    public boolean checkIfEmpty()
-    {
+    }
+
+    // Check if the menu items repository is empty
+    public boolean checkIfEmpty() {
         return (menuItemsRepository.checkIfEmpty());
     }
 
-    //initialize menuItem table with base items
-    public void PopulateMenuItems(List<MenuItem>menuItems) {
+    // Initialize the menuItem table with base items
+    public void PopulateMenuItems(List<MenuItem> menuItems) {
         menuItemsRepository.populate(menuItems);
     }
-   //get base menu items
+
+    // Get base menu items
     public Response getBaseItems() {
-        Response response=new Response(RETURN_MENU,null,null,THIS_CLIENT);
+        Response response = new Response(RETURN_MENU, null, null, THIS_CLIENT);
         System.out.println("getBaseItems control");
-        List<MenuItem> menuItems= menuItemsRepository.getBaseItems();
-        if(menuItems.isEmpty())
-        {
+        List<MenuItem> menuItems = menuItemsRepository.getBaseItems();
+        if (menuItems.isEmpty()) {
             response.setStatus(ERROR);
             System.out.println("getBaseItems returned empty list");
-        }
-        else{
-            Menu menu=new Menu(menuItems);
+        } else {
+            Menu menu = new Menu(menuItems);
             response.setStatus(SUCCESS);
             response.setData(menu);
             System.out.println("getBaseItems returned successfully");
@@ -79,7 +88,7 @@ public class MenuItemsController {
         return response;
     }
 
-
+    // Search menu items by keyword, max price, or type
     public List<MenuItem> searchMenuItems(String keyword, Double maxPrice, DishType type) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "FROM MenuItem m WHERE 1=1 ";
@@ -107,31 +116,36 @@ public class MenuItemsController {
         return results;
     }
 
-
-    public Response updateThePrice(Request request)
-    {
-        Response response=new Response(UPDATED_PRICE,null,null,ALL_CLIENTS);
+    // Update the price of a menu item
+    public Response updateThePrice(Request request) {
+        Response response = new Response(UPDATED_PRICE, null, null, ALL_CLIENTS);
         System.out.println("in MenuController updateThePrice1");
         String[] data = (String[]) request.getData();
         int id = Integer.parseInt(data[0]);
-        double price =Double.parseDouble(data[1]);
+        double price = Double.parseDouble(data[1]);
         System.out.println("in MenuController updateThePrice2");
-        MenuItem item= menuItemsRepository.updateThePrice(id, price);
-        if(item == null)
-        {
+        MenuItem item = menuItemsRepository.updateThePrice(id, price);
+        if (item == null) {
             response.setStatus(ERROR);
-        }
-        else
-        {
+        } else {
             response.setStatus(SUCCESS);
             response.setData(item);
         }
         return response;
     }
-    public List <MenuItem> getAllItems()
-    {
+
+    // Get all menu items
+    public List<MenuItem> getAllItems() {
         return menuItemsRepository.getAllItems();
     }
 
-
+    // Helper method to remove dish from the database
+    public void removeDishFromDatabase(MenuItem dishToRemove) {
+        boolean success = menuItemsRepository.removeDish(dishToRemove);
+        if (success) {
+            System.out.println("Dish removed successfully");
+        } else {
+            System.out.println("Failed to remove dish");
+        }
+    }
 }

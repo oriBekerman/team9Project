@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import java.io.Serializable;
+import il.cshaifasweng.OCSFMediatorExample.entities.RequestType;
 
 public class Request<T> implements Serializable {
 
@@ -8,14 +9,12 @@ public class Request<T> implements Serializable {
     private ReqCategory category;
     private RequestType requestType;
 
-    // Constructor with category, requestType, and data
-    public Request(ReqCategory category, RequestType requestType, T data) {
+    public Request(ReqCategory category,RequestType requestType,T data) {
         this.data = data;
         this.category = category;
         this.requestType = requestType;
     }
 
-    // Constructor with only requestType (assuming it's for general use without category/data)
     public Request(RequestType requestType) {
         this.requestType = requestType;
     }
@@ -27,15 +26,12 @@ public class Request<T> implements Serializable {
     public void setData(T data) {
         this.data = data;
     }
-
     public ReqCategory getCategory() {
         return category;
     }
-
     public void setCategory(ReqCategory category) {
         this.category = category;
     }
-
     public RequestType getRequestType() {
         return requestType;
     }
