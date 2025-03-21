@@ -158,8 +158,8 @@ private static void initialize(String password) {
             // ==========================
             // Populating some delivery orders
             // Create Customer instances with associated credit card information
-            Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "0525616469","1234567898765432", "12/25", "123");
-            Customer customer2 = new Customer("Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com","0525616468", "9876543212345678", "11/24", "456");
+            Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "0525616469","5555555555554444", "12/25", "123");
+            Customer customer2 = new Customer("Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com","0525616468", "4111111111111111", "11/24", "456");
             // Create a list of customers
             List<Customer> customers = new ArrayList<>();
             customers.add(customer1);

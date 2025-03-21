@@ -23,6 +23,8 @@
             <Font size="15.0" />
          </font>
       </Label>
+      <!-- Error label added here -->
+      <Label fx:id="errorLabel" layoutX="79.0" layoutY="200.0" textFill="red" />
       <Button fx:id="paymentBtn" layoutX="496.0" layoutY="327.0" mnemonicParsing="false" onAction="#checkPayment" text="Pay" />
       <TextField fx:id="cardNumText" layoutX="300.0" layoutY="54.0" />
       <TextField fx:id="expDateText" layoutX="300.0" layoutY="105.0" />
