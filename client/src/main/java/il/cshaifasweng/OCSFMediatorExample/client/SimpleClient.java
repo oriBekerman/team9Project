@@ -225,6 +225,60 @@ public class SimpleClient extends AbstractClient {
 		}
 
 	}
-	
+
+	public void removeDishFromDatabase(MenuItem dishToRemove) {
+		// Assuming the category for removing a dish is BASE_MENU (similar to addDishToDatabase)
+		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.REMOVE_DISH, dishToRemove);
+		try {
+			SimpleClient.getClient().sendToServer(request);
+			System.out.println("Dish removed from database: " + dishToRemove.getName());
+		} catch (IOException e) {
+			System.out.println("Error removing dish from database: " + e.getMessage());
+		}
+	}
+
+	public void updateDishIngredients(MenuItem item)
+	{
+		try {
+			Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.UPDATE_INGREDIENTS, item);
+			getClient().sendToServer(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateDishType(MenuItem selectedItem) {
+		try {
+			// Get the item ID using getItemID() instead of getId()
+			int itemId = selectedItem.getItemID();
+
+			// Create a request with the selected item and the necessary dish type update
+			Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.UPDATE_DISH_TYPE, selectedItem);
+
+			// Send the request to the server
+			getClient().sendToServer(request);
+
+			// Print confirmation message with item ID
+			System.out.println("Dish type updated for dish ID: " + itemId);
+		} catch (IOException e) {
+			// Handle any IOException that occurs while communicating with the server
+			e.printStackTrace();
+			System.err.println("Error updating dish type: " + e.getMessage());
+		}
+	}
+
+
+
+	public void addDishToDatabase(MenuItem newDish)
+	{
+		// Assuming you have a way to send requests to the server:
+		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);
+		try {
+			SimpleClient.getClient().sendToServer(request);
+			System.out.println("Dish added to database: " + newDish.getName());
+		} catch (IOException e) {
+			System.out.println("Error adding dish to database: " + e.getMessage());
+		}
+	}
 }
 
