@@ -36,6 +36,7 @@ public class ReservationCntBoundary {
     private Branch branch;
     Set<RestTable> availableTables = new HashSet<>();
     boolean flag=false;
+    Map<LocalTime,Set<RestTable>> optionalTablesMap=new HashMap<>();
 
 
 
@@ -81,33 +82,30 @@ public class ReservationCntBoundary {
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
         LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
-
         SimpleClient.getClient().resInfo.setBranch(branch);
         SimpleClient.getClient().resInfo.setHours(time);
+        SimpleClient.getClient().resInfo.setTable(optionalTablesMap.get(time)); //set the tables at the chosen time to resInfo
 
 
-
-
-
-        // Parse the time from string to LocalTime
-
-        availableTables = this.branch.getAvailableTablesWithNumPeople(Integer.parseInt(numPeople), time,area);
-        String tableIDS="";
-        for (RestTable table: availableTables)
-        {
-            table.addUnavailableFromTime(time);
-            if(tableIDS.isEmpty())
-            {
-                tableIDS=String.valueOf(table.getId());
-            }
-            else
-            {
-                tableIDS=tableIDS+","+table.getId();
-            }
-        }
-        client.mapReservation.put("tableIDS",tableIDS);
-        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
-        SimpleClient.getClient().sendToServer(request);
+//        // Parse the time from string to LocalTime
+//
+////        availableTables = this.branch.getAvailableTablesWithNumPeople(Integer.parseInt(numPeople), time,area);
+////        String tableIDS="";
+////        for (RestTable table: availableTables)
+////        {
+////            table.addUnavailableFromTime(time);
+////            if(tableIDS.isEmpty())
+////            {
+////                tableIDS=String.valueOf(table.getId());
+////            }
+////            else
+////            {
+////                tableIDS=tableIDS+","+table.getId();
+////            }
+//        }
+//        client.mapReservation.put("tableIDS",tableIDS);
+//        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
+//        SimpleClient.getClient().sendToServer(request);
 
     }
 
@@ -115,13 +113,12 @@ public class ReservationCntBoundary {
     void continueAct(ActionEvent event) {
         client = SimpleClient.getClient();
         client.mapReservation.put("Hours",chosen);
-
         // Start a 15-minute timer to ensure the user fills personal details in time
         // if the user does not fill details within 15 min cancel table allocation
         TimerManager.getInstance().startTimer("reservationTimeout", () -> {
             System.out.println("Reservation expired! Taking action...");
             timeViolation();
-        }, 1);
+        }, 15);
         openPersonalDetailsPage();
 
     }
@@ -165,6 +162,7 @@ public class ReservationCntBoundary {
     @Subscribe
     public void onBranchSelected(BranchSelectedEvent event) {
         this.branch = event.getBranch();
+        SimpleClient.getClient().resInfo.setBranch(branch);
         updateAvailableTimesAndUI();
     }
 
@@ -210,7 +208,8 @@ public class ReservationCntBoundary {
                 break;
             availableTables = this.branch.getAvailableTablesWithNumPeople(Integer.parseInt(numPeople), time,area);
             if (!availableTables.isEmpty()) {
-                availableTimes.add(time.toString());  // Add the available time to the list
+                availableTimes.add(time.toString());// Add the available time to the list
+                optionalTablesMap.put(time, availableTables);
             }
             System.out.println("Available tables at " + time + " for " + numPeople + " people: " + availableTables.size());
 
@@ -270,7 +269,13 @@ public class ReservationCntBoundary {
 
     @Subscribe
     public void onDetailsSetEvent(CreditCardInfoSet event) {
-        makeReservation();
+//        makeReservation();
+        System.out.println("in on details filled event:" );
+        System.out.println("reservation:");
+        System.out.println("customer name: " +SimpleClient.getClient().resInfo.getCustomer().getName() );
+        System.out.println("customer card: " +SimpleClient.getClient().resInfo.getCustomer().getCreditCardNumber() );
+        System.out.println("customer email: "+SimpleClient.getClient().resInfo.getCustomer().getEmail());
+
     }
 
     private void makeReservation() {

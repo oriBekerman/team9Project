@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.CreditCardInfoSet;
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -75,6 +76,11 @@ public class CreditCradInfoBoundary {
                 SimpleClient.getClient().mapReservation.put("cardNum", cardNum);
                 SimpleClient.getClient().mapReservation.put("expDate", expDate);
                 SimpleClient.getClient().mapReservation.put("cvv", cvv);
+                Customer customer=SimpleClient.getClient().resInfo.getCustomer();
+                customer.setCreditCardNumber(cardNum);
+                customer.setCvv(cvv);
+                customer.setExpirationDate(expDate);
+                SimpleClient.getClient().resInfo.setCustomer(customer);
 
                 // stop reservation timer since pay is pressed and reservation will be saved
                 TimerManager.getInstance().cancelTimer("reservationTimeout");

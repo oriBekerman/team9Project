@@ -14,6 +14,9 @@ public class Customer extends Person {
     @Column(nullable = false)
     private String cvv;
 
+    @Column(nullable = false)
+    private String phoneNumber;
+
     // Default constructor
     public Customer() {}
 
@@ -37,6 +40,7 @@ public class Customer extends Person {
         this.creditCardNumber = creditCardNumber;
         this.expirationDate = expirationDate;
         this.cvv = cvv;
+        this.phoneNumber=phoneNumber;
     }
 
 
@@ -74,5 +78,12 @@ public class Customer extends Person {
                 ", expirationDate='" + expirationDate + '\'' +
                 ", cvv='" + cvv + '\'' +
                 "} ";
+    }
+
+    public void setPhone(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    public String getPhone() {
+        return phoneNumber;
     }
 }

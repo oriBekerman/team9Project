@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.ComplaintCustomerEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.ReservationPersonalInfoSet;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import javafx.application.Platform;
@@ -82,6 +83,11 @@ public class PersonalDetailsFillingBoundary {
             SimpleClient.getClient().mapReservation.put("name",name);
             SimpleClient.getClient().mapReservation.put("phone",phone);
             SimpleClient.getClient().mapReservation.put("mail",mail);
+            Customer customer=new Customer();
+            customer.setName(name);
+            customer.setEmail(mail);
+            customer.setPhone(phone);
+            SimpleClient.getClient().resInfo.setCustomer(customer);
             openCreditCardPage();
         }
     }
