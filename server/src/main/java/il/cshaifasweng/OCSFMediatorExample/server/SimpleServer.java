@@ -64,6 +64,7 @@ public class SimpleServer extends AbstractServer {
                 case RESERVATION -> resInfoController.handleRequest(request);
                 case REMOVE_DISH -> menuItemsController.handleRequest(request);
                 case UPDATE_INGREDIENTS -> menuItemsController.handleRequest(request);
+                case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
                 default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
             };
         } catch (Exception e) {

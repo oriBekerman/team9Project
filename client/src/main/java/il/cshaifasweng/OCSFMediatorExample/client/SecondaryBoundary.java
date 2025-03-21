@@ -29,6 +29,9 @@ public class SecondaryBoundary {
     private ResourceBundle resources;
 
     @FXML
+    private Button isBranchDishBtn;
+
+    @FXML
     private URL location;
 
     @FXML
@@ -138,11 +141,20 @@ public class SecondaryBoundary {
                     try {
                         double price = Double.parseDouble(priceResult.get());
 
+                        // Ask the user to select if it's a base dish or special
+                        ChoiceDialog<DishType> typeDialog = new ChoiceDialog<>(DishType.BASE, DishType.BASE, DishType.SPECIAL);
+                        typeDialog.setTitle("Dish Type");
+                        typeDialog.setHeaderText("Select the type of the dish:");
+                        Optional<DishType> typeResult = typeDialog.showAndWait();
+
+                        // Set default to BASE dish if no selection is made
+                        DishType dishType = typeResult.orElse(DishType.BASE);
+
                         // Create a default byte[] for the picture (empty for now)
                         byte[] defaultPicture = new byte[0];  // Empty byte array for now
 
-                        // Create a new MenuItem
-                        MenuItem newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, DishType.BASE);
+                        // Create a new MenuItem with the selected dish type
+                        MenuItem newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, dishType);
 
                         // Send the new dish to the server for saving
                         SimpleClient.getClient().addDishToDatabase(newDish);
@@ -158,6 +170,7 @@ public class SecondaryBoundary {
             }
         }
     }
+
 
 
     @FXML
@@ -304,7 +317,37 @@ public class SecondaryBoundary {
         });
     }
 
+    @FXML
+    void isBranchDish(ActionEvent event) {
+        // Get the selected MenuItem from the table view
+        MenuItem selectedItem = menuTableView.getSelectionModel().getSelectedItem();
 
+        // If no item is selected, show a message
+        if (selectedItem == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a dish to update its type.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Get the current dish type (BASE or SPECIAL)
+        DishType currentType = selectedItem.getDishType();
+
+        // Toggle between BASE and SPECIAL
+        DishType newType = (currentType == DishType.BASE) ? DishType.SPECIAL : DishType.BASE;
+
+        // Update the dish type of the selected item
+        selectedItem.setDishType(newType);
+
+        // Refresh the TableView to show the updated dish type
+        menuTableView.refresh();
+
+        // Optionally, send the updated dish type to the server (this may depend on your system's architecture)
+        SimpleClient.getClient().updateDishType(selectedItem);
+
+        // Show a success message to the user
+        Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Dish type updated successfully.");
+        successAlert.showAndWait();
+    }
 
 
     @FXML
@@ -340,8 +383,6 @@ public class SecondaryBoundary {
         menuTableView.getItems().setAll(filteredList);
         menuTableView.refresh();
     }
-
-
 
 
 

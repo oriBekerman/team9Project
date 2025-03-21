@@ -1,7 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
-import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.MenuItemsRepository;
 import org.hibernate.Query;
@@ -29,6 +28,7 @@ public class MenuItemsController {
             case ADD_DISH -> handleAddDishRequest(request);
             case REMOVE_DISH -> handleRemoveDishRequest(request);  // Handle REMOVE_DISH here
             case UPDATE_INGREDIENTS -> handleUpdateDishIngredientsRequest(request); // Handle UPDATE_INGREDIENTS here
+            case UPDATE_DISH_TYPE -> handleUpdateDishTypeRequest(request); // Handle UPDATE_DISH_TYPE here
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
@@ -161,6 +161,21 @@ public class MenuItemsController {
             System.out.println("Dish removed successfully");
         } else {
             System.out.println("Failed to remove dish");
+        }
+    }
+
+    // Handle update of dish type
+    public Response handleUpdateDishTypeRequest(Request<MenuItem> request) {
+        MenuItem dishToUpdate = request.getData();  // Retrieve the dish with updated dish type from the request
+        int itemId = dishToUpdate.getItemID();  // Get the item ID
+        DishType newDishType = dishToUpdate.getDishType();  // Get the new dish type
+
+        boolean success = menuItemsRepository.updateDishType(itemId, newDishType);  // Call repository method to update dish type
+
+        if (success) {
+            return new Response<>(ResponseType.UPDATE_DISH_TYPE, dishToUpdate, "Dish type updated successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+        } else {
+            return new Response<>(ResponseType.UPDATE_DISH_TYPE, null, "Failed to update dish type", Status.ERROR, Response.Recipient.THIS_CLIENT);
         }
     }
 }

@@ -5,8 +5,8 @@ public enum RequestType{
       ADD_DISH,
       REMOVE_DISH,
       UPDATE_INGREDIENTS,
-
-      //base menu related requests
+      UPDATE_DISH_TYPE,
+    //base menu related requests
       GET_BASE_MENU,//menuItems
       UPDATE_PRICE,//need two one for branch one for base
 
