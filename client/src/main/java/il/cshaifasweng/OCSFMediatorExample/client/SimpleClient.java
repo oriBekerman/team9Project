@@ -139,7 +139,6 @@ public class SimpleClient extends AbstractClient {
 				}
 			}
 			if (response.getResponseType().equals(RETURN_BRANCH)) {
-				System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee");
 				Branch branch= (Branch) response.getData();
 			EventBus.getDefault().post(new BranchSelectedEvent(branch));
 			}
@@ -154,6 +153,10 @@ public class SimpleClient extends AbstractClient {
 			{
 				ReservationAddedEvent event=new ReservationAddedEvent((ResInfo) response.getData(),response.getMessage());
 				EventBus.getDefault().post(event);
+			}
+			if(response.getResponseType().equals(UPDATE_BRANCH_TABLES))
+			{
+				System.out.println("in updateBRANCH_TABLES");
 			}
 		} else {
 			System.out.println("Received message is not of type Response");

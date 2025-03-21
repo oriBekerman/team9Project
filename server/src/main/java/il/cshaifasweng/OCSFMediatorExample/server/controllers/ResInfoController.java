@@ -99,8 +99,9 @@ public class ResInfoController {
     }
 
     public Response addReservation(Request request) {
-        System.out.println("in add reservation controller 11111");
-        Response response=new Response(ADDED_RESERVATION,null,null,THIS_CLIENT);
+        Response response=new Response(ADDED_RESERVATION,null,null,BOTH);
+        Response response1=new Response(ADDED_RESERVATION,null,null,THIS_CLIENT);
+        Response response2=new Response(UPDATE_BRANCH_TABLES,null,null,ALL_CLIENTS);
         ResInfo reservation = (ResInfo) request.getData();
         if(reservation.getBranch()==null)
         {
@@ -110,37 +111,39 @@ public class ResInfoController {
         Customer customer = reservation.getCustomer();
         Set<RestTable> tables = reservation.getTable();
         LocalTime time = reservation.getHours();
-        System.out.println("in add reservation controller 2222");
         // 1. Validate table list
         if (tables == null || tables.isEmpty()) {
             System.out.println("tables is empty or null");
             return new Response(ADDED_RESERVATION, null, "No tables provided for reservation", ERROR, THIS_CLIENT);
 
         }
-        System.out.println("in add reservation controller 3333");
         // 2. Mark each table as unavailable
         for (RestTable table : tables) {
                 System.out.println("in add reservation table loop: " + table.getId());
                 table.addUnavailableFromTime(time);
         }
-        System.out.println("in add reservation controller after table.addunavilable");
-
         // 3. Set status and link relationships
         reservation.setStatus(ResInfo.Status.APPROVED);
         branch.addReservation(reservation);  // sets branch on reservation and adds to branch.reservations
 
         // 4. Save reservation
-        resInfoRepository.addReservation(reservation);
-        response.setData(reservation);
-        response.setStatus(SUCCESS);
-        response.setMessage("Dear " + customer.getName() + ",\n" +
+        ResInfo newReservation=resInfoRepository.addReservation(reservation);
+        response1.setData(newReservation);
+        response1.setStatus(SUCCESS);
+        response1.setMessage("Dear " + customer.getName() + ",\n" +
                 "Your reservation has been confirmed.\n" +
                 "Here are the details:\n\n" +
                 "Time: " + reservation.getHours() + "\n" +
                 "Guests: " + reservation.getNumOfGuests() + "\n" +
                 "Branch: " + reservation.getBranch().getName() + "\n" +
                 "Enjoy your meal!");
-
+        response2.setData(newReservation);
+        response2.setStatus(SUCCESS);
+        List<Response> responses = new ArrayList<>();
+        responses.add(response1);
+        responses.add(response2);
+        response.setData(responses);
+        response.setStatus(SUCCESS);
         return response;
     }
 

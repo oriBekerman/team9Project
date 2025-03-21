@@ -100,7 +100,8 @@ public class Response<T> implements Serializable {
         RETURN_RES_REPORT,
 
         CANCELED_RESERVATION,
-        ADDED_RESERVATION
+        ADDED_RESERVATION,
+        UPDATE_BRANCH_TABLES
     }
 
     public enum Status {
