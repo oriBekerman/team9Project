@@ -99,22 +99,31 @@ public class ResInfoController {
     }
 
     public Response addReservation(Request request) {
+        System.out.println("in add reservation controller 11111");
         Response response=new Response(ADDED_RESERVATION,null,null,THIS_CLIENT);
         ResInfo reservation = (ResInfo) request.getData();
+        if(reservation.getBranch()==null)
+        {
+            System.out.println("reservation has no branch");
+        }
         Branch branch = reservation.getBranch();
         Customer customer = reservation.getCustomer();
         Set<RestTable> tables = reservation.getTable();
         LocalTime time = reservation.getHours();
-
+        System.out.println("in add reservation controller 2222");
         // 1. Validate table list
         if (tables == null || tables.isEmpty()) {
+            System.out.println("tables is empty or null");
             return new Response(ADDED_RESERVATION, null, "No tables provided for reservation", ERROR, THIS_CLIENT);
-        }
 
+        }
+        System.out.println("in add reservation controller 3333");
         // 2. Mark each table as unavailable
         for (RestTable table : tables) {
-            table.addUnavailableFromTime(time);
+                System.out.println("in add reservation table loop: " + table.getId());
+                table.addUnavailableFromTime(time);
         }
+        System.out.println("in add reservation controller after table.addunavilable");
 
         // 3. Set status and link relationships
         reservation.setStatus(ResInfo.Status.APPROVED);
@@ -132,7 +141,7 @@ public class ResInfoController {
                 "Branch: " + reservation.getBranch().getName() + "\n" +
                 "Enjoy your meal!");
 
-        return new Response(ADDED_RESERVATION, reservation, "Reservation created successfully", SUCCESS, THIS_CLIENT);
+        return response;
     }
 
 

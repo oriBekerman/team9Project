@@ -275,6 +275,14 @@ public class ReservationCntBoundary {
         System.out.println("customer name: " +SimpleClient.getClient().resInfo.getCustomer().getName() );
         System.out.println("customer card: " +SimpleClient.getClient().resInfo.getCustomer().getCreditCardNumber() );
         System.out.println("customer email: "+SimpleClient.getClient().resInfo.getCustomer().getEmail());
+        Request request=new Request(RESERVATION,ADD_RESERVATION,SimpleClient.getClient().resInfo);
+        try{
+            SimpleClient.getClient().sendToServer(request);
+        } catch (IOException e) {
+            System.out.println("fail to send reservation to server");
+            throw new RuntimeException(e);
+        }
+        System.out.println("in on details filled event: sent reservation to server" );
 
     }
 

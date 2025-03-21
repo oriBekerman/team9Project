@@ -14,16 +14,15 @@ public class ResInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer resID;
-
-    @ManyToOne  // Assuming Branch is an entity
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     private Branch branch;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "reservation_tables",
             joinColumns = @JoinColumn(name = "reservation_id"),
