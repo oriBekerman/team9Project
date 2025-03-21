@@ -79,7 +79,12 @@ public class ReservationCntBoundary {
         SimpleClient.getClient().mapReservation.put("Hours",chosen);
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
-        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+        if (chosen == null || chosen.isEmpty()) {
+            System.out.println("No time selected!");
+            return; // or show alert and exit the method
+        }
+        LocalTime time = LocalTime.parse(chosen);
+        time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
         SimpleClient.getClient().resInfo.setBranch(branch);
         SimpleClient.getClient().resInfo.setHours(time);
         SimpleClient.getClient().resInfo.setTable(optionalTablesMap.get(time)); //set the tables at the chosen time to resInfo
@@ -384,7 +389,8 @@ public class ReservationCntBoundary {
         {
             System.out.println("reservation is null");
         }
-        if (this.branch.getName()==reservation.getBranch().getName())
+        assert reservation != null;
+        if (Objects.equals(this.branch.getName(), reservation.getBranch().getName()))
         {
             System.out.println("in onUpdateBranchTables if");
             updatePage(reservation);
@@ -403,6 +409,9 @@ public class ReservationCntBoundary {
 //                hoursList.getItems().remove(reservation.getHours());
 //            }
 //        }
-        updateAvailableTimesAndUI();
+        if(flag)
+        {
+            updateAvailableTimesAndUI();
+        }
     }
 }
