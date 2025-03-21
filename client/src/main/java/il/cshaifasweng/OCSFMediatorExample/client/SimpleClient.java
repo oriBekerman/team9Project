@@ -138,9 +138,9 @@ public class SimpleClient extends AbstractClient {
 					System.out.println("No delivery data received.");
 				}
 			}
-			if (response.getResponseType().equals(RETURN_BRANCH)) {
+			if (response.getResponseType().equals(RETURN_BRANCH_BY_NAME)) {
 				Branch branch= (Branch) response.getData();
-			EventBus.getDefault().post(new BranchSelectedEvent(branch));
+			EventBus.getDefault().post(new BranchSentEvent(branch));
 			}
 
 			if (response.getResponseType().equals(UPDATE_BRANCH_RESERVATION)) {

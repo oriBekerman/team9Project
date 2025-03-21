@@ -8,10 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
@@ -33,6 +30,7 @@ import org.greenrobot.eventbus.Subscribe;
 public class ReservationCntBoundary {
     public String chosen;
     public SimpleClient client;
+    public Label noTablesLabel;
     private Branch branch;
     Set<RestTable> availableTables = new HashSet<>();
     boolean flag=false;
@@ -160,7 +158,7 @@ public class ReservationCntBoundary {
 
     //initialize branch received after request in setHours
     @Subscribe
-    public void onBranchSelected(BranchSelectedEvent event) {
+    public void onBranchSelected(BranchSentEvent event) {
         this.branch = event.getBranch();
         SimpleClient.getClient().resInfo.setBranch(branch);
         updateAvailableTimesAndUI();
@@ -218,7 +216,15 @@ public class ReservationCntBoundary {
         // Update the ComboBox on the JavaFX thread
         Platform.runLater(() -> {
             hoursList.getItems().clear();  // Clear existing items
-            hoursList.getItems().addAll(availableTimes);  // Add all available times
+            if (availableTimes.isEmpty())
+            {
+                noTablesLabel.setText("No available tables match your selected time, area, branch, and guest count. " +
+                        "Please go back and adjust your choices to try again.");
+            }
+            else
+            {
+                hoursList.getItems().addAll(availableTimes);  // Add all available times
+            }
         });
     }
 
@@ -373,9 +379,30 @@ public class ReservationCntBoundary {
     @Subscribe
     public void onUpdateBranchTablesEvent(UpdateBranchTablesEvent event) {
         System.out.println("in onUpdateBranchTables");
+        ResInfo reservation = event.getReservation();
+        if (reservation==null)
+        {
+            System.out.println("reservation is null");
+        }
+        if (this.branch.getName()==reservation.getBranch().getName())
+        {
+            System.out.println("in onUpdateBranchTables if");
+            updatePage(reservation);
+        }
     }
-
-
-
-
+    private void updatePage(ResInfo reservation)
+    {
+        SimpleClient.getClient().resInfo.setBranch(reservation.getBranch()); //update the branch in reservation to the updated branch
+        this.branch=reservation.getBranch(); //update this branch to the updated branch
+        //update map and comboBox
+//        for(RestTable table : reservation.getTable())
+//        {
+//            if(optionalTablesMap.get(reservation.getHours())==table)
+//            {
+//                optionalTablesMap.remove(reservation.getHours());
+//                hoursList.getItems().remove(reservation.getHours());
+//            }
+//        }
+        updateAvailableTimesAndUI();
+    }
 }

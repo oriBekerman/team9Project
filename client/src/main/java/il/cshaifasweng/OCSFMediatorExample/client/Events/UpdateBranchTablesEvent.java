@@ -4,14 +4,14 @@ import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
 
 public class UpdateBranchTablesEvent {
     ResInfo reservation;
-    public UpdateBranchTablesEvent(ResInfo reservation) {
-        reservation = reservation;
+    public UpdateBranchTablesEvent(ResInfo resInfo) {
+        this.reservation= resInfo;
     }
     public ResInfo getReservation() {
         return reservation;
     }
-    public void setReservation(ResInfo reservation) {
-        this.reservation = reservation;
+    public void setReservation(ResInfo resInfo) {
+        this.reservation = resInfo;
     }
 
 }

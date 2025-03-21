@@ -23,6 +23,7 @@ C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\CreditCradInfoBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateBranchResEvent.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\DeliverableItemsSentEvent.java
+C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSentEvent.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReservationBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSelectedEvent.java

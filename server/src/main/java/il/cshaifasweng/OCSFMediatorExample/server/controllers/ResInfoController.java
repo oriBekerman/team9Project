@@ -128,6 +128,10 @@ public class ResInfoController {
 
         // 4. Save reservation
         ResInfo newReservation=resInfoRepository.addReservation(reservation);
+        if(newReservation==null)
+        {
+            System.out.println("res in null");
+        }
         response1.setData(newReservation);
         response1.setStatus(SUCCESS);
         response1.setMessage("Dear " + customer.getName() + ",\n" +

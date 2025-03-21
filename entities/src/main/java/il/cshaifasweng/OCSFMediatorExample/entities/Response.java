@@ -86,6 +86,7 @@ public class Response<T> implements Serializable {
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,
         RETURN_BRANCH,
+        RETURN_BRANCH_BY_NAME,
         RETURN_DELIVERABLES,
         GET_ALL_DELIVERIES,
 
