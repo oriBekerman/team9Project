@@ -237,6 +237,15 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
+	public void updateDishIngredients(MenuItem item) {
+		try {
+			Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.UPDATE_INGREDIENTS, item);
+			getClient().sendToServer(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void addDishToDatabase(MenuItem newDish) {
 		// Assuming you have a way to send requests to the server:
 		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);

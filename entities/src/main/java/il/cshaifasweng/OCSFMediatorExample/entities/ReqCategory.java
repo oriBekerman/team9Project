@@ -11,5 +11,6 @@ public enum ReqCategory
     RESERVATION,
     COMPLAINT,
     REPORTS,
-    REMOVE_DISH
+    REMOVE_DISH,
+    UPDATE_INGREDIENTS
 }

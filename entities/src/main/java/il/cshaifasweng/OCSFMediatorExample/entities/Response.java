@@ -84,6 +84,7 @@ public class Response<T> implements Serializable {
         UPDATED_PRICE,
         REMOVE_DISH,
         ADD_DISH,
+        UPDATE_INGREDIENTS,
 
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,

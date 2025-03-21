@@ -28,6 +28,7 @@ public class MenuItemsController {
             case UPDATE_PRICE -> updateThePrice(request);
             case ADD_DISH -> handleAddDishRequest(request);
             case REMOVE_DISH -> handleRemoveDishRequest(request);  // Handle REMOVE_DISH here
+            case UPDATE_INGREDIENTS -> handleUpdateDishIngredientsRequest(request); // Handle UPDATE_INGREDIENTS here
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
@@ -114,6 +115,20 @@ public class MenuItemsController {
         List<MenuItem> results = query.list();
         session.close();
         return results;
+    }
+
+    public Response handleUpdateDishIngredientsRequest(Request<MenuItem> request) {
+        MenuItem dishToUpdate = request.getData();  // Retrieve the dish with updated ingredients from the request
+        int itemId = dishToUpdate.getItemID();  // Get the item ID
+        String newIngredients = dishToUpdate.getIngredients();  // Get the new ingredients
+
+        boolean success = menuItemsRepository.updateDishIngredients(itemId, newIngredients);  // Call repository method to update ingredients
+
+        if (success) {
+            return new Response<>(ResponseType.UPDATE_INGREDIENTS, dishToUpdate, "Dish ingredients updated successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+        } else {
+            return new Response<>(ResponseType.UPDATE_INGREDIENTS, null, "Failed to update dish ingredients", Status.ERROR, Response.Recipient.THIS_CLIENT);
+        }
     }
 
     // Update the price of a menu item

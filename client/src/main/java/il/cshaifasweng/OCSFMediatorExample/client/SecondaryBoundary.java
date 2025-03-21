@@ -85,7 +85,7 @@ public class SecondaryBoundary {
             return;
         }
 
-        // Open a dialog or prompt to update ingredients (you can create a separate method for this if needed)
+        // Open a dialog or prompt to update ingredients
         TextInputDialog dialog = new TextInputDialog(selectedItem.getIngredients());
         dialog.setTitle("Update Ingredients");
         dialog.setHeaderText("Edit the ingredients for: " + selectedItem.getName());
@@ -96,8 +96,11 @@ public class SecondaryBoundary {
             // Update the selected item’s ingredients
             selectedItem.setIngredients(newIngredients);
             menuTableView.refresh();  // Refresh the TableView to show the updated ingredients
+
+            // Send the updated ingredients to the server
+            SimpleClient.getClient().updateDishIngredients(selectedItem);
         });
-    };
+    }
 
     @FXML
     void addDish(ActionEvent event) {

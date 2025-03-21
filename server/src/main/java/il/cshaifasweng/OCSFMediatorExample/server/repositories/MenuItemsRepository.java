@@ -133,6 +133,32 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
             return false;
         }
     }
+    public boolean updateDishIngredients(int itemId, String newIngredients) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+
+            // Retrieve the menu item by its ID
+            MenuItem menuItem = session.get(MenuItem.class, itemId); // Retrieve by ID
+            if (menuItem != null) {
+                // Update ingredients of the menu item
+                menuItem.setIngredients(newIngredients);
+
+                // Merge the updated menu item into the session
+                session.merge(menuItem); // Use merge to apply updates
+
+                // Commit the transaction
+                session.getTransaction().commit();
+                System.out.println("Ingredients updated successfully for: " + menuItem.getName());  // Logging
+                return true;
+            } else {
+                System.out.println("MenuItem with ID " + itemId + " not found.");
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the error
+            return false;
+        }
+    }
     // Add a new MenuItem (Dish) to the database
     public boolean addMenuItem(MenuItem newDish) {
         Transaction transaction = null;  // Declare a transaction object
