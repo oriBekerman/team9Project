@@ -15,6 +15,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
@@ -63,7 +66,11 @@ public class DeliveryBoundary {
     private Label deliveryMessageLabel;
 
     private List<OrderItem> orderItems = new ArrayList<>();
-    private Delivery currentDelivery= new Delivery();;
+    private Delivery currentDelivery= new Delivery();
+
+    public void setDelivery(Delivery delivery){
+        this.currentDelivery= delivery;
+    }
 
     private static final double DELIVERY_COST = 15.0;
 
@@ -122,14 +129,17 @@ public class DeliveryBoundary {
 
     // Function to update the total price label
     private void updateTotalPrice() {
+
         // Ensure the menu table view is updated with the latest order items
-        if (orderItems != null) {
+        if (orderItems != null && !orderItems.isEmpty()) {
 
             double totalPrice = 0.0;
 
             // Calculate the total price based on quantity and price for each item
             for (OrderItem orderItem : orderItems) {
-                totalPrice += orderItem.getMenuItem().getPrice() * orderItem.getQuantity();
+                if (orderItem != null && orderItem.getMenuItem() != null) {
+                    totalPrice += orderItem.getMenuItem().getPrice() * orderItem.getQuantity();
+                }
             }
 
             // Add delivery cost if delivery is selected
@@ -214,9 +224,10 @@ public class DeliveryBoundary {
 
     @FXML
     void navToPD(ActionEvent event) {
-        currentDelivery.setOrderItems(orderItems);
-        System.out.println(currentDelivery);
-        switchToPDDelivery("personalDetailsFillingDelivery", currentDelivery);
+        if(currentDelivery != null) {
+            currentDelivery.setOrderItems(orderItems);
+            switchToPDDelivery(currentDelivery);
+        }
     }
 
 

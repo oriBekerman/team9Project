@@ -27,7 +27,7 @@
       <TextField fx:id="phoneTextField" layoutX="188.0" layoutY="110.0" />
       <TextField fx:id="mailTextField" layoutX="188.0" layoutY="150.0"/>
       <Button fx:id="contToCCInfoBtn" layoutX="405.0" layoutY="242.0" mnemonicParsing="false" onAction="#contToCCinfoFill" text="Continue" />
-      <Button fx:id="backBtn" layoutX="34.0" layoutY="249.0" mnemonicParsing="false" onAction="#backToReservation" text="Back" />
+      <Button fx:id="backBtn" layoutX="34.0" layoutY="249.0" mnemonicParsing="false" onAction="#backToDelivery" text="Back" />
       <Label fx:id="errorLabel" layoutX="65.0" layoutY="212.0" prefHeight="17.0" prefWidth="329.0" />
    </children>
 </AnchorPane>

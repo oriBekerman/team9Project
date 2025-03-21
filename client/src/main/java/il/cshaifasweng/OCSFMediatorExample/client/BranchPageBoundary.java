@@ -19,8 +19,7 @@ import javafx.scene.layout.VBox;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
-import static il.cshaifasweng.OCSFMediatorExample.client.App.switchToDelivery;
+import static il.cshaifasweng.OCSFMediatorExample.client.App.*;
 
 public class BranchPageBoundary {
 
@@ -37,6 +36,7 @@ public class BranchPageBoundary {
     public Button tableBtn;
     private final Object lock = new Object();
     private boolean branchTablesSet = false;
+    private Delivery currentDelivery= new Delivery();
 
     public BranchPageBoundary() {
         EventBus.getDefault().register(this);
@@ -102,8 +102,7 @@ public class BranchPageBoundary {
     public void navToReservationPage(ActionEvent actionEvent) {
     }
     public void navToDeliveryPage(ActionEvent actionEvent) {
-        // Now switch to the Delivery page
-        switchToDelivery("Delivery", branch);
+        switchToDelivery(branch, currentDelivery);
     }
     public void navToComplaintPage(ActionEvent actionEvent) {
     }
@@ -224,5 +223,7 @@ public class BranchPageBoundary {
         }
 
     }
+
+
 }
 //change

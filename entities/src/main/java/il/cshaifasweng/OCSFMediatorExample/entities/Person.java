@@ -29,11 +29,19 @@ public abstract class Person implements Serializable {
         this.address = address;
         this.email = email;
     }
+    public Person(int id, String name, String address, String email, String phone) {
+        this.id =id;
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.phone =phone;
+    }
     // Constructor with fields
     public Person(String name, String address, String email, String phone) {
         this.name = name;
         this.address = address;
         this.email = email;
+        this.phone= phone;
     }
     // Constructor with fields
     public Person(String name, String email,String phoneNumber) {
