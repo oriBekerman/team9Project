@@ -2,30 +2,28 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
 import java.time.LocalTime;
 
+import il.cshaifasweng.OCSFMediatorExample.client.Events.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
-import il.cshaifasweng.OCSFMediatorExample.entities.Request;
-import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
-import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
-import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateBranchResEvent;
-import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
-import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
-import java.util.ArrayList;
+
+import java.util.*;
+
 import javafx.application.Platform;
 
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.greenrobot.eventbus.Subscribe;
 

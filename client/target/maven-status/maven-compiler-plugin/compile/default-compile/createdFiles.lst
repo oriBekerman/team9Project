@@ -26,8 +26,10 @@ il\cshaifasweng\OCSFMediatorExample\client\App.class
 il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingDeliveryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\CreditCardInfoSet.class
 il\cshaifasweng\OCSFMediatorExample\client\ActiveUser.class
+il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\MenuEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuBarBoundary.class
+il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchListBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ReservationBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.class

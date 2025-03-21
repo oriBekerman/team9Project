@@ -63,30 +63,36 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
 
-            // 1. Save or update customer
             if (resSInfo.getCustomer() != null) {
                 session.saveOrUpdate(resSInfo.getCustomer());
             }
-            // 2. Save or update branch
+
             if (resSInfo.getBranch() != null) {
                 session.saveOrUpdate(resSInfo.getBranch());
             }
-            // 3. Save or update each table and update unavailable times
+
             if (resSInfo.getTable() != null && !resSInfo.getTable().isEmpty()) {
                 for (RestTable table : resSInfo.getTable()) {
-                    table.addUnavailableFromTime(resSInfo.getHours());  // update availability
-                    session.saveOrUpdate(table); // persist the change to table & its collection
+                    table.addUnavailableFromTime(resSInfo.getHours());
+                    session.saveOrUpdate(table);
                 }
             }
-            // 4. Save the reservation itself
             session.save(resSInfo);
             tx.commit();
+
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
+            if (tx != null && tx.getStatus().canRollback()) {
+                try {
+                    tx.rollback();
+                } catch (Exception rollbackEx) {
+                    System.err.println("Rollback failed: " + rollbackEx.getMessage());
+                }
+            }
             e.printStackTrace();
             throw new RuntimeException("Failed to populate reservation", e);
         }
     }
+
 
     public List<ResInfo> getReservationsByBranchAndMonth(int branchId, String monthYear) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
