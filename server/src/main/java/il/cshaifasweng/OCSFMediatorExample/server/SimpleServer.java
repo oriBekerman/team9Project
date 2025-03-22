@@ -24,9 +24,6 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    private static CustomerController customerController;
-    private static OrderItemController orderItemController;
-
     public static String dataBasePassword = "poolgirL1?"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
@@ -142,21 +139,5 @@ public class SimpleServer extends AbstractServer {
         this.deliveryController = databaseManager.getDeliveryController();
         this.resInfoController = databaseManager.getResInfoController();
         this.complaintController = databaseManager.getComplaintController();
-        this.customerController = databaseManager.getCustomerController();
-        this.orderItemController = databaseManager.getOrderItemController();
-    }
-
-    public static CustomerController getCustomerController() {
-        if(customerController==null){
-            customerController=new CustomerController();
-        }
-        return customerController;
-    }
-
-    public static OrderItemController getOrderItemController() {
-        if(orderItemController==null){
-            orderItemController=new OrderItemController();
-        }
-        return orderItemController;
     }
 }
