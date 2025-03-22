@@ -26,7 +26,7 @@ public class ResInfoController {
         System.out.println("Handling request: " + request.getRequestType());
         return switch (request.getRequestType())
         {
-            case ADD_RESERVATION -> addReservation(request);
+            case ADD_RESERVATION -> handleNewReservation(request);
 //            case CANCEL_RESERVATION-> cancelReservation(request);
             case GET_RES_REPORT -> getAllReservations();
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
@@ -98,57 +98,73 @@ public class ResInfoController {
         }
     }
 
-    public Response addReservation(Request request) {
-        Response response=new Response(ADDED_RESERVATION,null,null,BOTH);
-        Response response1=new Response(ADDED_RESERVATION,null,null,THIS_CLIENT);
-        Response response2=new Response(UPDATE_BRANCH_TABLES,null,null,ALL_CLIENTS);
-        ResInfo reservation = (ResInfo) request.getData();
-        if(reservation.getBranch()==null)
-        {
-            System.out.println("reservation has no branch");
+    public Response addReservation(ResInfo reservation) {
+        Response response = new Response(ADDED_RESERVATION, null, null, BOTH);
+        Response response1 = new Response(ADDED_RESERVATION, null, null, THIS_CLIENT);
+        Response response2 = new Response(UPDATE_BRANCH_TABLES, null, null, ALL_CLIENTS);
+
+        if (reservation.getBranch() == null) {
+            return new Response(ADDED_RESERVATION, null, "Reservation must include a branch.", ERROR, THIS_CLIENT);
         }
+
         Branch branch = reservation.getBranch();
         Customer customer = reservation.getCustomer();
         Set<RestTable> tables = reservation.getTable();
         LocalTime time = reservation.getHours();
-        // 1. Validate table list
+
         if (tables == null || tables.isEmpty()) {
-            System.out.println("tables is empty or null");
             return new Response(ADDED_RESERVATION, null, "No tables provided for reservation", ERROR, THIS_CLIENT);
-
         }
-        // 2. Mark each table as unavailable
+
+        // Mark tables as unavailable
         for (RestTable table : tables) {
-                System.out.println("in add reservation table loop: " + table.getId());
-                table.addUnavailableFromTime(time);
+            table.addUnavailableFromTime(time);
         }
-        // 3. Set status and link relationships
-        reservation.setStatus(ResInfo.Status.APPROVED);
-        branch.addReservation(reservation);  // sets branch on reservation and adds to branch.reservations
 
-        // 4. Save reservation
-        ResInfo newReservation=resInfoRepository.addReservation(reservation);
-        if(newReservation==null)
-        {
-            System.out.println("res in null");
+        // Set status and save
+        reservation.setStatus(ResInfo.Status.APPROVED);
+        branch.addReservation(reservation); // Link reservation to branch
+
+        ResInfo newReservation = resInfoRepository.addReservation(reservation);
+        if (newReservation == null) {
+            return new Response(ADDED_RESERVATION, null, "Failed to save reservation.", ERROR, THIS_CLIENT);
         }
         response1.setData(newReservation);
         response1.setStatus(SUCCESS);
         response1.setMessage("Dear " + customer.getName() + ",\n" +
-                "Your reservation has been confirmed.\n" +
-                "Here are the details:\n\n" +
+                "Your reservation has been confirmed.\n\n" +
                 "Time: " + reservation.getHours() + "\n" +
                 "Guests: " + reservation.getNumOfGuests() + "\n" +
-                "Branch: " + reservation.getBranch().getName() + "\n" +
+                "Branch: " + reservation.getBranch().getName() + "\n\n" +
                 "Enjoy your meal!");
         response2.setData(newReservation);
         response2.setStatus(SUCCESS);
-        List<Response> responses = new ArrayList<>();
-        responses.add(response1);
-        responses.add(response2);
-        response.setData(responses);
+        response.setData(List.of(response1, response2));
         response.setStatus(SUCCESS);
         return response;
+    }
+
+    public boolean checkTableAvailability(ResInfo resInfo)
+    {
+        boolean available=false;
+        Set<RestTable> restTables = resInfo.getTable();
+        LocalTime time = resInfo.getHours();
+        List<ResInfo> conflictingReservations=resInfoRepository.findConflictingReservations(restTables,time);
+        if(conflictingReservations.isEmpty())
+        {
+            available=true;
+        }
+        return available;
+    }
+    public Response handleNewReservation(Request request) {
+        ResInfo reservation = (ResInfo) request.getData();
+
+        if (!checkTableAvailability(reservation)) {
+            return new Response<>(ADDED_RESERVATION, null,
+                    "One or more selected tables are already reserved at this time.", ERROR, THIS_CLIENT);
+        }
+
+        return addReservation(reservation);
     }
 
 

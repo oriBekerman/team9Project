@@ -9,8 +9,10 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import javax.persistence.criteria.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.ResInfo.Status.APPROVED;
 
@@ -169,6 +171,35 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             e.printStackTrace();
         }
     }
+    public List<ResInfo> findConflictingReservations(Set<RestTable> tables, LocalTime time) {
+        List<ResInfo> conflicts = new ArrayList<>();
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<ResInfo> cq = cb.createQuery(ResInfo.class);
+            Root<ResInfo> root = cq.from(ResInfo.class);
+            Join<ResInfo, RestTable> tableJoin = root.join("tables");
+
+            // Filter for reservations using any of the selected tables
+            Predicate tableIn = tableJoin.in(tables);
+
+            // Time range: 1.5 hours before and after the given time
+            LocalTime startRange = time.minusHours(1).minusMinutes(15);
+            LocalTime endRange = time.plusHours(1).plusMinutes(15);
+            Predicate timeRange = cb.between(root.get("hours"), startRange, endRange);
+
+            cq.select(root).distinct(true)
+                    .where(cb.and(tableIn, timeRange));
+
+            conflicts = session.createQuery(cq).getResultList();
+            session.getTransaction().commit();
+        }
+
+        return conflicts;
+    }
+
 
 
 }

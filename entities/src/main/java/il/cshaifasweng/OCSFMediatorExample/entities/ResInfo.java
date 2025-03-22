@@ -31,6 +31,7 @@ public class ResInfo implements Serializable {
     private Set<RestTable> tables = new HashSet<>();
 
 
+
 //    @Column(nullable = false)
 //    private LocalDate resDate;
 
@@ -46,9 +47,14 @@ public class ResInfo implements Serializable {
     @Column(nullable = false)
     private Status status;
 
+    @Transient
     public boolean customerIsSet=false;
+    @Transient
     public boolean branchIsSet=false;
+    @Transient
     public boolean tableIsSet=false;
+//    @Transient
+//    Set<RestTable> tempTables = new HashSet<>();
 
 
     // Default constructor
@@ -156,7 +162,12 @@ public class ResInfo implements Serializable {
     public Set<RestTable> getTable() {
         return tables;
     }
-
+//    public Set<RestTable> getTempTables() {
+//        return tempTables;
+//    }
+//    public void setTempTables(Set<RestTable> tempTables) {
+//        this.tempTables = tempTables;
+//    }
     @Override
     public String toString() {
         return "ResInfo{" +

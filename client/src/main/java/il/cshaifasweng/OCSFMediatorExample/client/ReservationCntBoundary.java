@@ -10,7 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import org.greenrobot.eventbus.EventBus;
-import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
@@ -87,7 +86,9 @@ public class ReservationCntBoundary {
         time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
         SimpleClient.getClient().resInfo.setBranch(branch);
         SimpleClient.getClient().resInfo.setHours(time);
-        SimpleClient.getClient().resInfo.setTable(optionalTablesMap.get(time)); //set the tables at the chosen time to resInfo
+        Set<RestTable> tables=optionalTablesMap.get(time);
+        SimpleClient.getClient().resInfo.setTable(tables);
+//        SimpleClient.getClient().resInfo.setTable(optionalTablesMap.get(time)); //set the tables at the chosen time to resInfo
 
 
 //        // Parse the time from string to LocalTime
@@ -249,8 +250,6 @@ public class ReservationCntBoundary {
 
     }
 
-
-
     public void openPersonalDetailsPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("personalDetailsFilling.fxml"));
@@ -258,6 +257,10 @@ public class ReservationCntBoundary {
             // Get the controller and set the type before waiting
             PersonalDetailsFillingBoundary boundary = loader.getController();
             boundary.setType("reservation");  // This should be set before waiting
+            if(SimpleClient.getClient().rebookReservation)
+            {
+                boundary.setFields();
+            }
             synchronized (boundary) {
                 while (!boundary.typeIsSet) {
                     System.out.println("Waiting for type to be set...");
@@ -286,6 +289,19 @@ public class ReservationCntBoundary {
         System.out.println("customer name: " +SimpleClient.getClient().resInfo.getCustomer().getName() );
         System.out.println("customer card: " +SimpleClient.getClient().resInfo.getCustomer().getCreditCardNumber() );
         System.out.println("customer email: "+SimpleClient.getClient().resInfo.getCustomer().getEmail());
+        LocalTime time=SimpleClient.getClient().resInfo.getHours();
+//        Set<RestTable> restTables=SimpleClient.getClient().resInfo.getTable();
+//        for(RestTable table:restTables)
+//        {
+//            if(!(table.isAvailableAt(time)))
+//            {
+//                System.out.println("is available = "+table.isAvailableAt(time));
+//                tableNotAvailable();
+//                return;
+//            }
+//        }
+        SimpleClient.getClient().resInfo.setTable(SimpleClient.getClient().resInfo.getTable());
+        SimpleClient.getClient().rebookReservation=false;
         Request request=new Request(RESERVATION,ADD_RESERVATION,SimpleClient.getClient().resInfo);
         try{
             SimpleClient.getClient().sendToServer(request);
@@ -295,6 +311,24 @@ public class ReservationCntBoundary {
         }
         System.out.println("in on details filled event: sent reservation to server" );
 
+    }
+
+    private void tableNotAvailable() {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Table Not Available");
+            alert.setHeaderText("Dear customer, unfortunately, the table you selected is no longer available. " +
+                    "Please go back and choose a different time slot. " +
+                    "We apologize for the inconvenience and appreciate your understanding.");
+            alert.getButtonTypes().setAll(ButtonType.PREVIOUS);
+            Optional<ButtonType> result = alert.showAndWait();
+            // on OK
+            if (result.isPresent() && result.get() == ButtonType.PREVIOUS) {
+//                SimpleClient.getClient().rebookReservation=true;
+//                switchScreen("reservationCnt");
+                switchScreen("Reservation");
+            };
+        });
     }
 
     private void makeReservation() {
@@ -344,6 +378,13 @@ public class ReservationCntBoundary {
                 performAdditionalAction();
             }
         });
+    }
+
+    @Subscribe
+    public void onTableIsReservedEvent(TableIsReservedEvent event)
+    {
+        tableNotAvailable();
+        updatePage(event.getReservation());
     }
     // return to primary page after OK
     private void performAdditionalAction() {

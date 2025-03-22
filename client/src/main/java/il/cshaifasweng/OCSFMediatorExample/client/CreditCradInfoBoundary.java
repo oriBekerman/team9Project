@@ -160,6 +160,15 @@ public class CreditCradInfoBoundary {
             return false;
         }
     }
+    public void setFields()
+    {
+        if(SimpleClient.getClient().resInfo != null)
+        {
+           cardNumText.setText(SimpleClient.getClient().resInfo.getCustomer().getCreditCardNumber());
+           expDateText.setText(SimpleClient.getClient().resInfo.getCustomer().getExpirationDate());
+           cvvText.setText(SimpleClient.getClient().resInfo.getCustomer().getCvv());
+        }
+    }
 
 
 }

@@ -14,6 +14,7 @@ import java.util.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
 
 
@@ -27,6 +28,8 @@ public class SimpleClient extends AbstractClient {
 	private static ActiveUser activeUser = null;
 	public Map <String, String> mapReservation=new HashMap<String, String>();
 	public ResInfo resInfo=new ResInfo();
+	public boolean rebookReservation=false;
+	public  boolean tableAvailable=true;
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
@@ -151,8 +154,16 @@ public class SimpleClient extends AbstractClient {
 			}
 			if(response.getResponseType().equals(ADDED_RESERVATION))
 			{
-				ReservationAddedEvent event=new ReservationAddedEvent((ResInfo) response.getData(),response.getMessage());
-				EventBus.getDefault().post(event);
+				if(response.getStatus().equals(SUCCESS))
+				{
+					ReservationAddedEvent event=new ReservationAddedEvent((ResInfo) response.getData(),response.getMessage());
+					EventBus.getDefault().post(event);
+				}
+				if(response.getStatus().equals(ERROR))
+				{
+					TableIsReservedEvent event=new TableIsReservedEvent((ResInfo) response.getData());
+					EventBus.getDefault().post(event);
+				}
 			}
 			if(response.getResponseType().equals(UPDATE_BRANCH_TABLES))
 			{

@@ -34,6 +34,7 @@ C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SubComplaintBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationPersonalInfoSet.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReservationCntBoundary.java
+C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\TableIsReservedEvent.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationAddedEvent.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Main.java

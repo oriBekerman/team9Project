@@ -133,6 +133,10 @@ public class PersonalDetailsFillingBoundary {
             // Get the controller and set the type before waiting
             CreditCradInfoBoundary boundary = loader.getController();
             boundary.setType("reservation");  // This should be set before waiting
+//            if(SimpleClient.getClient().rebookReservation)
+//            {
+//                boundary.setFields();
+//            }
             synchronized (boundary) {
                 while (!boundary.typeIsSet) {
                     System.out.println("Waiting for type to be set...");
@@ -150,6 +154,15 @@ public class PersonalDetailsFillingBoundary {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();  // Restore interrupted state
+        }
+    }
+    public void setFields()
+    {
+        if(SimpleClient.getClient().resInfo != null)
+        {
+            nameTextField.setText(SimpleClient.getClient().resInfo.getCustomer().getName());
+            phoneTextField.setText(SimpleClient.getClient().resInfo.getCustomer().getPhone());
+            mailTextField.setText(SimpleClient.getClient().resInfo.getCustomer().getEmail());
         }
     }
 
