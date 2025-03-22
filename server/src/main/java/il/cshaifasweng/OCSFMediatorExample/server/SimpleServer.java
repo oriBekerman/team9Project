@@ -171,4 +171,8 @@ public class SimpleServer extends AbstractServer {
         complaintController=databaseManager.getComplaintController();
 
     }
+    public static BranchController getBranchController()
+    {
+        return branchController;
+    }
 }

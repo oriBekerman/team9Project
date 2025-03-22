@@ -18,7 +18,7 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCE
 
 public class ResInfoController {
 
-    private ResInfoRepository resInfoRepository;
+    private static ResInfoRepository resInfoRepository;
 
 
     // Handle requests based on type

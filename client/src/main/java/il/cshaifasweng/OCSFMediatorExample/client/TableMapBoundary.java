@@ -40,11 +40,16 @@ public class TableMapBoundary {
     public Button tableBtn6;
     public AnchorPane root;
     public Button backBtn;
-    private List<Button>buttons=new ArrayList<>();
+    public Button tableBtn7;
+    public Button tableBtn9;
+    public Button tableBtn8;
+    public Button tableBtn10;
+    private List<Button> buttons=new ArrayList<>();
+//    private List<Button>insideButtons=new ArrayList<>();
+//    private List<Button> outsideButtons=new ArrayList<>();
     private Map<RestTable,Button>map=new HashMap<>();
     private Map<Integer,RestTable>idMap=new HashMap<>();
     
-
 
     public TableMapBoundary()
     {
@@ -55,6 +60,9 @@ public class TableMapBoundary {
 //            buttons=insideGridPane.getChildren();
 //           setMap(branch);
         }
+//        if (!EventBus.getDefault().isRegistered(this)) {
+//            EventBus.getDefault().register(this);
+//        }
     }
     // initialize the map before letting the map page be opened
     public void setMap(Branch branch) {
@@ -91,7 +99,24 @@ public class TableMapBoundary {
                 buttons.add(tableBtn4);
                 buttons.add(tableBtn5);
                 buttons.add(tableBtn6);
-                List<RestTable> tableList = new ArrayList<>(tables); // Convert Set to List
+                buttons.add(tableBtn7);
+                buttons.add(tableBtn9);
+                buttons.add(tableBtn8);
+                buttons.add(tableBtn10);
+                List<RestTable> tableList = new ArrayList<>(tables);// Convert Set to List
+//                List<RestTable> outTables=new ArrayList<>();
+//                List<RestTable> inTables=new ArrayList<>();
+//                for (RestTable t:tableList)
+//                {
+//                    if(t.getArea().equals("outside"))
+//                    {
+//                        outTables.add(t);
+//                    }
+//                    else
+//                    {
+//                        inTables.add(t);
+//                    }
+//                }
                 for (int i = 0; i < Math.min(tableList.size(), buttons.size()); i++) {
 //                    String num = String.valueOf(tableList.get(i).getId());
                     map.put(tableList.get(i), buttons.get(i));
@@ -251,20 +276,19 @@ public class TableMapBoundary {
 
 
     }
-
     private void updatePage(ResInfo resInfo) {
         this.branch=resInfo.getBranch();
-//        if (resInfo.getHours().equals(timesBox.getSelectionModel().getSelectedItem()))
-//        {
-//            for(RestTable t: resInfo.getTable())
-//            {
-//                RestTable oldTable=idMap.get(t.getId());
-//                Button button=map.get(oldTable);
-//                map.remove(oldTable);
-//                map.put(t,button);
-//            }
-//
-//        }
+        if (resInfo.getHours().equals(timesBox.getSelectionModel().getSelectedItem()))
+        {
+            for(RestTable t: resInfo.getTable())
+            {
+                RestTable oldTable=idMap.get(t.getId());
+                Button button=map.get(oldTable);
+                map.remove(oldTable);
+                map.put(t,button);
+            }
+        }
         setMap(branch);
     }
+
 }

@@ -108,10 +108,27 @@ private static void initialize(String password) {
             RestTable table1= new RestTable("inside", 2);
             RestTable table2= new RestTable("inside", 4);
             RestTable table3= new RestTable("inside", 3);
-            RestTable table4= new RestTable("outside", 4);
-            RestTable table5= new RestTable("outside", 3);
-            RestTable table6= new RestTable("outside", 2);
-           List<RestTable> restTables = List.of(table1, table2, table3, table4);
+            RestTable table4= new RestTable("inside", 4);
+            RestTable table5= new RestTable("inside", 3);
+            RestTable table6= new RestTable("inside", 2);
+            RestTable table7= new RestTable("outside", 2);
+            RestTable table8= new RestTable("outside", 3);
+            RestTable table9= new RestTable("outside", 4);
+            RestTable table10= new RestTable("outside", 2);
+           List<RestTable> restTablesHaifa = List.of(table1, table2, table3, table4,table5,table6,table7,table8,table9,table10);
+
+            RestTable table11= new RestTable("inside", 2);
+            RestTable table12= new RestTable("inside", 4);
+            RestTable table13= new RestTable("inside", 3);
+            RestTable table14= new RestTable("inside", 4);
+            RestTable table15= new RestTable("inside", 3);
+            RestTable table16= new RestTable("inside", 2);
+            RestTable table17= new RestTable("outside", 2);
+            RestTable table18= new RestTable("outside", 3);
+            RestTable table19= new RestTable("outside", 4);
+            RestTable table20= new RestTable("outside", 2);
+            List<RestTable> restTablesTelAviv = List.of(table11, table12, table13, table14,table15,table16,table17,table18,table19,table20);
+
 
 //            // Set unavailable times
 //            LocalTime time1 = LocalTime.of(9, 0);
@@ -127,10 +144,16 @@ private static void initialize(String password) {
 //            restTables.get(4).addUnavailableFromTime(time5);
 
             // Assign tables to Haifa branch
-            for (RestTable table : restTables) {
+            for (RestTable table : restTablesHaifa) {
                 table.setBranch(haifaBranch);
             }
-            haifaBranch.setRestTables(new HashSet<>(restTables));
+            haifaBranch.setRestTables(new HashSet<>(restTablesHaifa));
+
+            // Assign tables to Tel Aviv branch
+            for (RestTable table : restTablesTelAviv) {
+                table.setBranch(telAvivBranch);
+            }
+            telAvivBranch.setRestTables(new HashSet<>(restTablesTelAviv));
 
             // ==========================
             // 5. Assign Menu Items & Deliverables to Branches

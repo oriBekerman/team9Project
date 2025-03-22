@@ -19,7 +19,7 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCE
 
 public class MenuItemsController {
 
-    private MenuItemsRepository menuItemsRepository;
+    private static MenuItemsRepository menuItemsRepository;
     public Response handleRequest(Request request)
     {
         System.out.println("Handling request: " + request.getRequestType());
