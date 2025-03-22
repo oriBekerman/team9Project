@@ -65,6 +65,9 @@ public class DeliveryBoundary {
     @FXML
     private Label deliveryMessageLabel;
 
+    @FXML
+    private Button Continue;
+
     private List<OrderItem> orderItems = new ArrayList<>();
     private Delivery currentDelivery= new Delivery();
 
@@ -171,6 +174,7 @@ public class DeliveryBoundary {
                         if (orderItem != null) {
                             orderItem.setQuantity(newValue);  // Update quantity in the OrderItem
                             updateTotalPrice(); // Update the total price when quantity changes
+                            isOrderValid(); //check if order valid for continue
                         }
                     });
                 }
@@ -185,6 +189,7 @@ public class DeliveryBoundary {
                         setGraphic(quantitySpinner);  // Display the spinner
                     }
                 }
+
             };
         });
 
@@ -220,10 +225,10 @@ public class DeliveryBoundary {
     @FXML
     void navToPD(ActionEvent event) {
         if (currentDelivery != null) {
-            // Filter the orderItems to only include those with a quantity greater than 1
+            // Filter the orderItems to only include those with a quantity greater than 0
             List<OrderItem> filteredItems = new ArrayList<>();
             for (OrderItem orderItem : orderItems) {
-                if (orderItem.getQuantity() > 1) {
+                if (orderItem.getQuantity() > 0) {
                     filteredItems.add(orderItem);
                 }
             }
@@ -233,6 +238,27 @@ public class DeliveryBoundary {
 
             // Switch to the PD Delivery page with the filtered delivery
             switchToPDDelivery(currentDelivery);
+        }
+    }
+    @FXML
+    private void isOrderValid() {
+        // Check if a delivery method is selected
+        boolean isDeliveryMethodSelected = deliveryRadio.isSelected() || pickupRadio.isSelected();
+
+        // Check if at least one order item has a quantity greater than 0
+        boolean isAtLeastOneItemValid = false;
+        for (OrderItem orderItem : orderItems) {
+            if (orderItem.getQuantity() > 0) {
+                isAtLeastOneItemValid = true;
+                break;
+            }
+        }
+
+        // Enable or disable the "Continue" button based on the conditions
+        if (isDeliveryMethodSelected && isAtLeastOneItemValid) {
+            Continue.setDisable(false); // Enable Continue button
+        } else {
+            Continue.setDisable(true); // Disable Continue button
         }
     }
 
@@ -275,10 +301,15 @@ public class DeliveryBoundary {
                 // If "Delivery" is selected, show the message
                 deliveryMessageLabel.setText("Delivery fee is 15 shekels.");
                 deliveryMessageLabel.setVisible(true);
+                isOrderValid();
             } else {
                 // If "Delivery" is not selected, hide the message
                 deliveryMessageLabel.setVisible(false);
             }
+        });
+
+        pickupRadio.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            isOrderValid(); // Ensure button validity is updated after selecting pickup
         });
 
 
@@ -288,6 +319,7 @@ public class DeliveryBoundary {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        isOrderValid();
     }
 
 

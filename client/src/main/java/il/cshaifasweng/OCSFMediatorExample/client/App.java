@@ -266,4 +266,28 @@ public class App extends Application {
         });
     }
 
+    public static void switchToSummeryDelivery(Delivery delivery) {
+        Platform.runLater(() -> {
+            setWindowTitle("Order Summery");
+            try {
+                // Load the FXML file for the delivery screen
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("deliverySummery.fxml"));
+                Parent root = loader.load();
+
+                // Get the controller of the loaded FXML
+                DeliverySummeryBoundary boundary = loader.getController();
+
+                // Pass the branchId to the controller
+                boundary.setDelivery(delivery);
+
+                // Set the scene and show the stage
+                scene = new Scene(root);
+                appStage.setScene(scene);
+                appStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
 }
