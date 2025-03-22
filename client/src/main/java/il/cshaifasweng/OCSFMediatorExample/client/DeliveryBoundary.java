@@ -308,6 +308,10 @@ public class DeliveryBoundary {
             }
         });
 
+        pickupRadio.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            isOrderValid(); // Ensure button validity is updated after selecting pickup
+        });
+
 
         // Fetch menu data
         try {
