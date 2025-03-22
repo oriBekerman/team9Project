@@ -6,16 +6,13 @@ C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\re
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableOriginatorServer.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\ComplaintRepository.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\App.java
-C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\OrderItemRepository.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\controllers\MenuItemsController.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\controllers\BranchController.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\AdaptableServer.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\EmployeeRepository.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\controllers\ComplaintController.java
-C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\controllers\CustomerController.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\ConnectionToClient.java
-C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\controllers\OrderItemController.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableServer.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\ResInfoRepository.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\OriginatorMessage.java
@@ -28,4 +25,3 @@ C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\co
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\RestTableRepository.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\DatabaseManager.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractConnectionFactory.java
-C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\CustomerRepository.java
