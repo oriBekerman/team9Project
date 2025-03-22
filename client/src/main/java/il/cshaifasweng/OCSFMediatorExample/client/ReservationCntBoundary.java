@@ -441,15 +441,6 @@ public class ReservationCntBoundary {
     {
         SimpleClient.getClient().resInfo.setBranch(reservation.getBranch()); //update the branch in reservation to the updated branch
         this.branch=reservation.getBranch(); //update this branch to the updated branch
-        //update map and comboBox
-//        for(RestTable table : reservation.getTable())
-//        {
-//            if(optionalTablesMap.get(reservation.getHours())==table)
-//            {
-//                optionalTablesMap.remove(reservation.getHours());
-//                hoursList.getItems().remove(reservation.getHours());
-//            }
-//        }
             updateAvailableTimesAndUI();
     }
 }
