@@ -15,7 +15,7 @@ import java.util.List;
 public class Delivery implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orderNumber", unique = true, nullable = false)
+    @Column(name = "orderNumber", unique = true)
     private Integer orderNumber;
 
     @Column(name = "date")
@@ -26,7 +26,7 @@ public class Delivery implements Serializable {
     private List<OrderItem> orderItems; // A list of OrderItem objects
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @Enumerated(EnumType.STRING)

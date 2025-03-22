@@ -1,5 +1,4 @@
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ConnectionToClient.class
-il\cshaifasweng\OCSFMediatorExample\server\controllers\OrderItemController.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\LogInController.class
 il\cshaifasweng\OCSFMediatorExample\server\HibernateUtil.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableOriginatorServer.class
@@ -7,18 +6,15 @@ il\cshaifasweng\OCSFMediatorExample\server\controllers\DeliveryController$1.clas
 il\cshaifasweng\OCSFMediatorExample\server\controllers\DeliveryController.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableServer.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\MenuItemsController$1.class
-il\cshaifasweng\OCSFMediatorExample\server\repositories\CustomerRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AdaptableServer.class
 il\cshaifasweng\OCSFMediatorExample\server\repositories\DeliveryRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\ComplaintController.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\MenuItemsController.class
 il\cshaifasweng\OCSFMediatorExample\server\DatabaseManager.class
 il\cshaifasweng\OCSFMediatorExample\server\SimpleServer.class
-il\cshaifasweng\OCSFMediatorExample\server\repositories\OrderItemRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\LogInController$1.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\BranchController.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\OriginatorMessage.class
-il\cshaifasweng\OCSFMediatorExample\server\controllers\CustomerController.class
 il\cshaifasweng\OCSFMediatorExample\server\repositories\MenuItemsRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\App.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\SubscribedClient.class
