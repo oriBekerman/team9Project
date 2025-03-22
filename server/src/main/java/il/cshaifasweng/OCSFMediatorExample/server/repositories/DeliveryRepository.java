@@ -5,6 +5,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
 import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.CustomerController;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.OrderItemController;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -45,6 +46,13 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
 
                 // Pass the list of one customer to PopulateCustomers
                 customerController.PopulateCustomer(customer);
+            }
+            // Populate the order items if they exist
+            if (delivery.getOrderItems() != null && !delivery.getOrderItems().isEmpty()) {
+                OrderItemController orderItemController = new OrderItemController();
+
+                // Pass the list of order items to populate
+                orderItemController.populateOrderItems(delivery.getOrderItems());
             }
 
             // Save the delivery, which will also cascade save the orderItems due to the @OneToMany(cascade = CascadeType.ALL) in Delivery

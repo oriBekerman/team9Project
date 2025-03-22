@@ -44,6 +44,10 @@ public class PersonalDetailsFillingDeliveryBoundary{
     @FXML
     private TextField phoneTextField;
 
+    @FXML
+    private TextField addressTextField;
+
+
     private Delivery currentDelivery= null;
 
     public void setDelivery(Delivery delivery){
@@ -57,7 +61,8 @@ public class PersonalDetailsFillingDeliveryBoundary{
         String name=nameTextField.getText();
         String phone=phoneTextField.getText();
         String mail=mailTextField.getText();
-        if(name.isEmpty() || phone.isEmpty() || mail.isEmpty())
+        String address = addressTextField.getText();
+        if(name.isEmpty() || phone.isEmpty() || mail.isEmpty()|| address.isEmpty())
         {
             errorLabel.setText("Please enter all the fields.");
         }
@@ -71,7 +76,7 @@ public class PersonalDetailsFillingDeliveryBoundary{
         }
         else{
             // Create a Customer object with partial information (credit card details will be added later)
-            Customer customer = new Customer(name, mail, phone, null, null, null);
+            Customer customer = new Customer(name, address, mail, phone, null, null, null);
 
             if (currentDelivery != null) {
                 currentDelivery.setCustomer(customer);
@@ -95,7 +100,7 @@ public class PersonalDetailsFillingDeliveryBoundary{
         assert mailTextField != null : "fx:id=\"mailTextField\" was not injected: check your FXML file 'personalDetailsFillingDelivery.fxml'.";
         assert nameTextField != null : "fx:id=\"nameTextField\" was not injected: check your FXML file 'personalDetailsFillingDelivery.fxml'.";
         assert phoneTextField != null : "fx:id=\"phoneTextField\" was not injected: check your FXML file 'personalDetailsFillingDelivery.fxml'.";
-
+        assert addressTextField != null : "fx:id=\"addressTextField\" was not injected: check your FXML file 'personalDetailsFillingDelivery.fxml'.";
 
     }
     public static boolean isValidPhone(String phone) {
