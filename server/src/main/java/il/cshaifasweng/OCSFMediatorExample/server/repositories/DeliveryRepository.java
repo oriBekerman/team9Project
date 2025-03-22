@@ -44,7 +44,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
                 CustomerController customerController = new CustomerController();
 
                 // Pass the list of one customer to PopulateCustomers
-                customerController.PopulateCustomers(customer);
+                customerController.PopulateCustomer(customer);
             }
 
             // Save the delivery, which will also cascade save the orderItems due to the @OneToMany(cascade = CascadeType.ALL) in Delivery

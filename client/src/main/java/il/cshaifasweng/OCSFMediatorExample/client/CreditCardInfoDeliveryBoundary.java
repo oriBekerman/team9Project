@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -77,6 +78,9 @@ public class CreditCardInfoDeliveryBoundary {
                         customer.setCvv(cvv);
                         customer.setExpirationDate(expDate);
                         currentDelivery.setCustomer(customer);
+                        // Set the current date and time for the delivery
+                        LocalDateTime now = LocalDateTime.now();
+                        currentDelivery.setDeliveryTime(now);
 
                         // Create the request to send to the server for delivery creation
                         Request<Delivery> createDeliveryRequest = new Request<>(
@@ -87,6 +91,7 @@ public class CreditCardInfoDeliveryBoundary {
 
                         // Assuming you have a method for sending requests to the server
                         SimpleClient.getClient().sendToServer(createDeliveryRequest);
+                        System.out.println(currentDelivery);
                     }
                     else{
                         System.out.println("custumer is null");

@@ -195,7 +195,7 @@ public class App extends Application {
         }
     }
 
-    public static void switchToDelivery(Branch branch, Delivery delivery) {
+    public static void switchToDelivery(Delivery delivery) {
         Platform.runLater(() -> {
             setWindowTitle("Delivery");
             try {
@@ -206,8 +206,6 @@ public class App extends Application {
                 // Get the controller of the loaded FXML
                 DeliveryBoundary deliveryBoundary = loader.getController();
 
-                // Pass the branchId to the controller
-                deliveryBoundary.setBranchId(branch);
                 deliveryBoundary.setDelivery(delivery);
 
                 // Set the scene and show the stage

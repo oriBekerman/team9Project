@@ -39,6 +39,15 @@ public class CustomerController {
         }
     }
 
+    public void PopulateCustomer(List<Customer> customers) {
+        try {
+            System.out.println("populating Customer...");
+            customerRepository.populate(customers);
+        } catch (Exception exception) {
+            throw exception;
+        }
+    }
+
     public boolean checkIfEmpty() {
         return customerRepository.getCustomers().isEmpty();
     }

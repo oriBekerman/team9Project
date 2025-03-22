@@ -86,7 +86,7 @@ public class PersonalDetailsFillingDeliveryBoundary{
 
     @FXML
     void backToDelivery(ActionEvent event) {
-        switchToDelivery(currentDelivery.getBranch(), currentDelivery);
+        switchToDelivery(currentDelivery);
     }
     @FXML
     void initialize() {

@@ -74,11 +74,6 @@ public class DeliveryBoundary {
 
     private static final double DELIVERY_COST = 15.0;
 
-    // Setter method for setting the branch ID
-    public void setBranchId(Branch branch) {
-        currentDelivery.setBranch(branch);
-    }
-
     // Event handler for MenuEvent
     @Subscribe
     public void displayMenu(MenuEvent event) {
@@ -224,8 +219,19 @@ public class DeliveryBoundary {
 
     @FXML
     void navToPD(ActionEvent event) {
-        if(currentDelivery != null) {
-            currentDelivery.setOrderItems(orderItems);
+        if (currentDelivery != null) {
+            // Filter the orderItems to only include those with a quantity greater than 1
+            List<OrderItem> filteredItems = new ArrayList<>();
+            for (OrderItem orderItem : orderItems) {
+                if (orderItem.getQuantity() > 1) {
+                    filteredItems.add(orderItem);
+                }
+            }
+
+            // Set the filtered order items to the current delivery
+            currentDelivery.setOrderItems(filteredItems);
+
+            // Switch to the PD Delivery page with the filtered delivery
             switchToPDDelivery(currentDelivery);
         }
     }
