@@ -195,7 +195,7 @@ public class App extends Application {
         }
     }
 
-    public static void switchToDelivery(String screenName, Branch branch) {
+    public static void switchToDelivery(Delivery delivery) {
         Platform.runLater(() -> {
             setWindowTitle("Delivery");
             try {
@@ -206,8 +206,7 @@ public class App extends Application {
                 // Get the controller of the loaded FXML
                 DeliveryBoundary deliveryBoundary = loader.getController();
 
-                // Pass the branchId to the controller
-                deliveryBoundary.setBranchId(branch);
+                deliveryBoundary.setDelivery(delivery);
 
                 // Set the scene and show the stage
                 scene = new Scene(root);
@@ -219,7 +218,7 @@ public class App extends Application {
         });
     }
 
-    public static void switchToPDDelivery(String screenName, Delivery delivery) {
+    public static void switchToPDDelivery(Delivery delivery) {
         Platform.runLater(() -> {
             setWindowTitle("Personal Details Filling");
             try {
@@ -228,10 +227,34 @@ public class App extends Application {
                 Parent root = loader.load();
 
                 // Get the controller of the loaded FXML
-//                PersonalDetailsFillingdDeliveryBoundary boundary = loader.getController();
-//
-//                // Pass the branchId to the controller
-//                boundary.setDelivery(delivery);
+                PersonalDetailsFillingDeliveryBoundary boundary = loader.getController();
+
+                // Pass the branchId to the controller
+                boundary.setDelivery(delivery);
+
+                // Set the scene and show the stage
+                scene = new Scene(root);
+                appStage.setScene(scene);
+                appStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static void switchToCCInfoDelivery(Delivery delivery) {
+        Platform.runLater(() -> {
+            setWindowTitle("Credit Card Information");
+            try {
+                // Load the FXML file for the delivery screen
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("creditCardInfoDelivery.fxml"));
+                Parent root = loader.load();
+
+                // Get the controller of the loaded FXML
+                CreditCardInfoDeliveryBoundary boundary = loader.getController();
+
+                // Pass the branchId to the controller
+                boundary.setDelivery(delivery);
 
                 // Set the scene and show the stage
                 scene = new Scene(root);

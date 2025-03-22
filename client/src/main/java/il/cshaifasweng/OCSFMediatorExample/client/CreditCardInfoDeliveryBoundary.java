@@ -1,6 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -8,6 +10,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.CreditCardInfoSet;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,14 +18,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.greenrobot.eventbus.EventBus;
 
-import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+import static il.cshaifasweng.OCSFMediatorExample.client.App.*;
 
 public class CreditCardInfoDeliveryBoundary {
 
-
+    @FXML
     public TextField cardNumText;
+    @FXML
     public TextField expDateText;
+    @FXML
     public TextField cvvText;
+    @FXML
     public Label errorLabel;
     @FXML
     private ResourceBundle resources;
@@ -35,81 +41,85 @@ public class CreditCardInfoDeliveryBoundary {
 
     @FXML
     private Button paymentBtn;
-    private String type;
-    public boolean typeIsSet=false;
+    private Delivery currentDelivery= null;
+
+    public void setDelivery(Delivery delivery){
+        this.currentDelivery= delivery;
+        System.out.println("delivery passed to credit card info");
+    }
 
     public CreditCardInfoDeliveryBoundary() {}
 
-    public CreditCardInfoDeliveryBoundary(String type) {
-        this.type = type;
-        this.typeIsSet=true;
-    }
-
     @FXML
     void backToPersonalD(ActionEvent event) {
-        switchScreen("Personal Details Filling");
+        switchToPDDelivery(currentDelivery);
     }
 
     @FXML
-    void checkPayment(ActionEvent event) {
+    void checkPayment(ActionEvent event) throws IOException {
         String cardNum = cardNumText.getText();
         String expDate = expDateText.getText();
         String cvv = cvvText.getText();
-        if(cardNum.isEmpty() || expDate.isEmpty() || cvv.isEmpty()) {
-            errorLabel.setText("Please fill all the fields");
-        }
-        else if(!isValidCreditCard(cardNum))
-        {
-            errorLabel.setText("Invalid Card Number");
-        }
-        else if(!isValidExpDate(expDate))
-        {
-            errorLabel.setText("Invalid Expiry Date");
-        }
-        else if (!isValidCVV(cvv))
-        {
-            errorLabel.setText("Invalid CVV");
-        }
-        else {
-            if(type=="reservation")
-            {
-                SimpleClient.getClient().mapReservation.put("cardNum", cardNum);
-                SimpleClient.getClient().mapReservation.put("expDate", expDate);
-                SimpleClient.getClient().mapReservation.put("cvv", cvv);
+        try {
+            if (cardNum.isEmpty() || expDate.isEmpty() || cvv.isEmpty()) {
+                errorLabel.setText("Please fill all the fields");
+            } else if (!isValidCreditCard(cardNum)) {
+                errorLabel.setText("Invalid Card Number");
+            } else if (!isValidExpDate(expDate)) {
+                errorLabel.setText("Invalid Expiry Date");
+            } else if (!isValidCVV(cvv)) {
+                errorLabel.setText("Invalid CVV");
+            } else {
+                if (currentDelivery != null) {
+                    // add credit card to custumer
+                    Customer customer = currentDelivery.getCustomer();
+                    if(customer!=null) {
+                        customer.setCreditCardNumber(cardNum);
+                        customer.setCvv(cvv);
+                        customer.setExpirationDate(expDate);
+                        currentDelivery.setCustomer(customer);
+                        // Set the current date and time for the delivery
+                        LocalDateTime now = LocalDateTime.now();
+                        currentDelivery.setDeliveryTime(now);
 
-                // stop reservation timer since pay is pressed and reservation will be saved
-                TimerManager.getInstance().cancelTimer("reservationTimeout");
+                        // Create the request to send to the server for delivery creation
+                        Request<Delivery> createDeliveryRequest = new Request<>(
+                                ReqCategory.DELIVERY,
+                                RequestType.CREATE_DELIVERY,
+                                currentDelivery
+                        );
 
-                CreditCardInfoSet events = new CreditCardInfoSet();
-                EventBus.getDefault().post(events);
+                        // Assuming you have a method for sending requests to the server
+                        SimpleClient.getClient().sendToServer(createDeliveryRequest);
+                        System.out.println(currentDelivery);
+                    }
+                    else{
+                        System.out.println("custumer is null");
+                    }
+                } else {
+                    System.out.println("Delivery object is null, cannot assign customer.");
+                }
+
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();  // Log the error
+            errorLabel.setText("An unexpected error occurred.");
         }
-
     }
 
     @FXML
     void initialize() {
         assert backBtn != null : "fx:id=\"backBtn\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
         assert paymentBtn != null : "fx:id=\"paymentBtn\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
-
-
+        assert cardNumText != null : "fx:id=\"cardNumText\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
+        assert expDateText != null : "fx:id=\"expDateText\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
+        assert cvvText != null : "fx:id=\"cvvText\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
+        assert errorLabel != null : "fx:id=\"errorLabel\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
     }
-    public void setType(String type) {
-        System.out.println("in set type before sync");
-        synchronized (this) {
-            if (this.type == null || !this.type.equals(type)) {
-                System.out.println("in type map after sync");
-                this.type = type;
-                this.typeIsSet = true;
-                notifyAll();
-            }
-        }
-    }
-
 
 
     //validate card number
+
     public boolean isValidCreditCard(String cardNumber) {
         if (!Pattern.compile("^[0-9]{13,19}$").matcher(cardNumber).matches()) {
             return false;
@@ -153,6 +163,7 @@ public class CreditCardInfoDeliveryBoundary {
             return cardExpiry.isAfter(YearMonth.now()); // Expiration must be in the future
         } catch (
                 DateTimeParseException e) {
+            System.out.println("Invalid date format: " + expDate);
             return false;
         }
     }

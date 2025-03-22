@@ -1,13 +1,17 @@
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
 import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.CustomerController;
+import il.cshaifasweng.OCSFMediatorExample.server.controllers.OrderItemController;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DeliveryRepository extends BaseRepository<Delivery> {
@@ -32,10 +36,23 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
     public boolean populateDelivery(Delivery delivery) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-
             // Save the customer first if it's not null
             if (delivery.getCustomer() != null) {
-                session.saveOrUpdate(delivery.getCustomer());  // Ensure the customer is saved or updated
+
+                // Create a list containing the single customer
+                List<Customer> customer = Collections.singletonList(delivery.getCustomer());
+
+                CustomerController customerController = new CustomerController();
+
+                // Pass the list of one customer to PopulateCustomers
+                customerController.PopulateCustomer(customer);
+            }
+            // Populate the order items if they exist
+            if (delivery.getOrderItems() != null && !delivery.getOrderItems().isEmpty()) {
+                OrderItemController orderItemController = new OrderItemController();
+
+                // Pass the list of order items to populate
+                orderItemController.populateOrderItems(delivery.getOrderItems());
             }
 
             // Save the delivery, which will also cascade save the orderItems due to the @OneToMany(cascade = CascadeType.ALL) in Delivery

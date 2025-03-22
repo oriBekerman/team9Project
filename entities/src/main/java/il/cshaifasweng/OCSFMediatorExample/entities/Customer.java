@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "Customers")
 public class Customer extends Person {
 
     @Column(nullable = false)
@@ -17,16 +18,10 @@ public class Customer extends Person {
     // Default constructor
     public Customer() {}
 
-    // Constructor with fields
-    public Customer(int id, String name, String address, String email, String creditCardNumber, String expirationDate, String cvv) {
-        super(id, name, address, email);  // Call the Person constructor
-        this.creditCardNumber = creditCardNumber;
-        this.expirationDate = expirationDate;
-        this.cvv = cvv;
-    }
+
     // Constructor with fields
     public Customer(String name, String address, String email,String phoneNumber, String creditCardNumber, String expirationDate, String cvv) {
-        super(name, address,phoneNumber,email);  // Call the Person constructor
+        super(name, address,email, phoneNumber);  // Call the Person constructor
         this.creditCardNumber = creditCardNumber;
         this.expirationDate = expirationDate;
         this.cvv = cvv;

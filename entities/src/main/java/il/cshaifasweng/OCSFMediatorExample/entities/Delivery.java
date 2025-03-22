@@ -19,7 +19,7 @@ public class Delivery implements Serializable {
     private Integer orderNumber;
 
     @Column(name = "date")
-    private LocalDateTime date; // Change to LocalDateTime
+    private LocalDateTime date;
 
     // One-to-many relationship with OrderItem
     @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
@@ -125,6 +125,14 @@ public class Delivery implements Serializable {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+    public LocalDateTime getDeliveryTime() {
+        return this.date;
+    }
+
+    // Setter for deliveryTime
+    public void setDeliveryTime(LocalDateTime deliveryTime) {
+        this.date = deliveryTime;
     }
 
     @Override
