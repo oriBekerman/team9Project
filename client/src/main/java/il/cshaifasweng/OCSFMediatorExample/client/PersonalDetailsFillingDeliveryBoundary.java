@@ -91,8 +91,15 @@ public class PersonalDetailsFillingDeliveryBoundary{
 
     @FXML
     void backToDelivery(ActionEvent event) {
+        // Reset the orderItems list inside currentDelivery
+        if (currentDelivery != null) {
+            currentDelivery.getOrderItems().clear();  // Assuming `getOrderItems()` is the getter for the orderItems list
+        }
+
+        // Switch to the delivery page with the updated (reset) orderItems list
         switchToDelivery(currentDelivery);
     }
+
     @FXML
     void initialize() {
         assert backBtn != null : "fx:id=\"backBtn\" was not injected: check your FXML file 'personalDetailsFillingDelivery.fxml'.";
