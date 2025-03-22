@@ -29,6 +29,9 @@ public class SecondaryBoundary {
     private ResourceBundle resources;
 
     @FXML
+    private Button isBranchDishBtn;
+
+    @FXML
     private URL location;
 
     @FXML
@@ -85,7 +88,7 @@ public class SecondaryBoundary {
             return;
         }
 
-        // Open a dialog or prompt to update ingredients (you can create a separate method for this if needed)
+        // Open a dialog or prompt to update ingredients
         TextInputDialog dialog = new TextInputDialog(selectedItem.getIngredients());
         dialog.setTitle("Update Ingredients");
         dialog.setHeaderText("Edit the ingredients for: " + selectedItem.getName());
@@ -96,8 +99,11 @@ public class SecondaryBoundary {
             // Update the selected item’s ingredients
             selectedItem.setIngredients(newIngredients);
             menuTableView.refresh();  // Refresh the TableView to show the updated ingredients
+
+            // Send the updated ingredients to the server
+            SimpleClient.getClient().updateDishIngredients(selectedItem);
         });
-    };
+    }
 
     @FXML
     void addDish(ActionEvent event) {
@@ -135,13 +141,27 @@ public class SecondaryBoundary {
                     try {
                         double price = Double.parseDouble(priceResult.get());
 
+                        // Ask the user to select if it's a base dish or special
+                        ChoiceDialog<DishType> typeDialog = new ChoiceDialog<>(DishType.BASE, DishType.BASE, DishType.SPECIAL);
+                        typeDialog.setTitle("Dish Type");
+                        typeDialog.setHeaderText("Select the type of the dish:");
+                        Optional<DishType> typeResult = typeDialog.showAndWait();
+
+                        // Set default to BASE dish if no selection is made
+                        DishType dishType = typeResult.orElse(DishType.BASE);
+
                         // Create a default byte[] for the picture (empty for now)
                         byte[] defaultPicture = new byte[0];  // Empty byte array for now
 
-                        // Create a new MenuItem and add it to the menu
-                        MenuItem newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, DishType.BASE);
-                        allMenuItems.add(newDish);  // Add to the list
-                        menuTableView.getItems().add(newDish);  // Add to the TableView
+                        // Create a new MenuItem with the selected dish type
+                        MenuItem newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, dishType);
+
+                        // Send the new dish to the server for saving
+                        SimpleClient.getClient().addDishToDatabase(newDish);
+
+                        // Add to the local menu and TableView
+                        allMenuItems.add(newDish);
+                        menuTableView.getItems().add(newDish);
                     } catch (NumberFormatException e) {
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid price format.");
                         alert.showAndWait();
@@ -150,6 +170,8 @@ public class SecondaryBoundary {
             }
         }
     }
+
+
 
     @FXML
     void removeDish(ActionEvent event) {
@@ -170,10 +192,22 @@ public class SecondaryBoundary {
         Optional<ButtonType> result = confirmAlert.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            allMenuItems.remove(selectedItem);  // Remove the dish from the list
-            menuTableView.getItems().remove(selectedItem);  // Remove the dish from the TableView
+            // Remove the dish from the local menu (observable list)
+            allMenuItems.remove(selectedItem);
+
+            // Remove the dish from the TableView
+            menuTableView.getItems().remove(selectedItem);
+
+            // Optionally, send a request to the server to remove the dish
+            // You can use something like SimpleClient.getClient().removeDishFromDatabase(selectedItem);
+            SimpleClient.getClient().removeDishFromDatabase(selectedItem);
+
+            // Optionally, you can show a confirmation message after removing the dish
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Dish removed successfully.");
+            successAlert.showAndWait();
         }
-    };
+    }
+
 
 
     //    @FXML
@@ -263,7 +297,7 @@ public class SecondaryBoundary {
 
         Platform.runLater(() -> {
             menuTableView.refresh();
-            SaveBtn.setDisable(true);
+            //SaveBtn.setDisable(true);
             UpdatePriceBtn.setDisable(false);
             UpdatePriceBtn.requestFocus();
         });
@@ -278,12 +312,42 @@ public class SecondaryBoundary {
             for (TextField priceField : priceFieldMap.values()) {
                 priceField.setDisable(false);  // Enable the TextField
             }
-            SaveBtn.setDisable(false); // Enable save button
+            //SaveBtn.setDisable(false); // Enable save button
             UpdatePriceBtn.setDisable(true); // Disable update button
         });
     }
 
+    @FXML
+    void isBranchDish(ActionEvent event) {
+        // Get the selected MenuItem from the table view
+        MenuItem selectedItem = menuTableView.getSelectionModel().getSelectedItem();
 
+        // If no item is selected, show a message
+        if (selectedItem == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a dish to update its type.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Get the current dish type (BASE or SPECIAL)
+        DishType currentType = selectedItem.getDishType();
+
+        // Toggle between BASE and SPECIAL
+        DishType newType = (currentType == DishType.BASE) ? DishType.SPECIAL : DishType.BASE;
+
+        // Update the dish type of the selected item
+        selectedItem.setDishType(newType);
+
+        // Refresh the TableView to show the updated dish type
+        menuTableView.refresh();
+
+        // Optionally, send the updated dish type to the server (this may depend on your system's architecture)
+        SimpleClient.getClient().updateDishType(selectedItem);
+
+        // Show a success message to the user
+        Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Dish type updated successfully.");
+        successAlert.showAndWait();
+    }
 
 
     @FXML
@@ -322,8 +386,6 @@ public class SecondaryBoundary {
 
 
 
-
-
     // Initialize method to register for events
     @FXML
     void initialize() {
@@ -350,17 +412,17 @@ public class SecondaryBoundary {
                 UpdateingridientsBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
                 addDishBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
                 removeDishBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
-                SaveBtn.setVisible(true);
+                //SaveBtn.setVisible(true);
             } else {
                 UpdatePriceBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
-                SaveBtn.setVisible(false);
+                //SaveBtn.setVisible(false);
                 UpdateingridientsBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
                 addDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
                 removeDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
             }
         } else {
             UpdatePriceBtn.setVisible(false); // Hide Update button if not logged in
-            SaveBtn.setVisible(false);
+            //SaveBtn.setVisible(false);
             UpdateingridientsBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
             addDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
             removeDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
@@ -385,7 +447,7 @@ public class SecondaryBoundary {
         Platform.runLater(() -> {
             // Clear the TableView and refresh it with the updated menu items
             menuTableView.getItems().clear(); // Clear previous items
-            SaveBtn.setDisable(true);  // Disable the save button
+            //SaveBtn.setDisable(true);  // Disable the save button
             UpdatePriceBtn.setDisable(false);  // Re-enable the update button
             UpdatePriceBtn.requestFocus();  // Focus the update button
         });

@@ -1,13 +1,11 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
-
 @Entity
-@Table(name ="menuItems",uniqueConstraints = {
+@Table(name = "menuItems", uniqueConstraints = {
         @UniqueConstraint(columnNames = "ID")})
 public class MenuItem implements Serializable {
 
@@ -28,7 +26,7 @@ public class MenuItem implements Serializable {
     @Column
     private String preference;
 
-    @Column //stores a list of branch IDs where the menuItem cam be delivered from
+    @Column //stores a list of branch IDs where the menuItem can be delivered from
     private String deliverableBranchIds;
 
     @Lob
@@ -38,20 +36,14 @@ public class MenuItem implements Serializable {
     @Column(nullable = false)
     private DishType dishType;  // BASE or SPECIAL
 
-
     @ManyToMany(mappedBy = "menuItems", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-   List<Branch> branches =new ArrayList<>();
+    List<Branch> branches = new ArrayList<>();
 
     @ManyToMany(mappedBy = "deliverableItems")
     private List<Branch> deliverableBranches = new ArrayList<>();
 
-
-
-
-
-
     // Constructor with all fields except itemID (auto-generated)
-    public MenuItem(String name, double price, String ingredients, String preference, byte[] picture,DishType dishType) {
+    public MenuItem(String name, double price, String ingredients, String preference, byte[] picture, DishType dishType) {
         this.name = name;
         this.price = price;
         this.ingredients = ingredients;
@@ -61,14 +53,14 @@ public class MenuItem implements Serializable {
     }
 
     public MenuItem() {
-        // בנאי ריק נדרש על ידי Hibernate
+        // Default constructor required by Hibernate
     }
 
-     //Getters and Setters
-
+    // Getters and Setters
     public int getItemID() {
         return itemID;
     }
+
     public void setItemID(int itemID) {
         this.itemID = itemID;
     }
@@ -112,27 +104,39 @@ public class MenuItem implements Serializable {
     public void setPicture(byte[] picture) {
         this.picture = picture;
     }
+
     public DishType getDishType() {
         return dishType;
     }
-    public String getDishTypeString ()
-    {
-        if (dishType == DishType.SPECIAL)
-            return "YES";
-        return "NO";
+
+    // Convert dishType to string (Base/Special)
+    public String getDishTypeString() {
+        return dishType == DishType.SPECIAL ? "YES" : "NO";
     }
+
     public void setDishType(DishType dishType) {
         this.dishType = dishType;
     }
-    public List<Branch> getBranches() { return branches; }
-    public void setBranches(List<Branch> branches) { this.branches = branches; }
-    public List<Branch> getDeliverableBranches() { return deliverableBranches; }
-    public void setDeliverableBranches(List<Branch> deliverableBranches) { this.deliverableBranches = deliverableBranches; }
 
-    public void printMenuItem(){
-        System.out.println("Name:"+this.name+" price:"+this.price+
-                " ingredients:"+this.ingredients+" preference:"+this.preference);
+    public List<Branch> getBranches() {
+        return branches;
+    }
 
+    public void setBranches(List<Branch> branches) {
+        this.branches = branches;
+    }
+
+    public List<Branch> getDeliverableBranches() {
+        return deliverableBranches;
+    }
+
+    public void setDeliverableBranches(List<Branch> deliverableBranches) {
+        this.deliverableBranches = deliverableBranches;
+    }
+
+    public void printMenuItem() {
+        System.out.println("Name: " + this.name + " price: " + this.price +
+                " ingredients: " + this.ingredients + " preference: " + this.preference);
     }
 
     @Override
@@ -145,6 +149,4 @@ public class MenuItem implements Serializable {
                 ", preference='" + preference + '\'' +
                 '}';
     }
-
 }
-
