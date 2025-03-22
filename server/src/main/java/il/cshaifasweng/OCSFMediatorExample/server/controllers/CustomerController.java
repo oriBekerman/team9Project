@@ -28,16 +28,16 @@ public class CustomerController {
 //    }
 
     // Method to populate Customers if the table is empty
-    public void PopulateCustomers(List<Customer> customers) {
-        try {
-            System.out.println("Checking and populating Customers...");
-            if (customerRepository.getCustomers().isEmpty()) {
-                customerRepository.populate(customers);
-            }
-        } catch (Exception exception) {
-            throw exception;
-        }
-    }
+//    public void PopulateCustomers(List<Customer> customers) {
+//        try {
+//            System.out.println("Checking and populating Customers...");
+//            if (customerRepository.getCustomers().isEmpty()) {
+//                customerRepository.populate(customers);
+//            }
+//        } catch (Exception exception) {
+//            throw exception;
+//        }
+//    }
 
     public void PopulateCustomer(List<Customer> customers) {
         try {

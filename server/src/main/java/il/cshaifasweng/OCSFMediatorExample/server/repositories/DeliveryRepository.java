@@ -3,7 +3,9 @@ package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
 import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
+import il.cshaifasweng.OCSFMediatorExample.server.DatabaseManager;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
+import il.cshaifasweng.OCSFMediatorExample.server.SimpleServer;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.CustomerController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.OrderItemController;
 import org.hibernate.Session;
@@ -36,29 +38,36 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
     public boolean populateDelivery(Delivery delivery) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
+
             // Save the customer first if it's not null
             if (delivery.getCustomer() != null) {
-
-                // Create a list containing the single customer
                 List<Customer> customer = Collections.singletonList(delivery.getCustomer());
-
-                CustomerController customerController = new CustomerController();
-
-                // Pass the list of one customer to PopulateCustomers
+                CustomerController customerController = SimpleServer.getCustomerController();
                 customerController.PopulateCustomer(customer);
             }
-            // Populate the order items if they exist
-            if (delivery.getOrderItems() != null && !delivery.getOrderItems().isEmpty()) {
-                OrderItemController orderItemController = new OrderItemController();
 
-                // Pass the list of order items to populate
-                orderItemController.populateOrderItems(delivery.getOrderItems());
+            // Save the order items before associating them with the delivery
+            if (delivery.getOrderItems() != null && !delivery.getOrderItems().isEmpty()) {
+                OrderItemController orderItemController = SimpleServer.getOrderItemController();
+                orderItemController.populateOrderItem(delivery.getOrderItems());
+            }
+
+            // Link each order item to the delivery and persist them explicitly
+            for (OrderItem item : delivery.getOrderItems()) {
+                item.setDelivery(delivery);  // Ensure each order item is linked to the delivery
+                System.out.println("Saving OrderItem: " + item);
+                session.save(item);  // Save each order item explicitly
             }
 
             // Save the delivery, which will also cascade save the orderItems due to the @OneToMany(cascade = CascadeType.ALL) in Delivery
+            System.out.println("Saving Delivery: " + delivery);
             session.save(delivery);
 
+            // Explicitly flush the session to persist the changes
+            session.flush();  // This ensures that the SQL statements are executed immediately
+
             session.getTransaction().commit();  // Commit the transaction
+
             System.out.println("Delivery saved successfully: " + delivery);
             return true;
         } catch (Exception e) {
@@ -66,6 +75,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
             return false;
         }
     }
+
 
 
     // Get all deliveries from the database
