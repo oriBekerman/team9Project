@@ -23,11 +23,12 @@ public abstract class Person implements Serializable {
     public Person() {}
 
     // Constructor with fields
-    public Person(int id, String name, String address, String email) {
+    public Person(int id, String name, String address, String email,String phone) {
         this.id =id;
         this.name = name;
         this.address = address;
         this.email = email;
+        this.phone = phone;
     }
     // Constructor with fields
     public Person(String name, String address, String email, String phone) {
@@ -35,13 +36,7 @@ public abstract class Person implements Serializable {
         this.address = address;
         this.email = email;
     }
-    // Constructor with fields
-    public Person(String name, String email,String phoneNumber) {
-        this.name = name;
-        this.address = null;
-        this.email = email;
-        this.phone = phoneNumber;
-    }
+
 
     // Getters and Setters
     public int getId() {
@@ -84,5 +79,11 @@ public abstract class Person implements Serializable {
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+    public String getPhone() {
+        return phone;
+    }
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

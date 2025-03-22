@@ -22,13 +22,13 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.ResInfo.Status.APPROV
 //configures database,handles opening and closing sessions
 public class DatabaseManager {
     private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-    private MenuItemsController menuItemsController;
-    private BranchController branchController;
-    private LogInController logInController;
-    private RestTableController restTableController;
-    private DeliveryController deliveryController;
-    private ResInfoController resInfoController;
-    private ComplaintController complaintController;
+    private static MenuItemsController menuItemsController;
+    private static BranchController branchController;
+    private static LogInController logInController;
+    private static RestTableController restTableController;
+    private static DeliveryController deliveryController;
+    private static ResInfoController resInfoController;
+    private static ComplaintController complaintController;
 
     public DatabaseManager(String password) {
         initialize(password);
@@ -154,8 +154,8 @@ private static void initialize(String password) {
             // ==========================
             // Populating some delivery orders
             // Create Customer instances with associated credit card information
-            Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "1234-5678-9876-5432", "12/25", "123");
-            Customer customer2 = new Customer( "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
+            Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "","1234-5678-9876-5432", "12/25", "123");
+            Customer customer2 = new Customer( "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "","9876-5432-1234-5678", "11/24", "456");
 
             // Create OrderItems from MenuItem and quantity
             OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences

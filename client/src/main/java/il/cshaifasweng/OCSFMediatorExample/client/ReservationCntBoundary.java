@@ -35,11 +35,6 @@ public class ReservationCntBoundary {
     boolean flag=false;
     Map<LocalTime,Set<RestTable>> optionalTablesMap=new HashMap<>();
 
-
-
-
-
-
     @FXML
     private ComboBox<String> hoursList;
 
@@ -49,27 +44,38 @@ public class ReservationCntBoundary {
     @FXML
     private Button CntBtn;
 
-    public ReservationCntBoundary() {
-        EventBus.getDefault().register(this);
-    }
+//    public ReservationCntBoundary() {
+//        if (!isRegistered) {
+//            EventBus.getDefault().register(this);
+//            isRegistered = true;
+//        }
+//        try {
+//            initialize();
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @FXML
     void BackAct(ActionEvent event) throws IOException {
-        if (flag==true) {
+//        if (flag) {
+//            chooseCancel();
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Cancellation in Progress");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Reservation has been canceled. Press OK to continue.");
+//            alert.showAndWait();
+//            flag = false;
+//        }
 
-            chooseCancel();
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Cancellation in Progress");
-            alert.setHeaderText(null);
-            alert.setContentText("Reservation has been canceled. Press OK to continue.");
-
-            alert.showAndWait();
-            flag=false;
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
         }
-        EventBus.getDefault().unregister(this);
+
         switchScreen("Reservation");
     }
+
 
     @FXML
     void chooseHours(ActionEvent event) throws IOException {
@@ -139,8 +145,10 @@ public class ReservationCntBoundary {
     @FXML
     void initialize() throws IOException {
         System.out.println("finally!!!!!!!!!!!!!!");
-
-        setHoursList();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+        setHoursList(); // trigger initial data fetch
 
 //        Platform.runLater(() -> {
 //            hoursList.getScene().getWindow().setOnCloseRequest(event -> {
@@ -195,8 +203,12 @@ public class ReservationCntBoundary {
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String timeString = SimpleClient.getClient().mapReservation.get("Hours");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
+//        timeString=SimpleClient.getClient().resInfo.getHours().toString();
         Set<RestTable> availableTables = new HashSet<>();
-
+        if (timeString == null || timeString.isEmpty()) {
+            System.out.println("timeString is null or empty in updateAvailableTimesAndUI!");
+            return;
+        }
         // Parse the time from string to LocalTime
         LocalTime time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"));
 
@@ -234,21 +246,21 @@ public class ReservationCntBoundary {
         });
     }
 
-    private void chooseCancel() throws IOException
-    {
-        System.out.println("in choose cancel");
-        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
-
-        for (RestTable table : availableTables) {
-            Set<LocalTime> updatedTimes = new HashSet<>(table.getUnavailableFromTimes());
-            updatedTimes.remove(time);
-            table.setUnavailableFromTimes(updatedTimes);
-        }
-        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
-        SimpleClient.getClient().sendToServer(request);
-
-
-    }
+//    private void chooseCancel() throws IOException
+//    {
+//        System.out.println("in choose cancel");
+//        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+//
+//        for (RestTable table : availableTables) {
+//            Set<LocalTime> updatedTimes = new HashSet<>(table.getUnavailableFromTimes());
+//            updatedTimes.remove(time);
+//            table.setUnavailableFromTimes(updatedTimes);
+//        }
+//        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
+//        SimpleClient.getClient().sendToServer(request);
+//
+//
+//    }
 
     public void openPersonalDetailsPage() {
         try {
@@ -343,7 +355,7 @@ public class ReservationCntBoundary {
         String expDate=SimpleClient.getClient().mapReservation.get("expDate");
         LocalTime time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"));
         int numOfGuests=Integer.parseInt(numPeople);
-        Customer customer = new Customer(name,email,phone,cardNum,expDate,cvv);
+        Customer customer = new Customer(name,"",email,phone,cardNum,expDate,cvv);
         ResInfo reservation=new ResInfo(branch,customer,time,numOfGuests,area,availableTables);
         reservation.setStatus(ResInfo.Status.APPROVED);
         reservation.setCustomer(customer);
@@ -383,6 +395,7 @@ public class ReservationCntBoundary {
     @Subscribe
     public void onTableIsReservedEvent(TableIsReservedEvent event)
     {
+//        resetEventBus();
         tableNotAvailable();
         updatePage(event.getReservation());
     }
@@ -443,4 +456,9 @@ public class ReservationCntBoundary {
         this.branch=reservation.getBranch(); //update this branch to the updated branch
             updateAvailableTimesAndUI();
     }
+//    private void resetEventBus()
+//    {
+//        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().register(this);
+//    }
 }

@@ -21,6 +21,7 @@ public class ReservationBoundary {
     public SimpleClient client;
     public AnchorPane root;
     public Label titleLabel;
+    public boolean isRegistered=false;
 
 
     @FXML
@@ -50,6 +51,7 @@ public class ReservationBoundary {
 
     @FXML
     private ComboBox<String> numpeopleList;
+
 
     @FXML
     void backToHP(ActionEvent event) {

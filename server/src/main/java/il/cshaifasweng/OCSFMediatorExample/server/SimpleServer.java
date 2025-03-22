@@ -19,13 +19,13 @@ public class SimpleServer extends AbstractServer {
     public static Session session;
 
     //controllers
-    private MenuItemsController menuItemsController =null;
-    private BranchController branchController=null;
-    private RestTableController restTableController=null;
-    private LogInController logInController = null;
-    private DeliveryController deliveryController = null;
-    private ResInfoController resInfoController = null;
-    private ComplaintController complaintController=null;
+    private static MenuItemsController menuItemsController =null;
+    private static BranchController branchController=null;
+    private static RestTableController restTableController=null;
+    private static LogInController logInController = null;
+    private static DeliveryController deliveryController = null;
+    private static ResInfoController resInfoController = null;
+    private static ComplaintController complaintController=null;
 
     public static String dataBasePassword="Bekitnt26@";//change database password here
     public String password="";//used only when entering a new password through cmd
@@ -162,13 +162,13 @@ public class SimpleServer extends AbstractServer {
 
     private void getControllers()
     {
-        this.menuItemsController =databaseManager.getMenuItemsController();
-        this.branchController=databaseManager.getBranchController();
-        this.logInController = databaseManager.getLogInController();
-        this.restTableController = databaseManager.getRestTableController();
-        this.deliveryController = databaseManager.getDeliveryController();
-        this.resInfoController=databaseManager.getResInfoController();
-        this.complaintController=databaseManager.getComplaintController();
+        menuItemsController =databaseManager.getMenuItemsController();
+        branchController=databaseManager.getBranchController();
+        logInController = databaseManager.getLogInController();
+        restTableController = databaseManager.getRestTableController();
+        deliveryController = databaseManager.getDeliveryController();
+        resInfoController=databaseManager.getResInfoController();
+        complaintController=databaseManager.getComplaintController();
 
     }
 }

@@ -14,15 +14,13 @@ public class Customer extends Person {
     @Column(nullable = false)
     private String cvv;
 
-    @Column(nullable = false)
-    private String phoneNumber;
 
     // Default constructor
     public Customer() {}
 
     // Constructor with fields
-    public Customer(int id, String name, String address, String email, String creditCardNumber, String expirationDate, String cvv) {
-        super(id, name, address, email);  // Call the Person constructor
+    public Customer(int id, String name, String address, String email,String phone, String creditCardNumber, String expirationDate, String cvv) {
+        super(id, name, address, email,phone);  // Call the Person constructor
         this.creditCardNumber = creditCardNumber;
         this.expirationDate = expirationDate;
         this.cvv = cvv;
@@ -34,17 +32,6 @@ public class Customer extends Person {
         this.expirationDate = expirationDate;
         this.cvv = cvv;
     }
-    // Constructor with fields
-    public Customer(String name,String email,String phoneNumber, String creditCardNumber,String expirationDate, String cvv) {
-        super(name,email,phoneNumber);  // Call the Person constructor
-        this.creditCardNumber = creditCardNumber;
-        this.expirationDate = expirationDate;
-        this.cvv = cvv;
-        this.phoneNumber=phoneNumber;
-    }
-
-
-
     // Getters and Setters
     public String getCreditCardNumber() {
         return creditCardNumber;
@@ -78,12 +65,5 @@ public class Customer extends Person {
                 ", expirationDate='" + expirationDate + '\'' +
                 ", cvv='" + cvv + '\'' +
                 "} ";
-    }
-
-    public void setPhone(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-    public String getPhone() {
-        return phoneNumber;
     }
 }

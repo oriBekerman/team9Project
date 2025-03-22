@@ -1,7 +1,9 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateBranchTablesEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -40,6 +42,7 @@ public class TableMapBoundary {
     public Button backBtn;
     private List<Button>buttons=new ArrayList<>();
     private Map<RestTable,Button>map=new HashMap<>();
+    private Map<Integer,RestTable>idMap=new HashMap<>();
     
 
 
@@ -92,6 +95,7 @@ public class TableMapBoundary {
                 for (int i = 0; i < Math.min(tableList.size(), buttons.size()); i++) {
 //                    String num = String.valueOf(tableList.get(i).getId());
                     map.put(tableList.get(i), buttons.get(i));
+                    idMap.put(tableList.get(i).getId(), tableList.get(i));
                     setButton(buttons.get(i), String.valueOf(i));
                 }
                 setTimesBox();
@@ -232,5 +236,35 @@ public class TableMapBoundary {
             e.printStackTrace();
         }
 
+    }
+    @Subscribe
+    public void onUpdatesBranchTablesEvent(UpdateBranchTablesEvent event)
+    {
+        ResInfo reservation=event.getReservation();
+        if(reservation==null) {
+            return;
+        }
+        if(this.branch.getName().equals(reservation.getBranch().getName()))
+        {
+            updatePage(reservation);
+        }
+
+
+    }
+
+    private void updatePage(ResInfo resInfo) {
+        this.branch=resInfo.getBranch();
+//        if (resInfo.getHours().equals(timesBox.getSelectionModel().getSelectedItem()))
+//        {
+//            for(RestTable t: resInfo.getTable())
+//            {
+//                RestTable oldTable=idMap.get(t.getId());
+//                Button button=map.get(oldTable);
+//                map.remove(oldTable);
+//                map.put(t,button);
+//            }
+//
+//        }
+        setMap(branch);
     }
 }

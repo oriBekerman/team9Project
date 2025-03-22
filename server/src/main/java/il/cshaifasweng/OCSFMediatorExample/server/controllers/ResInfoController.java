@@ -19,7 +19,7 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCE
 public class ResInfoController {
 
     private ResInfoRepository resInfoRepository;
-//    private static CustomerRepository customerRepository;
+
 
     // Handle requests based on type
     public Response handleRequest(Request request) {
@@ -158,13 +158,15 @@ public class ResInfoController {
     }
     public Response handleNewReservation(Request request) {
         ResInfo reservation = (ResInfo) request.getData();
+        Response response=new Response(ADDED_RESERVATION, null, null, BOTH);
 
         if (!checkTableAvailability(reservation)) {
             return new Response<>(ADDED_RESERVATION, null,
                     "One or more selected tables are already reserved at this time.", ERROR, THIS_CLIENT);
         }
+        response=addReservation(reservation);
 
-        return addReservation(reservation);
+        return response;
     }
 
 
