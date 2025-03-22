@@ -29,8 +29,6 @@ public class DatabaseManager {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    private CustomerController customerController;
-
     public DatabaseManager(String password) {
         initialize(password);
         initControllers();
@@ -57,7 +55,6 @@ private static void initialize(String password) {
         this.deliveryController = new DeliveryController();
         this.resInfoController=new ResInfoController();
         this.complaintController=new ComplaintController();
-        this.customerController= new CustomerController();
     }
     //if  database tables are empty initialize them
     public void checkAndPopulateTables() {
@@ -67,8 +64,7 @@ private static void initialize(String password) {
                 logInController.checkIfEmpty() &&
                 restTableController.checkIfEmpty() &&
                 deliveryController.checkIfEmpty() &&
-                complaintController.checkIfEmpty() &&
-                customerController.checkIfEmpty())
+                complaintController.checkIfEmpty())
         {
 
             // ==========================
@@ -160,11 +156,6 @@ private static void initialize(String password) {
             // Create Customer instances with associated credit card information
             Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "0525616469","5555555555554444", "12/25", "123");
             Customer customer2 = new Customer("Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com","0525616468", "4111111111111111", "11/24", "456");
-            // Create a list of customers
-            List<Customer> customers = new ArrayList<>();
-            customers.add(customer1);
-            customers.add(customer2);
-            customerController.PopulateCustomers(customers);
 
             // Create OrderItems from MenuItem and quantity
             OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences
@@ -267,12 +258,6 @@ private static void initialize(String password) {
         return complaintController;
     }
 
-    CustomerController getCustomerController() {
-        if(customerController==null){
-            customerController=new CustomerController();
-        }
-        return customerController;
-    }
     // shuts down Hibernate.
     public static void shutdown() {
         HibernateUtil.shutdown();
