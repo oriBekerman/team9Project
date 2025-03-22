@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.*;
 
@@ -55,6 +56,14 @@ public class CreditCardInfoDeliveryBoundary {
         switchToPDDelivery(currentDelivery);
     }
 
+    @Subscribe
+    public void onDeliveryReceived(Delivery delivery) {
+        // This method will be called when a Delivery event is posted
+        System.out.println("Received Delivery: " + delivery);
+        currentDelivery = delivery;  // Update the current delivery object
+        switchToSummeryDelivery(currentDelivery);
+    }
+
     @FXML
     void checkPayment(ActionEvent event) throws IOException {
         String cardNum = cardNumText.getText();
@@ -91,7 +100,6 @@ public class CreditCardInfoDeliveryBoundary {
 
                         // Assuming you have a method for sending requests to the server
                         SimpleClient.getClient().sendToServer(createDeliveryRequest);
-                        System.out.println(currentDelivery);
                     }
                     else{
                         System.out.println("custumer is null");
@@ -115,6 +123,9 @@ public class CreditCardInfoDeliveryBoundary {
         assert expDateText != null : "fx:id=\"expDateText\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
         assert cvvText != null : "fx:id=\"cvvText\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
         assert errorLabel != null : "fx:id=\"errorLabel\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
+
+        // Register to EventBus
+        EventBus.getDefault().register(this);
     }
 
 

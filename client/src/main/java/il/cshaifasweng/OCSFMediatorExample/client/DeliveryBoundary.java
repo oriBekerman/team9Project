@@ -225,10 +225,10 @@ public class DeliveryBoundary {
     @FXML
     void navToPD(ActionEvent event) {
         if (currentDelivery != null) {
-            // Filter the orderItems to only include those with a quantity greater than 1
+            // Filter the orderItems to only include those with a quantity greater than 0
             List<OrderItem> filteredItems = new ArrayList<>();
             for (OrderItem orderItem : orderItems) {
-                if (orderItem.getQuantity() > 1) {
+                if (orderItem.getQuantity() > 0) {
                     filteredItems.add(orderItem);
                 }
             }

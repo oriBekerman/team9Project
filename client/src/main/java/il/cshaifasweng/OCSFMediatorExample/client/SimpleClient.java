@@ -130,10 +130,11 @@ public class SimpleClient extends AbstractClient {
 					EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 				}
 			}
-			 if (response.getResponseType().equals(SEND_DELIVERY)) {
+			 if (response.getResponseType().equals(DELIVERY_CREATED)) {
 				Delivery delivery = (Delivery) response.getData();
 				if (delivery != null) {
 					System.out.println(delivery);
+					EventBus.getDefault().post(delivery);
 				} else {
 					System.out.println("No delivery data received.");
 				}
