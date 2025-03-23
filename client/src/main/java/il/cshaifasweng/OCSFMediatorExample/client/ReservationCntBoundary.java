@@ -365,6 +365,7 @@ public class ReservationCntBoundary {
             System.out.println("available tables are null or empty");
         }
         reservation.setTable(availableTables);
+        reservation.setHours(time);
         Request request=new Request<>(RESERVATION,ADD_RESERVATION,reservation);
         try{
             SimpleClient.getClient().sendToServer(request);

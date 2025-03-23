@@ -3,16 +3,22 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateBranchTablesEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
-import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -44,12 +50,18 @@ public class TableMapBoundary {
     public Button tableBtn9;
     public Button tableBtn8;
     public Button tableBtn10;
+    public Label reservationLabel;
+    public GridPane outsideGridPane;
+    public Button selectTablesBtn;
+    public Button doneBtn;
+    private boolean selectionEnabled = false;
     private List<Button> buttons=new ArrayList<>();
-//    private List<Button>insideButtons=new ArrayList<>();
-//    private List<Button> outsideButtons=new ArrayList<>();
-    private Map<RestTable,Button>map=new HashMap<>();
     private Map<Integer,RestTable>idMap=new HashMap<>();
-    
+    private BiMap<RestTable,Button>biMap=new BiMap<RestTable,Button>();
+    private Set<Button> selectedButtons = new HashSet<>();
+
+
+
 
     public TableMapBoundary()
     {
@@ -104,6 +116,7 @@ public class TableMapBoundary {
                 buttons.add(tableBtn8);
                 buttons.add(tableBtn10);
                 List<RestTable> tableList = new ArrayList<>(tables);// Convert Set to List
+                reservationLabel.setVisible(false);
 //                List<RestTable> outTables=new ArrayList<>();
 //                List<RestTable> inTables=new ArrayList<>();
 //                for (RestTable t:tableList)
@@ -119,8 +132,9 @@ public class TableMapBoundary {
 //                }
                 for (int i = 0; i < Math.min(tableList.size(), buttons.size()); i++) {
 //                    String num = String.valueOf(tableList.get(i).getId());
-                    map.put(tableList.get(i), buttons.get(i));
-                    idMap.put(tableList.get(i).getId(), tableList.get(i));
+//                    map.put(tableList.get(i), buttons.get(i));
+//                    idMap.put(tableList.get(i).getId(), tableList.get(i));
+                    biMap.put(tableList.get(i), buttons.get(i));
                     setButton(buttons.get(i), String.valueOf(i));
                 }
                 setTimesBox();
@@ -205,13 +219,13 @@ public class TableMapBoundary {
     private void displayMapAt(LocalTime localTime) {
         Set<RestTable> tables = branch.getAvailableTablesAt(localTime);
         for (RestTable table: tables) {
-            setTableButtonAvailable(map.get(table));
+            setTableButtonAvailable(biMap.getValue(table));
         }
         for(RestTable t: branch.getTables())
         {
             if(!tables.contains(t))
             {
-                setTableButtonsUnavailable(map.get(t));
+                setTableButtonsUnavailable(biMap.getValue(t));
             }
         }
     }
@@ -225,6 +239,7 @@ public class TableMapBoundary {
                 "    -fx-padding: 8px 16px;\n" +
                 "    -fx-border-radius: 6px;\n" +
                 "    -fx-cursor: hand;");
+        button.setUserData("available");
     }
     private void setTableButtonsUnavailable(Button button) {
         button.setStyle(" -fx-font-size: 16px;\n" +
@@ -235,6 +250,7 @@ public class TableMapBoundary {
                 "    -fx-padding: 8px 16px;\n" +
                 "    -fx-border-radius: 6px;\n" +
                 "    -fx-cursor: hand;");
+        button.setUserData("unavailable");
     }
 
     public void BackToBranch(ActionEvent actionEvent) {
@@ -283,12 +299,129 @@ public class TableMapBoundary {
             for(RestTable t: resInfo.getTable())
             {
                 RestTable oldTable=idMap.get(t.getId());
-                Button button=map.get(oldTable);
-                map.remove(oldTable);
-                map.put(t,button);
+                Button button=biMap.getValue(oldTable);
+                biMap.removeByKey(oldTable);
+                biMap.put(t,button);
             }
         }
         setMap(branch);
     }
 
+    public void tableBtnAction(ActionEvent actionEvent) {
+//        LocalTime time=LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
+//        Button bt=(Button)actionEvent.getSource();
+//        if(temp.getUserData().equals("unavailable"))
+//        {
+////            openReservationDetails((Button)actionEvent.getSource(),time);
+//        }
+        Button bt=(Button)actionEvent.getSource();
+        selectedButtons.add(bt);
+    }
+//    private void openReservationDetails(Button button,LocalTime time) {
+//        RestTable t=biMap.getKey(button);
+//        System.out.println("reser boundary teble id: "+t.getId());
+//        ResInfo res=branch.getReservationByTable(t,time);
+//        if(res==null)
+//        {
+//            System.out.println("reservation not found");
+//        }
+////        reservationLabel.setText("reservation:" +
+////                "name -"+res.getCustomer().getName());
+////        showTemporarily(reservationLabel,60);
+//        Platform.runLater(() -> {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Table Reservation:");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Name: " + res.getCustomer().getName());
+//            alert.getButtonTypes().setAll(ButtonType.CLOSE);
+//
+//            alert.show(); // Non-blocking
+//
+//            // Close alert after 30 seconds if not manually closed
+//            PauseTransition delay = new PauseTransition(Duration.seconds(30));
+//            delay.setOnFinished(event -> {
+//                // Check if the alert is still showing before closing
+//                if (alert.isShowing()) {
+//                    alert.close();
+//                }
+//            });
+//            delay.play();
+//        });
+//
+//    }
+    public void showTemporarily(Node node, double seconds) {
+        node.setVisible(true); // Show the node
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(seconds));
+        pause.setOnFinished(event -> node.setVisible(false)); // Hide after duration
+        pause.play();
+    }
+
+    public void reserveTable(RestTable table,LocalTime time)
+    {}
+
+    public void markSelected(MouseEvent mouseEvent) {
+    }
+
+    //set selection mode
+    public void enableSelection(ActionEvent actionEvent) {
+        selectedButtons.clear();
+        selectionEnabled = true;
+
+        for (Button button : biMap.values()) {
+            if ("available".equals(button.getUserData())) {
+                button.setDisable(false);
+                button.setOnAction(this::handleSelectionClick);  // attach listener
+            } else {
+                button.setDisable(true); // prevent clicking unavailable tables
+            }
+        }
+        reservationLabel.setText("Selection mode enabled. Click tables to select.");
+//        showTemporarily(reservationLabel, 4);
+    }
+    //get all the table buttons that were clicked when on selection mode
+    @FXML
+    private void handleSelectionClick(ActionEvent event) {
+        if (!selectionEnabled) return;
+
+        Button button = (Button) event.getSource();
+
+        if (selectedButtons.contains(button)) {
+            selectedButtons.remove(button);
+            setTableButtonAvailable(button);  // reset to available style
+        } else {
+            selectedButtons.add(button);
+            highlightSelectedButton(button);  // visually mark selected
+        }
+    }
+    private void highlightSelectedButton(Button button) {
+        button.setStyle(" -fx-font-size: 16px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-text-fill: white;\n" +
+                "    -fx-background-color: #506037;\n" +
+                "    -fx-alignment: center;\n" +
+                "    -fx-padding: 8px 16px;\n" +
+                "    -fx-border-radius: 6px;\n" +
+                "    -fx-cursor: hand;");
+    }
+
+    public void sendSelection(ActionEvent actionEvent) {
+        for(Button button: selectedButtons)
+        {
+            System.out.println(button.getText());
+        }
+
+    }
+//    //set selection mode
+//    public void disableSelection() {
+//        selectionEnabled = false;
+//        for (Button button : biMap.values()) {
+//            if ("unavailable".equals(button.getUserData())) {
+//                button.setDisable(false);
+//            } else {
+//                button.setDisable(true); // prevent clicking unavailable tables
+//            }
+//        }
+////        showTemporarily(reservationLabel, 4);
+//    }
 }
