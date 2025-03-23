@@ -47,6 +47,9 @@ public class ResInfo implements Serializable {
     @Column(nullable = false)
     private Status status;
 
+    @Column
+    private String walk_in;
+
     @Transient
     public boolean customerIsSet=false;
     @Transient
@@ -168,6 +171,12 @@ public class ResInfo implements Serializable {
 //    public void setTempTables(Set<RestTable> tempTables) {
 //        this.tempTables = tempTables;
 //    }
+    public void setWalk_in(String walk_in) {
+        this.walk_in = walk_in;
+    }
+    public String getWalk_in() {
+        return walk_in;
+    }
     @Override
     public String toString() {
         return "ResInfo{" +
@@ -179,6 +188,7 @@ public class ResInfo implements Serializable {
                 ", inOrOut='" + inOrOut + '\'' +
                 '}';
     }
+
     public enum Status {
         APPROVED,
         DENIED,

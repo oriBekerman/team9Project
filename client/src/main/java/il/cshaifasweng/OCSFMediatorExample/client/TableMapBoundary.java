@@ -28,6 +28,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
+import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.RESERVATION;
+import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.ADD_RESERVATION;
 import static java.lang.Math.min;
 
 public class TableMapBoundary {
@@ -133,7 +135,7 @@ public class TableMapBoundary {
                 for (int i = 0; i < Math.min(tableList.size(), buttons.size()); i++) {
 //                    String num = String.valueOf(tableList.get(i).getId());
 //                    map.put(tableList.get(i), buttons.get(i));
-//                    idMap.put(tableList.get(i).getId(), tableList.get(i));
+                    idMap.put(tableList.get(i).getId(), tableList.get(i));
                     biMap.put(tableList.get(i), buttons.get(i));
                     setButton(buttons.get(i), String.valueOf(i));
                 }
@@ -379,6 +381,16 @@ public class TableMapBoundary {
         reservationLabel.setText("Selection mode enabled. Click tables to select.");
 //        showTemporarily(reservationLabel, 4);
     }
+
+    public void disableSelection() {
+        selectionEnabled = false;
+        for (Button button : biMap.values()) {
+            if ("unavailable".equals(button.getUserData())) {
+                button.setDisable(false);
+            }
+        }
+//        showTemporarily(reservationLabel, 4);
+    }
     //get all the table buttons that were clicked when on selection mode
     @FXML
     private void handleSelectionClick(ActionEvent event) {
@@ -410,18 +422,33 @@ public class TableMapBoundary {
         {
             System.out.println(button.getText());
         }
+        LocalTime time =LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
+        reserveTables(time);
+        disableSelection();
+
 
     }
-//    //set selection mode
-//    public void disableSelection() {
-//        selectionEnabled = false;
-//        for (Button button : biMap.values()) {
-//            if ("unavailable".equals(button.getUserData())) {
-//                button.setDisable(false);
-//            } else {
-//                button.setDisable(true); // prevent clicking unavailable tables
-//            }
-//        }
-////        showTemporarily(reservationLabel, 4);
-//    }
+    private void reserveTables(LocalTime time)
+    {
+        System.out.println("reserve tables");
+        int numOfGuests=0;
+        Set<RestTable> tables=new HashSet<>();
+        for(Button button: selectedButtons)
+        {
+            RestTable t=biMap.getKey(button);
+            tables.add(t);
+            numOfGuests+=t.getCapacity();
+            System.out.println("reserve tables get table: "+t.getId() );
+        }
+        Customer customer=new Customer("","","","","","","");
+        ResInfo reservation=new ResInfo(branch,customer,time,numOfGuests,"",tables);
+        Request request=new Request<>(RESERVATION,ADD_RESERVATION,reservation);
+        try
+        {
+            SimpleClient.getClient().sendToServer(request);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
