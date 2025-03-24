@@ -192,6 +192,15 @@ public class App extends Application {
                     }
                 });
                 break;
+        case "CancelDelivery":
+            Platform.runLater(() -> {
+                try {
+                    setContent("cancelDelivery");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            break;
         }
     }
 

@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import org.greenrobot.eventbus.EventBus;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
@@ -42,13 +43,14 @@ public class DeliverySummeryBoundary {
 
     private void updateUI() {
         // Update UI only if the delivery data is not null
-        if (currentDelivery != null) {
+        if (currentDelivery != null && !currentDelivery.isCanceled()) {
             // Create a StringBuilder to concatenate all the information
             StringBuilder orderDetails = new StringBuilder();
 
             orderDetails.append("Order number: ").append(currentDelivery.getOrderNumber()).append("\n");
             orderDetails.append("Delivery Method: ").append(currentDelivery.getDeliveryMethod()).append("\n");
             orderDetails.append("Total Price: ").append(currentDelivery.getTotalPrice()).append("\n");
+            orderDetails.append("Delivery/Pickup Time: ").append(currentDelivery.getTime()).append("\n");
             orderDetails.append("Order Items:\n");
 
             // Display order items if they exist
@@ -64,6 +66,9 @@ public class DeliverySummeryBoundary {
 
             // Set the full order details to the orderText label
             orderText.setText(orderDetails.toString());
+        }
+        else{
+            orderText.setText("order not exist");
         }
     }
 }

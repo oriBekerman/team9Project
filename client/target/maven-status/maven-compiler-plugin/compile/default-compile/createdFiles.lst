@@ -26,6 +26,7 @@ il\cshaifasweng\OCSFMediatorExample\client\ReservationCntBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\CreditCradInfoBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\App.class
+il\cshaifasweng\OCSFMediatorExample\client\CancelDeliveryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingDeliveryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\CreditCardInfoSet.class
 il\cshaifasweng\OCSFMediatorExample\client\ActiveUser.class
@@ -41,6 +42,7 @@ il\cshaifasweng\OCSFMediatorExample\client\SessionManager.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.class
 il\cshaifasweng\OCSFMediatorExample\client\TableMapBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ComplaintCustomerEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\CancelDeliveryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateBranchTablesEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchTablesReceivedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchPageBoundary.class

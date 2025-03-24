@@ -101,6 +101,7 @@ public class Response<T> implements Serializable {
 
         DELIVERY_CREATED,
         SEND_DELIVERY,
+        DELIVERY_CANCELED,
 
         RETURN_RES_REPORT,
 
