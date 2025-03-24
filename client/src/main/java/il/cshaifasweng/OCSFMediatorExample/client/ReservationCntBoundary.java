@@ -244,6 +244,8 @@ public class ReservationCntBoundary {
                 hoursList.getItems().addAll(availableTimes);  // Add all available times
             }
         });
+        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().register(this);
     }
 
 //    private void chooseCancel() throws IOException
@@ -339,6 +341,7 @@ public class ReservationCntBoundary {
 //                SimpleClient.getClient().rebookReservation=true;
 //                switchScreen("reservationCnt");
                 switchScreen("Reservation");
+                EventBus.getDefault().unregister(this);
             };
         });
     }
