@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +21,7 @@ public class ReservationBoundary {
     public SimpleClient client;
     public AnchorPane root;
     public Label titleLabel;
+    public boolean isRegistered=false;
 
 
     @FXML
@@ -50,6 +52,7 @@ public class ReservationBoundary {
     @FXML
     private ComboBox<String> numpeopleList;
 
+
     @FXML
     void backToHP(ActionEvent event) {
 
@@ -67,6 +70,8 @@ public class ReservationBoundary {
         String chosen = hoursList.getSelectionModel().getSelectedItem();
         client = SimpleClient.getClient();
         client.mapReservation.put("Hours",chosen);
+        LocalTime time=LocalTime.parse(chosen);
+        client.resInfo.setHours(time);
     }
 
 
@@ -75,7 +80,6 @@ public class ReservationBoundary {
         String chosen = InOutdoorList.getSelectionModel().getSelectedItem();
         client = SimpleClient.getClient();
         client.mapReservation.put("Area",chosen);
-
         SimpleClient.getClient().resInfo.setInOrOut(chosen);
     }
 
@@ -84,7 +88,6 @@ public class ReservationBoundary {
         String chosen = numpeopleList.getSelectionModel().getSelectedItem();
         client = SimpleClient.getClient();
         client.mapReservation.put("num",chosen);
-
         SimpleClient.getClient().resInfo.setNumOfGuests(Integer.parseInt(chosen));
     }
 

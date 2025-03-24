@@ -5,10 +5,7 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.sql.Time;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table (name ="restTable",uniqueConstraints = {
@@ -33,12 +30,11 @@ public class RestTable implements Serializable {
 
 // Stores the start times when the table becomes unavailable.
 // Each unavailability period lasts for 1.5 hours from the recorded start time.
+@ElementCollection(fetch = FetchType.EAGER)
+@CollectionTable(name = "table_unavailable_from", joinColumns = @JoinColumn(name = "rest_table_id"))
+@Column(name = "start_time")
+private Set<LocalTime> unavailableFromTimes = new HashSet<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "table_unavailable_from", joinColumns = @JoinColumn(name = "rest_table_id"))
-    @Column(name = "start_time")
-    @org.hibernate.annotations.Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private Set<LocalTime> unavailableFromTimes = new HashSet<>();
 
 
 

@@ -11,6 +11,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Main.class
 il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliverySummeryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationPersonalInfoSet.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\TableIsReservedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\DeliverableItemsSentEvent.class
@@ -19,6 +20,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Events\WarningEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\updateDishEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\UserLoginSuccessEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSentEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SubComplaintBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ReservationCntBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingBoundary.class
@@ -39,5 +41,6 @@ il\cshaifasweng\OCSFMediatorExample\client\SessionManager.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.class
 il\cshaifasweng\OCSFMediatorExample\client\TableMapBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ComplaintCustomerEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateBranchTablesEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchTablesReceivedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchPageBoundary.class

@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.CreditCardInfoSet;
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -75,6 +76,11 @@ public class CreditCradInfoBoundary {
                 SimpleClient.getClient().mapReservation.put("cardNum", cardNum);
                 SimpleClient.getClient().mapReservation.put("expDate", expDate);
                 SimpleClient.getClient().mapReservation.put("cvv", cvv);
+                Customer customer=SimpleClient.getClient().resInfo.getCustomer();
+                customer.setCreditCardNumber(cardNum);
+                customer.setCvv(cvv);
+                customer.setExpirationDate(expDate);
+                SimpleClient.getClient().resInfo.setCustomer(customer);
 
                 // stop reservation timer since pay is pressed and reservation will be saved
                 TimerManager.getInstance().cancelTimer("reservationTimeout");
@@ -152,6 +158,15 @@ public class CreditCradInfoBoundary {
             return cardExpiry.isAfter(YearMonth.now()); // Expiration must be in the future
         } catch (DateTimeParseException e) {
             return false;
+        }
+    }
+    public void setFields()
+    {
+        if(SimpleClient.getClient().resInfo != null)
+        {
+           cardNumText.setText(SimpleClient.getClient().resInfo.getCustomer().getCreditCardNumber());
+           expDateText.setText(SimpleClient.getClient().resInfo.getCustomer().getExpirationDate());
+           cvvText.setText(SimpleClient.getClient().resInfo.getCustomer().getCvv());
         }
     }
 

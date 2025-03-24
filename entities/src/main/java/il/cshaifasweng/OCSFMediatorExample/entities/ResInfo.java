@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,18 +14,23 @@ public class ResInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer resID;
-
-    @ManyToOne  // Assuming Branch is an entity
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     private Branch branch;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
-    @ManyToMany
-    @JoinColumn(name="tableId", referencedColumnName = "id")
-    Set<RestTable> tables;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "reservation_tables",
+            joinColumns = @JoinColumn(name = "reservation_id"),
+            inverseJoinColumns = @JoinColumn(name = "table_id")
+    )
+    private Set<RestTable> tables = new HashSet<>();
+
+
 
 //    @Column(nullable = false)
 //    private LocalDate resDate;
@@ -41,27 +47,22 @@ public class ResInfo implements Serializable {
     @Column(nullable = false)
     private Status status;
 
+    @Column
+    private String walk_in;
+
+    @Transient
     public boolean customerIsSet=false;
+    @Transient
     public boolean branchIsSet=false;
+    @Transient
     public boolean tableIsSet=false;
+//    @Transient
+//    Set<RestTable> tempTables = new HashSet<>();
 
 
     // Default constructor
     public ResInfo() {}
 
-    // Constructor with fields
-//    public ResInfo(Branch branch, Customer customer,LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
-//        this.branch = branch;
-//        this.customer = customer;
-    ////        this.resDate = resDate;
-//        this.hours = hours;
-//        this.numOfGuests = numOfGuests;
-//        this.inOrOut = inOrOut;
-//        this.tables = table;
-//        branchIsSet=true;
-//        customerIsSet=true;
-//        tableIsSet=true;
-//    }
     public ResInfo(Branch branch, Customer customer,LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
         this.branch = branch;
         this.customer = customer;
@@ -72,6 +73,10 @@ public class ResInfo implements Serializable {
         branchIsSet=true;
         customerIsSet=true;
         tableIsSet=true;
+        for(RestTable t: table)
+        {
+            t.addUnavailableFromTime(hours);
+        }
     }
     public ResInfo(LocalTime hours, int numOfGuests, String inOrOut) {
         this.hours = hours;
@@ -103,13 +108,6 @@ public class ResInfo implements Serializable {
         customerIsSet=true;
     }
 
-//    public LocalDate getResDate() {
-//        return resDate;
-//    }
-//    public void setResDate(LocalDate date) {
-//        this.resDate = date;
-//    }
-
     public LocalTime getHours() {
         return hours;
     }
@@ -139,11 +137,20 @@ public class ResInfo implements Serializable {
     public void setTable(Set<RestTable> tables) {
         this.tables = tables;
         tableIsSet=true;
+        for (RestTable t: tables)
+        {
+            t.addUnavailableFromTime(hours);
+        }
     }
     public Set<RestTable> getTable() {
         return tables;
     }
-
+    public void setWalk_in(String walk_in) {
+        this.walk_in = walk_in;
+    }
+    public String getWalk_in() {
+        return walk_in;
+    }
     @Override
     public String toString() {
         return "ResInfo{" +
@@ -155,6 +162,7 @@ public class ResInfo implements Serializable {
                 ", inOrOut='" + inOrOut + '\'' +
                 '}';
     }
+
     public enum Status {
         APPROVED,
         DENIED,

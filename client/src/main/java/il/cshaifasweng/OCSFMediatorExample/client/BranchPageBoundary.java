@@ -193,9 +193,10 @@ public class BranchPageBoundary {
         synchronized (lock) {
             System.out.println("Tables received for branch: " + branch.getName());
             Set<RestTable> tables = event.getTables();
+            List<RestTable> newTables=tables.stream().toList();
 
             if (tables != null && !tables.isEmpty()) {
-                branch.setRestTables(tables);
+                branch.setRestTables(newTables);
                 branchTablesSet = true;
                 lock.notifyAll(); // Wake up any waiting threads
             } else {
@@ -224,7 +225,5 @@ public class BranchPageBoundary {
         }
 
     }
-
-
 }
 //change

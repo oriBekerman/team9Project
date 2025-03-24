@@ -3,13 +3,16 @@ package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
+import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import javax.persistence.criteria.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.ResInfo.Status.APPROVED;
 
@@ -21,8 +24,6 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
         super();
     }
 
-    ///  both of them to copy ( to my new EmployeeRepository )and change just name + type
-
     @Override
     public int getId(ResInfo entity) {return ((ResInfo)entity).getResID();}
 
@@ -30,8 +31,6 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
     protected Class<ResInfo> getEntityClass() {
         return ResInfo.class;
     }
-
-    /// //////
 
     // get ResSInfo form database returns resSInfoList
     public List<ResInfo> getAllResSInfo()
@@ -57,24 +56,40 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             populateResInfo(resInfo);
         }
     }
-    public void populateResInfo(ResInfo resSInfo)
-    {
+    public void populateResInfo(ResInfo resSInfo) {
         Transaction tx = null;
-        try(Session session = HibernateUtil.getSessionFactory().openSession())
-        {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
+
             if (resSInfo.getCustomer() != null) {
-                session.saveOrUpdate(resSInfo.getCustomer());  // Ensure the customer is saved or updated
+                session.saveOrUpdate(resSInfo.getCustomer());
+            }
+
+            if (resSInfo.getBranch() != null) {
+                session.saveOrUpdate(resSInfo.getBranch());
+            }
+
+            if (resSInfo.getTable() != null && !resSInfo.getTable().isEmpty()) {
+                for (RestTable table : resSInfo.getTable()) {
+                    table.addUnavailableFromTime(resSInfo.getHours());
+                    session.saveOrUpdate(table);
+                }
             }
             session.save(resSInfo);
             tx.commit();
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
+
+        } catch (Exception e) {
+            if (tx != null && tx.getStatus().canRollback()) {
+                try {
+                    tx.rollback();
+                } catch (Exception rollbackEx) {
+                    System.err.println("Rollback failed: " + rollbackEx.getMessage());
+                }
+            }
+            e.printStackTrace();
+            throw new RuntimeException("Failed to populate reservation", e);
         }
     }
-
     public List<ResInfo> getReservationsByBranchAndMonth(int branchId, String monthYear) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -93,29 +108,42 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             return new ArrayList<>();
         }
     }
-    public void addReservation(ResInfo reservation, boolean customerInDatabase)
-    {
+    public ResInfo addReservation(ResInfo reservation) {
         Transaction tx = null;
-        if(reservation.branchIsSet && reservation.customerIsSet
-                && reservation.tableIsSet && reservation.getStatus().equals(APPROVED))
-        {
-            if(!customerInDatabase)
-            {
-                saveCustomer(reservation.getCustomer());
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+
+            // Save or update customer if needed
+            if (reservation.getCustomer() != null) {
+                session.saveOrUpdate(reservation.getCustomer());
             }
-            try(Session session = HibernateUtil.getSessionFactory().openSession())
-            {
-                tx=session.beginTransaction();
-                session.save(reservation);
-                tx.commit();
+
+            // Save or update the branch only if necessary
+            if (reservation.getBranch() != null) {
+                session.saveOrUpdate(reservation.getBranch());
             }
-            catch (Exception e) {
-                e.printStackTrace();
+
+            // Save or update each table and mark them unavailable at the reservation time
+            if (reservation.getTable() != null) {
+                for (RestTable table : reservation.getTable()) {
+                    table.addUnavailableFromTime(reservation.getHours());
+                    session.saveOrUpdate(table);
+                }
             }
+
+            // Save the reservation itself
+            session.save(reservation);
+            tx.commit();
+
+            return reservation;
+
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            throw new RuntimeException("Failed to add reservation", e);
         }
     }
-
-
     public void deleteReservation(ResInfo reservation)
     {
         deleteById(reservation.getResID());
@@ -134,6 +162,67 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             e.printStackTrace();
         }
     }
+    public List<ResInfo> findConflictingReservations(Set<RestTable> tables, LocalTime time) {
+        List<ResInfo> conflicts = new ArrayList<>();
 
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
 
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<ResInfo> cq = cb.createQuery(ResInfo.class);
+            Root<ResInfo> root = cq.from(ResInfo.class);
+            Join<ResInfo, RestTable> tableJoin = root.join("tables");
+
+            // Filter for reservations using any of the selected tables
+            Predicate tableIn = tableJoin.in(tables);
+
+            // Time range: 1.5 hours before and after the given time
+            LocalTime startRange = time.minusHours(1).minusMinutes(15);
+            LocalTime endRange = time.plusHours(1).plusMinutes(15);
+            Predicate timeRange = cb.between(root.get("hours"), startRange, endRange);
+
+            cq.select(root).distinct(true)
+                    .where(cb.and(tableIn, timeRange));
+
+            conflicts = session.createQuery(cq).getResultList();
+            session.getTransaction().commit();
+        }
+
+        return conflicts;
+    }
+    //check if there is a reservation with a customer that has the same email if so returns that customer.
+    public Customer getCustomerByEmail(String email) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<ResInfo> cq = cb.createQuery(ResInfo.class);
+            Root<ResInfo> root = cq.from(ResInfo.class);
+
+            // Access nested customer.email
+            Predicate emailMatch = cb.equal(root.get("customer").get("email"), email);
+
+            cq.select(root).where(emailMatch);
+
+            ResInfo res = session.createQuery(cq)
+                    .setMaxResults(1)
+                    .uniqueResult();
+
+            return (res != null) ? res.getCustomer() : null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public void setCustomer(ResInfo newReservation) {
+        Transaction tx=null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession())
+        {
+            tx = session.beginTransaction();
+            session.saveOrUpdate(newReservation);
+            tx.commit();
+        }
+        catch (Exception e) {
+            if (tx != null) tx.rollback();
+        }
+    }
 }

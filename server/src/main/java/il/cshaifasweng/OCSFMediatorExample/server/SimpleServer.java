@@ -24,7 +24,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "poolgirL1?"; // Change database password here
+    public static String dataBasePassword = "Bekitnt26@"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) {
@@ -73,6 +73,10 @@ public class SimpleServer extends AbstractServer {
 
         System.out.println("Response prepared for client: " + response.getResponseType());
         sendResponseToClient(response, client);
+        if(response.getMessage() !=null)
+        {
+            System.out.println("response msg =" +response.getMessage());
+        }
     }
 
     private void sendResponseToClient(Response response, ConnectionToClient client) {
@@ -92,8 +96,16 @@ public class SimpleServer extends AbstractServer {
                 }
                 case BOTH -> {
                     List<Response> responses = (List<Response>) response.getData();
-                    sendToAllClients(responses.get(0));
-                    client.sendToClient(responses.get(1));
+                    if(responses.get(0).getRecipient().equals(THIS_CLIENT) && responses.get(1).getRecipient().equals(ALL_CLIENTS))
+                    {
+                        sendToAllClients(responses.get(1));
+                        client.sendToClient(responses.get(0));
+                    }
+                    if(responses.get(0).getRecipient().equals(ALL_CLIENTS) && responses.get(1).getRecipient().equals(THIS_CLIENT))
+                    {
+                        sendToAllClients(responses.get(0));
+                        client.sendToClient(responses.get(1));
+                    }
                 }
                 default -> System.err.println("Unknown response recipient: " + response.getRecipient());
             }
