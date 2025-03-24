@@ -61,6 +61,9 @@ public class CancelDeliveryBoundary {
     @FXML
     void FindDelivery(ActionEvent event) throws IOException {
 
+        ErrorText.setText("");
+        DeliveryDisplay.getChildren().clear();
+
         String deliveryNum = orderNumberText.getText();
         String email = emailText.getText();
 
@@ -86,12 +89,18 @@ public class CancelDeliveryBoundary {
             System.out.println("Received Delivery: " + delivery);
             currentDelivery = delivery;  // Update the current delivery object
 
-            // Ensure UI updates happen on the JavaFX thread
-            Platform.runLater(this::displayDelivery);
+            // check if email and order number allains
+            if(emailText.getText().equals(currentDelivery.getCustomer().getEmail())) {
+                Platform.runLater(this::displayDelivery);
+            }
+            else{
+                Platform.runLater(() -> {
+                    ErrorText.setText("Order not exist");
+                });
+            }
         } else {
             Platform.runLater(() -> {
-                System.out.println("here");
-                DeliveryDisplay.getChildren().add(new Label("Order not exist"));
+                ErrorText.setText("Order not exist");
             });
         }
     }
@@ -153,6 +162,19 @@ public class CancelDeliveryBoundary {
         }
     }
 
+    @Subscribe
+    public void onDeliveryNotFound(String responseMessage) {
+        if ("delivery not found".equals(responseMessage)) {
+            Platform.runLater(() -> {
+                ErrorText.setText("");
+                DeliveryDisplay.getChildren().clear();
+                ErrorText.setText("delivery not found");
+                cancelBtn.setDisable(true);
+            });
+        }
+    }
+
+
 
     @FXML
     public void initialize() {
@@ -180,42 +202,37 @@ public class CancelDeliveryBoundary {
 
         // Ensure delivery data is not null
         if (currentDelivery != null && !currentDelivery.isCanceled()) {
-            if(currentDelivery.getCustomer().getEmail().equals(emailText.getText())) {
-                // Add order details as Labels to the VBox
-                DeliveryDisplay.getChildren().add(new Label("Order Number: " + currentDelivery.getOrderNumber()));
-                DeliveryDisplay.getChildren().add(new Label("Delivery Method: " + currentDelivery.getDeliveryMethod()));
-                DeliveryDisplay.getChildren().add(new Label("Total Price: " + currentDelivery.getTotalPrice()));
-                DeliveryDisplay.getChildren().add(new Label("Delivery/Pickup Time: " + currentDelivery.getTime()));
-                DeliveryDisplay.getChildren().add(new Label("Order Items:"));
+            // Add order details as Labels to the VBox
+            DeliveryDisplay.getChildren().add(new Label("Order Number: " + currentDelivery.getOrderNumber()));
+            DeliveryDisplay.getChildren().add(new Label("Delivery Method: " + currentDelivery.getDeliveryMethod()));
+            DeliveryDisplay.getChildren().add(new Label("Total Price: " + currentDelivery.getTotalPrice()));
+            DeliveryDisplay.getChildren().add(new Label("Delivery/Pickup Time: " + currentDelivery.getTime()));
+            DeliveryDisplay.getChildren().add(new Label("Order Items:"));
 
-                // Display order items if they exist
-                if (currentDelivery.getOrderItems() != null && !currentDelivery.getOrderItems().isEmpty()) {
-                    for (OrderItem item : currentDelivery.getOrderItems()) {
-                        MenuItem menuItem = item.getMenuItem();
-                        String itemDetails = String.format(
-                                "%s\n Ingredients: %s\n Price: %.2f\n Preferences: %s\n Quantity: %d",
-                                menuItem.getName(),
-                                menuItem.getIngredients(),
-                                menuItem.getPrice(),
-                                item.getPreferences(),
-                                item.getQuantity()
-                        );
-                        Label itemLabel = new Label(itemDetails);
-                        itemLabel.setStyle("-fx-padding: 5; -fx-border-color: black; -fx-border-width: 0 0 1 0;");
-                        DeliveryDisplay.getChildren().add(itemLabel);
+            // Display order items if they exist
+            if (currentDelivery.getOrderItems() != null && !currentDelivery.getOrderItems().isEmpty()) {
+                for (OrderItem item : currentDelivery.getOrderItems()) {
+                    MenuItem menuItem = item.getMenuItem();
+                    String itemDetails = String.format(
+                            "%s\n Ingredients: %s\n Price: %.2f\n Preferences: %s\n Quantity: %d",
+                            menuItem.getName(),
+                            menuItem.getIngredients(),
+                            menuItem.getPrice(),
+                            item.getPreferences(),
+                            item.getQuantity()
+                    );
+                    Label itemLabel = new Label(itemDetails);
+                    itemLabel.setStyle("-fx-padding: 5; -fx-border-color: black; -fx-border-width: 0 0 1 0;");
+                    DeliveryDisplay.getChildren().add(itemLabel);
 
-                        //enable the user to cancel order
-                        cancelBtn.setDisable(false);
-                    }
-                } else {
-                    DeliveryDisplay.getChildren().add(new Label("No items in the order."));
+                    //enable the user to cancel order
+                    cancelBtn.setDisable(false);
                 }
-            }
-            else{
-                DeliveryDisplay.getChildren().add(new Label("Delivery email or Order number is not correct."));
+            } else {
+                DeliveryDisplay.getChildren().add(new Label("No items in the order."));
             }
         } else {
-            DeliveryDisplay.getChildren().add(new Label("No delivery found."));
+            ErrorText.setText("delivery not found");
         }
     }
 

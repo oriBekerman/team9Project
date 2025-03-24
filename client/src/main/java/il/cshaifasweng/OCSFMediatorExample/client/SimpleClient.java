@@ -146,9 +146,7 @@ public class SimpleClient extends AbstractClient {
 					EventBus.getDefault().post(delivery);
 				} else {
 					System.out.println("No delivery data received.");
-					//post null delivery
-					Delivery del = null;
-					EventBus.getDefault().post(del);
+					EventBus.getDefault().post("delivery not found");
 
 				}
 			}
