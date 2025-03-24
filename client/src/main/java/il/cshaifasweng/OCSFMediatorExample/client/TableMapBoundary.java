@@ -498,7 +498,4 @@ public class TableMapBoundary {
                 "-fx-border-radius: 8px;\n" +
                 "-fx-padding: 12px;");
     }
-
-
-
 }

@@ -63,19 +63,6 @@ public class ResInfo implements Serializable {
     // Default constructor
     public ResInfo() {}
 
-    // Constructor with fields
-//    public ResInfo(Branch branch, Customer customer,LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
-//        this.branch = branch;
-//        this.customer = customer;
-    ////        this.resDate = resDate;
-//        this.hours = hours;
-//        this.numOfGuests = numOfGuests;
-//        this.inOrOut = inOrOut;
-//        this.tables = table;
-//        branchIsSet=true;
-//        customerIsSet=true;
-//        tableIsSet=true;
-//    }
     public ResInfo(Branch branch, Customer customer,LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
         this.branch = branch;
         this.customer = customer;
@@ -121,13 +108,6 @@ public class ResInfo implements Serializable {
         customerIsSet=true;
     }
 
-//    public LocalDate getResDate() {
-//        return resDate;
-//    }
-//    public void setResDate(LocalDate date) {
-//        this.resDate = date;
-//    }
-
     public LocalTime getHours() {
         return hours;
     }
@@ -165,12 +145,6 @@ public class ResInfo implements Serializable {
     public Set<RestTable> getTable() {
         return tables;
     }
-//    public Set<RestTable> getTempTables() {
-//        return tempTables;
-//    }
-//    public void setTempTables(Set<RestTable> tempTables) {
-//        this.tempTables = tempTables;
-//    }
     public void setWalk_in(String walk_in) {
         this.walk_in = walk_in;
     }

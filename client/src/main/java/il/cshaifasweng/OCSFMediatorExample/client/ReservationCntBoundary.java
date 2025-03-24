@@ -44,35 +44,20 @@ public class ReservationCntBoundary {
     @FXML
     private Button CntBtn;
 
-//    public ReservationCntBoundary() {
-//        if (!isRegistered) {
-//            EventBus.getDefault().register(this);
-//            isRegistered = true;
-//        }
-//        try {
-//            initialize();
-//        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @FXML
+    void initialize() throws IOException {
+        System.out.println("finally!!!!!!!!!!!!!!");
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+        setHoursList(); // trigger initial data fetch
+    }
 
     @FXML
     void BackAct(ActionEvent event) throws IOException {
-//        if (flag) {
-//            chooseCancel();
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setTitle("Cancellation in Progress");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Reservation has been canceled. Press OK to continue.");
-//            alert.showAndWait();
-//            flag = false;
-//        }
-
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
-
         switchScreen("Reservation");
     }
 
@@ -94,29 +79,6 @@ public class ReservationCntBoundary {
         SimpleClient.getClient().resInfo.setHours(time);
         Set<RestTable> tables=optionalTablesMap.get(time);
         SimpleClient.getClient().resInfo.setTable(tables);
-//        SimpleClient.getClient().resInfo.setTable(optionalTablesMap.get(time)); //set the tables at the chosen time to resInfo
-
-
-//        // Parse the time from string to LocalTime
-//
-////        availableTables = this.branch.getAvailableTablesWithNumPeople(Integer.parseInt(numPeople), time,area);
-////        String tableIDS="";
-////        for (RestTable table: availableTables)
-////        {
-////            table.addUnavailableFromTime(time);
-////            if(tableIDS.isEmpty())
-////            {
-////                tableIDS=String.valueOf(table.getId());
-////            }
-////            else
-////            {
-////                tableIDS=tableIDS+","+table.getId();
-////            }
-//        }
-//        client.mapReservation.put("tableIDS",tableIDS);
-//        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
-//        SimpleClient.getClient().sendToServer(request);
-
     }
 
     @FXML
@@ -125,10 +87,10 @@ public class ReservationCntBoundary {
         client.mapReservation.put("Hours",chosen);
         // Start a 15-minute timer to ensure the user fills personal details in time
         // if the user does not fill details within 15 min cancel table allocation
-        TimerManager.getInstance().startTimer("reservationTimeout", () -> {
-            System.out.println("Reservation expired! Taking action...");
-            timeViolation();
-        }, 15);
+//        TimerManager.getInstance().startTimer("reservationTimeout", () -> {
+//            System.out.println("Reservation expired! Taking action...");
+//            timeViolation();
+//        }, 15);
         openPersonalDetailsPage();
 
     }
@@ -141,26 +103,7 @@ public class ReservationCntBoundary {
        SimpleClient.getClient().sendToServer(request2);
 
     }
-
-    @FXML
-    void initialize() throws IOException {
-        System.out.println("finally!!!!!!!!!!!!!!");
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-        setHoursList(); // trigger initial data fetch
-
-//        Platform.runLater(() -> {
-//            hoursList.getScene().getWindow().setOnCloseRequest(event -> {
-//                try {
-//                    chooseCancel();
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            });
-//        });
-    }
-
+    
     @Subscribe
     public void onBranchTablesReceived(BranchTablesReceivedEvent event) {
         hoursList.getItems().clear();
@@ -248,22 +191,6 @@ public class ReservationCntBoundary {
         EventBus.getDefault().register(this);
     }
 
-//    private void chooseCancel() throws IOException
-//    {
-//        System.out.println("in choose cancel");
-//        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
-//
-//        for (RestTable table : availableTables) {
-//            Set<LocalTime> updatedTimes = new HashSet<>(table.getUnavailableFromTimes());
-//            updatedTimes.remove(time);
-//            table.setUnavailableFromTimes(updatedTimes);
-//        }
-//        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
-//        SimpleClient.getClient().sendToServer(request);
-//
-//
-//    }
-
     public void openPersonalDetailsPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("personalDetailsFilling.fxml"));
@@ -338,8 +265,6 @@ public class ReservationCntBoundary {
             Optional<ButtonType> result = alert.showAndWait();
             // on OK
             if (result.isPresent() && result.get() == ButtonType.PREVIOUS) {
-//                SimpleClient.getClient().rebookReservation=true;
-//                switchScreen("reservationCnt");
                 switchScreen("Reservation");
                 EventBus.getDefault().unregister(this);
             };
@@ -409,36 +334,36 @@ public class ReservationCntBoundary {
         switchScreen("Home Page");
         EventBus.getDefault().unregister(this);
     }
-    public void timeViolation()
-    {
-        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
-        // Ensure unavailable times are removed correctly
-        for (RestTable table : availableTables) {
-            Set<LocalTime> updatedTimes = new HashSet<>(table.getUnavailableFromTimes());
-            updatedTimes.remove(time);
-            table.setUnavailableFromTimes(updatedTimes);
-        }
-        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
-        try {
-            SimpleClient.getClient().sendToServer(request);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Time violation");
-            alert.setHeaderText(null);
-            alert.setContentText("Your reservation was canceled as personal details and payment were not provided within 15 minutes. You can start over anytime!");
-            alert.getButtonTypes().setAll(ButtonType.OK);
-            Optional<ButtonType> result = alert.showAndWait();
-            // on OK
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                performAdditionalAction();
-            };
-        });
-
-    }
+//    public void timeViolation()
+//    {
+//        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
+//        // Ensure unavailable times are removed correctly
+//        for (RestTable table : availableTables) {
+//            Set<LocalTime> updatedTimes = new HashSet<>(table.getUnavailableFromTimes());
+//            updatedTimes.remove(time);
+//            table.setUnavailableFromTimes(updatedTimes);
+//        }
+//        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
+//        try {
+//            SimpleClient.getClient().sendToServer(request);
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        Platform.runLater(() -> {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Time violation");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Your reservation was canceled as personal details and payment were not provided within 15 minutes. You can start over anytime!");
+//            alert.getButtonTypes().setAll(ButtonType.OK);
+//            Optional<ButtonType> result = alert.showAndWait();
+//            // on OK
+//            if (result.isPresent() && result.get() == ButtonType.OK) {
+//                performAdditionalAction();
+//            };
+//        });
+//
+//    }
 
     @Subscribe
     public void onUpdateBranchTablesEvent(UpdateBranchTablesEvent event) {
@@ -461,9 +386,5 @@ public class ReservationCntBoundary {
         this.branch=reservation.getBranch(); //update this branch to the updated branch
             updateAvailableTimesAndUI();
     }
-//    private void resetEventBus()
-//    {
-//        EventBus.getDefault().unregister(this);
-//        EventBus.getDefault().register(this);
-//    }
+
 }

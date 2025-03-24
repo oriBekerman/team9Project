@@ -32,35 +32,6 @@ public class ResInfoController {
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
-
-//    private Response addReservation(Request request) {
-//        Response response=new Response(ADDED_RESERVATION,null,null,THIS_CLIENT);
-//        ResInfo reservation= (ResInfo) request.getData();
-//        Customer customer= reservation.getCustomer();
-////        String email= customer.getEmail();
-////        Customer customer1=getCustomer(email);
-////        if(customer1!=null) //customer is already in database no need to save it again
-////        {
-////            reservation.setCustomer(customer1);
-////            resInfoRepository.addReservation(reservation,true);
-////        }
-////        //customer is not in database need to save it
-////        else {
-////            resInfoRepository.addReservation(reservation,false);
-////        }
-//        resInfoRepository.addReservation(reservation,false);
-//        response.setData(reservation);
-//        response.setStatus(SUCCESS);
-//        response.setMessage("Dear " + customer.getName() + ",\n" +
-//                "Your reservation has been confirmed.\n" +
-//                "Here are the details:\n\n" +
-//                "Time: " + reservation.getHours() + "\n" +
-//                "Guests: " + reservation.getNumOfGuests() + "\n" +
-//                "Branch: " + reservation.getBranch().getName() + "\n" +
-//                "Enjoy your meal!");
-//        return response;
-//    }
-
     //constructor
     public ResInfoController() {this.resInfoRepository = new ResInfoRepository();};
 
