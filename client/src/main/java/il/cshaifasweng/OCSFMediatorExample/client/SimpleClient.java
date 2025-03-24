@@ -142,6 +142,20 @@ public class SimpleClient extends AbstractClient {
 					System.out.println("No delivery data received.");
 				}
 			}
+			if (response.getResponseType().equals(SEND_DELIVERY)) {
+				Delivery delivery = (Delivery) response.getData();
+				if (delivery != null) {
+					System.out.println(delivery);
+					EventBus.getDefault().post(delivery);
+				} else {
+					System.out.println("No delivery data received.");
+					EventBus.getDefault().post("delivery not found");
+
+				}
+			}
+			if (response.getResponseType().equals(DELIVERY_CANCELED)) {
+				EventBus.getDefault().post("delivery deleted");
+			}
 			if (response.getResponseType().equals(RETURN_BRANCH_BY_NAME)) {
 				Branch branch= (Branch) response.getData();
 			EventBus.getDefault().post(new BranchSentEvent(branch));
@@ -266,6 +280,7 @@ public class SimpleClient extends AbstractClient {
 			e.printStackTrace();
 		}
 	}
+
 	public void updateDishType(MenuItem selectedItem) {
 		try {
 			// Get the item ID using getItemID() instead of getId()

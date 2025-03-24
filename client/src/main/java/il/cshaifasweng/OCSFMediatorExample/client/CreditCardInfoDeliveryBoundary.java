@@ -23,6 +23,8 @@ import static il.cshaifasweng.OCSFMediatorExample.client.App.*;
 
 public class CreditCardInfoDeliveryBoundary {
 
+    public SimpleClient client;
+
     @FXML
     public TextField cardNumText;
     @FXML
@@ -53,14 +55,15 @@ public class CreditCardInfoDeliveryBoundary {
 
     @FXML
     void backToPersonalD(ActionEvent event) {
+        onExit();
         switchToPDDelivery(currentDelivery);
     }
 
     @Subscribe
     public void onDeliveryReceived(Delivery delivery) {
         // This method will be called when a Delivery event is posted
-        System.out.println("Received Delivery: " + delivery);
         currentDelivery = delivery;  // Update the current delivery object
+        onExit();
         switchToSummeryDelivery(currentDelivery);
     }
 
@@ -87,9 +90,6 @@ public class CreditCardInfoDeliveryBoundary {
                         customer.setCvv(cvv);
                         customer.setExpirationDate(expDate);
                         currentDelivery.setCustomer(customer);
-                        // Set the current date and time for the delivery
-                        LocalDateTime now = LocalDateTime.now();
-                        currentDelivery.setDeliveryTime(now);
 
                         // Create the request to send to the server for delivery creation
                         Request<Delivery> createDeliveryRequest = new Request<>(
@@ -177,6 +177,11 @@ public class CreditCardInfoDeliveryBoundary {
             System.out.println("Invalid date format: " + expDate);
             return false;
         }
+    }
+
+    public void onExit() {
+        EventBus.getDefault().unregister(this);
+        System.out.println("Unregistered from EventBus: DeliverySummeryBoundary");
     }
 
 

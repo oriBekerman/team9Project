@@ -21,6 +21,7 @@ public enum RequestType{
      GET_DELIVERABLES,
      CREATE_DELIVERY,
      GET_DELIVERY,
+     CANCEL_DELIVERY,
 
      GET_BRANCH_MENU,
      FETCH_BRANCH_TABLES,

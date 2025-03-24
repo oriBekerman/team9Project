@@ -55,6 +55,9 @@ public class PrimaryBoundary {
 
 	@FXML
 	private Button toggleButtonBranch;
+
+	@FXML
+	private Button cancelDelivery;
 	private Popup popup = new Popup();
 
 	public List<Branch> branchList = null;
@@ -80,6 +83,11 @@ public class PrimaryBoundary {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@FXML
+	void cancelDel(ActionEvent event) {
+		switchScreen("CancelDelivery");
 	}
 
 	@FXML
