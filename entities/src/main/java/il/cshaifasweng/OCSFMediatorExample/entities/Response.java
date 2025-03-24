@@ -90,6 +90,7 @@ public class Response<T> implements Serializable {
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,
         RETURN_BRANCH,
+        RETURN_BRANCH_BY_NAME,
         RETURN_DELIVERABLES,
         GET_ALL_DELIVERIES,
 
@@ -105,7 +106,8 @@ public class Response<T> implements Serializable {
         RETURN_RES_REPORT,
 
         CANCELED_RESERVATION,
-        ADDED_RESERVATION
+        ADDED_RESERVATION,
+        UPDATE_BRANCH_TABLES
     }
 
     public enum Status {

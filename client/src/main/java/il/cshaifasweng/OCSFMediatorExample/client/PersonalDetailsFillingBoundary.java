@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.ComplaintCustomerEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.ReservationPersonalInfoSet;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import javafx.application.Platform;
@@ -82,6 +83,11 @@ public class PersonalDetailsFillingBoundary {
             SimpleClient.getClient().mapReservation.put("name",name);
             SimpleClient.getClient().mapReservation.put("phone",phone);
             SimpleClient.getClient().mapReservation.put("mail",mail);
+            Customer customer=new Customer();
+            customer.setName(name);
+            customer.setEmail(mail);
+            customer.setPhone(phone);
+            SimpleClient.getClient().resInfo.setCustomer(customer);
             openCreditCardPage();
         }
     }
@@ -127,6 +133,10 @@ public class PersonalDetailsFillingBoundary {
             // Get the controller and set the type before waiting
             CreditCradInfoBoundary boundary = loader.getController();
             boundary.setType("reservation");  // This should be set before waiting
+//            if(SimpleClient.getClient().rebookReservation)
+//            {
+//                boundary.setFields();
+//            }
             synchronized (boundary) {
                 while (!boundary.typeIsSet) {
                     System.out.println("Waiting for type to be set...");
@@ -144,6 +154,15 @@ public class PersonalDetailsFillingBoundary {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();  // Restore interrupted state
+        }
+    }
+    public void setFields()
+    {
+        if(SimpleClient.getClient().resInfo != null)
+        {
+            nameTextField.setText(SimpleClient.getClient().resInfo.getCustomer().getName());
+            phoneTextField.setText(SimpleClient.getClient().resInfo.getCustomer().getPhone());
+            mailTextField.setText(SimpleClient.getClient().resInfo.getCustomer().getEmail());
         }
     }
 

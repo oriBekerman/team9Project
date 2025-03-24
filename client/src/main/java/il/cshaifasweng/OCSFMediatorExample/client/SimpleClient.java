@@ -14,6 +14,7 @@ import java.util.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
 
 
@@ -27,6 +28,8 @@ public class SimpleClient extends AbstractClient {
 	private static ActiveUser activeUser = null;
 	public Map <String, String> mapReservation=new HashMap<String, String>();
 	public ResInfo resInfo=new ResInfo();
+	public boolean rebookReservation=false;
+	public  boolean tableAvailable=true;
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
@@ -153,10 +156,9 @@ public class SimpleClient extends AbstractClient {
 			if (response.getResponseType().equals(DELIVERY_CANCELED)) {
 				EventBus.getDefault().post("delivery deleted");
 			}
-			if (response.getResponseType().equals(RETURN_BRANCH)) {
-				System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee");
+			if (response.getResponseType().equals(RETURN_BRANCH_BY_NAME)) {
 				Branch branch= (Branch) response.getData();
-			EventBus.getDefault().post(new BranchSelectedEvent(branch));
+			EventBus.getDefault().post(new BranchSentEvent(branch));
 			}
 
 			if (response.getResponseType().equals(UPDATE_BRANCH_RESERVATION)) {
@@ -167,7 +169,24 @@ public class SimpleClient extends AbstractClient {
 			}
 			if(response.getResponseType().equals(ADDED_RESERVATION))
 			{
-				ReservationAddedEvent event=new ReservationAddedEvent((ResInfo) response.getData(),response.getMessage());
+				if(response.getStatus().equals(SUCCESS))
+				{
+					ReservationAddedEvent event=new ReservationAddedEvent((ResInfo) response.getData(),response.getMessage());
+					EventBus.getDefault().post(event);
+				}
+				if(response.getStatus().equals(ERROR))
+				{
+					System.out.println("in error res");
+					TableIsReservedEvent event=new TableIsReservedEvent((List<ResInfo>) response.getData());
+					System.out.println("event created");
+					EventBus.getDefault().post(event);
+					System.out.println("event posted");
+				}
+			}
+			if(response.getResponseType().equals(UPDATE_BRANCH_TABLES))
+			{
+				System.out.println("in updateBRANCH_TABLES");
+				UpdateBranchTablesEvent event=new UpdateBranchTablesEvent((ResInfo) response.getData());
 				EventBus.getDefault().post(event);
 			}
 		} else {
@@ -281,8 +300,6 @@ public class SimpleClient extends AbstractClient {
 			System.err.println("Error updating dish type: " + e.getMessage());
 		}
 	}
-
-
 
 	public void addDishToDatabase(MenuItem newDish)
 	{
