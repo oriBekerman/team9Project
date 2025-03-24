@@ -1,3 +1,4 @@
+C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\TableIsReservedEvent.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingBoundary.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ActiveUser.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\MenuEvent.java
@@ -18,6 +19,7 @@ C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Ma
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchListSentEvent.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SubComplaintBoundary.java
+C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSentEvent.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\CreditCardInfoDeliveryBoundary.java
@@ -30,6 +32,7 @@ C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Ev
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.java
+C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateBranchTablesEvent.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ComplaintCustomerEvent.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReservationBoundary.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\BranchListBoundary.java

@@ -108,7 +108,7 @@ public class CancelDeliveryBoundary {
             }
             else{
                 Platform.runLater(() -> {
-                    ErrorText.setText("Order not exist");
+                    ErrorText.setText("Order does not match the email");
                 });
             }
         } else {

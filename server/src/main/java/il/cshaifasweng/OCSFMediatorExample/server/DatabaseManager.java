@@ -167,9 +167,25 @@ private static void initialize(String password) {
             // ==========================
             // Populating some delivery orders
             // Create Customer instances with associated credit card information
-            Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@gmail.com", "","1234-5678-9876-5432", "12/25", "123");
-            Customer customer2 = new Customer( "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@gmail.com", "","9876-5432-1234-5678", "11/24", "456");
+            Customer customer1 = new Customer(
+                    "Michael Johnson",                   // Name
+                    "7890 Maple Ave, Tel Aviv",          // Address
+                    "michael.johnson@example.com",       // Email
+                    "0525616469",                        // Phone number
+                    "5555555555554444",                  // Credit Card Number
+                    "12/25",                             // Expiration Date
+                    "123"                                // CVV
+            );
 
+            Customer customer2 = new Customer(
+                    "Sarah Williams",                    // Name
+                    "1234 Birch St, Haifa",              // Address
+                    "sarah.williams@example.com",        // Email
+                    "0525616468",                        // Phone number
+                    "4111111111111111",                  // Credit Card Number
+                    "11/26",                             // Expiration Date
+                    "456"                                // CVV
+            );
             // Create OrderItems from MenuItem and quantity
             OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences
             OrderItem orderItem2 = new OrderItem(item4, 1, "Extra ketchup", null); // 1 of "Hamburger" with preferences
