@@ -232,12 +232,14 @@ private static void initialize(String password) {
             table2.addUnavailableFromTime(time1);
             ResInfo reservation1 = new ResInfo(haifaBranch, customer1, time1, 4, "Inside", Set.of(table2));
             reservation1.setStatus(APPROVED);
-            haifaBranch.addReservation(reservation1,  Set.of(table2), tableIds);
+            List tableIds2=List.of(table2.getId());
+            haifaBranch.addReservation(reservation1,  Set.of(table2), tableIds2);
 
             table1.addUnavailableFromTime(time2);
             ResInfo reservation2 = new ResInfo(haifaBranch, customer2, time2, 2, "Inside", Set.of(table1));
             reservation2.setStatus(APPROVED);
-            haifaBranch.addReservation(reservation2, Set.of(table1), tableIds);
+            List tableIds1=List.of(table1.getId());
+            haifaBranch.addReservation(reservation2, Set.of(table1), tableIds1);
 
             resInfoController.PopulateResSInfo(List.of(reservation1, reservation2));
             // Create a Complaint instance without a Branch

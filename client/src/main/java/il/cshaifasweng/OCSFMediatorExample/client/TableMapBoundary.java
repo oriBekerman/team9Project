@@ -292,7 +292,12 @@ public class TableMapBoundary {
         Set<RestTable>branchTables=branch.getTables();
         for(RestTable branchTable:branchTables)
         {
+//            RestTable table=checkTableInMap(branchTable);
             Button btn=tablesMap.get(branchTable);
+            if ((btn == null))
+            {
+                System.out.println("button is null -> table not found");
+            }
             System.out.println(btn.getText());
             if(btn!=null)
             {
@@ -313,6 +318,79 @@ public class TableMapBoundary {
             }
         }
     }
+    private void updatePage(ResInfo resInfo) {
+        System.out.println("🔁 In update page");
+
+        // Update internal branch reference
+        this.branch = resInfo.getBranch();
+
+        // Rebuild maps safely to reflect updated table references
+        Set<RestTable> updatedTables = branch.getTables();
+        Map<Integer, RestTable> updatedById = new HashMap<>();
+        for (RestTable table : updatedTables) {
+            updatedById.put(table.getId(), table);
+        }
+
+        // Rebuild idMap and remap buttons
+        for (Button button : buttons) {
+            RestTable oldTable = buttonsMap.get(button);
+            if (oldTable != null) {
+                int id = oldTable.getId();
+                RestTable newTable = updatedById.get(id);
+                if (newTable != null) {
+                    idMap.put(id, newTable);
+                    tablesMap.put(newTable, button);
+                    buttonsMap.put(button, newTable);
+                }
+            }
+        }
+
+        // Update UI only if the reservation is at the selected time
+        LocalTime selectedTime = LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
+        if (resInfo.getHours().equals(selectedTime)) {
+            for (RestTable t : resInfo.getTable()) {
+                RestTable updated = idMap.get(t.getId());
+                if (updated != null) {
+                    Button btn = tablesMap.get(updated);
+                    if (btn != null) {
+                        setTableButtonsUnavailable(btn);
+                    }
+                }
+            }
+        }
+    }
+
+
+//    private RestTable checkTableInMap(RestTable branchTable) {
+//        int branchTableId = branchTable.getId();
+//        RestTable oldTable=idMap.get(branchTableId);
+//        if(oldTable==null)
+//        {
+//            System.out.println("table not found");
+//        }
+//        if (oldTable.equals(branchTable))
+//        {
+//            System.out.println("table found and is the same as in map");
+////            return null;
+//        }
+//        if(!(oldTable.equals(branchTable)))
+//        {
+//            System.out.println("table not found in map difference between branchTable and mapTable");
+//            Button button=tablesMap.get(oldTable);
+//            System.out.println("button found in tableMap of oldTable");
+//            tablesMap.remove(oldTable);
+//            System.out.println("removed oldTable from tablesMap");
+//            tablesMap.put(branchTable, button);
+//            System.out.println("put button and branchTable in tablemap");
+//            buttonsMap.remove(button);
+//            System.out.println("remove button from buttonsMap -> removed old table from button map");
+//            buttonsMap.put(button, branchTable);
+//            System.out.println("put button and branchTable in buttonMap and return branchTable");
+//            return branchTable;
+//        }
+//        return oldTable;
+//    }
+
     private void setTableButtonAvailable(Button button)
     {
         button.setStyle(" -fx-font-size: 16px;\n" +
@@ -380,33 +458,33 @@ public class TableMapBoundary {
         updatePage(reservation);
     }
 //update UI when onUpdateBranchTables is triggered
-    private void updatePage(ResInfo resInfo) {
-        System.out.println("in update page");
-
-        // Only update map if reservation time matches selected time
-        LocalTime selectedTime = LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
-        if (resInfo.getHours().equals(selectedTime)) {
-            for (RestTable updatedTable : resInfo.getTable()) {
-                int id = updatedTable.getId();
-                RestTable oldTable = idMap.get(id);
-
-                if (oldTable != null) {
-                    Button button = tablesMap.get(oldTable);
-
-                    if (button != null) {
-                        // Replace old table with new version in maps
-                        tablesMap.remove(oldTable);
-                        tablesMap.put(updatedTable, button);
-                        buttonsMap.put(button, updatedTable);
-                        idMap.put(id, updatedTable);
-
-                        // Update the UI styling
-                        setTableButtonsUnavailable(button);
-                    }
-                }
-            }
-        }
-    }
+//    private void updatePage(ResInfo resInfo) {
+//        System.out.println("in update page");
+//
+//        // Only update map if reservation time matches selected time
+//        LocalTime selectedTime = LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
+//        if (resInfo.getHours().equals(selectedTime)) {
+//            for (RestTable updatedTable : resInfo.getTable()) {
+//                int id = updatedTable.getId();
+//                RestTable oldTable = idMap.get(id);
+//
+//                if (oldTable != null) {
+//                    Button button = tablesMap.get(oldTable);
+//
+//                    if (button != null) {
+//                        // Replace old table with new version in maps
+//                        tablesMap.remove(oldTable);
+//                        tablesMap.put(updatedTable, button);
+//                        buttonsMap.put(button, updatedTable);
+//                        idMap.put(id, updatedTable);
+//
+//                        // Update the UI styling
+//                        setTableButtonsUnavailable(button);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 
 

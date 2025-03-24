@@ -293,20 +293,22 @@ public class Branch implements Serializable  {
         reservations.add(reservation);
         reservation.setBranch(this);
         tablesAreSet = false;
-        //remove all the tables with ids matching a table in newTables
-        for(RestTable table : tables)
-        {
-            if(tableIds.contains(table.getId()))
-            {
-                tables.remove(table);
+
+        // Step 1: Collect tables to remove based on IDs
+        Set<RestTable> toRemove = new HashSet<>();
+        for (RestTable table : tables) {
+            if (tableIds.contains(table.getId())) {
+                toRemove.add(table);
             }
         }
-        //add all new tables
-        for(RestTable newTable : newTables)
-        {
-            tables.add(newTable);
-        }
-        //create tables id map to get table by id easily
+
+        // Step 2: Remove them safely
+        tables.removeAll(toRemove);
+
+        // Step 3: Add the new/updated tables
+        tables.addAll(newTables);
+
+    //create tables id map to get table by id easily
 
 
 //        // Create a map of existing tables by ID for quick lookup
