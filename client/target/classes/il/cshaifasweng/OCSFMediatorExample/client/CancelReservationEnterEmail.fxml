@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="il.cshaifasweng.OCSFMediatorExample.client.CancelReservationEnterEmailController">
+    <children>
+        <Label layoutX="20" layoutY="30" text="Enter your email:"/>
+        <TextField fx:id="emailField" layoutX="150" layoutY="25" prefWidth="200"/>
+        <Button text="Continue" layoutX="150" layoutY="70" onAction="#handleContinue"/>
+    </children>
+</AnchorPane>
+
