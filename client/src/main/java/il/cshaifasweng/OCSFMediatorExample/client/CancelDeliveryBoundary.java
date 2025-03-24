@@ -17,6 +17,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 import java.time.Duration;
 
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.Properties;
+
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchToSummeryDelivery;
 
@@ -59,6 +63,7 @@ public class CancelDeliveryBoundary {
     private TextField orderNumberText;
 
     private Delivery currentDelivery;
+    private double refund = 0.0;
 
     @FXML
     void navToHP(ActionEvent event) {
@@ -160,11 +165,11 @@ public class CancelDeliveryBoundary {
     void checkRewards() throws IOException {
         if (currentDelivery == null) {
             System.out.println("No delivery found.");
-            return;
+            refund = -1;
         }
 
         String deliveryTimeStr = currentDelivery.getTime(); // Example: "10:30"
-        double refund = 0.0;
+        double cal_refund = 0.0;
 
         // Parse the delivery time string into LocalTime
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -180,19 +185,20 @@ public class CancelDeliveryBoundary {
         System.out.println("Minutes until delivery: " + minutesUntilDelivery);
 
         // Cancel before 3 hours (180 minutes)  Full refund
-        if (minutesUntilDelivery > 180) {
-            refund = currentDelivery.getTotalPrice();
+        if (minutesUntilDelivery >= 180) {
+            cal_refund = currentDelivery.getTotalPrice();
         }
         // Cancel between 3 hours (180 min) and 1 hour (60 min)  50% refund
         else if (minutesUntilDelivery >= 60) {
-            refund = currentDelivery.getTotalPrice() / 2;
+            cal_refund = currentDelivery.getTotalPrice() / 2;
         }
         // Cancel within 1 hour  No refund
         else {
-            refund = 0.0;
+            cal_refund = 0.0;
         }
 
         System.out.println("Refund amount: " + refund);
+        refund= cal_refund;
     }
 
 
@@ -202,13 +208,67 @@ public class CancelDeliveryBoundary {
     public void onDeliveryDeleted(String responseMessage) {
         if ("delivery deleted".equals(responseMessage)) {
             Platform.runLater(() -> {
+
                 orderNumberText.clear();
                 emailText.clear();
                 ErrorText.setText("");
                 DeliveryDisplay.getChildren().clear();
-                DeliveryDisplay.getChildren().add(new Label("Order canceled"));
+                DeliveryDisplay.getChildren().add(new Label("Order canceled, your refound is "+ refund));
                 cancelBtn.setDisable(true);
+
+                // Send email confirmation
+                sendCancellationEmail(currentDelivery.getCustomer().getEmail(), refund);
             });
+        }
+    }
+
+    private void sendCancellationEmail(String customerEmail, double refund) {
+        String host = "smtp.gmail.com"; // Gmail's SMTP server
+        final String from = "galalpert5@gmail.com"; // Sender's email
+        final String password = "jmqf srzs ruqx yayg"; // Sender's email password
+
+        // Set up properties for the SMTP server
+        Properties properties = System.getProperties();
+        properties.setProperty("mail.smtp.host", host);
+        properties.setProperty("mail.smtp.port", "465");
+        properties.setProperty("mail.smtp.ssl.enable", "true");
+        properties.setProperty("mail.smtp.auth", "true");
+
+        // Create a session
+        Session session = Session.getDefaultInstance(properties, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, password);
+            }
+        });
+
+        try {
+            // Create a MimeMessage
+            MimeMessage message = new MimeMessage(session);
+
+            // Set sender's email
+            message.setFrom(new InternetAddress(from));
+
+            // Set recipient's email
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(customerEmail));
+
+            // Set subject of the email
+            message.setSubject("Order Canceled and Refund Processed");
+
+            // Set email body content
+            String content = "Dear Customer,\n\n" +
+                    "We are writing to confirm that your order has been successfully canceled. " +
+                    "The refund amount of " + refund + " has been processed.\n\n" +
+                    "Thank you for using our service!\n\n" +
+                    "Best regards,\n" +
+                    "Mama's kitchen";
+
+            message.setText(content);
+
+            // Send the email
+            Transport.send(message);
+            System.out.println("Email sent successfully to " + customerEmail);
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
         }
     }
 

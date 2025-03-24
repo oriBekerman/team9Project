@@ -40,5 +40,6 @@ il\cshaifasweng\OCSFMediatorExample\client\SessionManager.class
 il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.class
 il\cshaifasweng\OCSFMediatorExample\client\TableMapBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ComplaintCustomerEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\CancelDeliveryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchTablesReceivedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchPageBoundary.class
