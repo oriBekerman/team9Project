@@ -67,8 +67,6 @@ public class TableMapBoundary {
     private final Object tableSyncLock=new Object();
 
 
-
-
     public TableMapBoundary()
     {
         EventBus.getDefault().register(this);
@@ -84,86 +82,6 @@ public class TableMapBoundary {
 //        }
     }
     // initialize the map before letting the map page be opened
-//    public void setMap(Branch branch) {
-//        System.out.println("in set map before sync");
-//        synchronized (this) {
-//            if (branch != null)
-//            {
-//                System.out.println("in set map after sync");
-//                this.branch = branch;
-//                this.branch.tablesAreSet=false;
-//                System.out.println("after branch = " + this.branch);
-//                System.out.println("branch tables = " + String.valueOf(this.branch.tablesAreSet));
-//                System.out.println("Fetching tables for branch...");
-//                loadBranchTables();
-//                System.out.println("after load ...");
-//                try
-//                {
-//                    while (!branch.tablesAreSet) //wait for branch tables to be set in branch entity
-//                    {
-//                        wait();
-//                    }
-//                } catch (InterruptedException e) {
-//                    Thread.currentThread().interrupt();
-//                    System.out.println("Thread interrupted while waiting for tables.");
-//                    return;
-//                }
-//                // once the list of tables is loaded in branch make table buttons
-//                System.out.println("in set map after if branchTables:");
-//                System.out.println("map is set  = " + String.valueOf(mapIsSet));
-//                Set<RestTable> tables = branch.getTables(); // Assume this fetches the list of tables
-//                buttons.add(tableBtn1);
-//                buttons.add(tableBtn2);
-//                buttons.add(tableBtn3);
-//                buttons.add(tableBtn4);
-//                buttons.add(tableBtn5);
-//                buttons.add(tableBtn6);
-//                buttons.add(tableBtn7);
-//                buttons.add(tableBtn9);
-//                buttons.add(tableBtn8);
-//                buttons.add(tableBtn10);
-//                List<RestTable> tableList = tables.stream().toList();
-//                reservationLabel.setVisible(false);
-////                List<RestTable> outTables=new ArrayList<>();
-////                List<RestTable> inTables=new ArrayList<>();
-////                for (RestTable t:tableList)
-////                {
-////                    if(t.getArea().equals("outside"))
-////                    {
-////                        outTables.add(t);
-////                    }
-////                    else
-////                    {
-////                        inTables.add(t);
-////                    }
-////                }
-//                for (int i = 0; i < Math.min(tableList.size(), buttons.size()); i++) {
-////                    String num = String.valueOf(tableList.get(i).getId());
-////                    map.put(tableList.get(i), buttons.get(i));
-//                    idMap.put(tableList.get(i).getId(), tableList.get(i));
-//                    tablesMap.put(tableList.get(i),buttons.get(i));
-//                    buttonsMap.put(buttons.get(i),tableList.get(i));
-//                    setButton(buttons.get(i), String.valueOf(i));
-//                }
-//                setTimesBox();
-//                root.setStyle("-fx-background-color: #fbe9d0;");
-//                outsideAreaPane.setStyle("-fx-background-color: #f6d7b0;\n" +
-//                        "    -fx-border-color: #8a6f48;\n" +
-//                        "    -fx-border-width: 2px;\n" +
-//                        "    -fx-border-radius: 8px;\n" +
-//                        "    -fx-padding: 12px;");
-//                insideAreaPane.setStyle(" -fx-background-color: #e4c5a2;\n" +
-//                        "    -fx-border-color: #8a6f48;\n" +
-//                        "    -fx-border-width: 2px;\n" +
-//                        "    -fx-border-radius: 8px;\n" +
-//                        "    -fx-padding: 12px;");
-//                this.mapIsSet = true;
-//                System.out.println("Map is set");
-//                // Notify all waiting threads in openBranchMap()
-//                notifyAll();
-//            }
-//        }
-//    }
     public void setMap(Branch branch) {
         if (branch == null) return;
 
@@ -360,37 +278,6 @@ public class TableMapBoundary {
         }
     }
 
-
-//    private RestTable checkTableInMap(RestTable branchTable) {
-//        int branchTableId = branchTable.getId();
-//        RestTable oldTable=idMap.get(branchTableId);
-//        if(oldTable==null)
-//        {
-//            System.out.println("table not found");
-//        }
-//        if (oldTable.equals(branchTable))
-//        {
-//            System.out.println("table found and is the same as in map");
-////            return null;
-//        }
-//        if(!(oldTable.equals(branchTable)))
-//        {
-//            System.out.println("table not found in map difference between branchTable and mapTable");
-//            Button button=tablesMap.get(oldTable);
-//            System.out.println("button found in tableMap of oldTable");
-//            tablesMap.remove(oldTable);
-//            System.out.println("removed oldTable from tablesMap");
-//            tablesMap.put(branchTable, button);
-//            System.out.println("put button and branchTable in tablemap");
-//            buttonsMap.remove(button);
-//            System.out.println("remove button from buttonsMap -> removed old table from button map");
-//            buttonsMap.put(button, branchTable);
-//            System.out.println("put button and branchTable in buttonMap and return branchTable");
-//            return branchTable;
-//        }
-//        return oldTable;
-//    }
-
     private void setTableButtonAvailable(Button button)
     {
         button.setStyle(" -fx-font-size: 16px;\n" +
@@ -457,38 +344,6 @@ public class TableMapBoundary {
         }
         updatePage(reservation);
     }
-//update UI when onUpdateBranchTables is triggered
-//    private void updatePage(ResInfo resInfo) {
-//        System.out.println("in update page");
-//
-//        // Only update map if reservation time matches selected time
-//        LocalTime selectedTime = LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
-//        if (resInfo.getHours().equals(selectedTime)) {
-//            for (RestTable updatedTable : resInfo.getTable()) {
-//                int id = updatedTable.getId();
-//                RestTable oldTable = idMap.get(id);
-//
-//                if (oldTable != null) {
-//                    Button button = tablesMap.get(oldTable);
-//
-//                    if (button != null) {
-//                        // Replace old table with new version in maps
-//                        tablesMap.remove(oldTable);
-//                        tablesMap.put(updatedTable, button);
-//                        buttonsMap.put(button, updatedTable);
-//                        idMap.put(id, updatedTable);
-//
-//                        // Update the UI styling
-//                        setTableButtonsUnavailable(button);
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-
-
-
 
         public void tableBtnAction(ActionEvent actionEvent) {
 //        LocalTime time=LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
@@ -540,12 +395,8 @@ public class TableMapBoundary {
         pause.play();
     }
 
-    public void reserveTable(RestTable table,LocalTime time)
-    {}
-
     public void markSelected(MouseEvent mouseEvent) {
     }
-
     //set selection mode
     public void enableSelection(ActionEvent actionEvent) {
         selectedButtons.clear();

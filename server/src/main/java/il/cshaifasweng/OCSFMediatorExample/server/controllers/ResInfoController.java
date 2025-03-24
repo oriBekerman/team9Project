@@ -99,9 +99,11 @@ public class ResInfoController {
     }
 
     public Response addReservation(ResInfo reservation) {
+        System.out.println("in add reservation cnt");
         Response response = new Response(ADDED_RESERVATION, null, null, BOTH);
         Response response1 = new Response(ADDED_RESERVATION, null, null, THIS_CLIENT);
         Response response2 = new Response(UPDATE_BRANCH_TABLES, null, null, ALL_CLIENTS);
+        boolean customerInDB=false;
 
         if (reservation.getBranch() == null) {
             return new Response(ADDED_RESERVATION, null, "Reservation must include a branch.", ERROR, THIS_CLIENT);
@@ -134,9 +136,23 @@ public class ResInfoController {
                 return new Response(ADDED_RESERVATION, null, "Thread interrupted.", ERROR, THIS_CLIENT);
             }
         }
-
+        Customer customerDB=checkIfCustomerInDB(customer.getEmail());
+        if(customerDB!=null) //customer is in DB
+        {
+            reservation.setCustomer(null);
+            customerInDB=true;
+        }
         ResInfo newReservation = resInfoRepository.addReservation(reservation);
         newReservation.setBranch(branch); //set the branch with the updated tables to reservation
+        if(customerInDB) //set newReservation customer to be the one in DB
+        {
+            System.out.println("customerInDB if set");
+            newReservation.setCustomer(customerDB);
+            //add customer info to reservation in db
+            resInfoRepository.setCustomer(newReservation);
+
+
+        }
         if (newReservation == null) {
             return new Response(ADDED_RESERVATION, null, "Failed to save reservation.", ERROR, THIS_CLIENT);
         }
@@ -156,6 +172,10 @@ public class ResInfoController {
         response.setStatus(SUCCESS);
         return response;
     }
+    private Customer checkIfCustomerInDB(String email)
+    {
+        return resInfoRepository.getCustomerByEmail(email);
+    }
 
 
     public boolean checkTableAvailability(ResInfo resInfo)
@@ -171,6 +191,7 @@ public class ResInfoController {
         return available;
     }
     public Response handleNewReservation(Request request) {
+        System.out.println("in handleNewReservation");
         ResInfo reservation = (ResInfo) request.getData();
         Response response=new Response(ADDED_RESERVATION, null, null, BOTH);
 

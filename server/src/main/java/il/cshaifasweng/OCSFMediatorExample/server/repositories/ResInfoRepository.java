@@ -150,9 +150,6 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             throw new RuntimeException("Failed to add reservation", e);
         }
     }
-
-
-
     public void deleteReservation(ResInfo reservation)
     {
         deleteById(reservation.getResID());
@@ -199,7 +196,41 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
 
         return conflicts;
     }
+    //check if there is a reservation with a customer that has the same email if so returns that customer.
+    public Customer getCustomerByEmail(String email) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<ResInfo> cq = cb.createQuery(ResInfo.class);
+            Root<ResInfo> root = cq.from(ResInfo.class);
+
+            // Access nested customer.email
+            Predicate emailMatch = cb.equal(root.get("customer").get("email"), email);
+
+            cq.select(root).where(emailMatch);
+
+            ResInfo res = session.createQuery(cq)
+                    .setMaxResults(1)
+                    .uniqueResult();
+
+            return (res != null) ? res.getCustomer() : null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
-
+    public void setCustomer(ResInfo newReservation) {
+        Transaction tx=null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession())
+        {
+            tx = session.beginTransaction();
+            session.saveOrUpdate(newReservation);
+            tx.commit();
+        }
+        catch (Exception e) {
+            if (tx != null) tx.rollback();
+        }
+    }
 }
