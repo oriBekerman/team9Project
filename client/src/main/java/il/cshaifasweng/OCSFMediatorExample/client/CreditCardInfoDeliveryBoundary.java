@@ -61,7 +61,6 @@ public class CreditCardInfoDeliveryBoundary {
     @Subscribe
     public void onDeliveryReceived(Delivery delivery) {
         // This method will be called when a Delivery event is posted
-        System.out.println("Received Delivery: " + delivery);
         currentDelivery = delivery;  // Update the current delivery object
         switchToSummeryDelivery(currentDelivery);
     }

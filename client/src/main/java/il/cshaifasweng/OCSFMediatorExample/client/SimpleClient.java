@@ -130,7 +130,7 @@ public class SimpleClient extends AbstractClient {
 					EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 				}
 			}
-			 if ((response.getResponseType().equals(DELIVERY_CREATED)) ||(response.getResponseType().equals(SEND_DELIVERY))) {
+			 if (response.getResponseType().equals(DELIVERY_CREATED)) {
 				Delivery delivery = (Delivery) response.getData();
 				if (delivery != null) {
 					System.out.println(delivery);
@@ -138,6 +138,22 @@ public class SimpleClient extends AbstractClient {
 				} else {
 					System.out.println("No delivery data received.");
 				}
+			}
+			if (response.getResponseType().equals(SEND_DELIVERY)) {
+				Delivery delivery = (Delivery) response.getData();
+				if (delivery != null) {
+					System.out.println(delivery);
+					EventBus.getDefault().post(delivery);
+				} else {
+					System.out.println("No delivery data received.");
+					//post null delivery
+					Delivery del = null;
+					EventBus.getDefault().post(del);
+
+				}
+			}
+			if (response.getResponseType().equals(DELIVERY_CANCELED)) {
+				EventBus.getDefault().post("delivery deleted");
 			}
 			if (response.getResponseType().equals(RETURN_BRANCH)) {
 				System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee");

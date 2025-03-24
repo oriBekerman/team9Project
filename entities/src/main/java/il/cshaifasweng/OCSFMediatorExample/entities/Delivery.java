@@ -39,6 +39,9 @@ public class Delivery implements Serializable {
     @Column(nullable = false)
     private double totalPrice;
 
+    @Column(nullable = false)
+    private boolean isCanceled = false;
+
     public static final double DELIVERY_FEE = 15.0;
 
     // Default constructor
@@ -130,6 +133,14 @@ public class Delivery implements Serializable {
     // Setter for deliveryTime
     public void setDeliveryTime(String time) {
         this.time = time;
+    }
+
+    public boolean isCanceled() {
+        return isCanceled;
+    }
+
+    public void setCanceled(boolean canceled) {
+        isCanceled = canceled;
     }
 
     @Override

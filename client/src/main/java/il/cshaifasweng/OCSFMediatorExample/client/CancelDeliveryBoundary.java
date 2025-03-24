@@ -68,13 +68,13 @@ public class CancelDeliveryBoundary {
         if(CheckDeliveryNum(deliveryNum) && isValidEmail(email)){
 
             // Send request to the server to find the delivery
-            Request<Integer> createDeliveryRequest = new Request<>(
+            Request<Integer> findDeliveryRequest = new Request<>(
                     ReqCategory.DELIVERY,
                     RequestType.GET_DELIVERY,
                     Integer.parseInt(deliveryNum.trim())
             );
 
-            SimpleClient.getClient().sendToServer(createDeliveryRequest);
+            SimpleClient.getClient().sendToServer(findDeliveryRequest);
 
         }
 
@@ -82,11 +82,18 @@ public class CancelDeliveryBoundary {
 
     @Subscribe
     public void onDeliveryReceived(Delivery delivery) {
-        System.out.println("Received Delivery: " + delivery);
-        currentDelivery = delivery;  // Update the current delivery object
+        if (delivery != null) {
+            System.out.println("Received Delivery: " + delivery);
+            currentDelivery = delivery;  // Update the current delivery object
 
-        // Ensure UI updates happen on the JavaFX thread
-        Platform.runLater(this::displayDelivery);
+            // Ensure UI updates happen on the JavaFX thread
+            Platform.runLater(this::displayDelivery);
+        } else {
+            Platform.runLater(() -> {
+                System.out.println("here");
+                DeliveryDisplay.getChildren().add(new Label("Order not exist"));
+            });
+        }
     }
 
 
@@ -119,9 +126,33 @@ public class CancelDeliveryBoundary {
 
 
     @FXML
-    void cancelDelivery(ActionEvent event) {
-
+    void cancelDelivery(ActionEvent event) throws IOException {
+        String deliveryNum = orderNumberText.getText();
+        // Send request to the server to delete the delivery
+        Request<Integer> deleteDeliveryRequest = new Request<>(
+                ReqCategory.DELIVERY,
+                RequestType.CANCEL_DELIVERY,
+                Integer.parseInt(deliveryNum.trim())
+        );
+        SimpleClient.getClient().sendToServer(deleteDeliveryRequest);
     }
+
+    // In your EventBus subscriber class
+
+    @Subscribe
+    public void onDeliveryDeleted(String responseMessage) {
+        if ("delivery deleted".equals(responseMessage)) {
+            Platform.runLater(() -> {
+                orderNumberText.clear();
+                emailText.clear();
+                ErrorText.setText("");
+                DeliveryDisplay.getChildren().clear();
+                DeliveryDisplay.getChildren().add(new Label("Order canceled"));
+                cancelBtn.setDisable(true);
+            });
+        }
+    }
+
 
     @FXML
     public void initialize() {
@@ -148,35 +179,40 @@ public class CancelDeliveryBoundary {
         DeliveryDisplay.getChildren().clear();
 
         // Ensure delivery data is not null
-        if (currentDelivery != null) {
-            // Add order details as Labels to the VBox
-            DeliveryDisplay.getChildren().add(new Label("Order Number: " + currentDelivery.getOrderNumber()));
-            DeliveryDisplay.getChildren().add(new Label("Delivery Method: " + currentDelivery.getDeliveryMethod()));
-            DeliveryDisplay.getChildren().add(new Label("Total Price: " + currentDelivery.getTotalPrice()));
-            DeliveryDisplay.getChildren().add(new Label("Delivery/Pickup Time: " + currentDelivery.getTime()));
-            DeliveryDisplay.getChildren().add(new Label("Order Items:"));
+        if (currentDelivery != null && !currentDelivery.isCanceled()) {
+            if(currentDelivery.getCustomer().getEmail().equals(emailText.getText())) {
+                // Add order details as Labels to the VBox
+                DeliveryDisplay.getChildren().add(new Label("Order Number: " + currentDelivery.getOrderNumber()));
+                DeliveryDisplay.getChildren().add(new Label("Delivery Method: " + currentDelivery.getDeliveryMethod()));
+                DeliveryDisplay.getChildren().add(new Label("Total Price: " + currentDelivery.getTotalPrice()));
+                DeliveryDisplay.getChildren().add(new Label("Delivery/Pickup Time: " + currentDelivery.getTime()));
+                DeliveryDisplay.getChildren().add(new Label("Order Items:"));
 
-            // Display order items if they exist
-            if (currentDelivery.getOrderItems() != null && !currentDelivery.getOrderItems().isEmpty()) {
-                for (OrderItem item : currentDelivery.getOrderItems()) {
-                    MenuItem menuItem = item.getMenuItem();
-                    String itemDetails = String.format(
-                            "%s\n Ingredients: %s\n Price: %.2f\n Preferences: %s\n Quantity: %d",
-                            menuItem.getName(),
-                            menuItem.getIngredients(),
-                            menuItem.getPrice(),
-                            item.getPreferences(),
-                            item.getQuantity()
-                    );
-                    Label itemLabel = new Label(itemDetails);
-                    itemLabel.setStyle("-fx-padding: 5; -fx-border-color: black; -fx-border-width: 0 0 1 0;");
-                    DeliveryDisplay.getChildren().add(itemLabel);
+                // Display order items if they exist
+                if (currentDelivery.getOrderItems() != null && !currentDelivery.getOrderItems().isEmpty()) {
+                    for (OrderItem item : currentDelivery.getOrderItems()) {
+                        MenuItem menuItem = item.getMenuItem();
+                        String itemDetails = String.format(
+                                "%s\n Ingredients: %s\n Price: %.2f\n Preferences: %s\n Quantity: %d",
+                                menuItem.getName(),
+                                menuItem.getIngredients(),
+                                menuItem.getPrice(),
+                                item.getPreferences(),
+                                item.getQuantity()
+                        );
+                        Label itemLabel = new Label(itemDetails);
+                        itemLabel.setStyle("-fx-padding: 5; -fx-border-color: black; -fx-border-width: 0 0 1 0;");
+                        DeliveryDisplay.getChildren().add(itemLabel);
 
-                    //enable the user to cancel order
-                    cancelBtn.setDisable(false);
+                        //enable the user to cancel order
+                        cancelBtn.setDisable(false);
+                    }
+                } else {
+                    DeliveryDisplay.getChildren().add(new Label("No items in the order."));
                 }
-            } else {
-                DeliveryDisplay.getChildren().add(new Label("No items in the order."));
+            }
+            else{
+                DeliveryDisplay.getChildren().add(new Label("Delivery email or Order number is not correct."));
             }
         } else {
             DeliveryDisplay.getChildren().add(new Label("No delivery found."));

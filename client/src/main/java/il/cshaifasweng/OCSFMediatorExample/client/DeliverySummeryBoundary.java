@@ -42,7 +42,7 @@ public class DeliverySummeryBoundary {
 
     private void updateUI() {
         // Update UI only if the delivery data is not null
-        if (currentDelivery != null) {
+        if (currentDelivery != null && !currentDelivery.isCanceled()) {
             // Create a StringBuilder to concatenate all the information
             StringBuilder orderDetails = new StringBuilder();
 
@@ -65,6 +65,9 @@ public class DeliverySummeryBoundary {
 
             // Set the full order details to the orderText label
             orderText.setText(orderDetails.toString());
+        }
+        else{
+            orderText.setText("order not exist");
         }
     }
 }
