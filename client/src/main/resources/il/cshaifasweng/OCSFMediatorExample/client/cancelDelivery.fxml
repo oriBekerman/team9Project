@@ -14,14 +14,25 @@
                 <Font size="19.0" />
             </font></Label>
         <!-- Wrap the Label inside a VBox for dynamic resizing -->
-        <VBox fx:id="DeliveryDisplay" layoutX="96.0" layoutY="229.0" prefHeight="400.0" prefWidth="585.0" />
+        <VBox fx:id="DeliveryDisplay" layoutX="96.0" layoutY="229.0" prefHeight="410.0" prefWidth="606.0" />
         <Button fx:id="BackToHPbtn" layoutX="670.0" layoutY="662.0" mnemonicParsing="false" onAction="#navToHP" styleClass="return-btn" text="Back to Home Page" />
-      <Label fx:id="orderNumberLabel" layoutX="139.0" layoutY="93.0" text="Please enter order number:" />
-      <TextField fx:id="orderNumberText" layoutX="292.0" layoutY="89.0" prefHeight="17.0" prefWidth="31.0" />
-      <Label fx:id="emailLabel" layoutX="139.0" layoutY="124.0" text="Please enter the email you used for the order:" />
-      <TextField fx:id="emailText" layoutX="388.0" layoutY="120.0" prefHeight="25.0" prefWidth="132.0" />
-      <Button fx:id="getDelivery" layoutX="282.0" layoutY="182.0" mnemonicParsing="false" onAction="#FindDelivery" text="Find Delivery" />
-      <Label fx:id="ErrorText" layoutX="139.0" layoutY="151.0" prefHeight="17.0" prefWidth="218.0" />
+      <Label fx:id="orderNumberLabel" layoutX="119.0" layoutY="93.0" text="Please enter order number:">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+      <TextField fx:id="orderNumberText" layoutX="332.0" layoutY="91.0" prefHeight="17.0" prefWidth="31.0" />
+      <Label fx:id="emailLabel" layoutX="125.0" layoutY="137.0" text="Please enter the email you used for the order:">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+      <TextField fx:id="emailText" layoutX="439.0" layoutY="135.0" prefHeight="25.0" prefWidth="132.0" />
+      <Button fx:id="getDelivery" layoutX="372.0" layoutY="192.0" mnemonicParsing="false" onAction="#FindDelivery" text="Find Delivery" />
+      <Label fx:id="ErrorText" layoutX="119.0" layoutY="175.0" prefHeight="17.0" prefWidth="218.0" />
       <Button fx:id="cancelBtn" layoutX="332.0" layoutY="662.0" mnemonicParsing="false" onAction="#cancelDelivery" text="cancel Delivery" />
+      <Label fx:id="cancelFee" layoutX="611.0" layoutY="24.0" prefHeight="138.0" prefWidth="199.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>
