@@ -18,7 +18,7 @@ public class OrderItem implements Serializable {
     private String preferences=""; // Preferences for the item (e.g., special instructions)
 
     @ManyToOne
-    @JoinColumn(name = "delivery_id", nullable = false)
+    @JoinColumn(name = "delivery_id")
     private Delivery delivery; // Many-to-one relationship with Delivery
 
     // Default constructor

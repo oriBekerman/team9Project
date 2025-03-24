@@ -19,8 +19,7 @@ import javafx.scene.layout.VBox;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
-import static il.cshaifasweng.OCSFMediatorExample.client.App.switchToDelivery;
+import static il.cshaifasweng.OCSFMediatorExample.client.App.*;
 
 public class BranchPageBoundary {
 
@@ -37,6 +36,7 @@ public class BranchPageBoundary {
     public Button tableBtn;
     private final Object lock = new Object();
     private boolean branchTablesSet = false;
+    private Delivery currentDelivery= new Delivery();
 
     public BranchPageBoundary() {
         EventBus.getDefault().register(this);
@@ -102,8 +102,8 @@ public class BranchPageBoundary {
     public void navToReservationPage(ActionEvent actionEvent) {
     }
     public void navToDeliveryPage(ActionEvent actionEvent) {
-        // Now switch to the Delivery page
-        switchToDelivery("Delivery", branch);
+        currentDelivery.setBranch(branch);
+        switchToDelivery(currentDelivery);
     }
     public void navToComplaintPage(ActionEvent actionEvent) {
     }
@@ -205,25 +205,25 @@ public class BranchPageBoundary {
         }
     }
 
-//    //open selected branch page
-//    private void openMap(Branch branch) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("TableMapPage.fxml"));
-//            Parent mapPageRoot = loader.load();
-//            // Get the controller and pass the branch
-//            TableMapBoundary boundary = loader.getController();
-//            boundary.setMap(branch);
-//            if (boundary.mapIsSet) {
-//                System.out.println("map is already set");
-//            }
-//            while (!boundary.mapIsSet) {
-//                System.out.println("Waiting for map to be set");
-//            }
-//            App.setContent(mapPageRoot);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
+    //open selected branch page
+    private void openMap(Branch branch) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("TableMapPage.fxml"));
+            Parent mapPageRoot = loader.load();
+            // Get the controller and pass the branch
+            TableMapBoundary boundary = loader.getController();
+            boundary.setMap(branch);
+            if (boundary.mapIsSet) {
+                System.out.println("map is already set");
+            }
+            while (!boundary.mapIsSet) {
+                System.out.println("Waiting for map to be set");
+            }
+            App.setContent(mapPageRoot);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
 //change

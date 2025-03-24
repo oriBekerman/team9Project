@@ -15,18 +15,18 @@ import java.util.List;
 public class Delivery implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orderNumber", unique = true, nullable = false)
+    @Column(name = "orderNumber", unique = true)
     private Integer orderNumber;
 
     @Column(name = "date")
-    private LocalDateTime date; // Change to LocalDateTime
+    private LocalDateTime date;
 
     // One-to-many relationship with OrderItem
     @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems; // A list of OrderItem objects
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @Enumerated(EnumType.STRING)
@@ -125,6 +125,14 @@ public class Delivery implements Serializable {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+    public LocalDateTime getDeliveryTime() {
+        return this.date;
+    }
+
+    // Setter for deliveryTime
+    public void setDeliveryTime(LocalDateTime deliveryTime) {
+        this.date = deliveryTime;
     }
 
     @Override

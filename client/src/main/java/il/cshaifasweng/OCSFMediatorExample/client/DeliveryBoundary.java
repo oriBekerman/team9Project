@@ -15,6 +15,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
@@ -62,15 +65,17 @@ public class DeliveryBoundary {
     @FXML
     private Label deliveryMessageLabel;
 
+    @FXML
+    private Button Continue;
+
     private List<OrderItem> orderItems = new ArrayList<>();
-    private Delivery currentDelivery= new Delivery();;
+    private Delivery currentDelivery= new Delivery();
+
+    public void setDelivery(Delivery delivery){
+        this.currentDelivery= delivery;
+    }
 
     private static final double DELIVERY_COST = 15.0;
-
-    // Setter method for setting the branch ID
-    public void setBranchId(Branch branch) {
-        currentDelivery.setBranch(branch);
-    }
 
     // Event handler for MenuEvent
     @Subscribe
@@ -122,14 +127,17 @@ public class DeliveryBoundary {
 
     // Function to update the total price label
     private void updateTotalPrice() {
+
         // Ensure the menu table view is updated with the latest order items
-        if (orderItems != null) {
+        if (orderItems != null && !orderItems.isEmpty()) {
 
             double totalPrice = 0.0;
 
             // Calculate the total price based on quantity and price for each item
             for (OrderItem orderItem : orderItems) {
-                totalPrice += orderItem.getMenuItem().getPrice() * orderItem.getQuantity();
+                if (orderItem != null && orderItem.getMenuItem() != null) {
+                    totalPrice += orderItem.getMenuItem().getPrice() * orderItem.getQuantity();
+                }
             }
 
             // Add delivery cost if delivery is selected
@@ -166,6 +174,7 @@ public class DeliveryBoundary {
                         if (orderItem != null) {
                             orderItem.setQuantity(newValue);  // Update quantity in the OrderItem
                             updateTotalPrice(); // Update the total price when quantity changes
+                            isOrderValid(); //check if order valid for continue
                         }
                     });
                 }
@@ -180,6 +189,7 @@ public class DeliveryBoundary {
                         setGraphic(quantitySpinner);  // Display the spinner
                     }
                 }
+
             };
         });
 
@@ -214,9 +224,42 @@ public class DeliveryBoundary {
 
     @FXML
     void navToPD(ActionEvent event) {
-        currentDelivery.setOrderItems(orderItems);
-        System.out.println(currentDelivery);
-        switchToPDDelivery("personalDetailsFillingDelivery", currentDelivery);
+        if (currentDelivery != null) {
+            // Filter the orderItems to only include those with a quantity greater than 0
+            List<OrderItem> filteredItems = new ArrayList<>();
+            for (OrderItem orderItem : orderItems) {
+                if (orderItem.getQuantity() > 0) {
+                    filteredItems.add(orderItem);
+                }
+            }
+
+            // Set the filtered order items to the current delivery
+            currentDelivery.setOrderItems(filteredItems);
+
+            // Switch to the PD Delivery page with the filtered delivery
+            switchToPDDelivery(currentDelivery);
+        }
+    }
+    @FXML
+    private void isOrderValid() {
+        // Check if a delivery method is selected
+        boolean isDeliveryMethodSelected = deliveryRadio.isSelected() || pickupRadio.isSelected();
+
+        // Check if at least one order item has a quantity greater than 0
+        boolean isAtLeastOneItemValid = false;
+        for (OrderItem orderItem : orderItems) {
+            if (orderItem.getQuantity() > 0) {
+                isAtLeastOneItemValid = true;
+                break;
+            }
+        }
+
+        // Enable or disable the "Continue" button based on the conditions
+        if (isDeliveryMethodSelected && isAtLeastOneItemValid) {
+            Continue.setDisable(false); // Enable Continue button
+        } else {
+            Continue.setDisable(true); // Disable Continue button
+        }
     }
 
 
@@ -258,10 +301,15 @@ public class DeliveryBoundary {
                 // If "Delivery" is selected, show the message
                 deliveryMessageLabel.setText("Delivery fee is 15 shekels.");
                 deliveryMessageLabel.setVisible(true);
+                isOrderValid();
             } else {
                 // If "Delivery" is not selected, hide the message
                 deliveryMessageLabel.setVisible(false);
             }
+        });
+
+        pickupRadio.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            isOrderValid(); // Ensure button validity is updated after selecting pickup
         });
 
 
@@ -271,6 +319,7 @@ public class DeliveryBoundary {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        isOrderValid();
     }
 
 

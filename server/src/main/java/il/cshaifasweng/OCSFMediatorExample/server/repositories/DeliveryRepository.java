@@ -1,13 +1,13 @@
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
-import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DeliveryRepository extends BaseRepository<Delivery> {
@@ -33,12 +33,13 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
-            // Save the customer first if it's not null
-            if (delivery.getCustomer() != null) {
-                session.saveOrUpdate(delivery.getCustomer());  // Ensure the customer is saved or updated
+            // Check if the customer is transient (not saved in the database yet)
+            if (delivery.getCustomer() != null && delivery.getCustomer().getId() == 0) {
+                // Save the customer before saving the delivery
+                session.save(delivery.getCustomer());
             }
 
-            // Save the delivery, which will also cascade save the orderItems due to the @OneToMany(cascade = CascadeType.ALL) in Delivery
+            // Now save the delivery
             session.save(delivery);
 
             session.getTransaction().commit();  // Commit the transaction
@@ -49,6 +50,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
             return false;
         }
     }
+
 
 
     // Get all deliveries from the database

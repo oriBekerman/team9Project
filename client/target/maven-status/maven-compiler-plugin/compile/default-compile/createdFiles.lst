@@ -9,7 +9,7 @@ il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSelectedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
 il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.class
-il\cshaifasweng\OCSFMediatorExample\client\BiMap.class
+il\cshaifasweng\OCSFMediatorExample\client\DeliverySummeryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationPersonalInfoSet.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\TableIsReservedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.class

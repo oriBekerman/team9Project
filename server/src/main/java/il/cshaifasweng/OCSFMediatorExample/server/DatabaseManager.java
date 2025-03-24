@@ -9,6 +9,7 @@ import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsControlle
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -21,14 +22,13 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.ResInfo.Status.APPROV
 //configures database,handles opening and closing sessions
 public class DatabaseManager {
     private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-    private static MenuItemsController menuItemsController;
-    private static BranchController branchController;
-    private static LogInController logInController;
-    private static RestTableController restTableController;
-    private static DeliveryController deliveryController;
-    private static ResInfoController resInfoController;
-    private static ComplaintController complaintController;
-
+    private MenuItemsController menuItemsController;
+    private BranchController branchController;
+    private LogInController logInController;
+    private RestTableController restTableController;
+    private DeliveryController deliveryController;
+    private ResInfoController resInfoController;
+    private ComplaintController complaintController;
     public DatabaseManager(String password) {
         initialize(password);
         initControllers();
@@ -64,7 +64,8 @@ private static void initialize(String password) {
                 logInController.checkIfEmpty() &&
                 restTableController.checkIfEmpty() &&
                 deliveryController.checkIfEmpty() &&
-                complaintController.checkIfEmpty()) {
+                complaintController.checkIfEmpty())
+        {
 
             // ==========================
             // 1. Populate Employees
@@ -107,29 +108,10 @@ private static void initialize(String password) {
             RestTable table1= new RestTable("inside", 2);
             RestTable table2= new RestTable("inside", 4);
             RestTable table3= new RestTable("inside", 3);
-            RestTable table4= new RestTable("inside", 4);
-            RestTable table5= new RestTable("inside", 3);
-            RestTable table6= new RestTable("inside", 2);
-            RestTable table7= new RestTable("outside", 2);
-            RestTable table8= new RestTable("outside", 3);
-            RestTable table9= new RestTable("outside", 4);
-            RestTable table10= new RestTable("outside", 2);
-//           List<RestTable> restTablesHaifa = List.of(table1, table2, table3, table4,table5,table6,table7,table8,table9,table10);
-           List<RestTable> restTablesHaifa = List.of(table1, table2, table3,table4,table5,table6,table7,table8,table9,table10);
-
-
-            RestTable table11= new RestTable("inside", 2);
-            RestTable table12= new RestTable("inside", 4);
-            RestTable table13= new RestTable("inside", 3);
-            RestTable table14= new RestTable("inside", 4);
-            RestTable table15= new RestTable("inside", 3);
-            RestTable table16= new RestTable("inside", 2);
-            RestTable table17= new RestTable("outside", 2);
-            RestTable table18= new RestTable("outside", 3);
-            RestTable table19= new RestTable("outside", 4);
-            RestTable table20= new RestTable("outside", 2);
-            List<RestTable> restTablesTelAviv = List.of(table11, table12, table13, table14,table15,table16,table17,table18,table19,table20);
-
+            RestTable table4= new RestTable("outside", 4);
+            RestTable table5= new RestTable("outside", 3);
+            RestTable table6= new RestTable("outside", 2);
+           List<RestTable> restTables = List.of(table1, table2, table3, table4);
 
 //            // Set unavailable times
 //            LocalTime time1 = LocalTime.of(9, 0);
@@ -145,17 +127,10 @@ private static void initialize(String password) {
 //            restTables.get(4).addUnavailableFromTime(time5);
 
             // Assign tables to Haifa branch
-            for (RestTable table : restTablesHaifa) {
+            for (RestTable table : restTables) {
                 table.setBranch(haifaBranch);
             }
-//            haifaBranch.setRestTables(new HashSet<>(restTablesHaifa));
-            haifaBranch.setRestTables(restTablesHaifa);
-
-            // Assign tables to Tel Aviv branch
-            for (RestTable table : restTablesTelAviv) {
-                table.setBranch(telAvivBranch);
-            }
-            telAvivBranch.setRestTables(restTablesTelAviv);
+            haifaBranch.setRestTables(new HashSet<>(restTables));
 
             // ==========================
             // 5. Assign Menu Items & Deliverables to Branches
@@ -179,8 +154,8 @@ private static void initialize(String password) {
             // ==========================
             // Populating some delivery orders
             // Create Customer instances with associated credit card information
-            Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@gmail.com", "","1234-5678-9876-5432", "12/25", "123");
-            Customer customer2 = new Customer( "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@gmail.com", "","9876-5432-1234-5678", "11/24", "456");
+            Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "0525616469","5555555555554444", "12/25", "123");
+            Customer customer2 = new Customer("Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com","0525616468", "4111111111111111", "11/24", "456");
 
             // Create OrderItems from MenuItem and quantity
             OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences
@@ -224,23 +199,10 @@ private static void initialize(String password) {
             deliveryController.populateDelivery(order2);
 
 
-            LocalTime time1 = LocalTime.of(19, 30);
-            LocalTime time2 = LocalTime.of(10, 30);
-
-
-
-            table2.addUnavailableFromTime(time1);
-            ResInfo reservation1 = new ResInfo(haifaBranch, customer1, time1, 4, "Inside", Set.of(table2));
+            ResInfo reservation1 = new ResInfo(haifaBranch,customer1,LocalTime.of(19, 30), 4, "Inside",Set.of(table2));
             reservation1.setStatus(APPROVED);
-            List tableIds2=List.of(table2.getId());
-            haifaBranch.addReservation(reservation1,  Set.of(table2), tableIds2);
-
-            table1.addUnavailableFromTime(time2);
-            ResInfo reservation2 = new ResInfo(haifaBranch, customer2, time2, 2, "Inside", Set.of(table1));
+            ResInfo reservation2 = new ResInfo(haifaBranch,customer2,LocalTime.of(10, 30), 2, "Inside",Set.of(table1));
             reservation2.setStatus(APPROVED);
-            List tableIds1=List.of(table1.getId());
-            haifaBranch.addReservation(reservation2, Set.of(table1), tableIds1);
-
             resInfoController.PopulateResSInfo(List.of(reservation1, reservation2));
             // Create a Complaint instance without a Branch
             Complaint complaint = new Complaint( "Delayed order delivery",NEW);
@@ -295,6 +257,7 @@ private static void initialize(String password) {
         }
         return complaintController;
     }
+
     // shuts down Hibernate.
     public static void shutdown() {
         HibernateUtil.shutdown();

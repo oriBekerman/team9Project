@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.CreditCradInfoBoundary">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.CreditCardInfoDeliveryBoundary">
    <children>
       <Label layoutX="79.0" layoutY="56.0" text="Credit card number :">
          <font>
@@ -23,10 +23,12 @@
             <Font size="15.0" />
          </font>
       </Label>
+      <!-- Error label added here -->
+      <Label fx:id="errorLabel" layoutX="79.0" layoutY="200.0" textFill="red" />
       <Button fx:id="paymentBtn" layoutX="496.0" layoutY="327.0" mnemonicParsing="false" onAction="#checkPayment" text="Pay" />
-      <TextField layoutX="300.0" layoutY="54.0" />
-      <TextField layoutX="300.0" layoutY="105.0" />
-      <TextField layoutX="300.0" layoutY="152.0" />
+      <TextField fx:id="cardNumText" layoutX="300.0" layoutY="54.0" />
+      <TextField fx:id="expDateText" layoutX="300.0" layoutY="105.0" />
+      <TextField fx:id="cvvText" layoutX="300.0" layoutY="152.0" />
       <Button fx:id="backBtn" layoutX="41.0" layoutY="327.0" mnemonicParsing="false" onAction="#backToPersonalD" text="Back" />
    </children>
 </AnchorPane>
