@@ -49,6 +49,7 @@ public class DeliverySummeryBoundary {
             orderDetails.append("Order number: ").append(currentDelivery.getOrderNumber()).append("\n");
             orderDetails.append("Delivery Method: ").append(currentDelivery.getDeliveryMethod()).append("\n");
             orderDetails.append("Total Price: ").append(currentDelivery.getTotalPrice()).append("\n");
+            orderDetails.append("Delivery/Pickup Time: ").append(currentDelivery.getTime()).append("\n");
             orderDetails.append("Order Items:\n");
 
             // Display order items if they exist

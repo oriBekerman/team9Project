@@ -7,7 +7,6 @@ import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -18,8 +17,8 @@ public class Delivery implements Serializable {
     @Column(name = "orderNumber", unique = true)
     private Integer orderNumber;
 
-    @Column(name = "date")
-    private LocalDateTime date;
+    @Column(name = "time")
+    private String time;
 
     // One-to-many relationship with OrderItem
     @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
@@ -46,12 +45,13 @@ public class Delivery implements Serializable {
     public Delivery() {}
 
     // Constructor
-    public Delivery(List<OrderItem> orderItems, Customer customer, DeliveryMethod deliveryMethod, Branch branch) {
+    public Delivery(List<OrderItem> orderItems, Customer customer, DeliveryMethod deliveryMethod, Branch branch, String time) {
         this.orderItems = orderItems;
         this.customer = customer;
         this.deliveryMethod = deliveryMethod;
         this.branch = branch;
         this.totalPrice = calculateTotalPrice(); // Calculate total price based on items
+        this.time =time;
     }
 
     // Calculate total price dynamically
@@ -70,8 +70,8 @@ public class Delivery implements Serializable {
     public int getDeliveryNumber() {
         return orderNumber;
     }
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setTime(String time) {
+        this.time = time;
     }
 
 
@@ -82,8 +82,8 @@ public class Delivery implements Serializable {
         return orderNumber;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public String getTime() {
+        return time;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -126,20 +126,17 @@ public class Delivery implements Serializable {
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
-    public LocalDateTime getDeliveryTime() {
-        return this.date;
-    }
 
     // Setter for deliveryTime
-    public void setDeliveryTime(LocalDateTime deliveryTime) {
-        this.date = deliveryTime;
+    public void setDeliveryTime(String time) {
+        this.time = time;
     }
 
     @Override
     public String toString() {
         return "Delivery{" +
                 "orderNumber=" + orderNumber +
-                ", date='" + date + '\'' +
+                ", time='" + time + '\'' +
                 ", orderItems=" + orderItems +
                 ", customer=" + customer +
                 ", deliveryMethod=" + deliveryMethod +

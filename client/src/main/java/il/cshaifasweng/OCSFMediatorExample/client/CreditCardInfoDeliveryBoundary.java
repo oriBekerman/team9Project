@@ -87,9 +87,6 @@ public class CreditCardInfoDeliveryBoundary {
                         customer.setCvv(cvv);
                         customer.setExpirationDate(expDate);
                         currentDelivery.setCustomer(customer);
-                        // Set the current date and time for the delivery
-                        LocalDateTime now = LocalDateTime.now();
-                        currentDelivery.setDeliveryTime(now);
 
                         // Create the request to send to the server for delivery creation
                         Request<Delivery> createDeliveryRequest = new Request<>(

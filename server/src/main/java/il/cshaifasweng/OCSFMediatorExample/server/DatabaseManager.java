@@ -168,17 +168,17 @@ private static void initialize(String password) {
                     new ArrayList<>(), // Initialize empty OrderItems list for order1
                     customer1, // Customer
                     DeliveryMethod.DELIVERY, // Delivery method
-                    telAvivBranch // Branch
+                    telAvivBranch, // Branch
+                    "10:30"
             );
-            order1.setDate(LocalDateTime.now());
 
             Delivery order2 = new Delivery(
                     new ArrayList<>(), // Initialize empty OrderItems list for order2
                     customer2, // Customer
                     DeliveryMethod.SELF_PICKUP, // Delivery method
-                    haifaBranch // Branch
+                    haifaBranch, // Branch
+                    "17:00"
             );
-            order2.setDate(LocalDateTime.now());
 
             // Now associate the OrderItems with the Delivery orders
             orderItem1.setDelivery(order1); // Associate orderItem1 with order1
