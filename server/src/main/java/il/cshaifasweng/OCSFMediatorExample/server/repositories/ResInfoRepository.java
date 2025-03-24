@@ -24,8 +24,6 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
         super();
     }
 
-    ///  both of them to copy ( to my new EmployeeRepository )and change just name + type
-
     @Override
     public int getId(ResInfo entity) {return ((ResInfo)entity).getResID();}
 
@@ -33,8 +31,6 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
     protected Class<ResInfo> getEntityClass() {
         return ResInfo.class;
     }
-
-    /// //////
 
     // get ResSInfo form database returns resSInfoList
     public List<ResInfo> getAllResSInfo()
@@ -94,8 +90,6 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             throw new RuntimeException("Failed to populate reservation", e);
         }
     }
-
-
     public List<ResInfo> getReservationsByBranchAndMonth(int branchId, String monthYear) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -219,8 +213,6 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             return null;
         }
     }
-
-
     public void setCustomer(ResInfo newReservation) {
         Transaction tx=null;
         try (Session session = HibernateUtil.getSessionFactory().openSession())

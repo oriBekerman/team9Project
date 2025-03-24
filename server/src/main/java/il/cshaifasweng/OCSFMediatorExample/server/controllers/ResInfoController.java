@@ -149,7 +149,7 @@ public class ResInfoController {
     }
 
 
-    public boolean checkTableAvailability(ResInfo resInfo)
+    public List<ResInfo> checkTableAvailability(ResInfo resInfo)
     {
         boolean available=false;
         Set<RestTable> restTables = resInfo.getTable();
@@ -157,69 +157,22 @@ public class ResInfoController {
         List<ResInfo> conflictingReservations=resInfoRepository.findConflictingReservations(restTables,time);
         if(conflictingReservations.isEmpty())
         {
-            available=true;
+            return null;
         }
-        return available;
+        return conflictingReservations;
     }
     public Response handleNewReservation(Request request) {
         System.out.println("in handleNewReservation");
         ResInfo reservation = (ResInfo) request.getData();
         Response response=new Response(ADDED_RESERVATION, null, null, BOTH);
-
-        if (!checkTableAvailability(reservation)) {
-            return new Response<>(ADDED_RESERVATION, null,
+        List<ResInfo> conflictingReservations=checkTableAvailability(reservation);
+        if (!(conflictingReservations==null)) {
+            return new Response<>(ADDED_RESERVATION, conflictingReservations,
                     "One or more selected tables are already reserved at this time.", ERROR, THIS_CLIENT);
         }
         response=addReservation(reservation);
 
         return response;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    public Response<List<Response>>cancelReservation(Request request)
-//    {
-//        int fine=0;
-//        //send to all client to update tables
-//        Response response=new Response(CANCELED_RESERVATION,null,ERROR,BOTH);
-//        List<Response> responses=new ArrayList<>();
-//        Response response1=new Response<>(CANCELED_RESERVATION,null,ERROR,ALL_CLIENTS);
-//        //send to this client to get fine
-//        Response response2=new Response<>(CANCELED_RESERVATION,null,ERROR,THIS_CLIENT);
-//        ResInfo reservation= (ResInfo) request.getData();
-//        if(reservation.getHours().minusHours(1).isBefore(LocalTime.now()))
-//        {
-//            fine=10;
-//        }
-//        resInfoRepository.deleteReservation(reservation);
-//        response1.setData(reservation);
-//        response1.setStatus(SUCCESS);
-//        response2.setData(fine);
-//        response2.setStatus(SUCCESS);
-//        response2.setMessage("since the cancellation is within an hour of the reservation time the cancellation fine is "+fine);
-//        responses.add(response1);
-//        responses.add(response2);
-//        response.setData(responses);
-//        response.setStatus(SUCCESS);
-//        return response;
-//    }
-//    private Customer getCustomer(String email)
-//    {
-//        return customerRepository.findByEmail(email);
-//    }
-
-
 
 }

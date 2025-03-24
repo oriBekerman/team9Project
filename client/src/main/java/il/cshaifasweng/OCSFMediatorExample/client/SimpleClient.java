@@ -162,8 +162,11 @@ public class SimpleClient extends AbstractClient {
 				}
 				if(response.getStatus().equals(ERROR))
 				{
-					TableIsReservedEvent event=new TableIsReservedEvent((ResInfo) response.getData());
+					System.out.println("in error res");
+					TableIsReservedEvent event=new TableIsReservedEvent((List<ResInfo>) response.getData());
+					System.out.println("event created");
 					EventBus.getDefault().post(event);
+					System.out.println("event posted");
 				}
 			}
 			if(response.getResponseType().equals(UPDATE_BRANCH_TABLES))
@@ -263,7 +266,6 @@ public class SimpleClient extends AbstractClient {
 			e.printStackTrace();
 		}
 	}
-
 	public void updateDishType(MenuItem selectedItem) {
 		try {
 			// Get the item ID using getItemID() instead of getId()
@@ -283,8 +285,6 @@ public class SimpleClient extends AbstractClient {
 			System.err.println("Error updating dish type: " + e.getMessage());
 		}
 	}
-
-
 
 	public void addDishToDatabase(MenuItem newDish)
 	{

@@ -23,9 +23,6 @@ import java.time.format.DateTimeFormatter;
 
 import org.greenrobot.eventbus.Subscribe;
 
-
-
-
 public class ReservationCntBoundary {
     public String chosen;
     public SimpleClient client;
@@ -96,20 +93,20 @@ public class ReservationCntBoundary {
     }
 
     //requests branch instance from server
-@Subscribe
+    @Subscribe
     void setHoursList() throws IOException {
         //getBranch and then set hours list
         Request<String> request2 = new Request<>(BRANCH,GET_BRANCH_BY_NAME, SimpleClient.getClient().mapReservation.get("Branch"));
-       SimpleClient.getClient().sendToServer(request2);
+        SimpleClient.getClient().sendToServer(request2);
 
     }
-    
+
     @Subscribe
     public void onBranchTablesReceived(BranchTablesReceivedEvent event) {
         hoursList.getItems().clear();
         for (RestTable table : event.getTables()) {
             if(SimpleClient.getClient().mapReservation.get("Area")==table.getArea())
-            hoursList.getItems().add(table.getAvailableFromTimes().toString());  // Assuming RestTable has a method getAvailableTime()
+                hoursList.getItems().add(table.getAvailableFromTimes().toString());  // Assuming RestTable has a method getAvailableTime()
         }
     }
 
@@ -298,9 +295,9 @@ public class ReservationCntBoundary {
         try{
             SimpleClient.getClient().sendToServer(request);
         }
-       catch (Exception e){
+        catch (Exception e){
             e.printStackTrace();
-       }
+        }
 
     }
 
@@ -324,9 +321,14 @@ public class ReservationCntBoundary {
     @Subscribe
     public void onTableIsReservedEvent(TableIsReservedEvent event)
     {
+        System.out.println("recieved event");
 //        resetEventBus();
         tableNotAvailable();
-        updatePage(event.getReservation());
+        for(ResInfo resInfo: event.getReservation())
+        {
+            updatePage(resInfo);
+        }
+
     }
     // return to primary page after OK
     private void performAdditionalAction() {
@@ -384,7 +386,7 @@ public class ReservationCntBoundary {
     {
         SimpleClient.getClient().resInfo.setBranch(reservation.getBranch()); //update the branch in reservation to the updated branch
         this.branch=reservation.getBranch(); //update this branch to the updated branch
-            updateAvailableTimesAndUI();
+        updateAvailableTimesAndUI();
     }
 
 }
