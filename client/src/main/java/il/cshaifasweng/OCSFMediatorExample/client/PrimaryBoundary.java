@@ -88,11 +88,6 @@ public class PrimaryBoundary {
 	@FXML
 	void cancelDel(ActionEvent event) {
 		switchScreen("CancelDelivery");
-		try {
-			SimpleClient.getClient().displayNetworkMenu();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	@FXML

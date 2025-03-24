@@ -23,6 +23,8 @@ import static il.cshaifasweng.OCSFMediatorExample.client.App.*;
 
 public class CreditCardInfoDeliveryBoundary {
 
+    public SimpleClient client;
+
     @FXML
     public TextField cardNumText;
     @FXML
