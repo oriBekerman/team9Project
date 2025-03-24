@@ -32,6 +32,9 @@ public class MenuItem implements Serializable {
     @Lob
     private byte[] picture;
 
+    @Column
+    private String imagePath;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DishType dishType;  // BASE or SPECIAL
@@ -43,13 +46,14 @@ public class MenuItem implements Serializable {
     private List<Branch> deliverableBranches = new ArrayList<>();
 
     // Constructor with all fields except itemID (auto-generated)
-    public MenuItem(String name, double price, String ingredients, String preference, byte[] picture, DishType dishType) {
+    public MenuItem(String name, double price, String ingredients, String preference, byte[] picture, DishType dishType,String imagePath) {
         this.name = name;
         this.price = price;
         this.ingredients = ingredients;
         this.preference = preference;
         this.picture = picture;
         this.dishType = dishType;
+        this.imagePath = imagePath;
     }
 
     public MenuItem() {

@@ -13,9 +13,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
@@ -25,6 +28,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 public class SecondaryBoundary {
 
     public Label menuLabel;
+    public AnchorPane root;
     @FXML
     private ResourceBundle resources;
 
@@ -451,5 +455,36 @@ public class SecondaryBoundary {
             UpdatePriceBtn.setDisable(false);  // Re-enable the update button
             UpdatePriceBtn.requestFocus();  // Focus the update button
         });
+        setStyle();
     }
+
+    private void setStyle()
+    {
+        root.setStyle("-fx-background-color: #fbe9d0;");
+        for (Node node : root.getChildrenUnmodifiable())
+        {
+            if(node instanceof Button)
+            {
+                node.setStyle(" -fx-font-size: 16px;\n" +
+                        "    -fx-font-weight: bold;\n" +
+                        "    -fx-text-fill: white;\n" +
+                        "    -fx-background-color: #8a6f48;\n" +
+                        "    -fx-alignment: center;\n" +
+                        "    -fx-padding: 8px 16px;\n" +
+                        "    -fx-border-radius: 6px;\n" +
+                        "    -fx-cursor: hand;");
+            }
+            if (node instanceof TableColumnHeader)
+            {
+                node.setStyle(" -fx-font-size: 16px;\n" +
+                        "    -fx-text-fill: #4e453c;\n" +
+                        "    -fx-padding: 8px;\n" +
+                        "    -fx-font-weight: bold;;");
+            }
+
+        }
+
+    }
+
+
 }
