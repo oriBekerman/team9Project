@@ -404,6 +404,7 @@ public class ReservationCntBoundary {
     private void performAdditionalAction() {
         System.out.println("in preform addi");
         switchScreen("Home Page");
+        EventBus.getDefault().unregister(this);
     }
     public void timeViolation()
     {

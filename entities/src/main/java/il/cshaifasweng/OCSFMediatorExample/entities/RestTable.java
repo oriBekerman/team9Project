@@ -5,10 +5,7 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.sql.Time;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table (name ="restTable",uniqueConstraints = {

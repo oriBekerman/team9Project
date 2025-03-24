@@ -4,10 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 
@@ -59,6 +56,7 @@ public class Branch implements Serializable  {
     private Set<ResInfo> reservations = new HashSet<>();
 
 
+    @Transient
     public boolean tablesAreSet=false;
 
 
@@ -69,6 +67,7 @@ public class Branch implements Serializable  {
         this.location = location;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
+        this.tablesAreSet=true;
     }
 
     // Getters and Setters
@@ -139,14 +138,20 @@ public class Branch implements Serializable  {
         }
         return tables;
     }
-    public void setRestTables(Set<RestTable> tables) {
-        this.tables = tables;
+    public void setRestTables(List<RestTable> newTables) {
+        Set<RestTable> restTables=new HashSet<>();
+        for(RestTable table : newTables)
+        {
+            restTables.add(table);
+        }
+        this.tables=restTables;
         if (tables != null){
-            if(tables.size()>0)
+            if(!tables.isEmpty())
             {
                 this.tablesAreSet=true;
             }
         }
+
     }
     public List<RestTable> getAvailableTablesWithCapacity(int capacity,LocalTime time)
     {
@@ -268,6 +273,7 @@ public class Branch implements Serializable  {
 
     public ResInfo createReservation(Customer customer, int numGuests, String area, LocalTime time) {
         Set<RestTable> tables = getAvailableTablesWithNumPeople(numGuests, time, area);
+        List<Integer> tableIds=new ArrayList<>();
 
         if (tables.isEmpty()) return null;
 
@@ -276,17 +282,53 @@ public class Branch implements Serializable  {
 
         for (RestTable table : tables) {
             table.addUnavailableFromTime(time);
+            tableIds.add(table.getId());
         }
 
-        addReservation(reservation);
+        addReservation(reservation, tables,tableIds);
         return reservation;
     }
 
-    public void addReservation(ResInfo reservation) {
+    public synchronized void addReservation(ResInfo reservation, Set<RestTable> newTables, List<Integer> tableIds) {
         reservations.add(reservation);
         reservation.setBranch(this);
+        tablesAreSet = false;
+        //remove all the tables with ids matching a table in newTables
+        for(RestTable table : tables)
+        {
+            if(tableIds.contains(table.getId()))
+            {
+                tables.remove(table);
+            }
+        }
+        //add all new tables
+        for(RestTable newTable : newTables)
+        {
+            tables.add(newTable);
+        }
+        //create tables id map to get table by id easily
+
+
+//        // Create a map of existing tables by ID for quick lookup
+//        Map<Integer, RestTable> tableMap = new HashMap<>();
+//        for (RestTable table : tables) {
+//            tableMap.put(table.getId(), table);
+//        }
+//        // Replace existing tables with new versions by matching IDs
+//        for (RestTable newTable : newTables) {
+//            int id = newTable.getId();
+//            if (tableMap.containsKey(id)) {
+//                tables.remove(tableMap.get(id));
+//                tables.add(newTable);
+//            }
+//        }
+
+        tablesAreSet = true;
+        this.notifyAll();  // Notify any thread waiting for tables
     }
-//    public ResInfo getReservationByTable(RestTable table,LocalTime time)
+
+
+    //    public ResInfo getReservationByTable(RestTable table,LocalTime time)
 //    {
 //        for(ResInfo reservation : reservations)
 //        {

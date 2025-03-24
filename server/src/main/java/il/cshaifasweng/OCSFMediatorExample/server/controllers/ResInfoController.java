@@ -111,21 +111,32 @@ public class ResInfoController {
         Customer customer = reservation.getCustomer();
         Set<RestTable> tables = reservation.getTable();
         LocalTime time = reservation.getHours();
+        List<Integer> tableIds = new ArrayList<>(); //list of tables ids of the tables that need to be updated
 
         if (tables == null || tables.isEmpty()) {
             return new Response(ADDED_RESERVATION, null, "No tables provided for reservation", ERROR, THIS_CLIENT);
         }
-
-        // Mark tables as unavailable
         for (RestTable table : tables) {
             table.addUnavailableFromTime(time);
+            tableIds.add(table.getId());
+        }
+        reservation.setStatus(ResInfo.Status.APPROVED);
+        //wait for branch tables to be set
+        synchronized (branch) {
+            branch.addReservation(reservation,tables,tableIds);
+
+            try {
+                while (!branch.tablesAreSet) {
+                    branch.wait();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return new Response(ADDED_RESERVATION, null, "Thread interrupted.", ERROR, THIS_CLIENT);
+            }
         }
 
-        // Set status and save
-        reservation.setStatus(ResInfo.Status.APPROVED);
-        branch.addReservation(reservation); // Link reservation to branch
-
         ResInfo newReservation = resInfoRepository.addReservation(reservation);
+        newReservation.setBranch(branch); //set the branch with the updated tables to reservation
         if (newReservation == null) {
             return new Response(ADDED_RESERVATION, null, "Failed to save reservation.", ERROR, THIS_CLIENT);
         }
@@ -137,12 +148,15 @@ public class ResInfoController {
                 "Guests: " + reservation.getNumOfGuests() + "\n" +
                 "Branch: " + reservation.getBranch().getName() + "\n\n" +
                 "Enjoy your meal!");
+
         response2.setData(newReservation);
         response2.setStatus(SUCCESS);
+
         response.setData(List.of(response1, response2));
         response.setStatus(SUCCESS);
         return response;
     }
+
 
     public boolean checkTableAvailability(ResInfo resInfo)
     {

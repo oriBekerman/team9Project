@@ -9,7 +9,6 @@ import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsControlle
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -115,7 +114,9 @@ private static void initialize(String password) {
             RestTable table8= new RestTable("outside", 3);
             RestTable table9= new RestTable("outside", 4);
             RestTable table10= new RestTable("outside", 2);
-           List<RestTable> restTablesHaifa = List.of(table1, table2, table3, table4,table5,table6,table7,table8,table9,table10);
+//           List<RestTable> restTablesHaifa = List.of(table1, table2, table3, table4,table5,table6,table7,table8,table9,table10);
+           List<RestTable> restTablesHaifa = List.of(table1, table2, table3,table4,table5,table6,table7,table8,table9,table10);
+
 
             RestTable table11= new RestTable("inside", 2);
             RestTable table12= new RestTable("inside", 4);
@@ -147,13 +148,14 @@ private static void initialize(String password) {
             for (RestTable table : restTablesHaifa) {
                 table.setBranch(haifaBranch);
             }
-            haifaBranch.setRestTables(new HashSet<>(restTablesHaifa));
+//            haifaBranch.setRestTables(new HashSet<>(restTablesHaifa));
+            haifaBranch.setRestTables(restTablesHaifa);
 
             // Assign tables to Tel Aviv branch
             for (RestTable table : restTablesTelAviv) {
                 table.setBranch(telAvivBranch);
             }
-            telAvivBranch.setRestTables(new HashSet<>(restTablesTelAviv));
+            telAvivBranch.setRestTables(restTablesTelAviv);
 
             // ==========================
             // 5. Assign Menu Items & Deliverables to Branches
@@ -225,15 +227,17 @@ private static void initialize(String password) {
             LocalTime time1 = LocalTime.of(19, 30);
             LocalTime time2 = LocalTime.of(10, 30);
 
+
+
+            table2.addUnavailableFromTime(time1);
             ResInfo reservation1 = new ResInfo(haifaBranch, customer1, time1, 4, "Inside", Set.of(table2));
             reservation1.setStatus(APPROVED);
-            table2.addUnavailableFromTime(time1);
-            haifaBranch.addReservation(reservation1);
+            haifaBranch.addReservation(reservation1,  Set.of(table2), tableIds);
 
+            table1.addUnavailableFromTime(time2);
             ResInfo reservation2 = new ResInfo(haifaBranch, customer2, time2, 2, "Inside", Set.of(table1));
             reservation2.setStatus(APPROVED);
-            table1.addUnavailableFromTime(time2);
-            haifaBranch.addReservation(reservation2);
+            haifaBranch.addReservation(reservation2, Set.of(table1), tableIds);
 
             resInfoController.PopulateResSInfo(List.of(reservation1, reservation2));
             // Create a Complaint instance without a Branch

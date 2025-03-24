@@ -193,9 +193,10 @@ public class BranchPageBoundary {
         synchronized (lock) {
             System.out.println("Tables received for branch: " + branch.getName());
             Set<RestTable> tables = event.getTables();
+            List<RestTable> newTables=tables.stream().toList();
 
             if (tables != null && !tables.isEmpty()) {
-                branch.setRestTables(tables);
+                branch.setRestTables(newTables);
                 branchTablesSet = true;
                 lock.notifyAll(); // Wake up any waiting threads
             } else {
@@ -204,25 +205,25 @@ public class BranchPageBoundary {
         }
     }
 
-    //open selected branch page
-    private void openMap(Branch branch) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("TableMapPage.fxml"));
-            Parent mapPageRoot = loader.load();
-            // Get the controller and pass the branch
-            TableMapBoundary boundary = loader.getController();
-            boundary.setMap(branch);
-            if (boundary.mapIsSet) {
-                System.out.println("map is already set");
-            }
-            while (!boundary.mapIsSet) {
-                System.out.println("Waiting for map to be set");
-            }
-            App.setContent(mapPageRoot);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
+//    //open selected branch page
+//    private void openMap(Branch branch) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("TableMapPage.fxml"));
+//            Parent mapPageRoot = loader.load();
+//            // Get the controller and pass the branch
+//            TableMapBoundary boundary = loader.getController();
+//            boundary.setMap(branch);
+//            if (boundary.mapIsSet) {
+//                System.out.println("map is already set");
+//            }
+//            while (!boundary.mapIsSet) {
+//                System.out.println("Waiting for map to be set");
+//            }
+//            App.setContent(mapPageRoot);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 }
 //change
