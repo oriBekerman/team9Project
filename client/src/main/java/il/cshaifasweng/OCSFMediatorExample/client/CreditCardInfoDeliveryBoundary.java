@@ -55,6 +55,7 @@ public class CreditCardInfoDeliveryBoundary {
 
     @FXML
     void backToPersonalD(ActionEvent event) {
+        onExit();
         switchToPDDelivery(currentDelivery);
     }
 
@@ -62,6 +63,7 @@ public class CreditCardInfoDeliveryBoundary {
     public void onDeliveryReceived(Delivery delivery) {
         // This method will be called when a Delivery event is posted
         currentDelivery = delivery;  // Update the current delivery object
+        onExit();
         switchToSummeryDelivery(currentDelivery);
     }
 
@@ -175,6 +177,11 @@ public class CreditCardInfoDeliveryBoundary {
             System.out.println("Invalid date format: " + expDate);
             return false;
         }
+    }
+
+    public void onExit() {
+        EventBus.getDefault().unregister(this);
+        System.out.println("Unregistered from EventBus: DeliverySummeryBoundary");
     }
 
 

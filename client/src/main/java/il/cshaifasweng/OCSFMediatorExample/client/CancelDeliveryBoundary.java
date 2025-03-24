@@ -12,7 +12,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
+import java.time.Duration;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchToSummeryDelivery;
@@ -55,6 +58,7 @@ public class CancelDeliveryBoundary {
 
     @FXML
     void navToHP(ActionEvent event) {
+        onExit(); // Unregister before switching
         switchScreen("Home Page");
     }
 
@@ -136,6 +140,8 @@ public class CancelDeliveryBoundary {
 
     @FXML
     void cancelDelivery(ActionEvent event) throws IOException {
+
+        checkRewards();
         String deliveryNum = orderNumberText.getText();
         // Send request to the server to delete the delivery
         Request<Integer> deleteDeliveryRequest = new Request<>(
@@ -145,6 +151,46 @@ public class CancelDeliveryBoundary {
         );
         SimpleClient.getClient().sendToServer(deleteDeliveryRequest);
     }
+
+    @FXML
+    void checkRewards() throws IOException {
+        if (currentDelivery == null) {
+            System.out.println("No delivery found.");
+            return;
+        }
+
+        String deliveryTimeStr = currentDelivery.getTime(); // Example: "10:30"
+        double refund = 0.0;
+
+        // Parse the delivery time string into LocalTime
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime deliveryTime = LocalTime.parse(deliveryTimeStr, formatter);
+
+        // Get the current time
+        LocalTime now = LocalTime.now();
+
+        // Calculate the duration between now and the delivery time
+        Duration duration = Duration.between(now, deliveryTime);
+        long minutesUntilDelivery = duration.toMinutes();
+
+        System.out.println("Minutes until delivery: " + minutesUntilDelivery);
+
+        // Cancel before 3 hours (180 minutes)  Full refund
+        if (minutesUntilDelivery > 180) {
+            refund = currentDelivery.getTotalPrice();
+        }
+        // Cancel between 3 hours (180 min) and 1 hour (60 min)  50% refund
+        else if (minutesUntilDelivery >= 60) {
+            refund = currentDelivery.getTotalPrice() / 2;
+        }
+        // Cancel within 1 hour  No refund
+        else {
+            refund = 0.0;
+        }
+
+        System.out.println("Refund amount: " + refund);
+    }
+
 
     // In your EventBus subscriber class
 
@@ -234,6 +280,11 @@ public class CancelDeliveryBoundary {
         } else {
             ErrorText.setText("delivery not found");
         }
+    }
+
+    public void onExit() {
+        EventBus.getDefault().unregister(this);
+        System.out.println("Unregistered from EventBus: CancelDeliveryBoundary");
     }
 
 }
