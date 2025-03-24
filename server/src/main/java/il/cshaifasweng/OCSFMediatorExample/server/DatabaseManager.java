@@ -7,6 +7,7 @@ import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.time.LocalDate;
@@ -156,6 +157,14 @@ private static void initialize(String password) {
             // Create Customer instances with associated credit card information
             Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "0525616469","5555555555554444", "12/25", "123");
             Customer customer2 = new Customer("Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com","0525616468", "4111111111111111", "11/24", "456");
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
+
+            session.save(customer1);
+            session.save(customer2);
+
+            session.getTransaction().commit();
+            session.close();
 
             // Create OrderItems from MenuItem and quantity
             OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences
@@ -204,6 +213,15 @@ private static void initialize(String password) {
             ResInfo reservation2 = new ResInfo(haifaBranch,customer2,LocalTime.of(10, 30), 2, "Inside",Set.of(table1));
             reservation2.setStatus(APPROVED);
             resInfoController.PopulateResSInfo(List.of(reservation1, reservation2));
+            Session session2 = HibernateUtil.getSessionFactory().openSession();
+            session2.beginTransaction();
+
+            session2.save(reservation1);
+            session2.save(reservation2);
+
+            session2.getTransaction().commit();
+            session2.close();
+
             // Create a Complaint instance without a Branch
             Complaint complaint = new Complaint( "Delayed order delivery",NEW);
             complaint.setBranch(telAvivBranch);

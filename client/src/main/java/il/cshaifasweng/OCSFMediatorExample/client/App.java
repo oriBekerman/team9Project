@@ -192,6 +192,26 @@ public class App extends Application {
                     }
                 });
                 break;
+            case "CancelReservationEnterEmail":
+                Platform.runLater(() -> {
+                    setWindowTitle("Cancel Reservation - Email");
+                    try {
+                        setContent("CancelReservationEnterEmail");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "CancelReservationChoose":
+                Platform.runLater(() -> {
+                    setWindowTitle("Cancel Reservation - Choose");
+                    try {
+                        setContent("CancelReservationChoose");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
         }
     }
 

@@ -1,3 +1,4 @@
+il\cshaifasweng\OCSFMediatorExample\client\CancelReservationChooseController.class
 il\cshaifasweng\OCSFMediatorExample\client\TimerManager.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AbstractClient.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary.class
@@ -9,6 +10,7 @@ il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSelectedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
 il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\State.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliverySummeryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationPersonalInfoSet.class
 il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.class
@@ -30,6 +32,7 @@ il\cshaifasweng\OCSFMediatorExample\client\ActiveUser.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\MenuEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuBarBoundary.class
+il\cshaifasweng\OCSFMediatorExample\client\CancelReservationEnterEmailController.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchListBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ReservationBoundary.class

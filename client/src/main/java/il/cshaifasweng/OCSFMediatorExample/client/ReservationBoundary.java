@@ -1,16 +1,21 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
+import org.hibernate.annotations.Parent;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
@@ -51,6 +56,10 @@ public class ReservationBoundary {
     private ComboBox<String> numpeopleList;
 
     @FXML
+    private Button cancelReservationBtn;
+
+
+    @FXML
     void backToHP(ActionEvent event) {
 
         switchScreen("Home Page");
@@ -61,6 +70,12 @@ public class ReservationBoundary {
         client = SimpleClient.getClient();
         client.mapReservation.put("Branch",chosen);
     }
+
+    @FXML
+    private void handleCancelReservation(ActionEvent event) {
+        switchScreen("CancelReservationEnterEmail");
+    }
+
 
     @FXML
     void chooseHour(ActionEvent event) {

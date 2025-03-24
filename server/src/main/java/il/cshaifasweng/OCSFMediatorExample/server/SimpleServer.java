@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
+import com.google.protobuf.Message;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
@@ -7,6 +8,10 @@ import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SubscribedClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.util.Pair;
 import org.hibernate.Session;
+
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.io.IOException;
 import java.util.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
@@ -24,7 +29,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "poolgirL1?"; // Change database password here
+    public static String dataBasePassword = "N2O0A0M6"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) {
@@ -47,6 +52,73 @@ public class SimpleServer extends AbstractServer {
             }
             return;
         }
+
+        if (msg instanceof il.cshaifasweng.OCSFMediatorExample.entities.Message message) {
+
+            // טיפול בשליפת הזמנות לפי אימייל
+            if (message.getAction().equals("get_reservations_by_email")) {
+                String email = (String) message.getObject();
+                Session em = session;
+                try {
+                    em.beginTransaction();
+                    List<ResInfo> resultList = em.createQuery(
+                                    "FROM ResInfo r WHERE r.customer.email = :email", ResInfo.class)
+                            .setParameter("email", email)
+                            .getResultList();
+                    em.getTransaction().commit();
+
+                    try {
+                        client.sendToClient(new il.cshaifasweng.OCSFMediatorExample.entities.Message(
+                                "return_reservations", resultList));
+                    } catch (IOException e) {
+                        System.err.println("Failed to send reservation list: " + e.getMessage());
+                    }
+
+                } catch (Exception e) {
+                    em.getTransaction().rollback();
+                    e.printStackTrace();
+                }
+                return;
+            }
+
+            // טיפול בבקשת ביטול הזמנה
+            if (message.getAction().equals("cancel_reservation")) {
+                int resId = (int) message.getObject();
+                Session em = session;
+                try {
+                    em.beginTransaction();
+                    ResInfo res = em.get(ResInfo.class, resId);
+                    if (res != null) {
+                        em.remove(res);
+                        em.getTransaction().commit();
+                        try {
+                            client.sendToClient(new il.cshaifasweng.OCSFMediatorExample.entities.Message(
+                                    "cancel_reservation_success", null));
+                        } catch (IOException e) {
+                            System.err.println("Failed to send success response: " + e.getMessage());
+                        }
+                    } else {
+                        try {
+                            client.sendToClient(new il.cshaifasweng.OCSFMediatorExample.entities.Message(
+                                    "cancel_reservation_failed", "Reservation not found"));
+                        } catch (IOException e) {
+                            System.err.println("Failed to send failure response: " + e.getMessage());
+                        }
+                    }
+                } catch (Exception e) {
+                    em.getTransaction().rollback();
+                    e.printStackTrace();
+                    try {
+                        client.sendToClient(new il.cshaifasweng.OCSFMediatorExample.entities.Message(
+                                "cancel_reservation_failed", "Error cancelling reservation."));
+                    } catch (IOException ex) {
+                        System.err.println("Failed to send error response: " + ex.getMessage());
+                    }
+                }
+                return;
+            }
+        }
+
 
         if (!(msg instanceof Request request)) {
             System.err.println("Invalid message received. Expected Request object.");

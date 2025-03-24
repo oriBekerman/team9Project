@@ -26,5 +26,6 @@ il\cshaifasweng\OCSFMediatorExample\entities\Response$ResponseType.class
 il\cshaifasweng\OCSFMediatorExample\entities\ResInfo.class
 il\cshaifasweng\OCSFMediatorExample\entities\Customer.class
 il\cshaifasweng\OCSFMediatorExample\entities\Response$Recipient.class
+il\cshaifasweng\OCSFMediatorExample\entities\Message.class
 il\cshaifasweng\OCSFMediatorExample\entities\Request.class
 il\cshaifasweng\OCSFMediatorExample\entities\Response.class

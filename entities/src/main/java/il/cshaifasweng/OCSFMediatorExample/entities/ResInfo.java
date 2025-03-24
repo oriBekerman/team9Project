@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.util.Set;
 
 @Entity
-@Table(name = "resSInfo")
+@Table(name = "res_info")
 public class ResInfo implements Serializable {
 
     @Id
