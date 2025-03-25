@@ -29,6 +29,7 @@ public class ComplaintController {
         return switch (request.getRequestType())
         {
             case GET_ALL_COMPLAINTS ->getAllComplaints();
+            case HANDLE_COMPLAINT_TABLE -> updateComplaint((List<Complaint>) request.getData());
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
@@ -64,6 +65,21 @@ public class ComplaintController {
         response.setData(complaints);
         return response;
     }
+    private Response<List<Complaint>> updateComplaint(List<Complaint> complaints)
+    {
+        Response response=new Response(UPDATE_COMPLAINT,null,null,ERROR,THIS_CLIENT);
+
+        complaints=complaintRepository.updateComplaintsList(complaints);
+        if(complaints.size()==0)
+        {
+            response.setMessage("No complaints found");
+            return response;
+        }
+        response.setStatus(SUCCESS);
+        response.setData(complaints);
+        return response;
+    }
+
     private Response<List<Complaint>> getComplaintByEmployee(Request request)
     {
         Response response=new Response<>(Complaint_BY_EMPLOYEE,null,"",ERROR,THIS_CLIENT);

@@ -16,6 +16,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.BRANCH;
+import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.COMPLAINT;
+import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
+
 public class HandleComplaintTableBoundary {
     public AnchorPane root;
     public Label complaintsTitle;
@@ -152,6 +156,14 @@ public class HandleComplaintTableBoundary {
                     complaint.setCompensation(0);
                 }
                 complaintTable.refresh();
+
+                try {
+                    Request<List<Complaint>> request = new Request<>(COMPLAINT,HANDLE_COMPLAINT_TABLE,complaints );
+                    SimpleClient.getClient().sendToServer(request);
+                } catch (Exception e) {
+                    showError("Failed to send updated complaint to server.");
+                    e.printStackTrace();
+                }
             }
             return null;
         });

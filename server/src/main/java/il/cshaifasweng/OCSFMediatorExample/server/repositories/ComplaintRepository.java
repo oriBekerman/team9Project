@@ -92,5 +92,30 @@ public class ComplaintRepository extends BaseRepository<Complaint>
         }
         return complaints;
     }
+    public List<Complaint> updateComplaintsList(List<Complaint> complaintsToUpdate) {
+        Transaction tx = null;
+        List<Complaint> updatedComplaints = new ArrayList<>();
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+
+            for (Complaint complaint : complaintsToUpdate) {
+                // Attach the complaint to the current session and update
+                Complaint updated = (Complaint) session.merge(complaint);
+                updatedComplaints.add(updated);
+            }
+
+            tx.commit();
+            System.out.println("Complaints updated successfully.");
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+
+        return updatedComplaints;
+    }
+
 
 }

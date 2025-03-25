@@ -112,7 +112,8 @@ public class Response<T> implements Serializable {
         //COMPLAINT RELATED RESPONSES
         RETURN_ALL_COMPLAINTS,
         Complaint_BY_EMPLOYEE,
-        Complaint_BY_DATE
+        Complaint_BY_DATE,
+        UPDATE_COMPLAINT
     }
 
     public enum Status {
