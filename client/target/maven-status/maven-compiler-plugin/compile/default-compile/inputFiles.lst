@@ -30,6 +30,7 @@ C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Pe
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\App.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationPersonalInfoSet.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.java
+C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ComplaintCreatedEvent.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateBranchTablesEvent.java

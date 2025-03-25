@@ -21,6 +21,7 @@ il\cshaifasweng\OCSFMediatorExample\server\ocsf\SubscribedClient.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\BranchController$1.class
 il\cshaifasweng\OCSFMediatorExample\server\repositories\ComplaintRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\repositories\EmployeeRepository.class
+il\cshaifasweng\OCSFMediatorExample\server\controllers\ComplaintController$1.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer.class
 il\cshaifasweng\OCSFMediatorExample\server\repositories\ResInfoRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\ResInfoController$1.class

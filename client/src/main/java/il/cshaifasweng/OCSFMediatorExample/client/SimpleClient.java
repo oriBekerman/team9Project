@@ -158,7 +158,7 @@ public class SimpleClient extends AbstractClient {
 			}
 			if (response.getResponseType().equals(RETURN_BRANCH_BY_NAME)) {
 				Branch branch= (Branch) response.getData();
-			EventBus.getDefault().post(new BranchSentEvent(branch));
+				EventBus.getDefault().post(new BranchSentEvent(branch));
 			}
 
 			if (response.getResponseType().equals(UPDATE_BRANCH_RESERVATION)) {
@@ -188,6 +188,22 @@ public class SimpleClient extends AbstractClient {
 				System.out.println("in updateBRANCH_TABLES");
 				UpdateBranchTablesEvent event=new UpdateBranchTablesEvent((ResInfo) response.getData());
 				EventBus.getDefault().post(event);
+			}
+			//COMPLAINT
+			if (response.getResponseType().equals(COMPLAINT_CREATED)) {
+				System.out.println("in complaint created");
+
+				// Check if complaint is null
+				Complaint complaint = (Complaint) response.getData();
+				if (complaint == null) {
+					System.err.println("Error: Complaint object is null in response.");
+					return;
+				}
+
+				System.out.println("Complaint successfully created: " + complaint);
+
+				// Post the event with the complaint data to the EventBus
+				EventBus.getDefault().post(new ComplaintCreatedEvent(complaint));
 			}
 		} else {
 			System.out.println("Received message is not of type Response");
