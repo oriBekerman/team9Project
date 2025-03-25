@@ -36,6 +36,7 @@ public class SimpleServer extends AbstractServer {
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         System.out.println("Received request from client: " + msg);
 
+        // Handling the "add client" string command
         if (msg instanceof String msgString && msgString.startsWith("add client")) {
             System.out.println("Client added successfully");
             SubscribedClient connection = new SubscribedClient(client);
@@ -72,8 +73,18 @@ public class SimpleServer extends AbstractServer {
                 case REMOVE_DISH -> menuItemsController.handleRequest(request);
                 case UPDATE_INGREDIENTS -> menuItemsController.handleRequest(request);
                 case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
-                case CANCEL_RESERVATION -> resInfoController.cancelReservation((Integer) request.getData());
+                case CANCEL_RESERVATION -> resInfoController.cancelReservation(request);
                 case COMPLAINT -> complaintController.handleRequest(request);
+
+                // Handle permitGranted category
+                case PERMIT_GRANTED ->
+                {
+                    System.out.println("Permit granted request received.");
+                    // Process permitGranted request
+                    Response permitResponse = handlePermitGranted(request);
+                    yield permitResponse;
+                }
+
                 default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
             };
         } catch (Exception e) {
@@ -83,10 +94,20 @@ public class SimpleServer extends AbstractServer {
 
         System.out.println("Response prepared for client: " + response.getResponseType());
         sendResponseToClient(response, client);
-        if(response.getMessage() !=null)
-        {
-            System.out.println("response msg =" +response.getMessage());
+        if (response.getMessage() != null) {
+            System.out.println("response msg =" + response.getMessage());
         }
+    }
+
+    private Response handlePermitGranted(Request request) {
+        System.out.println("Handling permit granted message...");
+        Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
+                "Your permit request has been granted.",
+                Response.Status.SUCCESS,
+                Response.Recipient.ALL_CLIENTS);
+
+        // Return the response
+        return response;
     }
 
     private void sendResponseToClient(Response response, ConnectionToClient client) {
@@ -106,13 +127,11 @@ public class SimpleServer extends AbstractServer {
                 }
                 case BOTH -> {
                     List<Response> responses = (List<Response>) response.getData();
-                    if(responses.get(0).getRecipient().equals(THIS_CLIENT) && responses.get(1).getRecipient().equals(ALL_CLIENTS))
-                    {
+                    if (responses.get(0).getRecipient().equals(THIS_CLIENT) && responses.get(1).getRecipient().equals(ALL_CLIENTS)) {
                         sendToAllClients(responses.get(1));
                         client.sendToClient(responses.get(0));
                     }
-                    if(responses.get(0).getRecipient().equals(ALL_CLIENTS) && responses.get(1).getRecipient().equals(THIS_CLIENT))
-                    {
+                    if (responses.get(0).getRecipient().equals(ALL_CLIENTS) && responses.get(1).getRecipient().equals(THIS_CLIENT)) {
                         sendToAllClients(responses.get(0));
                         client.sendToClient(responses.get(1));
                     }
