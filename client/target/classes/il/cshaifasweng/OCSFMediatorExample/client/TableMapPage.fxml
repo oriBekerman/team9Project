@@ -48,17 +48,17 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="tableBtn7" mnemonicParsing="false" onAction="#handleSelectionClick" onMouseClicked="#markSelected" text="0" />
-                  <Button fx:id="tableBtn9" mnemonicParsing="false" onAction="#handleSelectionClick" text="0" GridPane.columnIndex="1" />
-                  <Button fx:id="tableBtn8" mnemonicParsing="false" onAction="#handleSelectionClick" text="0" GridPane.rowIndex="1" />
-                  <Button fx:id="tableBtn10" mnemonicParsing="false" onAction="#handleSelectionClick" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="tableBtn7" mnemonicParsing="false" onAction="#handleSelectionClick" onMouseClicked="#markSelected" styleClass="two-table-button" text="0" />
+                  <Button fx:id="tableBtn9" mnemonicParsing="false" onAction="#handleSelectionClick" styleClass="two-table-button" text="0" GridPane.columnIndex="1" />
+                  <Button fx:id="tableBtn8" mnemonicParsing="false" onAction="#handleSelectionClick" styleClass="two-table-button" text="0" GridPane.rowIndex="1" />
+                  <Button fx:id="tableBtn10" mnemonicParsing="false" onAction="#handleSelectionClick" styleClass="two-table-button" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children></Pane>
-      <Button fx:id="backBtn" layoutX="24.0" layoutY="14.0" mnemonicParsing="false" onAction="#BackToBranch" text="Return" />
+      <Button fx:id="backBtn" layoutX="24.0" layoutY="14.0" mnemonicParsing="false" onAction="#BackToBranch" styleClass="return-btn" text="Return" />
       <ComboBox fx:id="timesBox" layoutX="706.0" layoutY="26.0" onAction="#chooseTime" prefWidth="150.0" />
       <Label fx:id="reservationLabel" layoutX="810.0" layoutY="116.0" text="0" />
-      <Button fx:id="selectTablesBtn" layoutX="752.0" layoutY="249.0" mnemonicParsing="false" onAction="#enableSelection" prefHeight="26.0" prefWidth="117.0" text="select tables" />
-      <Button fx:id="doneBtn" layoutX="547.0" layoutY="13.0" mnemonicParsing="false" onAction="#sendSelection" prefHeight="26.0" prefWidth="93.0" text="Done" />
+      <Button fx:id="selectTablesBtn" layoutX="752.0" layoutY="249.0" mnemonicParsing="false" onAction="#enableSelection" prefHeight="50.0" prefWidth="136.0" styleClass="return-btn" text="select tables" />
+      <Button fx:id="doneBtn" layoutX="547.0" layoutY="13.0" mnemonicParsing="false" onAction="#sendSelection" prefHeight="26.0" prefWidth="93.0" styleClass="return-btn" text="Done" />
    </children>
 </AnchorPane>

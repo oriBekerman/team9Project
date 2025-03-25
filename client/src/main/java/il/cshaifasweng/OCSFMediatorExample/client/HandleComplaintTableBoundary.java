@@ -5,12 +5,10 @@ import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -23,20 +21,20 @@ public class HandleComplaintTableBoundary {
     public Label complaintsTitle;
     public Button returnBtn;
     public TableView<Complaint> complaintTable;
-    public TableColumn<Complaint,String> numColumn;
-    public TableColumn<Complaint, String> DateColumn;
-    public TableColumn<Complaint,String> branchColumn;
-    public TableColumn<Complaint,String> desColumn;
-    public TableColumn<Complaint,String> statusColumn;
-    public TableColumn<Complaint,String> customerNameColumn;
+    public TableColumn<Complaint, String> numColumn;
+    public TableColumn<Complaint, String> dateColumn;
+    public TableColumn<Complaint, String> branchColumn;
+    public TableColumn<Complaint, String> descriptionColumn;
+    public TableColumn<Complaint, String> statusColumn;
+    public TableColumn<Complaint, String> customerNameColumn;
+    public TableColumn<Complaint, String> compensationColumn;
+
     private CustomerServiceEmployee employee;
-    public boolean pageIsSet =false;
-    private boolean complaintsAreSet=false;
-    private List<Complaint> complaints=new ArrayList<>();
+    public boolean pageIsSet = false;
+    private boolean complaintsAreSet = false;
+    private List<Complaint> complaints = new ArrayList<>();
 
-    public HandleComplaintTableBoundary() {
-
-    }
+    public HandleComplaintTableBoundary() {}
 
     @FXML
     void initialize() {
@@ -44,70 +42,147 @@ public class HandleComplaintTableBoundary {
             EventBus.getDefault().register(this);
         }
         setColumns();
+        complaintTable.setOnMouseClicked(this::openComplaintPage);
     }
-    public void setPage()
-    {
-        System.out.println("in page is set");
+
+    public void setPage() {
+        System.out.println("Page is being set...");
         synchronized (this) {
-           this.pageIsSet =false;
-           this.complaintsAreSet=false;
-           waitForComplaints();
+            this.pageIsSet = false;
+            this.complaintsAreSet = false;
+            waitForComplaints();
             InitTableAfterAllComplaintEvent();
-//            initializeUIAfterTablesAreReady(branch);
         }
     }
-    private void waitForComplaints() {
-        System.out.println("Waiting for complaints to be fetched...");
 
-        SimpleClient.getClient().getAllComplaints(); // Send request to server
+    private void waitForComplaints() {
+        System.out.println("Waiting for complaints from the server...");
+        SimpleClient.getClient().getAllComplaints();
 
         try {
             while (!complaintsAreSet) {
-                wait();  // Wait until tablesAreSet becomes true (from EventBus)
+                wait();
             }
-            System.out.println("complaints received!");
+            System.out.println("Complaints received from the server!");
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            System.out.println("Thread interrupted while waiting for tables.");
+            System.out.println("Thread interrupted while waiting for complaints.");
         }
     }
-    //set table columns
-    private void setColumns()
-    {
+
+    private void setColumns() {
         numColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getComplaintId().toString()));
 
-        DateColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getComplaintDate().
-                        format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
+        dateColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getComplaintDate()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
 
         customerNameColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getCustomer().getName()));
-        branchColumn.setCellValueFactory(cellData ->new SimpleStringProperty(cellData.getValue().getBranch().getName()));
-        desColumn.setCellValueFactory(cellData ->new SimpleStringProperty(cellData.getValue().getComplaintText()));
-        statusColumn.setCellValueFactory(cellData ->new SimpleStringProperty(cellData.getValue().getStatus().toString()));
+
+        branchColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getBranch().getName()));
+
+        descriptionColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getComplaintText()));
+
+        statusColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getStatus().toString()));
+
+        compensationColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(
+                        cellData.getValue().getStatus() == ComplaintStatus.RESOLVED_WITH_COMPENSATION
+                                ? String.valueOf(cellData.getValue().getCompensation())
+                                : "-"
+                ));
     }
 
     public void openComplaintPage(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount() == 2) {
+            Complaint selectedComplaint = complaintTable.getSelectionModel().getSelectedItem();
+            if (selectedComplaint != null) {
+                showEditComplaintDialog(selectedComplaint);
+            }
+        }
     }
 
-    //set complaints with the complaints received from server
+    private void showEditComplaintDialog(Complaint complaint) {
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Edit Complaint");
+
+        Label statusLabel = new Label("Status:");
+        ComboBox<ComplaintStatus> statusComboBox = new ComboBox<>();
+        statusComboBox.getItems().addAll(ComplaintStatus.values());
+        statusComboBox.setValue(complaint.getStatus());
+
+        Label compensationLabel = new Label("Compensation:");
+        TextField compensationField = new TextField();
+        compensationField.setPromptText("Enter compensation amount");
+        compensationField.setDisable(complaint.getStatus() != ComplaintStatus.RESOLVED_WITH_COMPENSATION);
+
+        if (complaint.getStatus() == ComplaintStatus.RESOLVED_WITH_COMPENSATION) {
+            compensationField.setText(String.valueOf(complaint.getCompensation()));
+        }
+
+        statusComboBox.setOnAction(e -> {
+            boolean isComp = statusComboBox.getValue() == ComplaintStatus.RESOLVED_WITH_COMPENSATION;
+            compensationField.setDisable(!isComp);
+            if (!isComp) compensationField.clear();
+        });
+
+        VBox content = new VBox(10, statusLabel, statusComboBox, compensationLabel, compensationField);
+        dialog.getDialogPane().setContent(content);
+
+        ButtonType saveButton = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButton, ButtonType.CANCEL);
+
+        dialog.setResultConverter(button -> {
+            if (button == saveButton) {
+                complaint.setStatus(statusComboBox.getValue());
+                if (statusComboBox.getValue() == ComplaintStatus.RESOLVED_WITH_COMPENSATION) {
+                    try {
+                        long comp = Long.parseLong(compensationField.getText());
+                        complaint.setCompensation(comp);
+                    } catch (NumberFormatException e) {
+                        showError("Invalid compensation amount. Please enter a number.");
+                        return null;
+                    }
+                } else {
+                    complaint.setCompensation(0);
+                }
+                complaintTable.refresh();
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     @Subscribe
     public void onAllComplaintEvent(ReceivedAllComplaintsEvent event) {
         synchronized (this) {
-            if(event.getComplaintList()==null)
-            {
+            if (event.getComplaintList() == null) {
                 System.out.println(event.getMessage());
-                pageIsSet =true;
+                pageIsSet = true;
                 notifyAll();
+                return;
             }
-            complaints=event.getComplaintList();
-            complaintsAreSet=true;
-            System.out.println("complaint received! Notifying all waiting threads...");
-            notifyAll();  // Wake up threads waiting for tables
+            complaints = event.getComplaintList();
+            complaintsAreSet = true;
+            System.out.println("Complaints received! Notifying all waiting threads...");
+            notifyAll();
         }
     }
-    //set the table with the complaints
+
     private void InitTableAfterAllComplaintEvent() {
         Platform.runLater(() -> {
             synchronized (this) {
@@ -115,11 +190,9 @@ public class HandleComplaintTableBoundary {
                 complaintTable.getItems().setAll(complaints);
                 setColumns();
                 pageIsSet = true;
-                System.out.println("Complaints  loaded");
+                System.out.println("Complaints loaded into table.");
                 this.notifyAll();
             }
         });
     }
-
-
 }
