@@ -16,16 +16,16 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.TableColumnHeader;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.AcknowledgmentEvent;
 
-
-public class SecondaryBoundary {
+public class SecondaryBoundary
+{
 
     public Label menuLabel;
     public AnchorPane root;
@@ -81,7 +81,8 @@ public class SecondaryBoundary {
 
 
     @FXML
-    void UpdateIngridients(ActionEvent event) {
+    void UpdateIngridients(ActionEvent event)
+    {
         // Get the selected MenuItem from the table view
         MenuItem selectedItem = menuTableView.getSelectionModel().getSelectedItem();
 
@@ -241,8 +242,10 @@ public class SecondaryBoundary {
 
     // Event handler for MenuEvent
     @Subscribe
-    public void onUpdateEvent(updateDishEvent event) {
-        try {
+    public void onUpdateEvent(updateDishEvent event)
+    {
+        try
+        {
 //            Request request=new Request<>(GET_BASE_MENU);
 //            SimpleClient.getClient().sendToServer(request);
             SimpleClient.getClient().displayNetworkMenu();
@@ -254,18 +257,21 @@ public class SecondaryBoundary {
 
     // Back to home page button logic
     @FXML
-    void BackToHPfunc(ActionEvent event) throws IOException {
+    void BackToHPfunc(ActionEvent event) throws IOException
+    {
         App.setRoot("primary");  // Switch to the primary screen
     }
 
     // Save the updated menu logic (stub)
     @FXML
-    void SaveTheUpdateMenu(ActionEvent event) throws IOException {
+    void SaveTheUpdateMenu(ActionEvent event) throws IOException
+    {
         // Create a map to hold the MenuItem IDs and their new prices
         Map<Integer, Double> updatedPrices = new HashMap<>();
 
         // Iterate over the priceFieldMap to check for price changes
-        for (Map.Entry<MenuItem, TextField> entry : priceFieldMap.entrySet()) {
+        for (Map.Entry<MenuItem, TextField> entry : priceFieldMap.entrySet())
+        {
             MenuItem item = entry.getKey();
             TextField priceField = entry.getValue();
 
@@ -299,10 +305,11 @@ public class SecondaryBoundary {
             priceField.setDisable(true);
         }
 
-        Platform.runLater(() -> {
+        Platform.runLater(() ->
+        {
             menuTableView.refresh();
             //SaveBtn.setDisable(true);
-            UpdatePriceBtn.setDisable(false);
+            UpdatePriceBtn.setDisable(true);
             UpdatePriceBtn.requestFocus();
         });
     }
@@ -312,8 +319,10 @@ public class SecondaryBoundary {
     void UpdateThePrice(ActionEvent event)
     {
         // Enable all price fields
-        Platform.runLater(() -> {
-            for (TextField priceField : priceFieldMap.values()) {
+        Platform.runLater(() ->
+        {
+            for (TextField priceField : priceFieldMap.values())
+            {
                 priceField.setDisable(false);  // Enable the TextField
             }
             //SaveBtn.setDisable(false); // Enable save button
@@ -321,13 +330,22 @@ public class SecondaryBoundary {
         });
     }
 
+    @Subscribe
+    public void onAcknowledgmentEvent(AcknowledgmentEvent event) {
+        System.out.println("AcknowledgmentEvent received! Enabling button...");
+        Platform.runLater(() -> UpdatePriceBtn.setDisable(true));
+    }
+
+
     @FXML
-    void isBranchDish(ActionEvent event) {
+    void isBranchDish(ActionEvent event)
+    {
         // Get the selected MenuItem from the table view
         MenuItem selectedItem = menuTableView.getSelectionModel().getSelectedItem();
 
         // If no item is selected, show a message
-        if (selectedItem == null) {
+        if (selectedItem == null)
+        {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a dish to update its type.");
             alert.showAndWait();
             return;
@@ -355,7 +373,8 @@ public class SecondaryBoundary {
 
 
     @FXML
-    void performSearch(ActionEvent event) {
+    void performSearch(ActionEvent event)
+    {
         String query = searchField.getText().toLowerCase().trim();
         System.out.println("Search Query: " + query); // Debugging
 
@@ -388,7 +407,15 @@ public class SecondaryBoundary {
         menuTableView.refresh();
     }
 
+    @Subscribe
+    public void handleEnableUpdatePriceBtnEvent(AcknowledgmentEvent event)
+    {
+        Platform.runLater(() ->
+        {
 
+            UpdatePriceBtn.setDisable(false);  // Enable the button
+        });
+    }
 
     // Initialize method to register for events
     @FXML
@@ -416,6 +443,7 @@ public class SecondaryBoundary {
                 UpdateingridientsBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
                 addDishBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
                 removeDishBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
+                isBranchDishBtn.setVisible(true);
                 //SaveBtn.setVisible(true);
             } else {
                 UpdatePriceBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
@@ -423,6 +451,7 @@ public class SecondaryBoundary {
                 UpdateingridientsBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
                 addDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
                 removeDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
+                isBranchDishBtn.setVisible(false);
             }
         } else {
             UpdatePriceBtn.setVisible(false); // Hide Update button if not logged in
@@ -430,6 +459,7 @@ public class SecondaryBoundary {
             UpdateingridientsBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
             addDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
             removeDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
+            isBranchDishBtn.setVisible(false);
         }
         priceColumn.setCellFactory(col -> new TableCell<MenuItem, Double>() {
             @Override
@@ -448,11 +478,12 @@ public class SecondaryBoundary {
 
 
 
+
         Platform.runLater(() -> {
             // Clear the TableView and refresh it with the updated menu items
             menuTableView.getItems().clear(); // Clear previous items
             //SaveBtn.setDisable(true);  // Disable the save button
-            UpdatePriceBtn.setDisable(false);  // Re-enable the update button
+            UpdatePriceBtn.setDisable(true);  // Re-enable the update button
             UpdatePriceBtn.requestFocus();  // Focus the update button
         });
         setStyle();
