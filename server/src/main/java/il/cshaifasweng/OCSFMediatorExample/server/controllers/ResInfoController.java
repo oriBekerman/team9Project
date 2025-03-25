@@ -2,10 +2,12 @@ package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
-import il.cshaifasweng.OCSFMediatorExample.server.EmailSender;
+import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import il.cshaifasweng.OCSFMediatorExample.server.SimpleServer;
 //import il.cshaifasweng.OCSFMediatorExample.server.repositories.CustomerRepository;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.ResInfoRepository;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -48,13 +50,30 @@ public class ResInfoController {
 
     // Method to fetch all reservations and wrap in a response
     public Response<List<ResInfo>> getAllReservations() {
-        try {
-            List<ResInfo> reservations = resInfoRepository.getAllResSInfo();
-            return new Response<>(RETURN_RES_REPORT, reservations, "Fetched all reservations successfully",SUCCESS,THIS_CLIENT);
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            List<ResInfo> reservations = session.createQuery(
+                    "SELECT DISTINCT r FROM ResInfo r JOIN FETCH r.customer WHERE r.isCancelled = false",
+                    ResInfo.class).list();
+
+            return new Response<>(
+                    Response.ResponseType.RETURN_RES_REPORT,
+                    reservations,
+                    "Reservations loaded successfully",
+                    Response.Status.SUCCESS,
+                    Response.Recipient.THIS_CLIENT
+            );
         } catch (Exception e) {
-            return new Response<>(RETURN_RES_REPORT, "Failed to fetch reservations: " + e.getMessage(), ERROR,THIS_CLIENT);
+            e.printStackTrace();
+            return new Response<>(
+                    Response.ResponseType.RETURN_RES_REPORT,
+                    new ArrayList<>(),
+                    "Failed to load reservations: " + e.getMessage(),
+                    Response.Status.ERROR,
+                    Response.Recipient.THIS_CLIENT
+            );
         }
     }
+
 
     public List <ResInfo> getAllResSInfo()
     {
@@ -69,6 +88,7 @@ public class ResInfoController {
             return new Response<>(RETURN_RES_REPORT, "Failed to fetch monthly reservations: " + e.getMessage(), ERROR, THIS_CLIENT);
         }
     }
+
 
     public Response addReservation(ResInfo reservation) {
         System.out.println("in add reservation cnt");
@@ -142,17 +162,6 @@ public class ResInfoController {
 
         response.setData(List.of(response1, response2));
         response.setStatus(SUCCESS);
-        EmailSender.sendEmail(newReservation.getCustomer().getEmail(),
-                "MAMA'S KITCHEN RESERVATION",
-        "Dear " + customer.getName() + ",\n\n" +
-                "Thank you for choosing Mama's Kitchen! We're happy to confirm your reservation:\n\n" +
-                "📅 Time: " + reservation.getHours() + "\n" +
-                "👥 Guests: " + reservation.getNumOfGuests() + "\n" +
-                "📍 Branch: " + reservation.getBranch().getName() + "\n\n" +
-                "We look forward to welcoming you and providing a delightful dining experience.\n\n" +
-                "Warm regards,\n" +
-                "Mama's Kitchen Team");
-
         return response;
     }
     private Customer checkIfCustomerInDB(String email)
@@ -186,5 +195,68 @@ public class ResInfoController {
 
         return response;
     }
+
+
+
+    public Response<String> cancelReservation(Integer resID) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction tx = session.beginTransaction();
+
+            ResInfo reservation = session.get(ResInfo.class, resID);
+
+            if (reservation == null || reservation.getIsCancelled()) {
+                tx.rollback();
+                return new Response<>(
+                        CANCELED_RESERVATION,
+                        null,
+                        "Reservation not found or already cancelled",
+                        Response.Status.ERROR,
+                        Response.Recipient.THIS_CLIENT
+                );
+            }
+
+            LocalTime reservationTime = reservation.getHours();
+            LocalTime currentTime = LocalTime.now();
+            int guests = reservation.getNumOfGuests();
+
+            boolean penalty = currentTime.isAfter(reservationTime.minusHours(1));
+
+            reservation.setIsCancelled(true);
+
+            Set<RestTable> tables = reservation.getTable();
+            for (RestTable table : tables) {
+                table.removeUnavailableFromTime(reservationTime);
+                session.update(table);
+            }
+
+            session.update(reservation);
+            tx.commit();
+
+            int penaltyAmount = penalty ? guests * 10 : 0;
+            String message = penalty ?
+                    "Reservation cancelled with penalty: " + penaltyAmount + " ILS" :
+                    "Reservation cancelled successfully, no penalty.";
+
+            return new Response<>(
+                    CANCELED_RESERVATION,
+                    String.valueOf(penaltyAmount),
+                    message,
+                    Response.Status.SUCCESS,
+                    Response.Recipient.THIS_CLIENT
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Response<>(
+                    CANCELED_RESERVATION,
+                    null,
+                    "Error cancelling reservation: " + e.getMessage(),
+                    Response.Status.ERROR,
+                    Response.Recipient.THIS_CLIENT
+            );
+        }
+    }
+
+
+
 
 }

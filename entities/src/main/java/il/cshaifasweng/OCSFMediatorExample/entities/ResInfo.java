@@ -58,6 +58,16 @@ public class ResInfo implements Serializable {
     public boolean tableIsSet=false;
 //    @Transient
 //    Set<RestTable> tempTables = new HashSet<>();
+    @Column(name = "isCancelled")
+    private boolean isCancelled = false;
+
+    public boolean getIsCancelled() {
+        return isCancelled;
+    }
+
+    public void setIsCancelled(boolean isCancelled) {
+        this.isCancelled = isCancelled;
+    }
 
 
     // Default constructor
