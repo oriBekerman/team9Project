@@ -118,6 +118,9 @@ private Set<LocalTime> unavailableFromTimes = new HashSet<>();
         }
         return true;
     }
+
+
+
     public List<LocalTime> getAvailableFromTimes() {
         String start= branch.getOpeningTime();
         String end= branch.getClosingTime();

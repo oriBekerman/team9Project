@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="il.cshaifasweng.OCSFMediatorExample.client.EnterEmailController">
+    <children>
+        <Label layoutX="120" layoutY="80" text="Enter your Email:"/>
+        <TextField fx:id="emailField" layoutX="120" layoutY="110" prefWidth="250"/>
+        <Button fx:id="checkBtn" layoutX="120" layoutY="160" text="Check Reservations" onAction="#handleCheckReservations"/>
+        <Button fx:id="backBtn" layoutX="290" layoutY="160" text="Back" onAction="#handleBack"/>
+    </children>
+</AnchorPane>
