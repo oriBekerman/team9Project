@@ -160,7 +160,6 @@ public class DeliveryBoundary {
     }
 
     // Function to handle changes in quantity
-// Function to handle changes in quantity
     private void setupQuantityColumn(TableColumn<OrderItem, Integer> quantityColumn) {
         quantityColumn.setCellFactory(column -> {
             return new TableCell<OrderItem, Integer>() {
@@ -175,32 +174,9 @@ public class DeliveryBoundary {
                         if (orderItem != null) {
                             orderItem.setQuantity(newValue);  // Update quantity in the OrderItem
                             updateTotalPrice(); // Update the total price when quantity changes
-                            isOrderValid(); // Check if order is valid for continuing
-
-                            // Get the current comment
-                            String currentComment = orderItem.getPreferences();
-                            StringBuilder commentBuilder = new StringBuilder();
-
-                            // Split current comment into dish entries
-                            String[] existingDishes = currentComment != null ? currentComment.split("\n") : new String[0];
-
-                            // Generate new dish entries based on the updated quantity
-                            for (int i = 1; i <= newValue; i++) {
-                                if (i <= existingDishes.length) {
-                                    // If the dish already exists, keep the existing comment
-                                    commentBuilder.append(existingDishes[i - 1]).append("\n");
-                                } else {
-                                    // Add a new dish entry if it doesn't exist yet
-                                    commentBuilder.append("Dish ").append(i).append(": \n");
-                                }
-                            }
-
-                            // Update the comment column with the new generated comment
-                            orderItem.setPreferences(commentBuilder.toString());
-
-                            // Refresh only the specific row, not the entire table
-                            menuTableView.getItems().set(menuTableView.getItems().indexOf(orderItem), orderItem);
+                            isOrderValid(); //check if order valid for continue
                         }
+
                     });
                 }
 
@@ -214,6 +190,7 @@ public class DeliveryBoundary {
                         setGraphic(quantitySpinner);  // Display the spinner
                     }
                 }
+
             };
         });
 
