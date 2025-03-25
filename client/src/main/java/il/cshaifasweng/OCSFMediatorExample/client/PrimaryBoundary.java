@@ -82,20 +82,19 @@ public class PrimaryBoundary {
 	@FXML
 	void givePermit(ActionEvent event) {
 		try {
-			// Attempt to send the permit-granted message to the server
-			SimpleClient.getClient().sendToServer("permitGranted");
+			// Create a Request object for the PERMIT_GRANTED category with the PERMISSION_REQUEST type
+			Request<Void> request = new Request<>(ReqCategory.PERMIT_GRANTED, RequestType.PERMISSION_REQUEST, null);
 
-			// Optionally, update the UI to notify the manager
-			givePermitBtn.setDisable(true);  // Disable the Give Permit button after granting the permit
+			// Send the request to the server
+			SimpleClient.getClient().sendToServer(request);
+
 			System.out.println("Permit granted to dietitian.");
 		} catch (IOException e) {
-			// Handle the IOException here
-			e.printStackTrace(); // Print the stack trace for debugging
-
-			// Optionally, show an error message to the user, for example:
+			e.printStackTrace();  // Print the stack trace for debugging
 			showErrorMessage("Network error occurred while granting the permit.");
 		}
 	}
+
 
 	// Helper method to show error messages to the user
 	private void showErrorMessage(String message) {

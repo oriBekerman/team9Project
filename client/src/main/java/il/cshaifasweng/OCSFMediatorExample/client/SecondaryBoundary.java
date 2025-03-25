@@ -302,7 +302,7 @@ public class SecondaryBoundary {
         Platform.runLater(() -> {
             menuTableView.refresh();
             //SaveBtn.setDisable(true);
-            UpdatePriceBtn.setDisable(false);
+            UpdatePriceBtn.setDisable(true);
             UpdatePriceBtn.requestFocus();
         });
     }
@@ -311,14 +311,37 @@ public class SecondaryBoundary {
     @FXML
     void UpdateThePrice(ActionEvent event)
     {
-        // Enable all price fields
-        Platform.runLater(() -> {
-            for (TextField priceField : priceFieldMap.values()) {
-                priceField.setDisable(false);  // Enable the TextField
+        // Initially disable the button
+        UpdatePriceBtn.setDisable(true);
+
+        // Assume you're receiving the PERMIT_GRANTED_ACK from somewhere (e.g., message or event)
+        // Use a listener, event, or callback to enable the button once PERMIT_GRANTED_ACK is received
+
+        // Example simulation of receiving PERMIT_GRANTED_ACK
+        waitForPermitGrantedAck();
+    }
+
+    private void waitForPermitGrantedAck() {
+        // Simulate waiting for PERMIT_GRANTED_ACK message (You should replace this with your actual logic)
+        new Thread(() -> {
+            // Simulate delay or wait for the ACK message
+            try {
+                Thread.sleep(5000); // Simulating the waiting time for PERMIT_GRANTED_ACK
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            //SaveBtn.setDisable(false); // Enable save button
-            UpdatePriceBtn.setDisable(true); // Disable update button
-        });
+
+            // Once the ACK is received, enable the button
+            Platform.runLater(() -> {
+                // Enable the price fields
+                for (TextField priceField : priceFieldMap.values()) {
+                    priceField.setDisable(false);  // Enable the TextField
+                }
+
+                // Enable the update button
+                UpdatePriceBtn.setDisable(false);  // Enable the update button once ACK is received
+            });
+        }).start();
     }
 
     @FXML
@@ -455,7 +478,7 @@ public class SecondaryBoundary {
             // Clear the TableView and refresh it with the updated menu items
             menuTableView.getItems().clear(); // Clear previous items
             //SaveBtn.setDisable(true);  // Disable the save button
-            UpdatePriceBtn.setDisable(false);  // Re-enable the update button
+            UpdatePriceBtn.setDisable(true);  // Re-enable the update button
             UpdatePriceBtn.requestFocus();  // Focus the update button
         });
         setStyle();

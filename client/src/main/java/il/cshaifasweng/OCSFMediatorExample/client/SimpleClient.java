@@ -17,30 +17,30 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
 
-
 public class SimpleClient extends AbstractClient {
 
 	private static SimpleClient client = null;
 	private static MenuEvent pendingMenuEvent = null;  // Store pending MenuEvent if SecondaryController isn't ready
 	private static boolean isSecondaryControllerInitialized = false;
-	public static String host="localhost";
-	public  static int port=3000;
+	public static String host = "localhost";
+	public static int port = 3000;
 	private static ActiveUser activeUser = null;
-	public Map <String, String> mapReservation=new HashMap<String, String>();
-	public ResInfo resInfo=new ResInfo();
-	public boolean rebookReservation=false;
-	public  boolean tableAvailable=true;
+	public Map<String, String> mapReservation = new HashMap<String, String>();
+	public ResInfo resInfo = new ResInfo();
+	public boolean rebookReservation = false;
+	public boolean tableAvailable = true;
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
-
 	}
+
 	public static SimpleClient getClient() {
 		if (client == null) {
 			client = new SimpleClient(host, port);
 		}
 		return client;
 	}
+
 	@Override
 	protected void handleMessageFromServer(Object msg) {
 		System.out.println("Message received from server: " + msg);
@@ -52,6 +52,13 @@ public class SimpleClient extends AbstractClient {
 
 			// Print the status
 			System.out.println("Status: " + response.getStatus());
+
+			// Handle the permitGranted message from the server (response)
+			if (response.getResponseType() == Response.ResponseType.PERMIT_GRANTED_ACK) {
+
+				// Optionally, you can log or show a message on the client to confirm
+				System.out.println("Permit granted");
+			}
 
 			// Handle Warning response
 			if (msg.getClass().equals(Warning.class)) {
@@ -218,59 +225,64 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
-	public void editMenu(String itemId,String price) throws IOException
-	{
-		String[] data={itemId,price};
-		Request<String[]> request= new Request<>(BASE_MENU,UPDATE_PRICE,data);
+	public void editMenu(String itemId, String price) throws IOException {
+		String[] data = {itemId, price};
+		Request<String[]> request = new Request<>(BASE_MENU, UPDATE_PRICE, data);
 		client.sendToServer(request);
 	}
-	public void getBranchList(){
-		Request request=new Request(BRANCH,GET_BRANCHES,null);
-        try {
-            client.sendToServer(request);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("getBranchList requested");
+
+	public void getBranchList() {
+		Request request = new Request(BRANCH, GET_BRANCHES, null);
+		try {
+			client.sendToServer(request);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		System.out.println("getBranchList requested");
 	}
+
 	public void displayNetworkMenu() throws IOException {
-		Request<Object> request=new Request<>(BASE_MENU,GET_BASE_MENU,null	);
+		Request<Object> request = new Request<>(BASE_MENU, GET_BASE_MENU, null);
 		client.sendToServer(request);
 		System.out.println("menu base req sent");
 	}
+
 	public void displayBranchMenu(Branch branch) throws IOException {
-		Request<Branch> request= new Request<>(BRANCH,GET_BRANCH_MENU,branch);
+		Request<Branch> request = new Request<>(BRANCH, GET_BRANCH_MENU, branch);
 		client.sendToServer(request);
 	}
+
 	public static ActiveUser getActiveUser() {
 		return activeUser;
 	}
+
 	public static void setActiveUser(ActiveUser activeUser) {
 		SimpleClient.activeUser = activeUser;
 	}
+
 	private static void clearActiveUser() {
 		activeUser = null;
 	}
+
 	public static void logout() {
 		clearActiveUser();  // Clear active user in SimpleClient
 	}
+
 	public void fetchTables(Branch branch) throws IOException {
-		Request request=new Request(BRANCH,FETCH_BRANCH_TABLES,branch);
+		Request request = new Request(BRANCH, FETCH_BRANCH_TABLES, branch);
 		System.out.println("fetch sent to server");
 		client.sendToServer(request);
 	}
-	public void submitComplaint(List<String> customerDetails,Complaint complaint) throws IOException
-	{
-		Pair<Complaint,List<String>> pair=new Pair<>(complaint, customerDetails);
-		Request request=new Request(COMPLAINT,SUBMIT_COMPLAINT,pair);
+
+	public void submitComplaint(List<String> customerDetails, Complaint complaint) throws IOException {
+		Pair<Complaint, List<String>> pair = new Pair<>(complaint, customerDetails);
+		Request request = new Request(COMPLAINT, SUBMIT_COMPLAINT, pair);
 		try {
 			sendToServer(request);
 			System.out.println("complaint sent to server");
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
 	}
 
 	public void removeDishFromDatabase(MenuItem dishToRemove) {
@@ -284,8 +296,7 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
-	public void updateDishIngredients(MenuItem item)
-	{
+	public void updateDishIngredients(MenuItem item) {
 		try {
 			Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.UPDATE_INGREDIENTS, item);
 			getClient().sendToServer(request);
@@ -314,8 +325,7 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
-	public void addDishToDatabase(MenuItem newDish)
-	{
+	public void addDishToDatabase(MenuItem newDish) {
 		// Assuming you have a way to send requests to the server:
 		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);
 		try {
@@ -326,4 +336,3 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 }
-

@@ -67,7 +67,8 @@ public class SimpleServer extends AbstractServer {
                 case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
 
                 // Handle permitGranted category
-                case PERMIT_GRANTED -> {
+                case PERMIT_GRANTED ->
+                {
                     System.out.println("Permit granted request received.");
                     // Process permitGranted request
                     Response permitResponse = handlePermitGranted(request);
@@ -90,8 +91,6 @@ public class SimpleServer extends AbstractServer {
 
     private Response handlePermitGranted(Request request) {
         System.out.println("Handling permit granted message...");
-
-        // Use Response.ResponseType instead of just ResponseType
         Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
                 "Your permit request has been granted.",
                 Response.Status.SUCCESS,
