@@ -21,8 +21,6 @@ import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchToSummeryDelivery;
 
 public class SubComplaintBoundary {
-
-    public  PersonalDetailsFillingBoundary personalDetailsFillingBoundary;
     @FXML
     private ComboBox<String> branchComboBox;
 
