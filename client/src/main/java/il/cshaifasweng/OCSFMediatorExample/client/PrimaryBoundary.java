@@ -71,6 +71,44 @@ public class PrimaryBoundary {
 	private Button logoutBttn;
 
 	@FXML
+	private Button SaveBtn;
+
+	@FXML
+	private Button givePermitBtn;
+
+
+
+
+	@FXML
+	void givePermit(ActionEvent event) {
+		try {
+			// Attempt to send the permit-granted message to the server
+			SimpleClient.getClient().sendToServer("permitGranted");
+
+			// Optionally, update the UI to notify the manager
+			givePermitBtn.setDisable(true);  // Disable the Give Permit button after granting the permit
+			System.out.println("Permit granted to dietitian.");
+		} catch (IOException e) {
+			// Handle the IOException here
+			e.printStackTrace(); // Print the stack trace for debugging
+
+			// Optionally, show an error message to the user, for example:
+			showErrorMessage("Network error occurred while granting the permit.");
+		}
+	}
+
+	// Helper method to show error messages to the user
+	private void showErrorMessage(String message) {
+		// Example of showing the error message to the user
+		System.out.println("Error: " + message);
+		// You can also display a pop-up or dialog to the user with the error message
+	}
+
+
+
+
+
+	@FXML
 	void navToLoginP(ActionEvent event) {
 		switchScreen("Login");
 	}
@@ -140,7 +178,7 @@ public class PrimaryBoundary {
 		assert WelcomeLabel != null : "fx:id=\"WelcomeLabel\" was not injected: check your FXML file 'primary.fxml'.";
 		assert loginBttn != null : "fx:id=\"loginBttn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert logoutBttn != null : "fx:id=\"logoutBttn\" was not injected: check your FXML file 'primary.fxml'.";
-
+		assert givePermitBtn != null : "fx:id=\"givePermitBtn\" was not injected: check your FXML file 'primary.fxml'.";
 
 		EventBus.getDefault().register(this);
 		SimpleClient.getClient().getBranchList(); // Request branch list from server
@@ -160,22 +198,29 @@ public class PrimaryBoundary {
 			logoutBttn.setVisible(true);
 			loginBttn.setVisible(false);
 			// Check if the user is a "DIETITIAN" and display the Update button if true
-			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN) {
+			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN)
+			{
 				System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
 				UpdateMenuBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
-
-
-
-
-			} else {
+			}
+			else
+			{
 				UpdateMenuBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
-
+			}
+			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.COMPANY_MANAGER) {
+				System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
+				givePermitBtn.setVisible(true);
+			}
+			 else
+			 {
+				givePermitBtn.setVisible(false);
 			}
 		} else {
 			// If not logged in, show login button and hide logout button
 			logoutBttn.setVisible(false);
 			loginBttn.setVisible(true);
 			UpdateMenuBtn.setVisible(false); // Hide Update button if not logged in
+			givePermitBtn.setVisible(false); // Hide Give Permission button if not logged in
 		}
 
 

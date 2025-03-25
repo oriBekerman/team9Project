@@ -416,6 +416,7 @@ public class SecondaryBoundary {
                 UpdateingridientsBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
                 addDishBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
                 removeDishBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
+                isBranchDishBtn.setVisible(true);
                 //SaveBtn.setVisible(true);
             } else {
                 UpdatePriceBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
@@ -423,6 +424,7 @@ public class SecondaryBoundary {
                 UpdateingridientsBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
                 addDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
                 removeDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
+                isBranchDishBtn.setVisible(false);
             }
         } else {
             UpdatePriceBtn.setVisible(false); // Hide Update button if not logged in
@@ -430,6 +432,7 @@ public class SecondaryBoundary {
             UpdateingridientsBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
             addDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
             removeDishBtn.setVisible(false);  // Show Update button if user is a DIETITIAN
+            isBranchDishBtn.setVisible(false);
         }
         priceColumn.setCellFactory(col -> new TableCell<MenuItem, Double>() {
             @Override
