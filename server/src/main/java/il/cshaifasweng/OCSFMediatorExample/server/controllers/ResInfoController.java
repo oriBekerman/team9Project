@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
+import il.cshaifasweng.OCSFMediatorExample.server.EmailSender;
 import il.cshaifasweng.OCSFMediatorExample.server.SimpleServer;
 //import il.cshaifasweng.OCSFMediatorExample.server.repositories.CustomerRepository;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.ResInfoRepository;
@@ -141,6 +142,17 @@ public class ResInfoController {
 
         response.setData(List.of(response1, response2));
         response.setStatus(SUCCESS);
+        EmailSender.sendEmail(newReservation.getCustomer().getEmail(),
+                "MAMA'S KITCHEN RESERVATION",
+        "Dear " + customer.getName() + ",\n\n" +
+                "Thank you for choosing Mama's Kitchen! We're happy to confirm your reservation:\n\n" +
+                "📅 Time: " + reservation.getHours() + "\n" +
+                "👥 Guests: " + reservation.getNumOfGuests() + "\n" +
+                "📍 Branch: " + reservation.getBranch().getName() + "\n\n" +
+                "We look forward to welcoming you and providing a delightful dining experience.\n\n" +
+                "Warm regards,\n" +
+                "Mama's Kitchen Team");
+
         return response;
     }
     private Customer checkIfCustomerInDB(String email)
