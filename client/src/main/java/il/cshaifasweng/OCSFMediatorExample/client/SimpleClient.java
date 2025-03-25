@@ -30,12 +30,6 @@ public class SimpleClient extends AbstractClient {
 	public ResInfo resInfo=new ResInfo();
 	public boolean rebookReservation=false;
 	public  boolean tableAvailable=true;
-	public String userEmail;
-	private Response<?> lastResponse;
-
-	public Response<?> getResponse() {
-		return lastResponse;
-	}
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
@@ -167,11 +161,6 @@ public class SimpleClient extends AbstractClient {
 			EventBus.getDefault().post(new BranchSentEvent(branch));
 			}
 
-			if (msg instanceof Response) {
-				lastResponse = (Response<?>) msg;
-			}
-
-
 			if (response.getResponseType().equals(UPDATE_BRANCH_RESERVATION)) {
 				System.out.println("updateRES!!!!!");
 				Branch branch = (Branch) response.getData();
@@ -200,6 +189,25 @@ public class SimpleClient extends AbstractClient {
 				UpdateBranchTablesEvent event=new UpdateBranchTablesEvent((ResInfo) response.getData());
 				EventBus.getDefault().post(event);
 			}
+			if (response.getResponseType().equals(RETURN_ALL_COMPLAINTS))
+			{
+				System.out.println("in all complaints response");
+				if(response.getStatus().equals(SUCCESS))
+				{
+					List<Complaint>complaints=(List<Complaint>) response.getData();
+					System.out.println("in all complaints success");
+					ReceivedAllComplaintsEvent event=new ReceivedAllComplaintsEvent(complaints,response.getMessage());
+					System.out.println("new event created");
+					EventBus.getDefault().post(event);
+					System.out.println("event posted");
+				}
+				else //no complaints found event has message
+				{
+					System.out.println("in all complaints error");
+					ReceivedAllComplaintsEvent event=new ReceivedAllComplaintsEvent(response.getMessage());
+					EventBus.getDefault().post(event);
+				}
+			}
 		} else {
 			System.out.println("Received message is not of type Response");
 		}
@@ -215,15 +223,6 @@ public class SimpleClient extends AbstractClient {
 			pendingMenuEvent = null;  // Clear the pending event
 		}
 	}
-
-	public void sendRequest(Request request) {
-		try {
-			this.sendToServer(request);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 
 	public void editMenu(String itemId,String price) throws IOException
 	{
@@ -279,6 +278,14 @@ public class SimpleClient extends AbstractClient {
 		}
 
 	}
+	public void getAllComplaints() {
+		Request request=new Request(COMPLAINT,GET_ALL_COMPLAINTS,null);
+		try {
+			sendToServer(request);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public void removeDishFromDatabase(MenuItem dishToRemove) {
 		// Assuming the category for removing a dish is BASE_MENU (similar to addDishToDatabase)
@@ -332,37 +339,6 @@ public class SimpleClient extends AbstractClient {
 			System.out.println("Error adding dish to database: " + e.getMessage());
 		}
 	}
-
-	public List<ResInfo> getAllReservations() {
-		Request<String> request = new Request<>(ReqCategory.RESERVATION, "get_all_reservations");
-		sendRequest(request);
-
-		int waitAttempts = 0;
-		while (lastResponse == null || lastResponse.getResponseType() != Response.ResponseType.RETURN_RES_REPORT) {
-			try {
-				Thread.sleep(100);
-				waitAttempts++;
-				if (waitAttempts > 50) { // ממתין מקסימום 5 שניות
-					System.err.println("Timeout waiting for server response.");
-					return new ArrayList<>();
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				return new ArrayList<>();
-			}
-		}
-
-		if (lastResponse.getStatus() == Response.Status.SUCCESS) {
-			List<ResInfo> reservations = (List<ResInfo>) lastResponse.getData();
-			lastResponse = null;
-			return reservations;
-		} else {
-			lastResponse = null;
-			return new ArrayList<>();
-		}
-	}
-
-
 
 }
 

@@ -1,6 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
+import javax.persistence.ManyToOne;
 import java.util.List;
+import java.util.Set;
 
 public class CustomerServiceEmployee extends Employee {
 
@@ -19,9 +21,7 @@ public class CustomerServiceEmployee extends Employee {
         }
         super.setEmployeeType(employeeType);
     }
-    public List<Complaint> getComplaints() {
-        return complaints;
-    }
+
     public void setComplaints(List<Complaint> complaints) {
         this.complaints = complaints;
     }
@@ -33,4 +33,8 @@ public class CustomerServiceEmployee extends Employee {
         this.complaints.remove(complaint);
         complaint.setEmployee(null);
     }
+    public List<Complaint> getComplaints() {
+        return complaints;
+    }
+
 }

@@ -22,6 +22,7 @@ il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\UserLoginSuccessEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ReservationListController.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSentEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\ReceivedAllComplaintsEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SubComplaintBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ReservationCntBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingBoundary.class
@@ -30,8 +31,10 @@ il\cshaifasweng\OCSFMediatorExample\client\App.class
 il\cshaifasweng\OCSFMediatorExample\client\CancelDeliveryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingDeliveryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\CreditCardInfoSet.class
+il\cshaifasweng\OCSFMediatorExample\client\HandleComplaintTableBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ActiveUser.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.class
+il\cshaifasweng\OCSFMediatorExample\client\HandleComplaintBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\MenuEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuBarBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary$1.class

@@ -8,8 +8,8 @@ public class EmployeeFactory {
                 return new CustomerServiceEmployee(id, name, address, email, username, password, branchID);
             case DIETITIAN:
                 return new DietitianEmployee(id, name, address, email, username, password, branchID);
-            case CUSTOMER_SERVICE_MANAGER:
-                return new CustomerServiceManager(id, name, address, email, username, password, branchID);
+//            case CUSTOMER_SERVICE_MANAGER:
+//                return new CustomerServiceManager(id, name, address, email, username, password, branchID);
             default:
                 return new Employee(id, name, address, email, username, password, type, branchID);
         }
