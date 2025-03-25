@@ -164,6 +164,7 @@ public class TableMapBoundary {
         setTimesBox(); // Populate time slots
         setupStyles(); //set the style of the map
         reservationLabel.setVisible(false);
+        doneBtn.setVisible(false);
         mapIsSet = true;  //make mapIsSet flag true
 
         System.out.println("UI initialized, map is set.");
@@ -408,6 +409,7 @@ public class TableMapBoundary {
                 button.setDisable(true); // prevent clicking unavailable tables
             }
         }
+        doneBtn.setVisible(true);
         reservationLabel.setText("Selection mode enabled. Click tables to select.");
 //        showTemporarily(reservationLabel, 4);
     }
@@ -458,6 +460,7 @@ public class TableMapBoundary {
         {
             setTableButtonsUnavailable(button);
         }
+        doneBtn.setVisible(false);
         disableSelection();
     }
     private void reserveTables(LocalTime time)

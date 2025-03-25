@@ -10,6 +10,7 @@ C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ActiveUser.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\BranchListBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateBranchTablesEvent.java
+C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ReceivedAllComplaintsEvent.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\DeliverySummeryBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SessionManager.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.java
@@ -18,6 +19,7 @@ C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\WarningEvent.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.java
+C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\HandleComplaintTableBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\MenuBarBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SimpleClient.java
@@ -26,6 +28,7 @@ C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateBranchResEvent.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\DeliverableItemsSentEvent.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSentEvent.java
+C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\HandleComplaintBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReservationBoundary.java
 C:\university\2024-2025\semesterA\softwareeng\mainBeforeReservationMerge\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSelectedEvent.java

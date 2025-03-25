@@ -50,5 +50,6 @@
             <VBox prefHeight="32.0" prefWidth="190.0" />
          </children>
       </VBox>
+      <Button fx:id="complaintsTableBtn" layoutX="426.0" layoutY="391.0" mnemonicParsing="false" onAction="#viewComplaints" text="complaints" />
    </children>
 </AnchorPane>

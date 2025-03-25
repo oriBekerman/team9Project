@@ -16,17 +16,17 @@
       </Label>
       <Button fx:id="continueBtn" layoutX="692.0" layoutY="580.0" mnemonicParsing="false" onAction="#navToPersonalDetailsFilling" styleClass="return-btn" text="Continue" />
       <ComboBox fx:id="branchesList" layoutX="380.0" layoutY="110.0" onAction="#chooseBranch" prefWidth="150.0" />
-      <Label layoutX="189.0" layoutY="110.0" prefHeight="25.0" prefWidth="118.0" text="Select  a branch :">
+      <Label layoutX="178.0" layoutY="102.0" prefHeight="41.0" prefWidth="160.0" styleClass="subtitle" text="Select  a branch :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="189.0" layoutY="170.0" prefHeight="25.0" prefWidth="96.0" text="Select a time :">
+      <Label layoutX="189.0" layoutY="170.0" prefHeight="41.0" prefWidth="172.0" styleClass="subtitle" text="Select a time :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="189.0" layoutY="230.0" text="where to sit?">
+      <Label layoutX="189.0" layoutY="230.0" prefHeight="41.0" prefWidth="183.0" styleClass="subtitle" text="where to sit?">
          <font>
             <Font size="15.0" />
          </font>
@@ -35,7 +35,7 @@
       <Pane fx:id="MapPane" layoutX="165.0" layoutY="380.0" prefHeight="301.0" prefWidth="467.0" />
       <Button fx:id="backBtn" layoutX="58.0" layoutY="580.0" mnemonicParsing="false" onAction="#backToHP" styleClass="return-btn" text="Back to HP" />
       <ComboBox fx:id="InOutdoorList" layoutX="380.0" layoutY="230.0" onAction="#chooseInOutdoor" prefWidth="150.0" />
-      <Label layoutX="189.0" layoutY="290.0" prefHeight="21.0" prefWidth="150.0" text="Number of people:">
+      <Label layoutX="189.0" layoutY="290.0" prefHeight="21.0" prefWidth="150.0" styleClass="subtitle" text="Number of people:">
          <font>
             <Font size="15.0" />
          </font>

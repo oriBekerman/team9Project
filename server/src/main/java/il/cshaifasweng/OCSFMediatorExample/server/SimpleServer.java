@@ -61,6 +61,7 @@ public class SimpleServer extends AbstractServer {
                 case LOGIN -> logInController.handleRequest(request);
                 case DELIVERY -> deliveryController.handleRequest(request);
                 case RESERVATION -> resInfoController.handleRequest(request);
+                case COMPLAINT -> complaintController.handleRequest(request);
                 case REMOVE_DISH -> menuItemsController.handleRequest(request);
                 case UPDATE_INGREDIENTS -> menuItemsController.handleRequest(request);
                 case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);

@@ -189,6 +189,25 @@ public class SimpleClient extends AbstractClient {
 				UpdateBranchTablesEvent event=new UpdateBranchTablesEvent((ResInfo) response.getData());
 				EventBus.getDefault().post(event);
 			}
+			if (response.getResponseType().equals(RETURN_ALL_COMPLAINTS))
+			{
+				System.out.println("in all complaints response");
+				if(response.getStatus().equals(SUCCESS))
+				{
+					List<Complaint>complaints=(List<Complaint>) response.getData();
+					System.out.println("in all complaints success");
+					ReceivedAllComplaintsEvent event=new ReceivedAllComplaintsEvent(complaints,response.getMessage());
+					System.out.println("new event created");
+					EventBus.getDefault().post(event);
+					System.out.println("event posted");
+				}
+				else //no complaints found event has message
+				{
+					System.out.println("in all complaints error");
+					ReceivedAllComplaintsEvent event=new ReceivedAllComplaintsEvent(response.getMessage());
+					EventBus.getDefault().post(event);
+				}
+			}
 		} else {
 			System.out.println("Received message is not of type Response");
 		}
@@ -259,6 +278,14 @@ public class SimpleClient extends AbstractClient {
 		}
 
 	}
+	public void getAllComplaints() {
+		Request request=new Request(COMPLAINT,GET_ALL_COMPLAINTS,null);
+		try {
+			sendToServer(request);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public void removeDishFromDatabase(MenuItem dishToRemove) {
 		// Assuming the category for removing a dish is BASE_MENU (similar to addDishToDatabase)
@@ -312,5 +339,6 @@ public class SimpleClient extends AbstractClient {
 			System.out.println("Error adding dish to database: " + e.getMessage());
 		}
 	}
+
 }
 
