@@ -13,5 +13,6 @@ public enum ReqCategory
     REPORTS,
     REMOVE_DISH,
     UPDATE_INGREDIENTS,
+    CANCEL_RESERVATION,
     UPDATE_DISH_TYPE
 }

@@ -27,6 +27,13 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>entities</artifactId>
 		</dependency>
+
+		<!-- javax.mail to send emails add dependency here! -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

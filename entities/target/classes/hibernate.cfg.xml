@@ -18,9 +18,11 @@
         <!-- אפשרויות דיבאג -->
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
 
         <!-- יצירת טבלה אוטומטית (רק בעת פיתוח, לא בשימוש בייצור) -->
-        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.hbm2ddl.auto">create</property>
 
         <!-- מיפוי מחלקות  -->
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Branch" />

@@ -14,6 +14,11 @@ public class Request<T> implements Serializable {
         this.category = category;
         this.requestType = requestType;
     }
+    public Request(ReqCategory category, T data) {
+        this.category = category;
+        this.data = data;
+    }
+
 
     public Request(RequestType requestType) {
         this.requestType = requestType;

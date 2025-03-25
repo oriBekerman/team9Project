@@ -12,6 +12,8 @@ C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\co
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\AdaptableServer.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\EmployeeRepository.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\controllers\ComplaintController.java
+C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\EmailSender.java
+C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\controllers\CustomerController.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\ConnectionToClient.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\ObservableServer.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\ResInfoRepository.java
@@ -25,3 +27,4 @@ C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\co
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\RestTableRepository.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\DatabaseManager.java
 C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractConnectionFactory.java
+C:\CS\Project\server\src\main\java\il\cshaifasweng\OCSFMediatorExample\server\repositories\CustomerRepository.java

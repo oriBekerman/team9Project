@@ -19,6 +19,7 @@ C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Ma
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchListSentEvent.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\SubComplaintBoundary.java
+C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ReservationListController.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSentEvent.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary.java
@@ -26,6 +27,7 @@ C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Cr
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\CreditCardInfoSet.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\DeliverySummeryBoundary.java
+C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\EnterEmailController.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingDeliveryBoundary.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\App.java
 C:\CS\Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationPersonalInfoSet.java
