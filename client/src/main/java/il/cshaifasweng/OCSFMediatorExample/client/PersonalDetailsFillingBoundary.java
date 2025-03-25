@@ -10,16 +10,19 @@ import java.util.regex.Pattern;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.ComplaintCustomerEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.ReservationPersonalInfoSet;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.EventBus;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
@@ -29,6 +32,10 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.UPDATE_BR
 public class PersonalDetailsFillingBoundary {
 
     public Label errorLabel;
+    public AnchorPane root;
+    public Label nameLabel;
+    public Label phoneLabel;
+    public Label mailLabel;
     @FXML
     private ResourceBundle resources;
 
@@ -73,17 +80,22 @@ public class PersonalDetailsFillingBoundary {
         {
             errorLabel.setText("Please enter a valid phone number.");
         }
-       else if (!isValidEmail(mail))
-       {
-           errorLabel.setText("Please enter a valid email address.");
-       }
-       else if(type =="reservation")
-       {
-           SimpleClient.getClient().mapReservation.put("name",name);
-           SimpleClient.getClient().mapReservation.put("phone",phone);
-           SimpleClient.getClient().mapReservation.put("mail",mail);
-           openCreditCardPage();
-       }
+        else if (!isValidEmail(mail))
+        {
+            errorLabel.setText("Please enter a valid email address.");
+        }
+        else if(type =="reservation")
+        {
+            SimpleClient.getClient().mapReservation.put("name",name);
+            SimpleClient.getClient().mapReservation.put("phone",phone);
+            SimpleClient.getClient().mapReservation.put("mail",mail);
+            Customer customer=new Customer();
+            customer.setName(name);
+            customer.setEmail(mail);
+            customer.setPhone(phone);
+            SimpleClient.getClient().resInfo.setCustomer(customer);
+            openCreditCardPage();
+        }
     }
 
     @FXML
@@ -97,10 +109,11 @@ public class PersonalDetailsFillingBoundary {
         assert mailTextField != null : "fx:id=\"mailTextField\" was not injected: check your FXML file 'personalDetailsFilling.fxml'.";
         assert nameTextField != null : "fx:id=\"nameTextField\" was not injected: check your FXML file 'personalDetailsFilling.fxml'.";
         assert phoneTextField != null : "fx:id=\"phoneTextField\" was not injected: check your FXML file 'personalDetailsFilling.fxml'.";
+        setStyle();
 
 
     }
-// initialize the map before letting the map page be opened
+    // initialize the map before letting the map page be opened
     public void setType(String type) {
         System.out.println("in set type before sync");
         synchronized (this) {
@@ -127,6 +140,10 @@ public class PersonalDetailsFillingBoundary {
             // Get the controller and set the type before waiting
             CreditCradInfoBoundary boundary = loader.getController();
             boundary.setType("reservation");  // This should be set before waiting
+//            if(SimpleClient.getClient().rebookReservation)
+//            {
+//                boundary.setFields();
+//            }
             synchronized (boundary) {
                 while (!boundary.typeIsSet) {
                     System.out.println("Waiting for type to be set...");
@@ -145,6 +162,34 @@ public class PersonalDetailsFillingBoundary {
             e.printStackTrace();
             Thread.currentThread().interrupt();  // Restore interrupted state
         }
+    }
+    public void setFields()
+    {
+        if(SimpleClient.getClient().resInfo != null)
+        {
+            nameTextField.setText(SimpleClient.getClient().resInfo.getCustomer().getName());
+            phoneTextField.setText(SimpleClient.getClient().resInfo.getCustomer().getPhone());
+            mailTextField.setText(SimpleClient.getClient().resInfo.getCustomer().getEmail());
+        }
+    }
+    private void setStyle() {
+        root.setStyle("-fx-background-color: #fbe9d0;");
+        for (Node node : root.getChildrenUnmodifiable()) {
+            if (node instanceof Button)
+            {
+                node.setStyle("-fx-background-color: #8a6f48;\n" +
+                        "    -fx-text-fill: white;");
+            }
+            if (node instanceof Label)
+            {
+                node.setStyle("-fx-font-size: 18px;\n" +
+                        "    -fx-font-weight: bold;\n" +
+                        "    -fx-text-fill: #6c5339;\n" +
+                        "    -fx-padding: 10px 0;\n" +
+                        "    -fx-font-family: \"Serif\";");
+            }
+        }
+
     }
 
 }

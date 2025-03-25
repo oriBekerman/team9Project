@@ -7,33 +7,34 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="871.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryBoundary">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="871.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryBoundary">
     <children>
 
         <!-- Search Field -->
-        <TextField fx:id="searchField" layoutX="50" layoutY="10" prefWidth="200" promptText="Search..." />
+        <TextField fx:id="searchField" layoutX="52.0" layoutY="22.0" prefWidth="200" promptText="Search..." />
 
         <!-- Search Button -->
-        <Button fx:id="searchButton" layoutX="260" layoutY="10" onAction="#performSearch" text="Search" />
+        <Button fx:id="searchButton" layoutX="260" layoutY="10" onAction="#performSearch" prefHeight="34.0" prefWidth="94.0" text="Search" />
 
         <Button fx:id="BackToHPbtn" layoutX="1019.0" layoutY="14.0" mnemonicParsing="false" onAction="#BackToHPfunc" styleClass="return-btn" text="Back to Home Page" />
-        <Button fx:id="UpdatePriceBtn" layoutX="28.0" layoutY="689.0" mnemonicParsing="false" onAction="#UpdateThePrice" styleClass="cancel-btn" text="Update Price" />
-        <Button fx:id="SaveBtn" layoutX="28.0" layoutY="770.0" mnemonicParsing="false" onAction="#SaveTheUpdateMenu" prefHeight="49.0" prefWidth="124.0" styleClass="cancel-btn" text="Save" />
+        <Button fx:id="UpdatePriceBtn" layoutX="23.0" layoutY="664.0" mnemonicParsing="false" onAction="#UpdateThePrice" styleClass="menu-btn" text="Update Price" />
+        <Button fx:id="SaveBtn" layoutX="28.0" layoutY="734.0" mnemonicParsing="false" onAction="#SaveTheUpdateMenu" prefHeight="49.0" prefWidth="124.0" styleClass="menu-btn" text="Save" />
 
         <!-- TableView for MenuItems -->
-        <TableView fx:id="menuTableView" layoutX="142.0" layoutY="114.0" prefHeight="664.0" prefWidth="638.0">
+        <TableView fx:id="menuTableView" layoutX="243.0" layoutY="113.0" prefHeight="551.0" prefWidth="821.0">
             <columns>
                 <TableColumn fx:id="nameColumn" prefWidth="97.60003662109375" styleClass="column-header-background" text="Name" />
                 <TableColumn fx:id="ingredientsColumn" prefWidth="132.79998779296875" styleClass="column-header-background" text="Ingredients" />
                 <TableColumn fx:id="preferenceColumn" prefWidth="132.0" styleClass="column-header-background" text="Preference" />
                 <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="76.0" styleClass="column-header-background" text="Price" />
+            <TableColumn fx:id="dishTypeColumn" prefWidth="104.7999267578125" styleClass="column-header-background" text="Branch dish" />
                 <TableColumn fx:id="imageColum" minWidth="0.0" prefWidth="85.60009765625" styleClass="column-header-background" text="image" />
-            <TableColumn fx:id="dishTypeColumn" prefWidth="104.7999267578125" text="Branch dish" />
             </columns>
         </TableView>
       <Label fx:id="menuLabel" layoutX="589.0" layoutY="23.0" prefHeight="68.0" prefWidth="77.0" styleClass="menuPageTitle" text="Menu" />
-      <Button fx:id="UpdateingridientsBtn" layoutX="28.0" layoutY="651.0" mnemonicParsing="false" onAction="#UpdateIngridients" styleClass="cancel-btn" text="Update ingridients" />
-      <Button fx:id="addDishBtn" layoutX="28.0" layoutY="613.0" mnemonicParsing="false" onAction="#addDish" styleClass="cancel-btn" text="add dish" />
-      <Button fx:id="removeDishBtn" layoutX="28.0" layoutY="576.0" mnemonicParsing="false" onAction="#removeDish" styleClass="cancel-btn" text="remove dish" />
+      <Button fx:id="UpdateingridientsBtn" layoutX="20.0" layoutY="597.0" mnemonicParsing="false" onAction="#UpdateIngridients" styleClass="menu-btn" text="Update ingridients" />
+      <Button fx:id="addDishBtn" layoutX="28.0" layoutY="377.0" mnemonicParsing="false" onAction="#addDish" styleClass="menu-btn" text="add dish" />
+      <Button fx:id="removeDishBtn" layoutX="25.0" layoutY="452.0" mnemonicParsing="false" onAction="#removeDish" styleClass="menu-btn" text="remove dish" />
+      <Button fx:id="isBranchDishBtn" layoutX="20.0" layoutY="528.0" mnemonicParsing="false" onAction="#isBranchDish" styleClass="menu-btn" text="is branch dish" />
     </children>
 </AnchorPane>

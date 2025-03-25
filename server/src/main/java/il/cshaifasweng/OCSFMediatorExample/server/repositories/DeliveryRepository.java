@@ -1,13 +1,13 @@
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
-import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DeliveryRepository extends BaseRepository<Delivery> {
@@ -19,7 +19,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
 
     @Override
     public int getId(Delivery entity) {
-        return entity.getOrderNumber();
+        return entity.getDeliveryNumber();
     }
 
     @Override
@@ -33,12 +33,13 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
-            // Save the customer first if it's not null
-            if (delivery.getCustomer() != null) {
-                session.saveOrUpdate(delivery.getCustomer());  // Ensure the customer is saved or updated
+            // Check if the customer is transient (not saved in the database yet)
+            if (delivery.getCustomer() != null && delivery.getCustomer().getId() == 0) {
+                // Save the customer before saving the delivery
+                session.save(delivery.getCustomer());
             }
 
-            // Save the delivery, which will also cascade save the orderItems due to the @OneToMany(cascade = CascadeType.ALL) in Delivery
+            // Now save the delivery
             session.save(delivery);
 
             session.getTransaction().commit();  // Commit the transaction
@@ -49,6 +50,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
             return false;
         }
     }
+
 
 
     // Get all deliveries from the database
@@ -105,5 +107,38 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         return delivery;
     }
 
+    // Method to cancel a delivery by setting the isCanceled flag to true
+    public boolean cancelDeliveryByOrderNumber(int orderNumber) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+
+            // Get the delivery by order number
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Delivery> query = builder.createQuery(Delivery.class);
+            Root<Delivery> deliveryRoot = query.from(Delivery.class);
+            query.select(deliveryRoot).where(builder.equal(deliveryRoot.get("orderNumber"), orderNumber));
+
+            List<Delivery> result = session.createQuery(query).getResultList();
+
+            if (!result.isEmpty()) {
+                // Delivery found, cancel it by setting the isCanceled flag to true
+                Delivery delivery = result.get(0);
+                delivery.setCanceled(true); // Set the delivery status as canceled
+
+                // Save the updated delivery
+                session.update(delivery);
+                session.getTransaction().commit();  // Commit the transaction
+                System.out.println("Delivery with order number " + orderNumber + " has been canceled.");
+                return true;  // Successfully canceled
+            } else {
+                // No delivery found with the given order number
+                System.out.println("No delivery found with order number: " + orderNumber);
+                return false;  // Failed to cancel
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;  // Failed to cancel due to an error
+        }
+    }
 
 }

@@ -19,7 +19,7 @@ import javafx.scene.layout.VBox;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+import static il.cshaifasweng.OCSFMediatorExample.client.App.*;
 
 public class BranchPageBoundary {
 
@@ -36,6 +36,7 @@ public class BranchPageBoundary {
     public Button tableBtn;
     private final Object lock = new Object();
     private boolean branchTablesSet = false;
+    private Delivery currentDelivery= new Delivery();
 
     public BranchPageBoundary() {
         EventBus.getDefault().register(this);
@@ -101,7 +102,8 @@ public class BranchPageBoundary {
     public void navToReservationPage(ActionEvent actionEvent) {
     }
     public void navToDeliveryPage(ActionEvent actionEvent) {
-        switchScreen("Delivery");
+        currentDelivery.setBranch(branch);
+        switchToDelivery(currentDelivery);
     }
     public void navToComplaintPage(ActionEvent actionEvent) {
     }
@@ -191,9 +193,10 @@ public class BranchPageBoundary {
         synchronized (lock) {
             System.out.println("Tables received for branch: " + branch.getName());
             Set<RestTable> tables = event.getTables();
+            List<RestTable> newTables=tables.stream().toList();
 
             if (tables != null && !tables.isEmpty()) {
-                branch.setRestTables(tables);
+                branch.setRestTables(newTables);
                 branchTablesSet = true;
                 lock.notifyAll(); // Wake up any waiting threads
             } else {

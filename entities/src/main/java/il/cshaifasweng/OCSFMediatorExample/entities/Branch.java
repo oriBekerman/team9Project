@@ -4,10 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 
@@ -55,9 +52,11 @@ public class Branch implements Serializable  {
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<RestTable> tables = new HashSet<>();
 
-//    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-//    private Set<ResInfo> reservations = new HashSet<>();
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<ResInfo> reservations = new HashSet<>();
 
+
+    @Transient
     public boolean tablesAreSet=false;
 
 
@@ -68,6 +67,7 @@ public class Branch implements Serializable  {
         this.location = location;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
+        this.tablesAreSet=true;
     }
 
     // Getters and Setters
@@ -138,14 +138,20 @@ public class Branch implements Serializable  {
         }
         return tables;
     }
-    public void setRestTables(Set<RestTable> tables) {
-        this.tables = tables;
+    public void setRestTables(List<RestTable> newTables) {
+        Set<RestTable> restTables=new HashSet<>();
+        for(RestTable table : newTables)
+        {
+            restTables.add(table);
+        }
+        this.tables=restTables;
         if (tables != null){
-            if(tables.size()>0)
+            if(!tables.isEmpty())
             {
                 this.tablesAreSet=true;
             }
         }
+
     }
     public List<RestTable> getAvailableTablesWithCapacity(int capacity,LocalTime time)
     {
@@ -187,6 +193,16 @@ public class Branch implements Serializable  {
             }
         }
         return availableTables;
+    }
+    public Set<RestTable> getUnavailableTablesAt(LocalTime time)
+    {
+        Set<RestTable> unavailableTables = new HashSet<>();
+        for(RestTable table : tables){
+            if(!table.isAvailableAt(time)){
+                unavailableTables.add(table);
+            }
+        }
+        return unavailableTables;
     }
 
     //returns the best table/ combination of tables for the given time and number of people and sitting area
@@ -255,9 +271,73 @@ public class Branch implements Serializable  {
         return availableTables;
     }
 
+    public ResInfo createReservation(Customer customer, int numGuests, String area, LocalTime time) {
+        Set<RestTable> tables = getAvailableTablesWithNumPeople(numGuests, time, area);
+        List<Integer> tableIds=new ArrayList<>();
 
+        if (tables.isEmpty()) return null;
 
+        ResInfo reservation = new ResInfo(this, customer, time, numGuests, area, tables);
+        reservation.setStatus(ResInfo.Status.APPROVED);
 
+        for (RestTable table : tables) {
+            table.addUnavailableFromTime(time);
+            tableIds.add(table.getId());
+        }
+
+        addReservation(reservation, tables,tableIds);
+        return reservation;
+    }
+
+    public synchronized void addReservation(ResInfo reservation, Set<RestTable> newTables, List<Integer> tableIds) {
+        reservations.add(reservation);
+        reservation.setBranch(this);
+        tablesAreSet = false;
+
+        // Collect tables to remove based on IDs
+        Set<RestTable> toRemove = new HashSet<>();
+        for (RestTable table : tables) {
+            if (tableIds.contains(table.getId())) {
+                toRemove.add(table);
+            }
+        }
+        tables.removeAll(toRemove);
+        tables.addAll(newTables);
+        tablesAreSet = true;
+        this.notifyAll();  // Notify any thread waiting for tables
+    }
+    //    public ResInfo getReservationByTable(RestTable table,LocalTime time)
+//    {
+//        for(ResInfo reservation : reservations)
+//        {
+//            System.out.println("reservation.branch for");
+//            System.out.println(reservation.getHours());
+//            if ((reservation.getHours().equals(time)))
+//            {
+//                System.out.println("reservation.getResID() 1111");
+//                Set<RestTable> restTables=reservation.getTable();
+//                for(RestTable restTable : restTables)
+//                {
+//                    System.out.println("reservation.getResID() 2222");
+//                    System.out.println(restTable.getId());
+//                    if(table.getId()==restTable.getId())
+//                    {
+//                        System.out.println("reservation.getResID() 3333");
+//                        System.out.println(restTable.getId());
+//                        return reservation;
+//                    }
+//                }
+//            }
+//        }
+//
+//        System.out.println("reservation.getResID()");
+//        return null;
+//
+//    }
+    public Set<ResInfo> getAllReservations()
+    {
+        return reservations;
+    }
 }
 
 

@@ -8,11 +8,14 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.CreditCardInfoSet;
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.EventBus;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
@@ -23,6 +26,10 @@ public class CreditCradInfoBoundary {
     public TextField expDateText;
     public TextField cvvText;
     public Label errorLabel;
+    public AnchorPane root;
+    public Label cardNumLabel;
+    public Label expDateLabel;
+    public Label cvvLabel;
     @FXML
     private ResourceBundle resources;
 
@@ -75,6 +82,11 @@ public class CreditCradInfoBoundary {
                 SimpleClient.getClient().mapReservation.put("cardNum", cardNum);
                 SimpleClient.getClient().mapReservation.put("expDate", expDate);
                 SimpleClient.getClient().mapReservation.put("cvv", cvv);
+                Customer customer=SimpleClient.getClient().resInfo.getCustomer();
+                customer.setCreditCardNumber(cardNum);
+                customer.setCvv(cvv);
+                customer.setExpirationDate(expDate);
+                SimpleClient.getClient().resInfo.setCustomer(customer);
 
                 // stop reservation timer since pay is pressed and reservation will be saved
                 TimerManager.getInstance().cancelTimer("reservationTimeout");
@@ -91,7 +103,7 @@ public class CreditCradInfoBoundary {
     void initialize() {
         assert backBtn != null : "fx:id=\"backBtn\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
         assert paymentBtn != null : "fx:id=\"paymentBtn\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
-
+        setStyle();
 
     }
     public void setType(String type) {
@@ -153,6 +165,34 @@ public class CreditCradInfoBoundary {
         } catch (DateTimeParseException e) {
             return false;
         }
+    }
+    public void setFields()
+    {
+        if(SimpleClient.getClient().resInfo != null)
+        {
+           cardNumText.setText(SimpleClient.getClient().resInfo.getCustomer().getCreditCardNumber());
+           expDateText.setText(SimpleClient.getClient().resInfo.getCustomer().getExpirationDate());
+           cvvText.setText(SimpleClient.getClient().resInfo.getCustomer().getCvv());
+        }
+    }
+    private void setStyle() {
+        root.setStyle("-fx-background-color: #fbe9d0;");
+        for (Node node : root.getChildrenUnmodifiable()) {
+            if (node instanceof Button)
+            {
+                node.setStyle("-fx-background-color: #8a6f48;\n" +
+                        "    -fx-text-fill: white;");
+            }
+            if (node instanceof Label)
+            {
+                node.setStyle("-fx-font-size: 18px;\n" +
+                        "    -fx-font-weight: bold;\n" +
+                        "    -fx-text-fill: #6c5339;\n" +
+                        "    -fx-padding: 10px 0;\n" +
+                        "    -fx-font-family: \"Serif\";");
+            }
+        }
+
     }
 
 

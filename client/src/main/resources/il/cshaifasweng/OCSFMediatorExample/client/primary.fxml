@@ -42,6 +42,7 @@
                         <Button fx:id="UpdateMenuBtn" mnemonicParsing="false" onAction="#displayMenuFunc" text="Update Menu" />
                         <Button fx:id="loginBttn" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
                         <Button fx:id="logoutBttn" mnemonicParsing="false" onAction="#LogOut" text="Logout" />
+                         <Button fx:id="cancelDelivery" mnemonicParsing="false" onAction="#cancelDel" text="cancel delivery" />
                      </children>
                   </VBox>
                </children>

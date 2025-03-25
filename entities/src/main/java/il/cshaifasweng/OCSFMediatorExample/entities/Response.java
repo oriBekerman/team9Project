@@ -82,10 +82,15 @@ public class Response<T> implements Serializable {
         //menu related responses
         RETURN_MENU,
         UPDATED_PRICE,
+        REMOVE_DISH,
+        ADD_DISH,
+        UPDATE_INGREDIENTS,
+        UPDATE_DISH_TYPE,
 
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,
         RETURN_BRANCH,
+        RETURN_BRANCH_BY_NAME,
         RETURN_DELIVERABLES,
         GET_ALL_DELIVERIES,
 
@@ -96,11 +101,13 @@ public class Response<T> implements Serializable {
 
         DELIVERY_CREATED,
         SEND_DELIVERY,
+        DELIVERY_CANCELED,
 
         RETURN_RES_REPORT,
 
         CANCELED_RESERVATION,
-        ADDED_RESERVATION
+        ADDED_RESERVATION,
+        UPDATE_BRANCH_TABLES
     }
 
     public enum Status {

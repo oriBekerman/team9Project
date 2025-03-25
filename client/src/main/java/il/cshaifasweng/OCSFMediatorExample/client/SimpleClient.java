@@ -14,6 +14,7 @@ import java.util.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
 
 
@@ -27,6 +28,14 @@ public class SimpleClient extends AbstractClient {
 	private static ActiveUser activeUser = null;
 	public Map <String, String> mapReservation=new HashMap<String, String>();
 	public ResInfo resInfo=new ResInfo();
+	public boolean rebookReservation=false;
+	public  boolean tableAvailable=true;
+	public String userEmail;
+	private Response<?> lastResponse;
+
+	public Response<?> getResponse() {
+		return lastResponse;
+	}
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
@@ -59,26 +68,13 @@ public class SimpleClient extends AbstractClient {
 			if (response.getResponseType().equals(RETURN_MENU)) {
 					Menu menu = (Menu) response.getData();
 					MenuEvent menuEvent = new MenuEvent(menu);
-					// Store the event if SecondaryController is not initialized
-					if (!isSecondaryControllerInitialized) {
-						pendingMenuEvent = menuEvent;
-					} else {
-						// Post immediately if SecondaryController is ready
-						EventBus.getDefault().post(menuEvent);
-					}
+					EventBus.getDefault().post(menuEvent);
 				}
 			if (response.getResponseType().equals(RETURN_BRANCH_MENU)) {
 				System.out.println("Menu received, storing event...");
 				Menu menu = (Menu) response.getData();
 				MenuEvent menuEvent = new MenuEvent(menu);
-				// Store the event if SecondaryController is not initialized
-				if (!isSecondaryControllerInitialized) {
-					pendingMenuEvent = menuEvent;
-				} else {
-					// Post immediately if SecondaryController is ready
-					EventBus.getDefault().post(menuEvent);
-					System.out.println("menu event posted");
-				}
+				EventBus.getDefault().post(menuEvent);
 			}
 			if (response.getResponseType().equals(UPDATED_PRICE)) {
 				MenuItem menuItem = (MenuItem) response.getData();
@@ -143,20 +139,38 @@ public class SimpleClient extends AbstractClient {
 					EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
 				}
 			}
-			 if (response.getResponseType().equals(SEND_DELIVERY)) {
-				System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee");
+			 if (response.getResponseType().equals(DELIVERY_CREATED)) {
 				Delivery delivery = (Delivery) response.getData();
 				if (delivery != null) {
 					System.out.println(delivery);
+					EventBus.getDefault().post(delivery);
 				} else {
 					System.out.println("No delivery data received.");
 				}
 			}
-			if (response.getResponseType().equals(RETURN_BRANCH)) {
-				System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeee");
-				Branch branch= (Branch) response.getData();
-			EventBus.getDefault().post(new BranchSelectedEvent(branch));
+			if (response.getResponseType().equals(SEND_DELIVERY)) {
+				Delivery delivery = (Delivery) response.getData();
+				if (delivery != null) {
+					System.out.println(delivery);
+					EventBus.getDefault().post(delivery);
+				} else {
+					System.out.println("No delivery data received.");
+					EventBus.getDefault().post("delivery not found");
+
+				}
 			}
+			if (response.getResponseType().equals(DELIVERY_CANCELED)) {
+				EventBus.getDefault().post("delivery deleted");
+			}
+			if (response.getResponseType().equals(RETURN_BRANCH_BY_NAME)) {
+				Branch branch= (Branch) response.getData();
+			EventBus.getDefault().post(new BranchSentEvent(branch));
+			}
+
+			if (msg instanceof Response) {
+				lastResponse = (Response<?>) msg;
+			}
+
 
 			if (response.getResponseType().equals(UPDATE_BRANCH_RESERVATION)) {
 				System.out.println("updateRES!!!!!");
@@ -166,7 +180,24 @@ public class SimpleClient extends AbstractClient {
 			}
 			if(response.getResponseType().equals(ADDED_RESERVATION))
 			{
-				ReservationAddedEvent event=new ReservationAddedEvent((ResInfo) response.getData(),response.getMessage());
+				if(response.getStatus().equals(SUCCESS))
+				{
+					ReservationAddedEvent event=new ReservationAddedEvent((ResInfo) response.getData(),response.getMessage());
+					EventBus.getDefault().post(event);
+				}
+				if(response.getStatus().equals(ERROR))
+				{
+					System.out.println("in error res");
+					TableIsReservedEvent event=new TableIsReservedEvent((List<ResInfo>) response.getData());
+					System.out.println("event created");
+					EventBus.getDefault().post(event);
+					System.out.println("event posted");
+				}
+			}
+			if(response.getResponseType().equals(UPDATE_BRANCH_TABLES))
+			{
+				System.out.println("in updateBRANCH_TABLES");
+				UpdateBranchTablesEvent event=new UpdateBranchTablesEvent((ResInfo) response.getData());
 				EventBus.getDefault().post(event);
 			}
 		} else {
@@ -184,6 +215,15 @@ public class SimpleClient extends AbstractClient {
 			pendingMenuEvent = null;  // Clear the pending event
 		}
 	}
+
+	public void sendRequest(Request request) {
+		try {
+			this.sendToServer(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	public void editMenu(String itemId,String price) throws IOException
 	{
@@ -239,6 +279,90 @@ public class SimpleClient extends AbstractClient {
 		}
 
 	}
-	
+
+	public void removeDishFromDatabase(MenuItem dishToRemove) {
+		// Assuming the category for removing a dish is BASE_MENU (similar to addDishToDatabase)
+		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.REMOVE_DISH, dishToRemove);
+		try {
+			SimpleClient.getClient().sendToServer(request);
+			System.out.println("Dish removed from database: " + dishToRemove.getName());
+		} catch (IOException e) {
+			System.out.println("Error removing dish from database: " + e.getMessage());
+		}
+	}
+
+	public void updateDishIngredients(MenuItem item)
+	{
+		try {
+			Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.UPDATE_INGREDIENTS, item);
+			getClient().sendToServer(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateDishType(MenuItem selectedItem) {
+		try {
+			// Get the item ID using getItemID() instead of getId()
+			int itemId = selectedItem.getItemID();
+
+			// Create a request with the selected item and the necessary dish type update
+			Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.UPDATE_DISH_TYPE, selectedItem);
+
+			// Send the request to the server
+			getClient().sendToServer(request);
+
+			// Print confirmation message with item ID
+			System.out.println("Dish type updated for dish ID: " + itemId);
+		} catch (IOException e) {
+			// Handle any IOException that occurs while communicating with the server
+			e.printStackTrace();
+			System.err.println("Error updating dish type: " + e.getMessage());
+		}
+	}
+
+	public void addDishToDatabase(MenuItem newDish)
+	{
+		// Assuming you have a way to send requests to the server:
+		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);
+		try {
+			SimpleClient.getClient().sendToServer(request);
+			System.out.println("Dish added to database: " + newDish.getName());
+		} catch (IOException e) {
+			System.out.println("Error adding dish to database: " + e.getMessage());
+		}
+	}
+
+	public List<ResInfo> getAllReservations() {
+		Request<String> request = new Request<>(ReqCategory.RESERVATION, "get_all_reservations");
+		sendRequest(request);
+
+		int waitAttempts = 0;
+		while (lastResponse == null || lastResponse.getResponseType() != Response.ResponseType.RETURN_RES_REPORT) {
+			try {
+				Thread.sleep(100);
+				waitAttempts++;
+				if (waitAttempts > 50) { // ממתין מקסימום 5 שניות
+					System.err.println("Timeout waiting for server response.");
+					return new ArrayList<>();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				return new ArrayList<>();
+			}
+		}
+
+		if (lastResponse.getStatus() == Response.Status.SUCCESS) {
+			List<ResInfo> reservations = (List<ResInfo>) lastResponse.getData();
+			lastResponse = null;
+			return reservations;
+		} else {
+			lastResponse = null;
+			return new ArrayList<>();
+		}
+	}
+
+
+
 }
 

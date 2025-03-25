@@ -1,10 +1,13 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -20,6 +23,7 @@ public class ReservationBoundary {
     public SimpleClient client;
     public AnchorPane root;
     public Label titleLabel;
+    public boolean isRegistered=false;
 
 
     @FXML
@@ -50,6 +54,10 @@ public class ReservationBoundary {
     @FXML
     private ComboBox<String> numpeopleList;
 
+
+
+
+
     @FXML
     void backToHP(ActionEvent event) {
 
@@ -67,7 +75,17 @@ public class ReservationBoundary {
         String chosen = hoursList.getSelectionModel().getSelectedItem();
         client = SimpleClient.getClient();
         client.mapReservation.put("Hours",chosen);
+        LocalTime time=LocalTime.parse(chosen);
+        client.resInfo.setHours(time);
     }
+
+    @FXML
+    void cancelReservation(ActionEvent event) {
+        App.switchScreen("enterEmail");
+    }
+
+
+
 
 
     @FXML
@@ -75,7 +93,6 @@ public class ReservationBoundary {
         String chosen = InOutdoorList.getSelectionModel().getSelectedItem();
         client = SimpleClient.getClient();
         client.mapReservation.put("Area",chosen);
-
         SimpleClient.getClient().resInfo.setInOrOut(chosen);
     }
 
@@ -84,7 +101,6 @@ public class ReservationBoundary {
         String chosen = numpeopleList.getSelectionModel().getSelectedItem();
         client = SimpleClient.getClient();
         client.mapReservation.put("num",chosen);
-
         SimpleClient.getClient().resInfo.setNumOfGuests(Integer.parseInt(chosen));
     }
 
@@ -196,27 +212,23 @@ public class ReservationBoundary {
         setNumpeopleList();
         setStyle();
     }
-    public void setStyle()
-    {
+    private void setStyle() {
         root.setStyle("-fx-background-color: #fbe9d0;");
-        titleLabel.setStyle(
-                "-fx-font-size: 24px;\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-text-fill: #4e453c;\n" +
-                "    -fx-alignment: center;\n" +
-                "    -fx-padding: 20px 0;\n" +
-                "    -fx-font-family: \"Serif\";");
-        // Buttons Styling
-        String buttonStyle = "-fx-background-color: #8a6f48;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-size: 14px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-padding: 8px 16px;" +
-                "-fx-border-radius: 5px;";
-
-        backBtn.setStyle(buttonStyle);
-
+        for (Node node : root.getChildrenUnmodifiable()) {
+            if (node instanceof Button)
+            {
+                node.setStyle("-fx-background-color: #8a6f48;\n" +
+                        "    -fx-text-fill: white;");
+            }
+            if (node instanceof Label)
+            {
+                node.setStyle("-fx-font-size: 18px;\n" +
+                        "    -fx-font-weight: bold;\n" +
+                        "    -fx-text-fill: #6c5339;\n" +
+                        "    -fx-padding: 10px 0;\n" +
+                        "    -fx-font-family: \"Serif\";");
+            }
+        }
 
     }
-
 }

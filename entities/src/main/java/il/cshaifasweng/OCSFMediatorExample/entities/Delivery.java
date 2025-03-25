@@ -12,20 +12,20 @@ import java.util.List;
 @Entity
 @Table(name = "Deliveries")
 public class Delivery implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderNumber;
+    @Column(name = "orderNumber", unique = true)
+    private Integer orderNumber;
 
-    @Column(nullable = false)
-    private String date;
+    @Column(name = "time")
+    private String time;
 
     // One-to-many relationship with OrderItem
     @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems; // A list of OrderItem objects
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @Enumerated(EnumType.STRING)
@@ -39,19 +39,22 @@ public class Delivery implements Serializable {
     @Column(nullable = false)
     private double totalPrice;
 
+    @Column(nullable = false)
+    private boolean isCanceled = false;
+
     public static final double DELIVERY_FEE = 15.0;
 
     // Default constructor
     public Delivery() {}
 
     // Constructor
-    public Delivery(String date, List<OrderItem> orderItems, Customer customer, DeliveryMethod deliveryMethod, Branch branch) {
-        this.date = date;
+    public Delivery(List<OrderItem> orderItems, Customer customer, DeliveryMethod deliveryMethod, Branch branch, String time) {
         this.orderItems = orderItems;
         this.customer = customer;
         this.deliveryMethod = deliveryMethod;
         this.branch = branch;
         this.totalPrice = calculateTotalPrice(); // Calculate total price based on items
+        this.time =time;
     }
 
     // Calculate total price dynamically
@@ -67,20 +70,23 @@ public class Delivery implements Serializable {
     }
 
     // Getters and Setters
-    public int getOrderNumber() {
+    public int getDeliveryNumber() {
         return orderNumber;
     }
+    public void setTime(String time) {
+        this.time = time;
+    }
+
 
     public void setOrderNumber(int orderNumber) {
         this.orderNumber = orderNumber;
     }
-
-    public String getDate() {
-        return date;
+    public Integer getOrderNumber() {
+        return orderNumber;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public String getTime() {
+        return time;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -106,7 +112,6 @@ public class Delivery implements Serializable {
 
     public void setDeliveryMethod(DeliveryMethod deliveryMethod) {
         this.deliveryMethod = deliveryMethod;
-        this.totalPrice = calculateTotalPrice(); // Recalculate total price when delivery method changes
     }
 
     public Branch getBranch() {
@@ -125,11 +130,24 @@ public class Delivery implements Serializable {
         this.totalPrice = totalPrice;
     }
 
+    // Setter for deliveryTime
+    public void setDeliveryTime(String time) {
+        this.time = time;
+    }
+
+    public boolean isCanceled() {
+        return isCanceled;
+    }
+
+    public void setCanceled(boolean canceled) {
+        isCanceled = canceled;
+    }
+
     @Override
     public String toString() {
         return "Delivery{" +
                 "orderNumber=" + orderNumber +
-                ", date='" + date + '\'' +
+                ", time='" + time + '\'' +
                 ", orderItems=" + orderItems +
                 ", customer=" + customer +
                 ", deliveryMethod=" + deliveryMethod +

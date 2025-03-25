@@ -1,6 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.WarningEvent;
+import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -119,16 +121,6 @@ public class App extends Application {
                     }
                 });
                 break;
-            case "Delivery":
-                Platform.runLater(() -> {
-                    setWindowTitle("Delivery");
-                    try {
-                        setContent("delivery");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-                break;
             case "Reservation":
                 Platform.runLater(() -> {
                     setWindowTitle("Reservation");
@@ -200,6 +192,135 @@ public class App extends Application {
                     }
                 });
                 break;
+            case "CancelDelivery":
+                 Platform.runLater(() -> {
+                    try {
+                        setContent("cancelDelivery");
+                   } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "enterEmail":
+                Platform.runLater(() -> {
+                    setWindowTitle("Enter Email");
+                    try {
+                        setContent("enterEmail");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "reservationList":
+                Platform.runLater(() -> {
+                    setWindowTitle("Your Reservations");
+                    try {
+                        setContent("reservationList");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+
+
+
+
         }
     }
+
+    public static void switchToDelivery(Delivery delivery) {
+        Platform.runLater(() -> {
+            setWindowTitle("Delivery");
+            try {
+                // Load the FXML file for the delivery screen
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("delivery.fxml"));
+                Parent root = loader.load();
+
+                // Get the controller of the loaded FXML
+                DeliveryBoundary deliveryBoundary = loader.getController();
+
+                deliveryBoundary.setDelivery(delivery);
+
+                // Set the scene and show the stage
+                scene = new Scene(root);
+                appStage.setScene(scene);
+                appStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static void switchToPDDelivery(Delivery delivery) {
+        Platform.runLater(() -> {
+            setWindowTitle("Personal Details Filling");
+            try {
+                // Load the FXML file for the delivery screen
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("personalDetailsFillingDelivery.fxml"));
+                Parent root = loader.load();
+
+                // Get the controller of the loaded FXML
+                PersonalDetailsFillingDeliveryBoundary boundary = loader.getController();
+
+                // Pass the branchId to the controller
+                boundary.setDelivery(delivery);
+
+                // Set the scene and show the stage
+                scene = new Scene(root);
+                appStage.setScene(scene);
+                appStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static void switchToCCInfoDelivery(Delivery delivery) {
+        Platform.runLater(() -> {
+            setWindowTitle("Credit Card Information");
+            try {
+                // Load the FXML file for the delivery screen
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("creditCardInfoDelivery.fxml"));
+                Parent root = loader.load();
+
+                // Get the controller of the loaded FXML
+                CreditCardInfoDeliveryBoundary boundary = loader.getController();
+
+                // Pass the branchId to the controller
+                boundary.setDelivery(delivery);
+
+                // Set the scene and show the stage
+                scene = new Scene(root);
+                appStage.setScene(scene);
+                appStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static void switchToSummeryDelivery(Delivery delivery) {
+        Platform.runLater(() -> {
+            setWindowTitle("Order Summery");
+            try {
+                // Load the FXML file for the delivery screen
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("deliverySummery.fxml"));
+                Parent root = loader.load();
+
+                // Get the controller of the loaded FXML
+                DeliverySummeryBoundary boundary = loader.getController();
+
+                // Pass the branchId to the controller
+                boundary.setDelivery(delivery);
+
+                // Set the scene and show the stage
+                scene = new Scene(root);
+                appStage.setScene(scene);
+                appStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
 }
