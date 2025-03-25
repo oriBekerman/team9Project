@@ -41,7 +41,10 @@ public class Complaint implements Serializable {
     public boolean customerIsSet=false;
 
     // Constructors
-    public Complaint() {}
+    public Complaint() {
+        this.status = ComplaintStatus.NEW; // Default status
+    }
+
 
     public Complaint(String complaintText, ComplaintStatus status, Customer customer,Branch branch) {
         this.complaintDate = LocalDateTime.now();

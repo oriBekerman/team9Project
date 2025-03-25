@@ -5,6 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,14 +32,14 @@ public class ReservationListController {
 
         loadReservations();
     }
-
+    //CHANGE HERE
     private void loadReservations() {
         List<ResInfo> allReservations = SimpleClient.getClient().getAllReservations();
-        String email = SimpleClient.getClient().userEmail;
+        //String email = SimpleClient.getClient().userEmail;
 
         List<ResInfo> filtered = allReservations.stream()
                 .filter(res -> res.getCustomer() != null
-                        && res.getCustomer().getEmail().equals(email)
+                        //&& res.getCustomer().getEmail().equals(email)
                         && !res.getIsCancelled())
                 .collect(Collectors.toList());
 
@@ -46,7 +48,7 @@ public class ReservationListController {
 
 
     @FXML
-    void handleCancel() {
+    void handleCancel() throws IOException {
         ResInfo selected = reservationsTable.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
@@ -54,18 +56,15 @@ public class ReservationListController {
             return;
         }
 
-        // שליחת הבקשה לשרת לביטול
+        // send request to cancel
         Request request = new Request(ReqCategory.CANCEL_RESERVATION, selected.getResID());
-        client.sendRequest(request);
+        SimpleClient.getClient().sendToServer(request);
+    }
 
-        Response<?> response = client.getResponse();
-
-        if (response.getStatus() == Response.Status.SUCCESS) {
-            showInfo(response.getMessage());
-            reservationsTable.getItems().remove(selected);
-        } else {
-            showAlert(response.getMessage());
-        }
+    @Subscribe
+    void responseCancel(ReservationCancelledEvent event) throws IOException {
+        ResInfo selected = reservationsTable.getSelectionModel().getSelectedItem();
+        reservationsTable.getItems().remove(selected);
     }
 
     @FXML

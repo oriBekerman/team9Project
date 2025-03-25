@@ -30,7 +30,7 @@ public class ResInfoController {
         return switch (request.getRequestType())
         {
             case ADD_RESERVATION -> handleNewReservation(request);
-//            case CANCEL_RESERVATION-> cancelReservation(request);
+            case CANCEL_RESERVATION-> cancelReservation(request);
             case GET_RES_REPORT -> getAllReservations();
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
@@ -198,7 +198,8 @@ public class ResInfoController {
 
 
 
-    public Response<String> cancelReservation(Integer resID) {
+    public Response<String> cancelReservation(Request request) {
+        Integer resID= (Integer) request.getData();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
 

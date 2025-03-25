@@ -33,6 +33,7 @@ public class SimpleClient extends AbstractClient {
 
 	private SimpleClient(String host, int port) {
 		super(host, port);
+
 	}
 
 	public static SimpleClient getClient() {
@@ -45,8 +46,7 @@ public class SimpleClient extends AbstractClient {
 	@Override
 	protected void handleMessageFromServer(Object msg) {
 		System.out.println("Message received from server: " + msg);
-		if (msg instanceof Response)
-		{
+		if (msg instanceof Response) {
 			Response response = (Response) msg;
 
 			// Print the response type
@@ -103,8 +103,7 @@ public class SimpleClient extends AbstractClient {
 				updateDishEvent updateEvent = new updateDishEvent(menuItem);
 				EventBus.getDefault().post(updateEvent);
 			}
-
-			// Handle BRANCHES_SENT response
+			//list of branches sent from server
 			if (response.getResponseType().equals(BRANCHES_SENT)) {
 				try {
 					System.out.println("client got branches sent");
@@ -114,7 +113,9 @@ public class SimpleClient extends AbstractClient {
 					Platform.runLater(() -> {
 						EventBus.getDefault().post(branchSentEvent);
 					});
-				} catch (ClassCastException e) {
+
+				}
+				catch (ClassCastException e) {
 					e.printStackTrace();
 				}
 			}
@@ -180,6 +181,7 @@ public class SimpleClient extends AbstractClient {
 				} else {
 					System.out.println("No delivery data received.");
 					EventBus.getDefault().post("delivery not found");
+
 				}
 			}
 
@@ -190,7 +192,7 @@ public class SimpleClient extends AbstractClient {
 
 			// Handle RETURN_BRANCH_BY_NAME response
 			if (response.getResponseType().equals(RETURN_BRANCH_BY_NAME)) {
-				Branch branch = (Branch) response.getData();
+				Branch branch= (Branch) response.getData();
 				EventBus.getDefault().post(new BranchSentEvent(branch));
 			}
 
@@ -223,6 +225,29 @@ public class SimpleClient extends AbstractClient {
 				UpdateBranchTablesEvent event = new UpdateBranchTablesEvent((ResInfo) response.getData());
 				EventBus.getDefault().post(event);
 			}
+			//COMPLAINT
+			if (response.getResponseType().equals(COMPLAINT_CREATED)) {
+				System.out.println("in complaint created");
+
+				// Check if complaint is null
+				Complaint complaint = (Complaint) response.getData();
+				if (complaint == null) {
+					System.err.println("Error: Complaint object is null in response.");
+					return;
+				}
+
+				System.out.println("Complaint successfully created: " + complaint);
+
+				// Post the event with the complaint data to the EventBus
+				EventBus.getDefault().post(new ComplaintCreatedEvent(complaint));
+			}
+			// Handle cancel resv response
+			if (response.getResponseType().equals(CANCELED_RESERVATION)) {
+				System.out.println("in CANCELED_RESERVATION");
+				ReservationCancelledEvent event = new ReservationCancelledEvent((String)response.getData());
+				EventBus.getDefault().post(event);
+			}
+
 		} else {
 			System.out.println("Received message is not of type Response");
 		}
@@ -298,6 +323,7 @@ public class SimpleClient extends AbstractClient {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+
 	}
 
 	public void removeDishFromDatabase(MenuItem dishToRemove) {
@@ -350,4 +376,36 @@ public class SimpleClient extends AbstractClient {
 			System.out.println("Error adding dish to database: " + e.getMessage());
 		}
 	}
+
+	public List<ResInfo> getAllReservations() {
+//		Request<String> request = new Request<>(ReqCategory.RESERVATION, "get_all_reservations");
+//		sendRequest(request);
+//
+//		int waitAttempts = 0;
+//		while (lastResponse == null || lastResponse.getResponseType() != Response.ResponseType.RETURN_RES_REPORT) {
+//			try {
+//				Thread.sleep(100);
+//				waitAttempts++;
+//				if (waitAttempts > 50) { // ממתין מקסימום 5 שניות
+//					System.err.println("Timeout waiting for server response.");
+//					return new ArrayList<>();
+//				}
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//				return new ArrayList<>();
+//			}
+//		}
+//
+//		if (lastResponse.getStatus() == Response.Status.SUCCESS) {
+//			List<ResInfo> reservations = (List<ResInfo>) lastResponse.getData();
+//			lastResponse = null;
+//			return reservations;
+//		} else {
+//			lastResponse = null;
+//			return new ArrayList<>();
+//		}
+		return new ArrayList<>(); //REMOVE THIS
+	}
+
 }
+
