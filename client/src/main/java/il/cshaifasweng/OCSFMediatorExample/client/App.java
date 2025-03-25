@@ -192,15 +192,39 @@ public class App extends Application {
                     }
                 });
                 break;
-        case "CancelDelivery":
-            Platform.runLater(() -> {
-                try {
-                    setContent("cancelDelivery");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-            break;
+            case "CancelDelivery":
+                 Platform.runLater(() -> {
+                    try {
+                        setContent("cancelDelivery");
+                   } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "enterEmail":
+                Platform.runLater(() -> {
+                    setWindowTitle("Enter Email");
+                    try {
+                        setContent("enterEmail");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "reservationList":
+                Platform.runLater(() -> {
+                    setWindowTitle("Your Reservations");
+                    try {
+                        setContent("reservationList");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+
+
+
+
         }
     }
 

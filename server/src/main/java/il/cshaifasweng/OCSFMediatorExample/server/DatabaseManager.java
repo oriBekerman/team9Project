@@ -7,7 +7,9 @@ import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.LogInController;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.MenuItemsController;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,6 +31,8 @@ public class DatabaseManager {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
+    private CustomerController customerController;
+
     public DatabaseManager(String password) {
         initialize(password);
         initControllers();
@@ -55,8 +59,10 @@ private static void initialize(String password) {
         this.deliveryController = new DeliveryController();
         this.resInfoController=new ResInfoController();
         this.complaintController=new ComplaintController();
+        this.customerController = new CustomerController(); // חדש
+
     }
-    //if  database tables are empty initialize them
+
     public void checkAndPopulateTables() {
         // If database tables are empty, initialize them
         if (menuItemsController.checkIfEmpty() &&
@@ -64,7 +70,10 @@ private static void initialize(String password) {
                 logInController.checkIfEmpty() &&
                 restTableController.checkIfEmpty() &&
                 deliveryController.checkIfEmpty() &&
-                complaintController.checkIfEmpty())
+                complaintController.checkIfEmpty() &&
+                customerController.checkIfEmpty())  // חדש
+
+
         {
 
             // ==========================
@@ -186,6 +195,9 @@ private static void initialize(String password) {
                     "11/26",                             // Expiration Date
                     "456"                                // CVV
             );
+
+            customerController.populateCustomers(List.of(customer1, customer2));  // חדש
+
             // Create OrderItems from MenuItem and quantity
             OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences
             OrderItem orderItem2 = new OrderItem(item4, 1, "Extra ketchup", null); // 1 of "Hamburger" with preferences
@@ -250,6 +262,13 @@ private static void initialize(String password) {
 
         }
     }
+
+
+
+
+
+
+
     //get controllers
     MenuItemsController getMenuItemsController() {
         if(menuItemsController==null)

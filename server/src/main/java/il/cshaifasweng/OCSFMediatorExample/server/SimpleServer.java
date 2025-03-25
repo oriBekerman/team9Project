@@ -24,7 +24,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "poolgirL1?"; // Change database password here
+    public static String dataBasePassword = "N2O0A0M6"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) {
@@ -60,10 +60,19 @@ public class SimpleServer extends AbstractServer {
                 case BRANCH -> branchController.handleRequest(request);
                 case LOGIN -> logInController.handleRequest(request);
                 case DELIVERY -> deliveryController.handleRequest(request);
-                case RESERVATION -> resInfoController.handleRequest(request);
+                case RESERVATION -> {
+                    if ("get_all_reservations".equals(request.getData())) {
+                        response = resInfoController.getAllReservations();
+                    } else {
+                        response = resInfoController.handleRequest(request);
+                    }
+                    yield response;
+                }
+
                 case REMOVE_DISH -> menuItemsController.handleRequest(request);
                 case UPDATE_INGREDIENTS -> menuItemsController.handleRequest(request);
                 case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
+                case CANCEL_RESERVATION -> resInfoController.cancelReservation((Integer) request.getData());
                 default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
             };
         } catch (Exception e) {

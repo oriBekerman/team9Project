@@ -53,6 +53,9 @@ public class ReservationBoundary {
     private ComboBox<String> numpeopleList;
 
 
+
+
+
     @FXML
     void backToHP(ActionEvent event) {
 
@@ -73,6 +76,14 @@ public class ReservationBoundary {
         LocalTime time=LocalTime.parse(chosen);
         client.resInfo.setHours(time);
     }
+
+    @FXML
+    void cancelReservation(ActionEvent event) {
+        App.switchScreen("enterEmail");
+    }
+
+
+
 
 
     @FXML
