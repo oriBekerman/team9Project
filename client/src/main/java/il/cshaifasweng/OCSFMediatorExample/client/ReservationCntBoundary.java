@@ -7,8 +7,10 @@ import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.EventBus;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
@@ -27,6 +29,8 @@ public class ReservationCntBoundary {
     public String chosen;
     public SimpleClient client;
     public Label noTablesLabel;
+    public Label titleLabel;
+    public AnchorPane root;
     private Branch branch;
     Set<RestTable> availableTables = new HashSet<>();
     boolean flag=false;
@@ -47,6 +51,7 @@ public class ReservationCntBoundary {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        setStyle();
         setHoursList(); // trigger initial data fetch
     }
 
@@ -387,6 +392,21 @@ public class ReservationCntBoundary {
         SimpleClient.getClient().resInfo.setBranch(reservation.getBranch()); //update the branch in reservation to the updated branch
         this.branch=reservation.getBranch(); //update this branch to the updated branch
         updateAvailableTimesAndUI();
+    }
+    private void setStyle() {
+        root.setStyle("-fx-background-color: #fbe9d0;");
+        for (Node node : root.getChildrenUnmodifiable()) {
+            if (node instanceof Button)
+            {
+                node.setStyle("-fx-background-color: #8a6f48;\n" +
+                        "    -fx-text-fill: white;");
+            }
+        }
+        titleLabel.setStyle("-fx-font-size: 18px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-text-fill: #6c5339;\n" +
+                "    -fx-padding: 10px 0;\n" +
+                "    -fx-font-family: \"Serif\";");
     }
 
 }
