@@ -237,12 +237,11 @@ public class TableMapBoundary {
         }
     }
     private void updatePage(ResInfo resInfo) {
-        System.out.println("🔁 In update page");
 
         // Update internal branch reference
         this.branch = resInfo.getBranch();
 
-        // Rebuild maps safely to reflect updated table references
+        // Rebuild maps to reflect updated table references
         Set<RestTable> updatedTables = branch.getTables();
         Map<Integer, RestTable> updatedById = new HashMap<>();
         for (RestTable table : updatedTables) {
@@ -345,7 +344,7 @@ public class TableMapBoundary {
         updatePage(reservation);
     }
 
-        public void tableBtnAction(ActionEvent actionEvent) {
+    public void tableBtnAction(ActionEvent actionEvent) {
 //        LocalTime time=LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
 //        Button bt=(Button)actionEvent.getSource();
 //        if(temp.getUserData().equals("unavailable"))
@@ -401,7 +400,6 @@ public class TableMapBoundary {
     public void enableSelection(ActionEvent actionEvent) {
         selectedButtons.clear();
         selectionEnabled = true;
-
         for (Button button : tablesMap.values()) {
             if ("available".equals(button.getUserData())) {
                 button.setDisable(false);

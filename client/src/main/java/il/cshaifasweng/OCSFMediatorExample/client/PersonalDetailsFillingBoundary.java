@@ -17,10 +17,12 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.EventBus;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
@@ -30,6 +32,10 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.UPDATE_BR
 public class PersonalDetailsFillingBoundary {
 
     public Label errorLabel;
+    public AnchorPane root;
+    public Label nameLabel;
+    public Label phoneLabel;
+    public Label mailLabel;
     @FXML
     private ResourceBundle resources;
 
@@ -103,6 +109,7 @@ public class PersonalDetailsFillingBoundary {
         assert mailTextField != null : "fx:id=\"mailTextField\" was not injected: check your FXML file 'personalDetailsFilling.fxml'.";
         assert nameTextField != null : "fx:id=\"nameTextField\" was not injected: check your FXML file 'personalDetailsFilling.fxml'.";
         assert phoneTextField != null : "fx:id=\"phoneTextField\" was not injected: check your FXML file 'personalDetailsFilling.fxml'.";
+        setStyle();
 
 
     }
@@ -164,6 +171,25 @@ public class PersonalDetailsFillingBoundary {
             phoneTextField.setText(SimpleClient.getClient().resInfo.getCustomer().getPhone());
             mailTextField.setText(SimpleClient.getClient().resInfo.getCustomer().getEmail());
         }
+    }
+    private void setStyle() {
+        root.setStyle("-fx-background-color: #fbe9d0;");
+        for (Node node : root.getChildrenUnmodifiable()) {
+            if (node instanceof Button)
+            {
+                node.setStyle("-fx-background-color: #8a6f48;\n" +
+                        "    -fx-text-fill: white;");
+            }
+            if (node instanceof Label)
+            {
+                node.setStyle("-fx-font-size: 18px;\n" +
+                        "    -fx-font-weight: bold;\n" +
+                        "    -fx-text-fill: #6c5339;\n" +
+                        "    -fx-padding: 10px 0;\n" +
+                        "    -fx-font-family: \"Serif\";");
+            }
+        }
+
     }
 
 }
