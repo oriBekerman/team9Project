@@ -32,34 +32,37 @@ public class LogInController {
     }
 
     public Response verifyUser(Request request) {
-        Response response=new Response<>(CORRECTNESS_USER,null,ERROR,THIS_CLIENT);
+        Response response = new Response<>(CORRECTNESS_USER, null, ERROR, THIS_CLIENT);
         String data = (String) request.getData();
         String[] credentials = data.split(" ");
         String username = credentials[0];
         String password = credentials[1];
         Employee employee = this.employeeRepository.findByUsername(username);
-        String loginResult;
+        String loginResult = "";
 
         if (employee == null) {
-            loginResult= "User not found";
+            loginResult = "User not found";
+            response.setMessage(loginResult);  // Set message for error
+        } else if (!employee.getPassword().equals(password)) {
+            loginResult = "Wrong password";
+            response.setMessage(loginResult);  // Set message for error
+        } else {
+            loginResult = "Login successful";
+            response.setMessage(loginResult);  // Set success message
         }
 
-        if (!employee.getPassword().equals(password)) {
-            loginResult= "Wrong password";
-        }
-        loginResult= "Login successful";
-        if (loginResult.equals("Login successful"))
-        {
+        if (loginResult.equals("Login successful")) {
             EmployeeType employeeType = getEmployeeTypeByUsername(username);
             response.setStatus(SUCCESS);
-            response.setMessage(username + ":" + employeeType);
+            response.setMessage(username + ":" + employeeType); // Success message
         } else {
             response.setStatus(ERROR);
-            response.setData(loginResult);
-
+            response.setData(loginResult);  // Keep the error message in data
         }
+
         return response;
     }
+
 
     public EmployeeType getEmployeeTypeByUsername(String username) {
         Employee employee = this.employeeRepository.findByUsername(username);
