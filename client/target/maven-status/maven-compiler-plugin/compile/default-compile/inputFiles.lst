@@ -9,6 +9,7 @@ C:\Users\rankt\Desktop\fin-proj\client\src\main\java\il\cshaifasweng\OCSFMediato
 C:\Users\rankt\Desktop\fin-proj\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.java
 C:\Users\rankt\Desktop\fin-proj\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.java
 C:\Users\rankt\Desktop\fin-proj\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\CreditCardInfoSet.java
+C:\Users\rankt\Desktop\fin-proj\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\AcknowledgmentEvent.java
 C:\Users\rankt\Desktop\fin-proj\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\CancelDeliveryBoundary.java
 C:\Users\rankt\Desktop\fin-proj\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\DeliverableItemsSentEvent.java
 C:\Users\rankt\Desktop\fin-proj\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationAddedEvent.java

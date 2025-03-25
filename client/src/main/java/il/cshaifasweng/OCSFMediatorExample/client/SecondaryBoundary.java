@@ -16,16 +16,16 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.TableColumnHeader;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.AcknowledgmentEvent;
 
-
-public class SecondaryBoundary {
+public class SecondaryBoundary
+{
 
     public Label menuLabel;
     public AnchorPane root;
@@ -81,7 +81,8 @@ public class SecondaryBoundary {
 
 
     @FXML
-    void UpdateIngridients(ActionEvent event) {
+    void UpdateIngridients(ActionEvent event)
+    {
         // Get the selected MenuItem from the table view
         MenuItem selectedItem = menuTableView.getSelectionModel().getSelectedItem();
 
@@ -241,8 +242,10 @@ public class SecondaryBoundary {
 
     // Event handler for MenuEvent
     @Subscribe
-    public void onUpdateEvent(updateDishEvent event) {
-        try {
+    public void onUpdateEvent(updateDishEvent event)
+    {
+        try
+        {
 //            Request request=new Request<>(GET_BASE_MENU);
 //            SimpleClient.getClient().sendToServer(request);
             SimpleClient.getClient().displayNetworkMenu();
@@ -254,18 +257,21 @@ public class SecondaryBoundary {
 
     // Back to home page button logic
     @FXML
-    void BackToHPfunc(ActionEvent event) throws IOException {
+    void BackToHPfunc(ActionEvent event) throws IOException
+    {
         App.setRoot("primary");  // Switch to the primary screen
     }
 
     // Save the updated menu logic (stub)
     @FXML
-    void SaveTheUpdateMenu(ActionEvent event) throws IOException {
+    void SaveTheUpdateMenu(ActionEvent event) throws IOException
+    {
         // Create a map to hold the MenuItem IDs and their new prices
         Map<Integer, Double> updatedPrices = new HashMap<>();
 
         // Iterate over the priceFieldMap to check for price changes
-        for (Map.Entry<MenuItem, TextField> entry : priceFieldMap.entrySet()) {
+        for (Map.Entry<MenuItem, TextField> entry : priceFieldMap.entrySet())
+        {
             MenuItem item = entry.getKey();
             TextField priceField = entry.getValue();
 
@@ -299,7 +305,8 @@ public class SecondaryBoundary {
             priceField.setDisable(true);
         }
 
-        Platform.runLater(() -> {
+        Platform.runLater(() ->
+        {
             menuTableView.refresh();
             //SaveBtn.setDisable(true);
             UpdatePriceBtn.setDisable(true);
@@ -311,46 +318,34 @@ public class SecondaryBoundary {
     @FXML
     void UpdateThePrice(ActionEvent event)
     {
-        // Initially disable the button
-        UpdatePriceBtn.setDisable(true);
-
-        // Assume you're receiving the PERMIT_GRANTED_ACK from somewhere (e.g., message or event)
-        // Use a listener, event, or callback to enable the button once PERMIT_GRANTED_ACK is received
-
-        // Example simulation of receiving PERMIT_GRANTED_ACK
-        waitForPermitGrantedAck();
-    }
-
-    private void waitForPermitGrantedAck() {
-        // Simulate waiting for PERMIT_GRANTED_ACK message (You should replace this with your actual logic)
-        new Thread(() -> {
-            // Simulate delay or wait for the ACK message
-            try {
-                Thread.sleep(5000); // Simulating the waiting time for PERMIT_GRANTED_ACK
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        // Enable all price fields
+        Platform.runLater(() ->
+        {
+            for (TextField priceField : priceFieldMap.values())
+            {
+                priceField.setDisable(false);  // Enable the TextField
             }
-
-            // Once the ACK is received, enable the button
-            Platform.runLater(() -> {
-                // Enable the price fields
-                for (TextField priceField : priceFieldMap.values()) {
-                    priceField.setDisable(false);  // Enable the TextField
-                }
-
-                // Enable the update button
-                UpdatePriceBtn.setDisable(false);  // Enable the update button once ACK is received
-            });
-        }).start();
+            //SaveBtn.setDisable(false); // Enable save button
+            UpdatePriceBtn.setDisable(true); // Disable update button
+        });
     }
+
+    @Subscribe
+    public void onAcknowledgmentEvent(AcknowledgmentEvent event) {
+        System.out.println("AcknowledgmentEvent received! Enabling button...");
+        Platform.runLater(() -> UpdatePriceBtn.setDisable(true));
+    }
+
 
     @FXML
-    void isBranchDish(ActionEvent event) {
+    void isBranchDish(ActionEvent event)
+    {
         // Get the selected MenuItem from the table view
         MenuItem selectedItem = menuTableView.getSelectionModel().getSelectedItem();
 
         // If no item is selected, show a message
-        if (selectedItem == null) {
+        if (selectedItem == null)
+        {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a dish to update its type.");
             alert.showAndWait();
             return;
@@ -378,7 +373,8 @@ public class SecondaryBoundary {
 
 
     @FXML
-    void performSearch(ActionEvent event) {
+    void performSearch(ActionEvent event)
+    {
         String query = searchField.getText().toLowerCase().trim();
         System.out.println("Search Query: " + query); // Debugging
 
@@ -411,7 +407,15 @@ public class SecondaryBoundary {
         menuTableView.refresh();
     }
 
+    @Subscribe
+    public void handleEnableUpdatePriceBtnEvent(AcknowledgmentEvent event)
+    {
+        Platform.runLater(() ->
+        {
 
+            UpdatePriceBtn.setDisable(false);  // Enable the button
+        });
+    }
 
     // Initialize method to register for events
     @FXML
@@ -471,6 +475,7 @@ public class SecondaryBoundary {
                 }
             }
         });
+
 
 
 

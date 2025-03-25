@@ -16,6 +16,7 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response;
 
 public class SimpleClient extends AbstractClient {
 
@@ -44,7 +45,8 @@ public class SimpleClient extends AbstractClient {
 	@Override
 	protected void handleMessageFromServer(Object msg) {
 		System.out.println("Message received from server: " + msg);
-		if (msg instanceof Response) {
+		if (msg instanceof Response)
+		{
 			Response response = (Response) msg;
 
 			// Print the response type
@@ -73,6 +75,18 @@ public class SimpleClient extends AbstractClient {
 				MenuEvent menuEvent = new MenuEvent(menu);
 				EventBus.getDefault().post(menuEvent);
 			}
+
+
+			if (response.getResponseType() == Response.ResponseType.PERMIT_GRANTED_ACK
+					&& response.getStatus() == Response.Status.SUCCESS)
+			{
+
+				System.out.println("Posting AcknowledgmentEvent");
+				EventBus.getDefault().post(new AcknowledgmentEvent());
+				System.out.println("AcknowledgmentEvent posted!");
+			}
+
+
 
 			// Handle RETURN_BRANCH_MENU response
 			if (response.getResponseType().equals(RETURN_BRANCH_MENU)) {
@@ -212,6 +226,7 @@ public class SimpleClient extends AbstractClient {
 		} else {
 			System.out.println("Received message is not of type Response");
 		}
+
 	}
 
 	//called by SecondaryController to notify when it is initialized
