@@ -20,7 +20,7 @@
         <property name="hibernate.format_sql">true</property>
 
 
-        <!-- יצירת טבלה אוטומטית (רק בעת פיתוח, לא בשימוש בייצור) -->
+
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <!-- מיפוי מחלקות  -->
