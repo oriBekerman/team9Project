@@ -23,23 +23,29 @@ public class ComplaintRepository extends BaseRepository<Complaint>
     protected Class<Complaint> getEntityClass() {
         return Complaint.class;
     }
-    public boolean populateComplaint(Complaint complaint) {
-        Transaction tx = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession())
-        {
-                tx=session.beginTransaction();
-            // Save the customer first if it's not null
-            if (complaint.getCustomer() != null)
-            {
-                session.saveOrUpdate(complaint.getCustomer());  // Ensure the customer is saved or updated
+    public static boolean populateComplaint(Complaint complaint) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction(); // Start the transaction
+
+            // Check if the customer is transient (not saved in the database yet)
+            if (complaint.getCustomer() != null && complaint.getCustomer().getId() == 0) {
+                // Save the customer before saving the complaint
+                session.save(complaint.getCustomer());
             }
+
+            // Save the complaint
             session.save(complaint);
-            tx.commit();
+
+            // Commit the transaction if everything went smoothly
+            session.getTransaction().commit();
             System.out.println("Complaint saved successfully: " + complaint);
             return true;
+
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return false; // Return false if an error occurred
         }
     }
+
+
 }

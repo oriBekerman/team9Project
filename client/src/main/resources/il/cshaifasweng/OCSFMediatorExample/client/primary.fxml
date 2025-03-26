@@ -43,6 +43,7 @@
                         <Button fx:id="loginBttn" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
                         <Button fx:id="logoutBttn" mnemonicParsing="false" onAction="#LogOut" text="Logout" />
                          <Button fx:id="cancelDelivery" mnemonicParsing="false" onAction="#cancelDel" text="cancel delivery" />
+                        <Button fx:id="givePermitBtn" mnemonicParsing="false" onAction="#givePermit" text="give permitions" />
                      </children>
                   </VBox>
                </children>
