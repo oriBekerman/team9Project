@@ -19,6 +19,7 @@ import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.Subscribe;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.RemoveDishEvent;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
@@ -177,7 +178,6 @@ public class SecondaryBoundary
     }
 
 
-
     @FXML
     void removeDish(ActionEvent event) {
         // Get the selected MenuItem from the table view
@@ -203,17 +203,21 @@ public class SecondaryBoundary
             // Remove the dish from the TableView
             menuTableView.getItems().remove(selectedItem);
 
-            // Optionally, send a request to the server to remove the dish
-            // You can use something like SimpleClient.getClient().removeDishFromDatabase(selectedItem);
+            // Send the request to remove the dish from the server
             SimpleClient.getClient().removeDishFromDatabase(selectedItem);
-
-            // Optionally, you can show a confirmation message after removing the dish
-            Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Dish removed successfully.");
-            successAlert.showAndWait();
+            
         }
     }
 
 
+    @Subscribe
+    public void onRemoveDishEvent(RemoveDishEvent event) {
+        Platform.runLater(() -> {
+            MenuItem removedItem = event.getRemovedMenuItem();
+            allMenuItems.remove(removedItem);
+            menuTableView.getItems().remove(removedItem);
+        });
+    }
 
     //    @FXML
 //   private TableColumn<MenuItem,String> branchSpecialColumn;

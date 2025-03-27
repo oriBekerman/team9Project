@@ -24,7 +24,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "poolgirL1?"; // Change database password here
+    public static String dataBasePassword = "1234"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) {
@@ -75,7 +75,10 @@ public class SimpleServer extends AbstractServer {
                 case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
                 case CANCEL_RESERVATION -> resInfoController.cancelReservation(request);
                 case COMPLAINT -> complaintController.handleRequest(request);
-
+                case ADD_DISH -> {
+                    Response addDishResponse = menuItemsController.handleRequest(request);
+                    yield addDishResponse;
+                }
                 // Handle permitGranted category
                 case PERMIT_GRANTED ->
                 {

@@ -47,12 +47,15 @@ public class MenuItemsController {
 
     public Response handleRemoveDishRequest(Request<MenuItem> request) {
         MenuItem dishToRemove = request.getData();  // Retrieve the dish to be removed from the request
-        boolean success = menuItemsRepository.removeDish(dishToRemove);  // Remove the dish from the repository
+        try {
+            // Perform the removal from the database
+            removeDishFromDatabase(dishToRemove);
 
-        if (success) {
-            return new Response<>(ResponseType.REMOVE_DISH, dishToRemove, "Dish removed successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
-        } else {
-            return new Response<>(ResponseType.REMOVE_DISH, null, "Failed to remove dish", Status.ERROR, Response.Recipient.THIS_CLIENT);
+            // Return a success response
+            return new Response(ResponseType.REMOVE_DISH, "Dish removed successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+        } catch (Exception e) {
+            // Handle any errors that occur during removal
+            return new Response(ResponseType.REMOVE_DISH, "Error removing dish: " + e.getMessage(), Status.ERROR, Response.Recipient.THIS_CLIENT);
         }
     }
 
