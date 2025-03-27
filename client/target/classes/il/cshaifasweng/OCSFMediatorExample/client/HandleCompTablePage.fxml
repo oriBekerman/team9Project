@@ -21,6 +21,7 @@
                <TableColumn fx:id="compensationColumn" text="Compensation" />
            </columns>
        </TableView>
+      <Button fx:id="BackBTN" layoutX="597.0" layoutY="1.0" mnemonicParsing="false" onAction="#OnBackAct" text="Back" />
 
    </children>
 </AnchorPane>
