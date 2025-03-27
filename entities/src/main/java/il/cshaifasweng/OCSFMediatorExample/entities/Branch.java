@@ -338,6 +338,24 @@ public class Branch implements Serializable  {
     {
         return reservations;
     }
+    public void cancelReservation(ResInfo reservation, Set<RestTable> newTables, List<Integer> tableIds)
+    {
+        reservations.remove(reservation);
+        reservation.setBranch(this);
+        tablesAreSet = false;
+        Set<RestTable> toRemove = new HashSet<>();
+        for (RestTable table : tables)
+        {
+            if (tableIds.contains(table.getId()))
+            {
+                toRemove.add(table);
+            }
+        }
+        tables.removeAll(toRemove);
+        tables.addAll(newTables);
+        tablesAreSet = true;
+        this.notifyAll();
+    }
 }
 
 

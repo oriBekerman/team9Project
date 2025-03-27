@@ -30,6 +30,7 @@ il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer.class
 il\cshaifasweng\OCSFMediatorExample\server\repositories\ResInfoRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\ResInfoController$1.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractConnectionFactory.class
+il\cshaifasweng\OCSFMediatorExample\server\DB_Update_Event.class
 il\cshaifasweng\OCSFMediatorExample\server\repositories\RestTableRepository.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer$1.class
 il\cshaifasweng\OCSFMediatorExample\server\SimpleServer$1.class

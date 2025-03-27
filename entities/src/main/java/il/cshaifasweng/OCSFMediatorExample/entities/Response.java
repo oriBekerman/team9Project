@@ -109,6 +109,7 @@ public class Response<T> implements Serializable {
         CANCELED_RESERVATION,
         ADDED_RESERVATION,
         UPDATE_BRANCH_TABLES,
+        RETURN_ACTIVE_RESERVATIONS,
 
         COMPLAINT_CREATED,
     }

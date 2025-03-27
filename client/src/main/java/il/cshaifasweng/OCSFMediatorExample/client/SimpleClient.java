@@ -241,10 +241,25 @@ public class SimpleClient extends AbstractClient {
 				// Post the event with the complaint data to the EventBus
 				EventBus.getDefault().post(new ComplaintCreatedEvent(complaint));
 			}
+			if(response.getResponseType().equals(RETURN_ACTIVE_RESERVATIONS))
+			{
+				System.out.println("in  RETURN_ACTIVE_RESERVATIONS is");
+				if(response.getStatus().equals(SUCCESS))
+				{
+					System.out.println("in  RETURN_ACTIVE_RESERVATIONS succsess");
+					SentActiveReservationsEvent event=new SentActiveReservationsEvent((List<ResInfo>) response.getData());
+					EventBus.getDefault().post(event);
+				}
+				else
+				{
+					System.out.println("no reservations found");
+				}
+			}
 			// Handle cancel resv response
 			if (response.getResponseType().equals(CANCELED_RESERVATION)) {
 				System.out.println("in CANCELED_RESERVATION");
-				ReservationCancelledEvent event = new ReservationCancelledEvent((String)response.getData());
+				String message= (String) response.getMessage();
+				ReservationCancelledEvent event = new ReservationCancelledEvent(message);
 				EventBus.getDefault().post(event);
 			}
 

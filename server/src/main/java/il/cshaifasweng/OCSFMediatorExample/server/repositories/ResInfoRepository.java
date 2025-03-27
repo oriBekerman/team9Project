@@ -225,4 +225,77 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             if (tx != null) tx.rollback();
         }
     }
+    public String cancelReservation(Integer resID) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction tx = session.beginTransaction();
+
+            ResInfo reservation = session.get(ResInfo.class, resID);
+            if (reservation == null || reservation.getIsCancelled()) {
+                tx.rollback();
+                return "NOT_FOUND_OR_ALREADY_CANCELLED";
+            }
+
+            LocalTime reservationTime = reservation.getHours();
+            LocalTime currentTime = LocalTime.now();
+            int guests = reservation.getNumOfGuests();
+            boolean penalty = currentTime.isAfter(reservationTime.minusHours(1));
+
+            reservation.setIsCancelled(true);
+
+            for (RestTable table : reservation.getTable()) {
+                table.removeUnavailableFromTime(reservationTime);
+                session.update(table);
+            }
+
+            session.update(reservation);
+            tx.commit();
+
+            return penalty ? "PENALTY:" + (guests * 10) : "NO_PENALTY";
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error cancelling reservation: " + e.getMessage(), e);
+        }
+    }
+
+    public List<ResInfo> getAllActiveReservations() {
+        List<ResInfo> resInfoList=new ArrayList<>();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                    "SELECT DISTINCT r FROM ResInfo r JOIN FETCH r.customer WHERE r.isCancelled = false",
+                    ResInfo.class).list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to fetch active reservations", e);
+        }
+    }
+//        public List<ResInfo> getAllActiveReservations() {
+//        List<ResInfo> resInfoList=new ArrayList<>();
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            CriteriaBuilder cb = session.getCriteriaBuilder();
+//            CriteriaQuery<ResInfo> cq = cb.createQuery(ResInfo.class);
+//            Root<ResInfo> root = cq.from(ResInfo.class);
+//            Predicate predicate = cb.equal(root.get("isCancelled"),false);
+//            cq.select(root).where(predicate);
+//            resInfoList = session.createQuery(cq).getResultList();
+//            return resInfoList;
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("Failed to fetch active reservations", e);
+//        }
+//    }
+public void setBranch(ResInfo reservation) {
+    Transaction tx = null;
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        tx = session.beginTransaction();
+        session.update(reservation.getBranch()); // Update branch
+        session.update(reservation);             // Update reservation with updated branch
+        tx.commit();
+    } catch (Exception e) {
+        if (tx != null) tx.rollback();
+        e.printStackTrace();
+    }
+}
+
+
 }
