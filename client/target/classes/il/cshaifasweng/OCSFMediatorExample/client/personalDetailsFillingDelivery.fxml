@@ -34,9 +34,9 @@
       <TextField fx:id="phoneTextField" layoutX="188.0" layoutY="110.0" />
       <TextField fx:id="mailTextField" layoutX="188.0" layoutY="150.0" />
       <TextField fx:id="addressTextField" layoutX="188.0" layoutY="190.0" />
-      <Button fx:id="contToCCInfoBtn" layoutX="394.0" layoutY="317.0" mnemonicParsing="false" onAction="#contToCCinfoFill" text="Continue" />
-      <Button fx:id="backBtn" layoutX="68.0" layoutY="330.0" mnemonicParsing="false" onAction="#backToDelivery" text="Back" />
-      <Label fx:id="errorLabel" layoutX="65.0" layoutY="212.0" prefHeight="17.0" prefWidth="329.0" />
+      <Button fx:id="contToCCInfoBtn" layoutX="356.0" layoutY="377.0" mnemonicParsing="false" onAction="#contToCCinfoFill" text="Continue" />
+      <Button fx:id="backBtn" layoutX="68.0" layoutY="377.0" mnemonicParsing="false" onAction="#backToDelivery" text="Back" />
+      <Label fx:id="errorLabel" layoutX="55.0" layoutY="286.0" prefHeight="17.0" prefWidth="329.0" />
       <Label layoutX="55.0" layoutY="248.0" text="Delivery/Pickup time">
          <font>
             <Font size="15.0" />
