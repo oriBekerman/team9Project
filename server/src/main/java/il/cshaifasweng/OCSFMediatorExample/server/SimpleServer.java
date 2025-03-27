@@ -36,7 +36,6 @@ public class SimpleServer extends AbstractServer {
         super(port);
         //set host and port
         this.host = InetAddress.getLocalHost().getHostAddress(); //get the server host
-
         //FOR NOW ONLY USE LOCAL HOST---------REMOVE IN PRESENTATION
         this.host = "127.0.0.1";
         this.port = port;
