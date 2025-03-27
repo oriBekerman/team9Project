@@ -221,6 +221,16 @@ public class App extends Application {
                     }
                 });
                 break;
+            case "Complaints":
+                Platform.runLater(() -> {
+                    setWindowTitle(" Complaints");
+                    try {
+                        setContent("HandleCompTablePage");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
 
 
 

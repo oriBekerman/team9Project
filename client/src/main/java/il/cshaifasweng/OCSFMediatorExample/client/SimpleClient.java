@@ -200,6 +200,13 @@ public class SimpleClient extends AbstractClient {
 				UpdateBranchTablesEvent event=new UpdateBranchTablesEvent((ResInfo) response.getData());
 				EventBus.getDefault().post(event);
 			}
+
+			if(response.getResponseType().equals(RETURN_ALL_COMPLAINTS))
+			{
+				System.out.println("1234");
+				ReceivedAllComplaintsEvent event=new ReceivedAllComplaintsEvent((List<Complaint>) response.getData());
+				EventBus.getDefault().post(event);
+			}
 		} else {
 			System.out.println("Received message is not of type Response");
 		}

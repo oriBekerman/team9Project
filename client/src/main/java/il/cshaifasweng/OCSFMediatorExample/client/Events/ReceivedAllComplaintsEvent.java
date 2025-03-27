@@ -14,6 +14,11 @@ public class ReceivedAllComplaintsEvent {
         this.complaintList = complaintList;
         this.message = "";
     }
+
+    public ReceivedAllComplaintsEvent(List<Complaint> complaintList) {
+        this.complaintList = complaintList;
+
+    }
     public List<Complaint> getComplaintList() {
         return complaintList;
     }

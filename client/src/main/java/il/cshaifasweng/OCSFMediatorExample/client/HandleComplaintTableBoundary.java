@@ -11,11 +11,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import javafx.event.ActionEvent;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.BRANCH;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.COMPLAINT;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
@@ -33,6 +35,9 @@ public class HandleComplaintTableBoundary {
     public TableColumn<Complaint, String> customerNameColumn;
     public TableColumn<Complaint, String> compensationColumn;
 
+    @FXML
+    private Button BackBTN;
+
     private CustomerServiceEmployee employee;
     public boolean pageIsSet = false;
     private boolean complaintsAreSet = false;
@@ -42,12 +47,27 @@ public class HandleComplaintTableBoundary {
 
     @FXML
     void initialize() {
+        System.out.println("Initializing HandleComplaintTableBoundary...");
+
+
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+
         setColumns();
+
+
+        try {
+            SimpleClient.getClient().getAllComplaints();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to request complaints from server.");
+        }
+
+
         complaintTable.setOnMouseClicked(this::openComplaintPage);
     }
+
 
     public void setPage() {
         System.out.println("Page is being set...");
@@ -192,6 +212,7 @@ public class HandleComplaintTableBoundary {
             complaintsAreSet = true;
             System.out.println("Complaints received! Notifying all waiting threads...");
             notifyAll();
+            InitTableAfterAllComplaintEvent();
         }
     }
 
@@ -206,5 +227,10 @@ public class HandleComplaintTableBoundary {
                 this.notifyAll();
             }
         });
+    }
+
+    @FXML
+    void OnBackAct(ActionEvent event) {
+        switchScreen("Home Page");
     }
 }
