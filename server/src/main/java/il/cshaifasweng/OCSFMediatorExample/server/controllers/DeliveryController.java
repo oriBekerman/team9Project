@@ -39,7 +39,7 @@ public class DeliveryController {
         try {
             // Extract data from the request
             Delivery delivery = (Delivery) request.getData(); // Assume we send a Delivery object in the request
-            delivery.setTotalPrice(delivery.calculateTotalPrice());
+            //delivery.setTotalPrice(delivery.calculateTotalPrice());
 
             // Create the delivery and check the result
             boolean isCreated = deliveryRepository.populateDelivery(delivery);
@@ -144,9 +144,16 @@ public class DeliveryController {
         return (deliveryRepository.checkIfEmpty());
     }
 
-    public void populateDelivery(Delivery delivery)
-    {
-        deliveryRepository.populateDelivery(delivery);
+    public void populateDelivery(Delivery delivery) {
+        if (delivery == null) {
+            System.err.println("Error: Attempted to populate a null delivery.");
+            return;
+        }
+        boolean success = deliveryRepository.populateDelivery(delivery);
+        if (!success) {
+            System.err.println("Error: Failed to populate delivery.");
+        }
     }
+
 
 }

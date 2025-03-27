@@ -21,6 +21,7 @@ il\cshaifasweng\OCSFMediatorExample\entities\DishType.class
 il\cshaifasweng\OCSFMediatorExample\entities\Employee.class
 il\cshaifasweng\OCSFMediatorExample\entities\RequestType.class
 il\cshaifasweng\OCSFMediatorExample\entities\DietitianEmployee.class
+il\cshaifasweng\OCSFMediatorExample\entities\ReservationCancelledEvent.class
 il\cshaifasweng\OCSFMediatorExample\entities\Response$ResponseType.class
 il\cshaifasweng\OCSFMediatorExample\entities\ResInfo.class
 il\cshaifasweng\OCSFMediatorExample\entities\Customer.class

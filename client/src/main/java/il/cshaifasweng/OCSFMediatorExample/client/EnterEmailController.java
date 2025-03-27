@@ -31,7 +31,7 @@ public class EnterEmailController {
             return;
         }
 
-        SimpleClient.getClient().userEmail = email;
+        //SimpleClient.getClient().userEmail = email; ///CHECK THIS
         App.switchScreen("reservationList");
     }
 
