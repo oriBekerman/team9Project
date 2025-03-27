@@ -8,6 +8,8 @@ import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.util.Pair;
 import org.hibernate.Session;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
@@ -16,6 +18,9 @@ public class SimpleServer extends AbstractServer {
     private static final List<SubscribedClient> SubscribersList = Collections.synchronizedList(new ArrayList<>());
     public static Session session;
 
+    public static String host;
+
+    public static int port;
     // Controllers
     private MenuItemsController menuItemsController;
     private BranchController branchController;
@@ -27,8 +32,16 @@ public class SimpleServer extends AbstractServer {
     public static String dataBasePassword = "poolgirL1?"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
-    public SimpleServer(int port) {
+    public SimpleServer(int port) throws UnknownHostException {
         super(port);
+        //set host and port
+        this.host = InetAddress.getLocalHost().getHostAddress(); //get the server host
+
+        //FOR NOW ONLY USE LOCAL HOST---------REMOVE IN PRESENTATION
+        this.host = "127.0.0.1";
+        this.port = port;
+
+        System.out.println("connected on host "+ this.host+" and port "+ this.port);
         getControllers();
     }
 
@@ -195,11 +208,7 @@ public class SimpleServer extends AbstractServer {
             clientHost = "127.0.0.1";
         }
 
-        // Server's actual host and port
-        String serverHost = "127.0.0.1";
-        int serverPort = 3000;
-
-        if (!clientHost.equals(serverHost) || clientPort != serverPort) {
+        if (!clientHost.equals(this.host) || clientPort != this.port) {
             return new Response(
                     Response.ResponseType.CLIENT_ADDED,
                     "Connection rejected: Incorrect host or port.",
