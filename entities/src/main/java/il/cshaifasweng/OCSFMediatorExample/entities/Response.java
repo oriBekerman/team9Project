@@ -111,6 +111,8 @@ public class Response<T> implements Serializable {
         UPDATE_BRANCH_TABLES,
 
         COMPLAINT_CREATED,
+        CLIENT_ADDED,
+
     }
 
     public enum Status {

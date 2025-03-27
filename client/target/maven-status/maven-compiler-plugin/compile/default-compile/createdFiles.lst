@@ -8,7 +8,6 @@ il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateBranchResEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSelectedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
-il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ComplaintCreatedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliverySummeryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationPersonalInfoSet.class
@@ -17,14 +16,15 @@ il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\DeliverableItemsSentEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary$2.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\ClientAddedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\WarningEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\updateDishEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\AcknowledgmentEvent.class
-il\cshaifasweng\OCSFMediatorExample\client\UserLoginSuccessEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ReservationListController.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSentEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SubComplaintBoundary.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\UserLoginFailedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ReservationCntBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\PersonalDetailsFillingBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\CreditCradInfoBoundary.class
@@ -35,9 +35,11 @@ il\cshaifasweng\OCSFMediatorExample\client\Events\CreditCardInfoSet.class
 il\cshaifasweng\OCSFMediatorExample\client\ActiveUser.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\MenuEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\ClientConnectingBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuBarBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchListBoundary.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\UserLoginSuccessEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ReservationBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.class
 il\cshaifasweng\OCSFMediatorExample\client\LoginBoundary.class

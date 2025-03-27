@@ -223,12 +223,12 @@ public class PrimaryBoundary {
 		}
 
 
-		try {
-			SimpleClient.getClient().sendToServer("add client");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			SimpleClient.getClient().sendToServer("add client");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		// Set the button action here
 		toggleButtonBranch.setOnAction(e -> {
 			System.out.println("Button clicked - showing popup");

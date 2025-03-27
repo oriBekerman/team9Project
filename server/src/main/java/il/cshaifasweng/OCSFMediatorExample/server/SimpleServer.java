@@ -36,19 +36,6 @@ public class SimpleServer extends AbstractServer {
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         System.out.println("Received request from client: " + msg);
 
-        // Handling the "add client" string command
-        if (msg instanceof String msgString && msgString.startsWith("add client")) {
-            System.out.println("Client added successfully");
-            SubscribedClient connection = new SubscribedClient(client);
-            SubscribersList.add(connection);
-            try {
-                client.sendToClient("Client added successfully");
-            } catch (IOException e) {
-                System.err.println("Error sending client confirmation: " + e.getMessage());
-            }
-            return;
-        }
-
         if (!(msg instanceof Request request)) {
             System.err.println("Invalid message received. Expected Request object.");
             return;
@@ -84,6 +71,7 @@ public class SimpleServer extends AbstractServer {
                     Response permitResponse = handlePermitGranted(request);
                     yield permitResponse;
                 }
+                case CONNECTION -> addClient(request, client);
 
                 default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
             };
@@ -171,6 +159,86 @@ public class SimpleServer extends AbstractServer {
             }
         }
     }
+
+    private Response addClient(Request request, ConnectionToClient client) {
+        System.out.println("Handling add client request...");
+        String clientInfo = (String) request.getData();
+        System.out.println("Client info received: " + clientInfo);
+
+        // Extract host and port from clientInfo
+        String[] parts = clientInfo.split(":");
+        if (parts.length != 2) {
+            return new Response(
+                    Response.ResponseType.CLIENT_ADDED,
+                    "Invalid client info format. Expected 'host:port'.",
+                    Response.Status.ERROR,
+                    Response.Recipient.THIS_CLIENT
+            );
+        }
+
+        String clientHost = parts[0];
+        int clientPort;
+
+        try {
+            clientPort = Integer.parseInt(parts[1]);
+        } catch (NumberFormatException e) {
+            return new Response(
+                    Response.ResponseType.CLIENT_ADDED,
+                    "Invalid port number.",
+                    Response.Status.ERROR,
+                    Response.Recipient.THIS_CLIENT
+            );
+        }
+
+        // Normalize "localhost" to "127.0.0.1"
+        if (clientHost.equalsIgnoreCase("localhost")) {
+            clientHost = "127.0.0.1";
+        }
+
+        // Server's actual host and port
+        String serverHost = "127.0.0.1";
+        int serverPort = 3000;
+
+        if (!clientHost.equals(serverHost) || clientPort != serverPort) {
+            return new Response(
+                    Response.ResponseType.CLIENT_ADDED,
+                    "Connection rejected: Incorrect host or port.",
+                    Response.Status.ERROR,
+                    Response.Recipient.THIS_CLIENT
+            );
+        }
+
+        // Add the client to the SubscribersList
+        SubscribedClient connection = new SubscribedClient(client);
+        SubscribersList.add(connection);
+
+        Response response = new Response(
+                Response.ResponseType.CLIENT_ADDED,
+                "Client added successfully.",
+                Response.Status.SUCCESS,
+                Response.Recipient.THIS_CLIENT
+        );
+
+        try {
+            // Send back a response confirming the client was added successfully
+            client.sendToClient(response);
+            System.out.println("Client added successfully: " + clientInfo);
+            return response;
+        } catch (IOException e) {
+            System.err.println("Error sending client confirmation: " + e.getMessage());
+            try {
+                // Send failure response if adding client fails
+                response.setStatus(Response.Status.ERROR);
+                response.setMessage("Failed to add client.");
+                client.sendToClient(response);
+                return response;
+            } catch (IOException ex) {
+                System.err.println("Error sending failure response: " + ex.getMessage());
+            }
+        }
+        return response;
+    }
+
 
     private void getControllers() {
         this.menuItemsController = databaseManager.getMenuItemsController();

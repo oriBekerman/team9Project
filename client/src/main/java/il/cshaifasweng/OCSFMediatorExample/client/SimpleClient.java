@@ -46,6 +46,7 @@ public class SimpleClient extends AbstractClient {
 	@Override
 	protected void handleMessageFromServer(Object msg) {
 		System.out.println("Message received from server: " + msg);
+
 		if (msg instanceof Response) {
 			Response response = (Response) msg;
 
@@ -54,6 +55,25 @@ public class SimpleClient extends AbstractClient {
 
 			// Print the status
 			System.out.println("Status: " + response.getStatus());
+
+			//handle add client
+			// Check if the message indicates that a client was added successfully
+			if (response.getResponseType().equals(Response.ResponseType.CLIENT_ADDED)) {
+				if (response.getStatus() == Response.Status.SUCCESS) {
+					// Successfully added client, handle accordingly
+					System.out.println("Client added successfully.");
+
+					// You can post an event to the EventBus to notify other parts of the application
+					EventBus.getDefault().post(new ClientAddedEvent("Client added successfully"));
+
+					// Optionally, you could log or perform additional actions based on the success
+				} else {
+					// Handle failure case if needed
+					String errorMessage = response.getMessage();
+					System.out.println("Failed to add client: " + errorMessage);
+					EventBus.getDefault().post(new ClientAddedEvent(errorMessage != null ? errorMessage : "Unknown error"));
+				}
+			}
 
 			// Handle the permitGranted message from the server (response)
 			if (response.getResponseType() == Response.ResponseType.PERMIT_GRANTED_ACK) {

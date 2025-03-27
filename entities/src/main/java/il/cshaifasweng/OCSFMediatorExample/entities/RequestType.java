@@ -32,7 +32,8 @@ public enum RequestType{
     CANCEL_RESERVATION,
     ADD_RESERVATION,
 
-    SUBMIT_COMPLAINT
+    SUBMIT_COMPLAINT,
 
+    ADD_CLIENT
 
 }
