@@ -185,59 +185,6 @@ public class ResInfoController {
         return response;
     }
 
-
-
-//    public Response<List<Response>> cancelReservation(Request request) {
-//        try {
-//            Response <List<Response>> response=new Response<>(CANCELED_RESERVATION,null,null,BOTH);
-//            Response <String> response1=new Response<>(CANCELED_RESERVATION,null,null,THIS_CLIENT);
-//            Response <ResInfo> response2=new Response<>(UPDATE_BRANCH_TABLES,null,null,ALL_CLIENTS);
-//            Integer resID= (Integer) request.getData();
-//            String result = resInfoRepository.cancelReservation(resID);
-//
-//            //if no reservation found sent only to this client
-//            if (result.equals("NOT_FOUND_OR_ALREADY_CANCELLED")) {
-//                response.setMessage("Reservation not found or already cancelled");
-//                response.setStatus(ERROR);
-//                response.setRecipient(THIS_CLIENT);
-//            }
-//            ResInfo resInfo=resInfoRepository.findById(resID);
-//            Branch oldBranch=resInfo.getBranch();
-//            List<Integer>tableID=new ArrayList<>();
-//            for(RestTable t:resInfo.getTable())
-//            {
-//                tableID.add(t.getId());
-//            }
-//            oldBranch.cancelReservation(resInfo,resInfo.getTable(),tableID);
-//
-//            String message;
-//            String penaltyValue = "0";
-//
-//            if (result.startsWith("PENALTY")) {
-//                penaltyValue = result.split(":")[1];
-//                message = "Reservation cancelled with penalty: " + penaltyValue + " ILS";
-//            } else {
-//                message = "Reservation cancelled successfully, no penalty.";
-//            }
-//            response1.setData(penaltyValue);
-//            response1.setMessage(message);
-//            response1.setStatus(SUCCESS);
-//            response2.setData(resInfo);
-//            response2.setMessage(message);
-//            response2.setStatus(SUCCESS);
-//            response.setData(List.of(response1, response2));
-//            response.setStatus(SUCCESS);
-//            return response;
-//        } catch (Exception e) {
-//            return new Response<>(
-//                    Response.ResponseType.CANCELED_RESERVATION,
-//                    null,
-//                    "Error cancelling reservation: " + e.getMessage(),
-//                    Response.Status.ERROR,
-//                    Response.Recipient.THIS_CLIENT
-//            );
-//        }
-//    }
 public Response<List<Response>> cancelReservation(Request request) {
     try {
         Integer resID = (Integer) request.getData();
@@ -263,12 +210,11 @@ public Response<List<Response>> cancelReservation(Request request) {
         for (RestTable table : reservation.getTable()) {
             tableIds.add(table.getId());
         }
-
         synchronized (branch) {
             branch.cancelReservation(reservation, reservation.getTable(), tableIds);
-            reservation.setBranch(branch);  // Keep it linked
-            resInfoRepository.setBranch(reservation);  // <- New method to persist updated branch + reservation
+            reservation = resInfoRepository.refreshReservationWithBranch(resID);
         }
+
 
         // Prepare responses
         String message;
@@ -280,16 +226,10 @@ public Response<List<Response>> cancelReservation(Request request) {
         } else {
             message = "Reservation cancelled successfully, no penalty.";
         }
-
-        // Response to client
         Response<String> clientRes = new Response<>(CANCELED_RESERVATION, penalty, message, SUCCESS, THIS_CLIENT);
-
-        // Response to update other clients
         Response<ResInfo> updateRes = new Response<>(UPDATE_BRANCH_TABLES, reservation, message, SUCCESS, ALL_CLIENTS);
-
-        // Final container response
         Response<List<Response>> combined = new Response<>(CANCELED_RESERVATION, List.of(clientRes, updateRes), message, SUCCESS, BOTH);
-
+        System.out.println("returned combined from res controller");
         return combined;
 
     } catch (Exception e) {

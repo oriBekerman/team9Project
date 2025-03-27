@@ -127,6 +127,7 @@ public class SimpleServer extends AbstractServer {
                         sendToAllClients(responses.get(0));
                         client.sendToClient(responses.get(1));
                     }
+                    System.out.println(" responses sent:"+responses.get(0).getResponseType()+" "+responses.get(1).getResponseType());
                 }
                 default -> System.err.println("Unknown response recipient: " + response.getRecipient());
             }

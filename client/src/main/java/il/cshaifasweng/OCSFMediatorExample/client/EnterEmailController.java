@@ -49,8 +49,8 @@ public class EnterEmailController {
 
     @FXML
     void handleBack() {
-        App.switchScreen("Reservation");
         EventBus.getDefault().unregister(this);
+        App.switchScreen("Reservation");
     }
 
     private void showAlert(String message) {
@@ -66,6 +66,13 @@ public class EnterEmailController {
     public void openReservationListPage(List<ResInfo> reservations)
     {
         System.out.println("in open reserv list");
+        for(ResInfo resInfo:reservations)
+        {
+            if (resInfo.getIsCancelled()==true)
+            {
+                reservations.remove(resInfo);
+            }
+        }
         boolean hasReservations = reservations.stream()
                 .anyMatch(res -> res.getCustomer() != null && res.getCustomer().getEmail().equals(emailField.getText().trim()));
 

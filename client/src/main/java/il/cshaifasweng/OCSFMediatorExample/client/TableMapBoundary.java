@@ -239,17 +239,22 @@ public class TableMapBoundary {
     private void updatePage(ResInfo resInfo) {
         System.out.println("In update page");
 
-        // Update internal branch reference
-        this.branch = resInfo.getBranch();
+        updateBranchReference(resInfo);
+        remapTables();
+        updateTableAvailabilityUI(resInfo);
+    }
 
-        // Rebuild maps safely to reflect updated table references
+    private void updateBranchReference(ResInfo resInfo) {
+        this.branch = resInfo.getBranch();
+    }
+
+    private void remapTables() {
         Set<RestTable> updatedTables = branch.getTables();
         Map<Integer, RestTable> updatedById = new HashMap<>();
         for (RestTable table : updatedTables) {
             updatedById.put(table.getId(), table);
         }
 
-        // Rebuild idMap and remap buttons
         for (Button button : buttons) {
             RestTable oldTable = buttonsMap.get(button);
             if (oldTable != null) {
@@ -262,21 +267,32 @@ public class TableMapBoundary {
                 }
             }
         }
+    }
 
-        // Update UI only if the reservation is at the selected time
-        LocalTime selectedTime = LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
-        if (resInfo.getHours().equals(selectedTime)) {
-            for (RestTable t : resInfo.getTable()) {
-                RestTable updated = idMap.get(t.getId());
-                if (updated != null) {
-                    Button btn = tablesMap.get(updated);
-                    if (btn != null) {
+    private void updateTableAvailabilityUI(ResInfo resInfo) {
+        String selected = timesBox.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        LocalTime selectedTime = LocalTime.parse(selected);
+        if (!resInfo.getHours().equals(selectedTime)) return;
+
+        for (RestTable t : resInfo.getTable()) {
+            RestTable updated = idMap.get(t.getId());
+            if (updated != null) {
+                Button btn = tablesMap.get(updated);
+                if (btn != null) {
+                    if (resInfo.getIsCancelled()) {
+                        setTableButtonAvailable(btn);
+                        System.out.println("Marked table available (cancelled): " + btn.getText());
+                    } else {
                         setTableButtonsUnavailable(btn);
+                        System.out.println("Marked table unavailable: " + btn.getText());
                     }
                 }
             }
         }
     }
+
 
     private void setTableButtonAvailable(Button button)
     {

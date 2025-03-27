@@ -1,6 +1,7 @@
 
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
@@ -181,13 +182,15 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             LocalTime endRange = time.plusHours(1).plusMinutes(15);
             Predicate timeRange = cb.between(root.get("hours"), startRange, endRange);
 
+            // ignore cancelled reservations
+            Predicate notCancelled = cb.isFalse(root.get("isCancelled"));
+
             cq.select(root).distinct(true)
-                    .where(cb.and(tableIn, timeRange));
+                    .where(cb.and(tableIn, timeRange, notCancelled));
 
             conflicts = session.createQuery(cq).getResultList();
             session.getTransaction().commit();
         }
-
         return conflicts;
     }
     //check if there is a reservation with a customer that has the same email if so returns that customer.
@@ -268,34 +271,28 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             throw new RuntimeException("Failed to fetch active reservations", e);
         }
     }
-//        public List<ResInfo> getAllActiveReservations() {
-//        List<ResInfo> resInfoList=new ArrayList<>();
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            CriteriaBuilder cb = session.getCriteriaBuilder();
-//            CriteriaQuery<ResInfo> cq = cb.createQuery(ResInfo.class);
-//            Root<ResInfo> root = cq.from(ResInfo.class);
-//            Predicate predicate = cb.equal(root.get("isCancelled"),false);
-//            cq.select(root).where(predicate);
-//            resInfoList = session.createQuery(cq).getResultList();
-//            return resInfoList;
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("Failed to fetch active reservations", e);
-//        }
-//    }
-public void setBranch(ResInfo reservation) {
-    Transaction tx = null;
-    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-        tx = session.beginTransaction();
-        session.update(reservation.getBranch()); // Update branch
-        session.update(reservation);             // Update reservation with updated branch
-        tx.commit();
-    } catch (Exception e) {
-        if (tx != null) tx.rollback();
-        e.printStackTrace();
+
+    public ResInfo refreshReservationWithBranch(int reservationId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+
+            // Use JOIN FETCH to load the branch eagerly
+            ResInfo reservation = session.createQuery(
+                            "SELECT r FROM ResInfo r " +
+                                    "JOIN FETCH r.branch " +
+                                    "JOIN FETCH r.customer " +
+                                    "JOIN FETCH r.tables " +
+                                    "WHERE r.resID = :resID", ResInfo.class)
+                    .setParameter("resID", reservationId)
+                    .uniqueResult();
+
+            session.getTransaction().commit();
+            return reservation;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-}
-
 
 }
+

@@ -78,21 +78,31 @@ public class ReservationListBoundary {
 
     @Subscribe
     public void responseCancel(ReservationCancelledEvent event) throws IOException {
-        ResInfo selected = reservationsTable.getSelectionModel().getSelectedItem();
-        reservationsTable.getItems().remove(selected);
         Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText(null);
-            alert.setContentText(" Reservation:\n"+"for "+selected.getBranch().getName()+"\n"+"at "+selected.getHours()+"\n"+"has been cancelled");
-            alert.getButtonTypes().setAll(ButtonType.OK);
-            Optional<ButtonType> result = alert.showAndWait();
-            // on OK
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                performAdditionalAction();
+            ResInfo selected = reservationsTable.getSelectionModel().getSelectedItem();
+
+            if (selected != null) {
+                reservationsTable.getItems().remove(selected);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        "Reservation:\nfor " + selected.getBranch().getName() +
+                                "\nat " + selected.getHours() + "\nhas been cancelled"
+                );
+                alert.getButtonTypes().setAll(ButtonType.OK);
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    performAdditionalAction();
+                }
+            } else {
+                showAlert("Could not find the selected reservation. It may have already been removed.");
             }
         });
     }
+
     private void performAdditionalAction() {
         System.out.println("in preform addi");
         switchScreen("Home Page");
