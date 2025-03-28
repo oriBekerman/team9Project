@@ -12,6 +12,7 @@ public enum ReqCategory
     COMPLAINT,
     REPORTS,
     REMOVE_DISH,
+    ADD_DISH,
     UPDATE_INGREDIENTS,
     UPDATE_DISH_TYPE,
     PERMIT_GRANTED,
