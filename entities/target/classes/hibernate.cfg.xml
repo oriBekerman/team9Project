@@ -10,7 +10,7 @@
         <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/restaurantDB1?useSSL=false&amp;serverTimezone=UTC</property> <!--changed database name here and in hibernate.properties file!-->
         <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">abcd1234</property>  <!-- change to your password here -->
+        <property name="hibernate.connection.password">N2O0A0M6</property>  <!-- change to your password here -->
 
         <!-- Dialect -->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
