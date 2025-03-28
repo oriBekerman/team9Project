@@ -31,12 +31,6 @@ public class SimpleClient extends AbstractClient {
 	public boolean rebookReservation=false;
 	public  boolean tableAvailable=true;
 	public String userEmail;
-	private Response<?> lastResponse;
-
-	public Response<?> getResponse() {
-		return lastResponse;
-	}
-
 	private SimpleClient(String host, int port) {
 		super(host, port);
 
@@ -61,17 +55,40 @@ public class SimpleClient extends AbstractClient {
 			// Print the status
 			System.out.println("Status: " + response.getStatus());
 
+			// Handle the permitGranted message from the server (response)
+			if (response.getResponseType() == Response.ResponseType.PERMIT_GRANTED_ACK) {
+
+				// Optionally, you can log or show a message on the client to confirm
+				System.out.println("Permit granted");
+			}
+
+			// Handle Warning response
 			if (msg.getClass().equals(Warning.class)) {
 				String message = msg.toString();
 				System.out.println(message);
 				EventBus.getDefault().post(new WarningEvent((Warning) msg));
 			}
-			// Safe cast
+
+			// Handle RETURN_MENU response
 			if (response.getResponseType().equals(RETURN_MENU)) {
 				Menu menu = (Menu) response.getData();
 				MenuEvent menuEvent = new MenuEvent(menu);
 				EventBus.getDefault().post(menuEvent);
 			}
+
+
+			if (response.getResponseType() == Response.ResponseType.PERMIT_GRANTED_ACK
+					&& response.getStatus() == Response.Status.SUCCESS)
+			{
+
+				System.out.println("Posting AcknowledgmentEvent");
+				EventBus.getDefault().post(new AcknowledgmentEvent());
+				System.out.println("AcknowledgmentEvent posted!");
+			}
+
+
+
+			// Handle RETURN_BRANCH_MENU response
 			if (response.getResponseType().equals(RETURN_BRANCH_MENU)) {
 				System.out.println("Menu received, storing event...");
 				Menu menu = (Menu) response.getData();
@@ -194,8 +211,6 @@ public class SimpleClient extends AbstractClient {
 			{
 				System.out.println("1234");
 				ReceivedAllComplaintsEvent event=new ReceivedAllComplaintsEvent((List<Complaint>) response.getData());
-				System.out.println("Complaint successfully created: " + complaint);
-
 
 			}
 			if(response.getResponseType().equals(RETURN_ACTIVE_RESERVATIONS))
@@ -351,6 +366,15 @@ public class SimpleClient extends AbstractClient {
 			System.out.println("Error adding dish to database: " + e.getMessage());
 		}
 	}
+	public void getAllComplaints() {
+		Request request=new Request(COMPLAINT,GET_ALL_COMPLAINTS,null);
+		try {
+			sendToServer(request);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 
 }
 

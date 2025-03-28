@@ -66,6 +66,17 @@ public class SimpleServer extends AbstractServer {
                 case REMOVE_DISH -> menuItemsController.handleRequest(request);
                 case UPDATE_INGREDIENTS -> menuItemsController.handleRequest(request);
                 case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
+                case CANCEL_RESERVATION -> resInfoController.cancelReservation(request);
+
+                // Handle permitGranted category
+                case PERMIT_GRANTED ->
+                {
+                    System.out.println("Permit granted request received.");
+                    // Process permitGranted request
+                    Response permitResponse = handlePermitGranted(request);
+                    yield permitResponse;
+                }
+
                 default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
             };
         } catch (Exception e) {
@@ -79,6 +90,17 @@ public class SimpleServer extends AbstractServer {
         {
             System.out.println("response msg =" +response.getMessage());
         }
+    }
+
+    private Response handlePermitGranted(Request request) {
+        System.out.println("Handling permit granted message...");
+        Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
+                "Your permit request has been granted.",
+                Response.Status.SUCCESS,
+                Response.Recipient.ALL_CLIENTS);
+
+        // Return the response
+        return response;
     }
 
     private void sendResponseToClient(Response response, ConnectionToClient client) {

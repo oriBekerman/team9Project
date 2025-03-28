@@ -18,6 +18,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.RESERVATION;
+import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.CANCEL_RESERVATION;
 
 public class ReservationListBoundary {
 
@@ -31,10 +33,7 @@ public class ReservationListBoundary {
     @FXML private TableColumn<ResInfo, String> statusCol;
 
     public Boolean isSet=false;
-    public ReservationListBoundary()
-    {
-        EventBus.getDefault().register(this);
-    }
+    public ReservationListBoundary() {}
 
     @FXML
     void initialize() {
@@ -44,6 +43,9 @@ public class ReservationListBoundary {
         guestsCol.setCellValueFactory(new PropertyValueFactory<>("numOfGuests"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         setStyle();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
 
     }
 
@@ -78,7 +80,7 @@ public class ReservationListBoundary {
         }
 
         // send request to cancel
-        Request request = new Request(ReqCategory.CANCEL_RESERVATION, selected.getResID());
+        Request request = new Request(RESERVATION,CANCEL_RESERVATION, selected.getResID());
         SimpleClient.getClient().sendToServer(request);
     }
 
