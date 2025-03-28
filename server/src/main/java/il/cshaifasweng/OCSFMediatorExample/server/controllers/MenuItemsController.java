@@ -40,9 +40,9 @@ public class MenuItemsController {
         boolean success = menuItemsRepository.addMenuItem(newDish);
 
         if (success) {
-            return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully", Status.SUCCESS, ALL_CLIENTS);
         } else {
-            return new Response<>(ResponseType.ADD_DISH, null, "Failed to add dish", Status.ERROR, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.ADD_DISH, null, "Failed to add dish", Status.ERROR, ALL_CLIENTS);
         }
     }
 // In the MenuItemsController's handleRequest method
