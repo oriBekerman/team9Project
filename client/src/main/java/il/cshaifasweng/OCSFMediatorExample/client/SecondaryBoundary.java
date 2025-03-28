@@ -27,6 +27,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.AcknowledgmentEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.RemoveDishEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.AddDishEvent;
 
 public class SecondaryBoundary
 {
@@ -116,8 +117,6 @@ public class SecondaryBoundary
 
     @FXML
     void addDish(ActionEvent event) {
-        MenuItem newDish = null;  // Declare newDish outside the try block
-
         // Prompt the user to enter a new dish's details
         TextInputDialog nameDialog = new TextInputDialog();
         nameDialog.setTitle("Add New Dish");
@@ -164,15 +163,39 @@ public class SecondaryBoundary
                         // Create a default byte[] for the picture (empty for now)
                         byte[] defaultPicture = new byte[0];  // Empty byte array for now
 
-                        // Create a new MenuItem with the selected dish type
-                        newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, dishType);
+                        // Final variables for use in lambda
+                        final String finalDishName = dishName;
+                        final double finalPrice = price;
+                        final String finalDishIngredients = dishIngredients;
+                        final String finalDishPreference = dishPreference;
+                        final DishType finalDishType = dishType;
 
                         // Send the new dish to the server for saving
-                        SimpleClient.getClient().addDishToDatabase(newDish);
+                        SimpleClient.getClient().addDishToDatabase(
+                                new MenuItem(finalDishName, finalPrice, finalDishIngredients, finalDishPreference, defaultPicture, finalDishType)
+                        );
 
-                        // Add to the local menu and TableView
-                        allMenuItems.add(newDish);
-                        menuTableView.getItems().add(newDish);
+                        // Update UI and post event on JavaFX Application Thread
+                        Platform.runLater(() -> {
+                            // Create the MenuItem within the runLater block
+                            MenuItem newDish = new MenuItem(
+                                    finalDishName,
+                                    finalPrice,
+                                    finalDishIngredients,
+                                    finalDishPreference,
+                                    defaultPicture,
+                                    finalDishType
+                            );
+
+                            // Add to the local menu and TableView
+                            allMenuItems.add(newDish);
+                            menuTableView.getItems().add(newDish);
+
+                            // Post an event to notify other parts of the application
+                            Platform.runLater(() -> {EventBus.getDefault().post(new AddDishEvent(newDish));});
+
+                        });
+
                     } catch (NumberFormatException e) {
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid price format.");
                         alert.showAndWait();
@@ -180,13 +203,18 @@ public class SecondaryBoundary
                 }
             }
         }
+    }
 
-        // Ensure newDish is not null before trying to remove it
-        if (newDish != null) {
-            SimpleClient.getClient().removeDishFromDatabase(newDish);
-            // Post a remove dish event to EventBus
-            EventBus.getDefault().post(new RemoveDishEvent(newDish));
-        }
+    // You'll need to create this event class in the same package as other events
+    @Subscribe
+    public void onAddDishEvent(AddDishEvent event) {
+        Platform.runLater(() -> {
+            MenuItem addedItem = event.getAddedMenuItem();
+            if (!allMenuItems.contains(addedItem)) {
+                allMenuItems.add(addedItem);
+                menuTableView.getItems().add(addedItem);
+            }
+        });
     }
 
 
