@@ -70,6 +70,13 @@ public class SimpleClient extends AbstractClient {
 				System.out.println("AcknowledgmentEvent posted!");
 			}
 
+			if (response.getResponseType().equals(Response.ResponseType.REMOVE_DISH))
+			{
+				MenuItem removedMenuItem = (MenuItem) response.getData();
+				updateDishEvent removeEvent = new updateDishEvent(removedMenuItem);
+				EventBus.getDefault().post(removeEvent);
+			}
+
 			if (msg.getClass().equals(Warning.class)) {
 				String message = msg.toString();
 				System.out.println(message);

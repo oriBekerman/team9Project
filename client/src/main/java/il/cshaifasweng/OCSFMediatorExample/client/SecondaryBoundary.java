@@ -193,30 +193,14 @@ public class SecondaryBoundary
             alert.showAndWait();
             return;
         }
-
-        // Ask for confirmation before removing the item
-        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to remove this dish?");
-        confirmAlert.setTitle("Remove Dish");
-        confirmAlert.setHeaderText("You are about to remove: " + selectedItem.getName());
-        Optional<ButtonType> result = confirmAlert.showAndWait();
-
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Remove the dish from the local menu (observable list)
             allMenuItems.remove(selectedItem);
-
             // Remove the dish from the TableView
             menuTableView.getItems().remove(selectedItem);
 
             // Send the dish removal request to the server and post an event for all clients
             SimpleClient.getClient().removeDishFromDatabase(selectedItem);
-
             // Post a remove dish event to EventBus
             EventBus.getDefault().post(new RemoveDishEvent(selectedItem));
-
-            // Show a confirmation message after removing the dish
-            Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Dish removed successfully.");
-            successAlert.showAndWait();
-        }
     }
 
     @Subscribe
