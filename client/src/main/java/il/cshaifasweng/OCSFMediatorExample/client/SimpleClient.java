@@ -76,6 +76,7 @@ public class SimpleClient extends AbstractClient {
 
 
 
+
 			if (response.getResponseType().equals(Response.ResponseType.REMOVE_DISH))
 			{
 				MenuItem removedMenuItem = (MenuItem) response.getData();
@@ -84,7 +85,12 @@ public class SimpleClient extends AbstractClient {
 			}
 
 
-
+			if (response.getResponseType().equals(Response.ResponseType.UPDATE_INGREDIENTS)) {
+				MenuItem updatedMenuItem = (MenuItem) response.getData();
+				// Post the update event with the updated menu item
+				updateDishEvent updateIngredientsEvent = new updateDishEvent(updatedMenuItem);
+				EventBus.getDefault().post(updateIngredientsEvent);
+			}
 
 
 			if (msg.getClass().equals(Warning.class)) {
@@ -343,11 +349,14 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
+
+
 	public void updateDishIngredients(MenuItem item)
 	{
+		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.UPDATE_INGREDIENTS, item);
 		try {
-			Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.UPDATE_INGREDIENTS, item);
-			getClient().sendToServer(request);
+			SimpleClient.getClient().sendToServer(request);
+			System.out.println("Ingridient added to database: " + item.getName());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
