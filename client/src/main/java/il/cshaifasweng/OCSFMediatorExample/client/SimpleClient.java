@@ -70,6 +70,26 @@ public class SimpleClient extends AbstractClient {
 				System.out.println("AcknowledgmentEvent posted!");
 			}
 
+
+
+
+
+			if (response.getResponseType().equals(Response.ResponseType.REMOVE_DISH))
+			{
+				MenuItem removedMenuItem = (MenuItem) response.getData();
+				updateDishEvent removeEvent = new updateDishEvent(removedMenuItem);
+				EventBus.getDefault().post(removeEvent);
+			}
+
+
+			if (response.getResponseType().equals(Response.ResponseType.UPDATE_INGREDIENTS)) {
+				MenuItem updatedMenuItem = (MenuItem) response.getData();
+				// Post the update event with the updated menu item
+				updateDishEvent updateIngredientsEvent = new updateDishEvent(updatedMenuItem);
+				EventBus.getDefault().post(updateIngredientsEvent);
+			}
+
+
 			if (msg.getClass().equals(Warning.class)) {
 				String message = msg.toString();
 				System.out.println(message);
@@ -116,11 +136,13 @@ public class SimpleClient extends AbstractClient {
 					item.printMenuItem();
 				}
 			}
-			if (response.getResponseType().equals(Response.ResponseType.ADD_DISH)) {
+			if (response.getResponseType().equals(Response.ResponseType.ADD_DISH))
+			{
 				MenuItem addedMenuItem = (MenuItem) response.getData();
 				updateDishEvent addEvent = new updateDishEvent(addedMenuItem);
 				EventBus.getDefault().post(addEvent);
 			}
+
 			if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
 			{
 				System.out.println("branch tables received from server");
@@ -269,7 +291,6 @@ public class SimpleClient extends AbstractClient {
 		client.sendToServer(request);
 		System.out.println("menu base req sent");
 	}
-
 	public void displayBranchMenu(Branch branch) throws IOException {
 		Request<Branch> request = new Request<>(BRANCH, GET_BRANCH_MENU, branch);
 		client.sendToServer(request);
@@ -319,11 +340,24 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
+	public void addDishToDatabase(MenuItem newDish) {
+		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);
+		try {
+			SimpleClient.getClient().sendToServer(request);
+			System.out.println("Dish added to database: " + newDish.getName());
+		} catch (IOException e) {
+			System.err.println("Error adding dish to database: " + e.getMessage());
+		}
+	}
+
+
+
 	public void updateDishIngredients(MenuItem item)
 	{
+		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.UPDATE_INGREDIENTS, item);
 		try {
-			Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.UPDATE_INGREDIENTS, item);
-			getClient().sendToServer(request);
+			SimpleClient.getClient().sendToServer(request);
+			System.out.println("Ingridient added to database: " + item.getName());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -348,18 +382,6 @@ public class SimpleClient extends AbstractClient {
 			System.err.println("Error updating dish type: " + e.getMessage());
 		}
 	}
-
-	public void addDishToDatabase(MenuItem newDish)
-	{
-		// Assuming you have a way to send requests to the server:
-		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);
-		try {
-			SimpleClient.getClient().sendToServer(request);
-			System.out.println("Dish added to database: " + newDish.getName());
-		} catch (IOException e) {
-			System.out.println("Error adding dish to database: " + e.getMessage());
-		}
-	}
 	public void getAllComplaints() {
 		Request request=new Request(COMPLAINT,GET_ALL_COMPLAINTS,null);
 		try {
@@ -370,5 +392,5 @@ public class SimpleClient extends AbstractClient {
 	}
 
 
-}
 
+}

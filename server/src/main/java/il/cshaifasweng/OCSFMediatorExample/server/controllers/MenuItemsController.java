@@ -40,9 +40,9 @@ public class MenuItemsController {
         boolean success = menuItemsRepository.addMenuItem(newDish);
 
         if (success) {
-            return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully", Status.SUCCESS, ALL_CLIENTS);
         } else {
-            return new Response<>(ResponseType.ADD_DISH, null, "Failed to add dish", Status.ERROR, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.ADD_DISH, null, "Failed to add dish", Status.ERROR, ALL_CLIENTS);
         }
     }
 // In the MenuItemsController's handleRequest method
@@ -127,9 +127,9 @@ public class MenuItemsController {
         boolean success = menuItemsRepository.updateDishIngredients(itemId, newIngredients);  // Call repository method to update ingredients
 
         if (success) {
-            return new Response<>(ResponseType.UPDATE_INGREDIENTS, dishToUpdate, "Dish ingredients updated successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.UPDATE_INGREDIENTS, dishToUpdate, "Dish ingredients updated successfully", Status.SUCCESS, ALL_CLIENTS);
         } else {
-            return new Response<>(ResponseType.UPDATE_INGREDIENTS, null, "Failed to update dish ingredients", Status.ERROR, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.UPDATE_INGREDIENTS, null, "Failed to update dish ingredients", Status.ERROR, ALL_CLIENTS);
         }
     }
 
