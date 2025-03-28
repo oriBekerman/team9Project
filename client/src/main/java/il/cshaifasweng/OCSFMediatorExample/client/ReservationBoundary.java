@@ -54,6 +54,8 @@ public class ReservationBoundary {
     @FXML
     private ComboBox<String> numpeopleList;
 
+    @FXML
+    private Button cancelBtn;
 
 
 

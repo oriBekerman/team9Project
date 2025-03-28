@@ -1,6 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.DishType;
@@ -16,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.TableColumnHeader;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.Subscribe;
@@ -477,6 +480,20 @@ public class SecondaryBoundary
         });
 
 
+        imageColum.setCellValueFactory(cellData -> {
+            byte[] imageBytes = cellData.getValue().getPicture();
+            if (imageBytes != null && imageBytes.length > 0) {
+                InputStream is = new ByteArrayInputStream(imageBytes);
+                Image image = new Image(is);
+                ImageView imageView = new ImageView(image);
+                imageView.setFitHeight(80);
+                imageView.setFitWidth(80);
+                imageView.setPreserveRatio(true);
+                return new javafx.beans.property.SimpleObjectProperty<>(imageView);
+            } else {
+                return new javafx.beans.property.SimpleObjectProperty<>(null);
+            }
+        });
 
 
         Platform.runLater(() -> {
