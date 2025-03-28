@@ -61,6 +61,9 @@ public class SimpleClient extends AbstractClient {
 
 			// Handle the permitGranted message from the server (response)
 
+
+
+
 			if (response.getResponseType() == Response.ResponseType.PERMIT_GRANTED_ACK
 					&& response.getStatus() == Response.Status.SUCCESS)
 			{
@@ -70,12 +73,19 @@ public class SimpleClient extends AbstractClient {
 				System.out.println("AcknowledgmentEvent posted!");
 			}
 
+
+
+
 			if (response.getResponseType().equals(Response.ResponseType.REMOVE_DISH))
 			{
 				MenuItem removedMenuItem = (MenuItem) response.getData();
 				updateDishEvent removeEvent = new updateDishEvent(removedMenuItem);
 				EventBus.getDefault().post(removeEvent);
 			}
+
+
+
+
 
 			if (msg.getClass().equals(Warning.class)) {
 				String message = msg.toString();
@@ -123,11 +133,13 @@ public class SimpleClient extends AbstractClient {
 					item.printMenuItem();
 				}
 			}
-			if (response.getResponseType().equals(Response.ResponseType.ADD_DISH)) {
+			if (response.getResponseType().equals(Response.ResponseType.ADD_DISH))
+			{
 				MenuItem addedMenuItem = (MenuItem) response.getData();
 				updateDishEvent addEvent = new updateDishEvent(addedMenuItem);
 				EventBus.getDefault().post(addEvent);
 			}
+
 			if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
 			{
 				System.out.println("branch tables received from server");
@@ -321,6 +333,16 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
+	public void addDishToDatabase(MenuItem newDish) {
+		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);
+		try {
+			SimpleClient.getClient().sendToServer(request);
+			System.out.println("Dish added to database: " + newDish.getName());
+		} catch (IOException e) {
+			System.err.println("Error adding dish to database: " + e.getMessage());
+		}
+	}
+
 	public void updateDishIngredients(MenuItem item)
 	{
 		try {
@@ -351,17 +373,6 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
-	public void addDishToDatabase(MenuItem newDish)
-	{
-		// Assuming you have a way to send requests to the server:
-		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);
-		try {
-			SimpleClient.getClient().sendToServer(request);
-			System.out.println("Dish added to database: " + newDish.getName());
-		} catch (IOException e) {
-			System.out.println("Error adding dish to database: " + e.getMessage());
-		}
-	}
 
 	public List<ResInfo> getAllReservations() {
 		Request<String> request = new Request<>(ReqCategory.RESERVATION, "get_all_reservations");

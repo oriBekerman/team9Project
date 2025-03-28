@@ -116,6 +116,8 @@ public class SecondaryBoundary
 
     @FXML
     void addDish(ActionEvent event) {
+        MenuItem newDish = null;  // Declare newDish outside the try block
+
         // Prompt the user to enter a new dish's details
         TextInputDialog nameDialog = new TextInputDialog();
         nameDialog.setTitle("Add New Dish");
@@ -163,7 +165,7 @@ public class SecondaryBoundary
                         byte[] defaultPicture = new byte[0];  // Empty byte array for now
 
                         // Create a new MenuItem with the selected dish type
-                        MenuItem newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, dishType);
+                        newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, dishType);
 
                         // Send the new dish to the server for saving
                         SimpleClient.getClient().addDishToDatabase(newDish);
@@ -177,6 +179,13 @@ public class SecondaryBoundary
                     }
                 }
             }
+        }
+
+        // Ensure newDish is not null before trying to remove it
+        if (newDish != null) {
+            SimpleClient.getClient().removeDishFromDatabase(newDish);
+            // Post a remove dish event to EventBus
+            EventBus.getDefault().post(new RemoveDishEvent(newDish));
         }
     }
 
@@ -200,7 +209,8 @@ public class SecondaryBoundary
             // Send the dish removal request to the server and post an event for all clients
             SimpleClient.getClient().removeDishFromDatabase(selectedItem);
             // Post a remove dish event to EventBus
-            EventBus.getDefault().post(new RemoveDishEvent(selectedItem));
+
+        Platform.runLater(() ->  EventBus.getDefault().post(new RemoveDishEvent(selectedItem)));
     }
 
     @Subscribe
@@ -328,7 +338,8 @@ public class SecondaryBoundary
     }
 
     @Subscribe
-    public void onAcknowledgmentEvent(AcknowledgmentEvent event) {
+    public void onAcknowledgmentEvent(AcknowledgmentEvent event)
+    {
         System.out.println("AcknowledgmentEvent received! Enabling button...");
         Platform.runLater(() -> UpdatePriceBtn.setDisable(true));
     }

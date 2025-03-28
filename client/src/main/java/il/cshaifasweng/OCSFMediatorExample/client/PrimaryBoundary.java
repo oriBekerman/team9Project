@@ -84,7 +84,6 @@ public class PrimaryBoundary {
 	@FXML
 	void givePermit(ActionEvent event) {
 		try {
-			// Create a Request object for the PERMIT_GRANTED category with the PERMISSION_REQUEST type
 			Request<Void> request = new Request<>(ReqCategory.PERMIT_GRANTED, RequestType.PERMISSION_REQUEST, null);
 
 			// Send the request to the server

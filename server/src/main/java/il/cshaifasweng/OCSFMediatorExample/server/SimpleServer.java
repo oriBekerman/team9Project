@@ -68,10 +68,10 @@ public class SimpleServer extends AbstractServer {
                 case PERMIT_GRANTED ->
                 {
                     System.out.println("Permit granted request received.");
-                    // Process permitGranted request
                     Response permitResponse = handlePermitGranted(request);
                     yield permitResponse;
                 }
+
                 case ADD_DISH -> {
                     Response addDishResponse = menuItemsController.handleRequest(request);
                     yield addDishResponse;
