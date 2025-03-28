@@ -28,7 +28,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.AcknowledgmentEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.RemoveDishEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.AddDishEvent;
-
+import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateIngredientsEvent;
 public class SecondaryBoundary
 {
 
@@ -86,8 +86,7 @@ public class SecondaryBoundary
 
 
     @FXML
-    void UpdateIngridients(ActionEvent event)
-    {
+    void UpdateIngridients(ActionEvent event) {
         // Get the selected MenuItem from the table view
         MenuItem selectedItem = menuTableView.getSelectionModel().getSelectedItem();
 
@@ -105,13 +104,37 @@ public class SecondaryBoundary
         dialog.setContentText("Ingredients:");
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(newIngredients -> {
-            // Update the selected item’s ingredients
+        result.ifPresent(newIngredients ->
+        {
             selectedItem.setIngredients(newIngredients);
-            menuTableView.refresh();  // Refresh the TableView to show the updated ingredients
 
-            // Send the updated ingredients to the server
             SimpleClient.getClient().updateDishIngredients(selectedItem);
+
+
+            Platform.runLater(() -> {
+                menuTableView.refresh();
+                EventBus.getDefault().post(new UpdateIngredientsEvent(selectedItem));
+            });
+        });
+    }
+
+
+    // Event handler for updating ingredients
+    @Subscribe
+    public void onUpdateIngredientsEvent(UpdateIngredientsEvent event) {
+        Platform.runLater(() -> {
+            MenuItem updatedItem = event.getUpdatedMenuItem();
+
+            // Find and update the item in the local lists
+            for (MenuItem item : allMenuItems) {
+                if (item.getItemID() == updatedItem.getItemID()) {
+                    item.setIngredients(updatedItem.getIngredients());
+                    break;
+                }
+            }
+
+            // Refresh the TableView
+            menuTableView.refresh();
         });
     }
 

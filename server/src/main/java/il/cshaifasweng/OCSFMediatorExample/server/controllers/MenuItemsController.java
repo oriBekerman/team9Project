@@ -127,9 +127,9 @@ public class MenuItemsController {
         boolean success = menuItemsRepository.updateDishIngredients(itemId, newIngredients);  // Call repository method to update ingredients
 
         if (success) {
-            return new Response<>(ResponseType.UPDATE_INGREDIENTS, dishToUpdate, "Dish ingredients updated successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.UPDATE_INGREDIENTS, dishToUpdate, "Dish ingredients updated successfully", Status.SUCCESS, ALL_CLIENTS);
         } else {
-            return new Response<>(ResponseType.UPDATE_INGREDIENTS, null, "Failed to update dish ingredients", Status.ERROR, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.UPDATE_INGREDIENTS, null, "Failed to update dish ingredients", Status.ERROR, ALL_CLIENTS);
         }
     }
 
