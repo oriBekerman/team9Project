@@ -36,6 +36,5 @@
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Complaint" />
 
 
-
     </session-factory>
 </hibernate-configuration>
