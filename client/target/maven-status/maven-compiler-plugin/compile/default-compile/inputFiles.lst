@@ -24,6 +24,7 @@ C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExam
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\UserLoginSuccessEvent.java
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\CreditCardInfoSet.java
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateBranchTablesEvent.java
+C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateIngredientsEvent.java
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\AdaptableClient.java
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\BranchPageBoundary.java
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\DeliverableItemsSentEvent.java
@@ -40,6 +41,7 @@ C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExam
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.java
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ComplaintCustomerEvent.java
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationAddedEvent.java
+C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\Events\AddDishEvent.java
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\CreditCardInfoDeliveryBoundary.java
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\LoginBoundary.java
 C:\university\team9Project\client\src\main\java\il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.java
