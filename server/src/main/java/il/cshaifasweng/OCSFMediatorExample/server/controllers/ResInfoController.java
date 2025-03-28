@@ -169,6 +169,10 @@ public class ResInfoController {
         {
             return null;
         }
+        for(ResInfo res:conflictingReservations)
+        {
+            System.out.println("reservation- "+res.getResID()+" is conflicting with "+resInfo.getCustomer().getName());
+        }
         return conflictingReservations;
     }
     public Response handleNewReservation(Request request) {
@@ -177,8 +181,16 @@ public class ResInfoController {
         Response response=new Response(ADDED_RESERVATION, null, null, BOTH);
         List<ResInfo> conflictingReservations=checkTableAvailability(reservation);
         if (!(conflictingReservations==null)) {
+            for(ResInfo res:conflictingReservations)
+            {
+                System.out.println("reservation: "+res.getResID()+" conflict with this reservation in tables:\n");
+                for (RestTable t:res.getTable())
+                {
+                    System.out.println(t.getId()+"\n");
+                }
+            }
             return new Response<>(ADDED_RESERVATION, conflictingReservations,
-                    "One or more selected tables are already reserved at this time.", ERROR, THIS_CLIENT);
+                    "One or more selected tables are already reserved at this time."+conflictingReservations.get(0).getResID(), ERROR, THIS_CLIENT);
         }
         response=addReservation(reservation);
 

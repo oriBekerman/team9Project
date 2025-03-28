@@ -195,18 +195,10 @@ public class SimpleClient extends AbstractClient {
 				Branch branch= (Branch) response.getData();
 				EventBus.getDefault().post(new BranchSentEvent(branch));
 			}
-
-			// Handle UPDATE_BRANCH_RESERVATION response
-			if (response.getResponseType().equals(UPDATE_BRANCH_RESERVATION)) {
-				System.out.println("updateRES!!!!!");
-				Branch branch = (Branch) response.getData();
-				EventBus.getDefault().removeStickyEvent(UpdateBranchResEvent.class); // Remove old events
-				EventBus.getDefault().post(new UpdateBranchResEvent(branch));
-			}
-
 			// Handle ADDED_RESERVATION response
 			if (response.getResponseType().equals(ADDED_RESERVATION)) {
 				if (response.getStatus().equals(SUCCESS)) {
+					System.out.println("in reservation succsess");
 					ReservationAddedEvent event = new ReservationAddedEvent((ResInfo) response.getData(), response.getMessage());
 					EventBus.getDefault().post(event);
 				}
@@ -222,6 +214,8 @@ public class SimpleClient extends AbstractClient {
 			// Handle UPDATE_BRANCH_TABLES response
 			if (response.getResponseType().equals(UPDATE_BRANCH_TABLES)) {
 				System.out.println("in updateBRANCH_TABLES");
+//				ResInfo resInfo1= (ResInfo) response.getData();
+//				Branch branch= (Branch) response.getData();
 				UpdateBranchTablesEvent event = new UpdateBranchTablesEvent((ResInfo) response.getData());
 				EventBus.getDefault().post(event);
 			}
@@ -390,36 +384,6 @@ public class SimpleClient extends AbstractClient {
 		} catch (IOException e) {
 			System.out.println("Error adding dish to database: " + e.getMessage());
 		}
-	}
-
-	public List<ResInfo> getAllReservations() {
-//		Request<String> request = new Request<>(ReqCategory.RESERVATION, "get_all_reservations");
-//		sendRequest(request);
-//
-//		int waitAttempts = 0;
-//		while (lastResponse == null || lastResponse.getResponseType() != Response.ResponseType.RETURN_RES_REPORT) {
-//			try {
-//				Thread.sleep(100);
-//				waitAttempts++;
-//				if (waitAttempts > 50) { // ממתין מקסימום 5 שניות
-//					System.err.println("Timeout waiting for server response.");
-//					return new ArrayList<>();
-//				}
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//				return new ArrayList<>();
-//			}
-//		}
-//
-//		if (lastResponse.getStatus() == Response.Status.SUCCESS) {
-//			List<ResInfo> reservations = (List<ResInfo>) lastResponse.getData();
-//			lastResponse = null;
-//			return reservations;
-//		} else {
-//			lastResponse = null;
-//			return new ArrayList<>();
-//		}
-		return new ArrayList<>(); //REMOVE THIS
 	}
 
 }

@@ -54,10 +54,6 @@ public class ReservationBoundary {
     @FXML
     private ComboBox<String> numpeopleList;
 
-
-
-
-
     @FXML
     void backToHP(ActionEvent event) {
 
@@ -69,7 +65,6 @@ public class ReservationBoundary {
         client = SimpleClient.getClient();
         client.mapReservation.put("Branch",chosen);
     }
-
     @FXML
     void chooseHour(ActionEvent event) {
         String chosen = hoursList.getSelectionModel().getSelectedItem();
@@ -83,9 +78,6 @@ public class ReservationBoundary {
     void cancelReservation(ActionEvent event) {
         App.switchScreen("enterEmail");
     }
-
-
-
 
 
     @FXML

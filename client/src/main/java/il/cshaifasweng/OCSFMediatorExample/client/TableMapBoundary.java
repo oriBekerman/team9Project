@@ -19,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -28,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
+import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.BRANCH;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.RESERVATION;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.ADD_RESERVATION;
 import static java.lang.Math.min;
@@ -36,27 +38,28 @@ public class TableMapBoundary {
 
     public Pane outsideAreaPane;
     public Pane insideAreaPane;
-    public Button tableBtn1;
     public Branch branch;
     public GridPane insideGridPane;
-    public Button tableBtn2;
-    public Button tableBtn3;
     public ComboBox<String> timesBox;
-    public Button tableBtn4;
-    public Button tableBtn5;
-    public Button tableBtn6;
     public AnchorPane root;
     public Button backBtn;
-    public Button tableBtn7;
-    public Button tableBtn9;
-    public Button tableBtn8;
-    public Button tableBtn10;
     public Label reservationLabel;
     public GridPane outsideGridPane;
     public Button selectTablesBtn;
     public Button doneBtn;
 
+
     public boolean mapIsSet=false;
+//    public Button In00Btn;
+//    public Button In01Btn;
+//    public Button In02Btn;
+//    public Button In10Btn;
+//    public Button In11Btn;
+//    public Button In12Btn;
+//    public Button Out00Btn;
+//    public Button Out10Btn;
+//    public Button Out01Btn;
+//    public Button Out11Btn;
     //    public boolean mapIsUpdated=false;
     private boolean selectionEnabled = false;
     private List<Button> buttons=new ArrayList<>();
@@ -141,34 +144,60 @@ public class TableMapBoundary {
     private void initializeUIAfterTablesAreReady(Branch branch) {
         System.out.println("Initializing UI with fetched tables...");
 
-        Set<RestTable> tables = branch.getTables();
-        List<RestTable> tableList = new ArrayList<>(tables);
+        List<RestTable> tableList = branch.getTablesSortedByID();
 
-        // Add buttons to the list
         buttons.clear();
-        buttons.addAll(List.of(
-                tableBtn1, tableBtn2, tableBtn3, tableBtn4, tableBtn5,
-                tableBtn6, tableBtn7, tableBtn8, tableBtn9, tableBtn10
-        ));
+        idMap.clear();
+        tablesMap.clear();
+        buttonsMap.clear();
 
-        // Map tables to buttons
-        for (int i = 0; i < Math.min(tableList.size(), buttons.size()); i++) {
-            RestTable table = tableList.get(i);
-            Button button = buttons.get(i);
-            idMap.put(table.getId(), table);
+        int insideColCount = 2;
+        int outsideColCount = 2;
+
+        int insideIndex = 0;
+        int outsideIndex = 0;
+
+        for (RestTable table : tableList) {
+            Button button = new Button();
+            int id = table.getId();
+
+            setDefaultButton(button,id+","+table.getCapacity());
+
+            buttons.add(button);
+            idMap.put(id, table);
             tablesMap.put(table, button);
             buttonsMap.put(button, table);
-            setDefaultButton(button, String.valueOf(i));
+
+            Pair<Integer, String> pair = new Pair<>(id, "");
+            button.setUserData(pair);
+
+            if ("inside".equalsIgnoreCase(table.getArea())) {
+                int row = insideIndex / insideColCount;
+                int col = insideIndex % insideColCount;
+                insideGridPane.add(button, col, row);
+                insideIndex++;
+            } else if ("outside".equalsIgnoreCase(table.getArea())) {
+                int row = outsideIndex / outsideColCount;
+                int col = outsideIndex % outsideColCount;
+                outsideGridPane.add(button, col, row);
+                outsideIndex++;
+                if (row >= 2) {
+                    System.out.println("⚠ Too many outside tables for 2x2 grid!");
+                }
+            } else {
+                System.out.println("Unknown area for table ID " + id + ": " + table.getArea());
+            }
         }
-
-        setTimesBox(); // Populate time slots
-        setupStyles(); //set the style of the map
+        setTimesBox();
+        setupStyles();
         reservationLabel.setVisible(false);
-        mapIsSet = true;  //make mapIsSet flag true
-
+        mapIsSet = true;
         System.out.println("UI initialized, map is set.");
-        notifyAll(); //notify all waiting threads that mapIsSet=true ->can switch to this screen in UI
+        notifyAll();
     }
+
+
+
     private void setTimesBox() {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm"); //good for both 09:00 and 9:00
@@ -292,8 +321,6 @@ public class TableMapBoundary {
             }
         }
     }
-
-
     private void setTableButtonAvailable(Button button)
     {
         button.setStyle(" -fx-font-size: 16px;\n" +
@@ -304,7 +331,10 @@ public class TableMapBoundary {
                 "    -fx-padding: 8px 16px;\n" +
                 "    -fx-border-radius: 6px;\n" +
                 "    -fx-cursor: hand;");
-        button.setUserData("available");
+        Pair<Integer,String>pair= (Pair<Integer, String>) button.getUserData();
+        Integer id=pair.getKey();
+        pair = new Pair<>(id, "available");
+        button.setUserData(pair);
     }
     private void setTableButtonsUnavailable(Button button) {
         button.setStyle(" -fx-font-size: 16px;\n" +
@@ -315,7 +345,10 @@ public class TableMapBoundary {
                 "    -fx-padding: 8px 16px;\n" +
                 "    -fx-border-radius: 6px;\n" +
                 "    -fx-cursor: hand;");
-        button.setUserData("unavailable");
+        Pair<Integer,String>pair= (Pair<Integer, String>) button.getUserData();
+        Integer id=pair.getKey();
+        pair = new Pair<>(id, "unavailable");
+        button.setUserData(pair);
     }
 
     //when return is clicked
@@ -417,9 +450,9 @@ public class TableMapBoundary {
     public void enableSelection(ActionEvent actionEvent) {
         selectedButtons.clear();
         selectionEnabled = true;
-
         for (Button button : tablesMap.values()) {
-            if ("available".equals(button.getUserData())) {
+            Pair<Integer, String> pair = (Pair<Integer, String>) button.getUserData();
+            if ("available".equals(pair.getValue())) {
                 button.setDisable(false);
                 button.setOnAction(this::handleSelectionClick);  // attach listener
             } else {
@@ -427,13 +460,15 @@ public class TableMapBoundary {
             }
         }
         reservationLabel.setText("Selection mode enabled. Click tables to select.");
-//        showTemporarily(reservationLabel, 4);
+
     }
+
 
     public void disableSelection() {
         selectionEnabled = false;
         for (Button button : tablesMap.values()) {
-            if ("unavailable".equals(button.getUserData())) {
+            Pair<Integer, String> pair = (Pair<Integer, String>) button.getUserData();
+            if ("unavailable".equals(pair.getValue())) {
                 button.setDisable(false);
             }
         }

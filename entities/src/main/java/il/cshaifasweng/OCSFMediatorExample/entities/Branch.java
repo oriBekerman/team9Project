@@ -153,6 +153,11 @@ public class Branch implements Serializable  {
         }
 
     }
+    public List<RestTable> getTablesSortedByID() {
+        List<RestTable> tablesByID = new ArrayList<>(tables); // copy the list
+        tablesByID.sort(Comparator.comparingInt(RestTable::getId)); // sort by ID
+        return tablesByID;
+    }
     public List<RestTable> getAvailableTablesWithCapacity(int capacity,LocalTime time)
     {
         List<RestTable> availableTables = new ArrayList<>();
@@ -219,7 +224,7 @@ public class Branch implements Serializable  {
         // Convert to list for easier sorting and processing
         List<RestTable> sortedTables = new ArrayList<>(availableAtTime);
 
-        // Step 1: Try to find a single exact match
+        //  Try to find a single exact match
         for (RestTable table : sortedTables) {
             if (table.getCapacity() == numPeople) {
                 availableTables.add(table);
@@ -228,7 +233,7 @@ public class Branch implements Serializable  {
             }
         }
 
-        // Step 2: Try to find a combination of tables that sum exactly to numPeople
+        // Try to find a combination of tables that sum exactly to numPeople
         Set<RestTable> bestCombination = null;
         int minWastedCapacity = Integer.MAX_VALUE;
 
@@ -260,7 +265,7 @@ public class Branch implements Serializable  {
             }
         }
 
-        // Step 3: If we didn't find an exact match, return the best fit
+        // If we didn't find an exact match, return the best fit
         if (bestCombination != null) {
             availableTables.addAll(bestCombination);
             System.out.println("Best fit found with minimum wasted capacity of " + minWastedCapacity);
@@ -288,7 +293,6 @@ public class Branch implements Serializable  {
         addReservation(reservation, tables,tableIds);
         return reservation;
     }
-
     public synchronized void addReservation(ResInfo reservation, Set<RestTable> newTables, List<Integer> tableIds) {
         reservations.add(reservation);
         reservation.setBranch(this);

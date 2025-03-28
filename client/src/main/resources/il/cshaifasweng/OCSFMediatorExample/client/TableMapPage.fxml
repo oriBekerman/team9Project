@@ -24,12 +24,6 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="tableBtn1" mnemonicParsing="false" onAction="#handleSelectionClick" styleClass="two-table-button" text="0" />
-                  <Button fx:id="tableBtn2" mnemonicParsing="false" onAction="#handleSelectionClick" styleClass="two-table-button" text="0" GridPane.rowIndex="1" />
-                  <Button fx:id="tableBtn3" mnemonicParsing="false" onAction="#handleSelectionClick" styleClass="two-table-button" text="0" GridPane.rowIndex="2" />
-                  <Button fx:id="tableBtn4" mnemonicParsing="false" onAction="#handleSelectionClick" styleClass="two-table-button" text="0" GridPane.columnIndex="1" />
-                  <Button fx:id="tableBtn5" mnemonicParsing="false" onAction="#handleSelectionClick" styleClass="two-table-button" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Button fx:id="tableBtn6" mnemonicParsing="false" onAction="#handleSelectionClick" styleClass="two-table-button" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>
@@ -48,10 +42,6 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="tableBtn7" mnemonicParsing="false" onAction="#handleSelectionClick" onMouseClicked="#markSelected" text="0" />
-                  <Button fx:id="tableBtn9" mnemonicParsing="false" onAction="#handleSelectionClick" text="0" GridPane.columnIndex="1" />
-                  <Button fx:id="tableBtn8" mnemonicParsing="false" onAction="#handleSelectionClick" text="0" GridPane.rowIndex="1" />
-                  <Button fx:id="tableBtn10" mnemonicParsing="false" onAction="#handleSelectionClick" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children></Pane>

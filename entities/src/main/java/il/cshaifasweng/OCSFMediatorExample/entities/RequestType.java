@@ -26,7 +26,6 @@ public enum RequestType{
      GET_BRANCH_MENU,
      FETCH_BRANCH_TABLES,
     UPDATE_BRANCH,
-
     GET_RES_REPORT,
 
     CANCEL_RESERVATION,
