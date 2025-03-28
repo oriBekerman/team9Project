@@ -24,7 +24,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "1234"; // Change database password here
+    public static String dataBasePassword = "Bekitnt26@"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) {
@@ -36,6 +36,7 @@ public class SimpleServer extends AbstractServer {
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         System.out.println("Received request from client: " + msg);
 
+        // Handling the "add client" string command
         if (msg instanceof String msgString && msgString.startsWith("add client")) {
             System.out.println("Client added successfully");
             SubscribedClient connection = new SubscribedClient(client);
@@ -108,13 +109,11 @@ public class SimpleServer extends AbstractServer {
                 }
                 case BOTH -> {
                     List<Response> responses = (List<Response>) response.getData();
-                    if(responses.get(0).getRecipient().equals(THIS_CLIENT) && responses.get(1).getRecipient().equals(ALL_CLIENTS))
-                    {
+                    if (responses.get(0).getRecipient().equals(THIS_CLIENT) && responses.get(1).getRecipient().equals(ALL_CLIENTS)) {
                         sendToAllClients(responses.get(1));
                         client.sendToClient(responses.get(0));
                     }
-                    if(responses.get(0).getRecipient().equals(ALL_CLIENTS) && responses.get(1).getRecipient().equals(THIS_CLIENT))
-                    {
+                    if (responses.get(0).getRecipient().equals(ALL_CLIENTS) && responses.get(1).getRecipient().equals(THIS_CLIENT)) {
                         sendToAllClients(responses.get(0));
                         client.sendToClient(responses.get(1));
                     }

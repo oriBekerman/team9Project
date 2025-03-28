@@ -5,6 +5,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Events\BranchListSentEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\CreditCardInfoDeliveryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationAddedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateBranchResEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\ReservationListBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSelectedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
@@ -41,6 +42,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Events\MenuEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuBarBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchListBoundary.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\SentActiveReservationsEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ReservationBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.class
 il\cshaifasweng\OCSFMediatorExample\client\LoginBoundary.class

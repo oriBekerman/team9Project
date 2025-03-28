@@ -36,9 +36,6 @@ public class RestTable implements Serializable {
 private Set<LocalTime> unavailableFromTimes = new HashSet<>();
 
 
-
-
-
 //    //location for gui seating chart
 //    @Embedded
 //    private Coordinates coordinates=new Coordinates();
@@ -154,12 +151,12 @@ private Set<LocalTime> unavailableFromTimes = new HashSet<>();
         }
         return times;
     }
-
     public void print() {
         System.out.println("Table: "+tableId);
         System.out.println("Area: "+area);
         System.out.println("Capacity: "+capacity);
         System.out.println("Branch: "+branch.getName());
     }
+
 }
 

@@ -87,12 +87,6 @@ public class ReservationCntBoundary {
     void continueAct(ActionEvent event) {
         client = SimpleClient.getClient();
         client.mapReservation.put("Hours",chosen);
-        // Start a 15-minute timer to ensure the user fills personal details in time
-        // if the user does not fill details within 15 min cancel table allocation
-//        TimerManager.getInstance().startTimer("reservationTimeout", () -> {
-//            System.out.println("Reservation expired! Taking action...");
-//            timeViolation();
-//        }, 15);
         openPersonalDetailsPage();
 
     }
@@ -120,25 +114,6 @@ public class ReservationCntBoundary {
     public void onBranchSelected(BranchSentEvent event) {
         this.branch = event.getBranch();
         SimpleClient.getClient().resInfo.setBranch(branch);
-        updateAvailableTimesAndUI();
-    }
-
-    @Subscribe
-    public void OnUpdateBranchResEvent(UpdateBranchResEvent event) {
-        System.out.println("Received UpdateBranchResEvent!!!!!!!!!!!");
-        this.branch = event.getBranch();
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("hours occupied");
-            alert.setHeaderText(null);
-            alert.setContentText("Please press OK to refresh to see the latest changes.");
-            alert.showAndWait();
-            try {
-                setHoursList();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
         updateAvailableTimesAndUI();
     }
 
@@ -375,16 +350,17 @@ public class ReservationCntBoundary {
     @Subscribe
     public void onUpdateBranchTablesEvent(UpdateBranchTablesEvent event) {
         System.out.println("in onUpdateBranchTables");
-        ResInfo reservation = event.getReservation();
-        if (reservation==null)
+        ResInfo newReservation = event.getReservation();
+        if (newReservation==null)
         {
             System.out.println("reservation is null");
         }
-        assert reservation != null;
-        if (Objects.equals(this.branch.getName(), reservation.getBranch().getName()))
+
+        //update this page if this branch and the new reservation's branch are the same
+        if(newReservation.getBranch().getBranchID()==this.branch.getBranchID())
         {
             System.out.println("in onUpdateBranchTables if");
-            updatePage(reservation);
+            updatePage(newReservation);
         }
     }
     private void updatePage(ResInfo reservation)
