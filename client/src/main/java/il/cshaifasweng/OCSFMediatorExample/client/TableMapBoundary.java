@@ -50,16 +50,6 @@ public class TableMapBoundary {
 
 
     public boolean mapIsSet=false;
-//    public Button In00Btn;
-//    public Button In01Btn;
-//    public Button In02Btn;
-//    public Button In10Btn;
-//    public Button In11Btn;
-//    public Button In12Btn;
-//    public Button Out00Btn;
-//    public Button Out10Btn;
-//    public Button Out01Btn;
-//    public Button Out11Btn;
     //    public boolean mapIsUpdated=false;
     private boolean selectionEnabled = false;
     private List<Button> buttons=new ArrayList<>();
@@ -68,7 +58,6 @@ public class TableMapBoundary {
     private Map<Button,RestTable>buttonsMap=new HashMap<>();
     private Set<Button> selectedButtons = new HashSet<>();
     private final Object tableSyncLock=new Object();
-
 
     public TableMapBoundary()
     {
@@ -113,7 +102,6 @@ public class TableMapBoundary {
             System.out.println("Thread interrupted while waiting for tables.");
         }
     }
-
     //get branch tables from server
     private void loadBranchTables()
     {
@@ -126,7 +114,6 @@ public class TableMapBoundary {
             }
         }
     }
-
     //get the branch tables from the event client posted (wake setMap thread after wait for loadTables)
     @Subscribe
     public void onBranchTablesEvent(BranchTablesReceivedEvent event) {
@@ -140,7 +127,6 @@ public class TableMapBoundary {
             notifyAll();  // Wake up threads waiting for tables
         }
     }
-
     private void initializeUIAfterTablesAreReady(Branch branch) {
         System.out.println("Initializing UI with fetched tables...");
 
@@ -195,9 +181,6 @@ public class TableMapBoundary {
         System.out.println("UI initialized, map is set.");
         notifyAll();
     }
-
-
-
     private void setTimesBox() {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm"); //good for both 09:00 and 9:00
@@ -224,7 +207,6 @@ public class TableMapBoundary {
                 "    -fx-border-radius: 6px;\n" +
                 "    -fx-cursor: hand;");
     }
-
     //user selected time from timesBox
     public void chooseTime(ActionEvent actionEvent) {
         System.out.println("in choose time");
@@ -232,7 +214,6 @@ public class TableMapBoundary {
         LocalTime localTime = LocalTime.parse(chosen);
         displayMapAt(localTime);
     }
-
     //given the chosen time set the map button according to the availability of the tables matching the button
     private void displayMapAt(LocalTime localTime) {
         Set<RestTable> branchAvailableTables = branch.getAvailableTablesAt(localTime);
@@ -272,11 +253,9 @@ public class TableMapBoundary {
         remapTables();
         updateTableAvailabilityUI(resInfo);
     }
-
     private void updateBranchReference(ResInfo resInfo) {
         this.branch = resInfo.getBranch();
     }
-
     private void remapTables() {
         Set<RestTable> updatedTables = branch.getTables();
         Map<Integer, RestTable> updatedById = new HashMap<>();
@@ -297,7 +276,6 @@ public class TableMapBoundary {
             }
         }
     }
-
     private void updateTableAvailabilityUI(ResInfo resInfo) {
         String selected = timesBox.getSelectionModel().getSelectedItem();
         if (selected == null) return;
@@ -350,13 +328,11 @@ public class TableMapBoundary {
         pair = new Pair<>(id, "unavailable");
         button.setUserData(pair);
     }
-
     //when return is clicked
     public void BackToBranch(ActionEvent actionEvent) {
         openBranchPage(branch);
 
     }
-
     //open  branch page after return
     private void openBranchPage(Branch branch) {
         try {
@@ -377,7 +353,6 @@ public class TableMapBoundary {
         }
 
     }
-
     // Triggered when a reservation is made or updated, indicating that the availability of tables has changed
     @Subscribe
     public void onUpdatesBranchTablesEvent(UpdateBranchTablesEvent event) {
@@ -393,7 +368,6 @@ public class TableMapBoundary {
         }
         updatePage(reservation);
     }
-
     public void tableBtnAction(ActionEvent actionEvent) {
 //        LocalTime time=LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
 //        Button bt=(Button)actionEvent.getSource();
@@ -443,7 +417,6 @@ public class TableMapBoundary {
         pause.setOnFinished(event -> node.setVisible(false)); // Hide after duration
         pause.play();
     }
-
     public void markSelected(MouseEvent mouseEvent) {
     }
     //set selection mode
@@ -462,8 +435,6 @@ public class TableMapBoundary {
         reservationLabel.setText("Selection mode enabled. Click tables to select.");
 
     }
-
-
     public void disableSelection() {
         selectionEnabled = false;
         for (Button button : tablesMap.values()) {
@@ -499,7 +470,6 @@ public class TableMapBoundary {
                 "    -fx-border-radius: 6px;\n" +
                 "    -fx-cursor: hand;");
     }
-
     public void sendSelection(ActionEvent actionEvent) {
         for(Button button: selectedButtons)
         {

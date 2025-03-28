@@ -4,8 +4,11 @@ import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.skin.TableColumnHeader;
+import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -18,6 +21,8 @@ import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
 public class ReservationListBoundary {
 
+    public Label pageTitle;
+    public AnchorPane root;
     @FXML private TableView<ResInfo> reservationsTable;
     @FXML private TableColumn<ResInfo, Integer> idCol;
     @FXML private TableColumn<ResInfo, String> branchCol;
@@ -38,6 +43,7 @@ public class ReservationListBoundary {
         timeCol.setCellValueFactory(new PropertyValueFactory<>("hours"));
         guestsCol.setCellValueFactory(new PropertyValueFactory<>("numOfGuests"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        setStyle();
 
     }
 
@@ -126,6 +132,33 @@ public class ReservationListBoundary {
         alert.setContentText(msg);
         alert.showAndWait();
     }
+    private void setStyle()
+    {
+        root.setStyle("-fx-background-color: #fbe9d0;");
+        for (Node node : root.getChildrenUnmodifiable())
+        {
+            if(node instanceof Button)
+            {
+                node.setStyle(" -fx-font-size: 16px;\n" +
+                        "    -fx-font-weight: bold;\n" +
+                        "    -fx-text-fill: white;\n" +
+                        "    -fx-background-color: #8a6f48;\n" +
+                        "    -fx-alignment: center;\n" +
+                        "    -fx-padding: 8px 16px;\n" +
+                        "    -fx-border-radius: 6px;\n" +
+                        "    -fx-cursor: hand;");
+            }
+            if (node instanceof TableColumnHeader)
+            {
+                node.setStyle(" -fx-font-size: 16px;\n" +
+                        "    -fx-text-fill: #4e453c;\n" +
+                        "    -fx-padding: 8px;\n" +
+                        "    -fx-font-weight: bold;;");
+            }
+        }
+    }
+
+
 
 
 }
