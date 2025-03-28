@@ -26,6 +26,7 @@ import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.AcknowledgmentEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.RemoveDishEvent;
 
 public class SecondaryBoundary
 {
@@ -206,17 +207,26 @@ public class SecondaryBoundary
             // Remove the dish from the TableView
             menuTableView.getItems().remove(selectedItem);
 
-            // Optionally, send a request to the server to remove the dish
-            // You can use something like SimpleClient.getClient().removeDishFromDatabase(selectedItem);
+            // Send the dish removal request to the server and post an event for all clients
             SimpleClient.getClient().removeDishFromDatabase(selectedItem);
 
-            // Optionally, you can show a confirmation message after removing the dish
+            // Post a remove dish event to EventBus
+            EventBus.getDefault().post(new RemoveDishEvent(selectedItem));
+
+            // Show a confirmation message after removing the dish
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Dish removed successfully.");
             successAlert.showAndWait();
         }
     }
 
-
+    @Subscribe
+    public void onRemoveDishEvent(RemoveDishEvent event) {
+        Platform.runLater(() -> {
+            MenuItem removedItem = event.getRemovedMenuItem();
+            allMenuItems.remove(removedItem);
+            menuTableView.getItems().remove(removedItem);
+        });
+    }
 
     //    @FXML
 //   private TableColumn<MenuItem,String> branchSpecialColumn;
@@ -238,7 +248,7 @@ public class SecondaryBoundary
             // שמירה של כל הפריטים ברשימה קבועה לחיפוש
             allMenuItems.setAll(menu.getMenuItems());
 
-            System.out.println("Menu items loaded: " + allMenuItems.size()); // Debugging
+          //  System.out.println("Menu items loaded: " + allMenuItems.size()); // Debugging
         });
     }
 

@@ -24,7 +24,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "N2O0A0M6"; // Change database password here
+    public static String dataBasePassword = "1234"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) {
@@ -65,6 +65,17 @@ public class SimpleServer extends AbstractServer {
                 case REMOVE_DISH -> menuItemsController.handleRequest(request);
                 case UPDATE_INGREDIENTS -> menuItemsController.handleRequest(request);
                 case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
+                case PERMIT_GRANTED ->
+                {
+                    System.out.println("Permit granted request received.");
+                    // Process permitGranted request
+                    Response permitResponse = handlePermitGranted(request);
+                    yield permitResponse;
+                }
+                case ADD_DISH -> {
+                    Response addDishResponse = menuItemsController.handleRequest(request);
+                    yield addDishResponse;
+                }
                 default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
             };
         } catch (Exception e) {
@@ -125,6 +136,17 @@ public class SimpleServer extends AbstractServer {
                 }
             }
         }
+    }
+
+    private Response handlePermitGranted(Request request) {
+        System.out.println("Handling permit granted message...");
+        Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
+                "Your permit request has been granted.",
+                Response.Status.SUCCESS,
+                Response.Recipient.ALL_CLIENTS);
+
+        // Return the response
+        return response;
     }
 
     public void sendToAllClientsExceptSender(Object message, ConnectionToClient client) {

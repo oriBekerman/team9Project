@@ -59,6 +59,17 @@ public class SimpleClient extends AbstractClient {
 			// Print the status
 			System.out.println("Status: " + response.getStatus());
 
+			// Handle the permitGranted message from the server (response)
+
+			if (response.getResponseType() == Response.ResponseType.PERMIT_GRANTED_ACK
+					&& response.getStatus() == Response.Status.SUCCESS)
+			{
+
+				System.out.println("Posting AcknowledgmentEvent");
+				EventBus.getDefault().post(new AcknowledgmentEvent());
+				System.out.println("AcknowledgmentEvent posted!");
+			}
+
 			if (msg.getClass().equals(Warning.class)) {
 				String message = msg.toString();
 				System.out.println(message);
@@ -104,6 +115,11 @@ public class SimpleClient extends AbstractClient {
 				for (MenuItem item : deliverables) {
 					item.printMenuItem();
 				}
+			}
+			if (response.getResponseType().equals(Response.ResponseType.ADD_DISH)) {
+				MenuItem addedMenuItem = (MenuItem) response.getData();
+				updateDishEvent addEvent = new updateDishEvent(addedMenuItem);
+				EventBus.getDefault().post(addEvent);
 			}
 			if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
 			{
@@ -288,13 +304,13 @@ public class SimpleClient extends AbstractClient {
 	}
 
 	public void removeDishFromDatabase(MenuItem dishToRemove) {
-		// Assuming the category for removing a dish is BASE_MENU (similar to addDishToDatabase)
+		// Create a request to remove the dish
 		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.REMOVE_DISH, dishToRemove);
 		try {
 			SimpleClient.getClient().sendToServer(request);
-			System.out.println("Dish removed from database: " + dishToRemove.getName());
+			System.out.println("Dish removal request sent for: " + dishToRemove.getName());
 		} catch (IOException e) {
-			System.out.println("Error removing dish from database: " + e.getMessage());
+			System.out.println("Error sending dish removal request: " + e.getMessage());
 		}
 	}
 
