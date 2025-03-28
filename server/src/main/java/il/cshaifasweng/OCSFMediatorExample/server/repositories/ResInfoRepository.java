@@ -1,6 +1,7 @@
 
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
@@ -181,13 +182,15 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             LocalTime endRange = time.plusHours(1).plusMinutes(15);
             Predicate timeRange = cb.between(root.get("hours"), startRange, endRange);
 
+            // ignore cancelled reservations
+            Predicate notCancelled = cb.isFalse(root.get("isCancelled"));
+
             cq.select(root).distinct(true)
-                    .where(cb.and(tableIn, timeRange));
+                    .where(cb.and(tableIn, timeRange, notCancelled));
 
             conflicts = session.createQuery(cq).getResultList();
             session.getTransaction().commit();
         }
-
         return conflicts;
     }
     //check if there is a reservation with a customer that has the same email if so returns that customer.
@@ -225,4 +228,71 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             if (tx != null) tx.rollback();
         }
     }
+    public String cancelReservation(Integer resID) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction tx = session.beginTransaction();
+
+            ResInfo reservation = session.get(ResInfo.class, resID);
+            if (reservation == null || reservation.getIsCancelled()) {
+                tx.rollback();
+                return "NOT_FOUND_OR_ALREADY_CANCELLED";
+            }
+
+            LocalTime reservationTime = reservation.getHours();
+            LocalTime currentTime = LocalTime.now();
+            int guests = reservation.getNumOfGuests();
+            boolean penalty = currentTime.isAfter(reservationTime.minusHours(1));
+
+            reservation.setIsCancelled(true);
+
+            for (RestTable table : reservation.getTable()) {
+                table.removeUnavailableFromTime(reservationTime);
+                session.update(table);
+            }
+
+            session.update(reservation);
+            tx.commit();
+
+            return penalty ? "PENALTY:" + (guests * 10) : "NO_PENALTY";
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error cancelling reservation: " + e.getMessage(), e);
+        }
+    }
+
+    public List<ResInfo> getAllActiveReservations() {
+        List<ResInfo> resInfoList=new ArrayList<>();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                    "SELECT DISTINCT r FROM ResInfo r JOIN FETCH r.customer WHERE r.isCancelled = false",
+                    ResInfo.class).list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to fetch active reservations", e);
+        }
+    }
+
+    public ResInfo refreshReservationWithBranch(int reservationId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+
+            // Use JOIN FETCH to load the branch eagerly
+            ResInfo reservation = session.createQuery(
+                            "SELECT r FROM ResInfo r " +
+                                    "JOIN FETCH r.branch " +
+                                    "JOIN FETCH r.customer " +
+                                    "JOIN FETCH r.tables " +
+                                    "WHERE r.resID = :resID", ResInfo.class)
+                    .setParameter("resID", reservationId)
+                    .uniqueResult();
+
+            session.getTransaction().commit();
+            return reservation;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
+
