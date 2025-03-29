@@ -31,6 +31,7 @@ public class ComplaintController {
         {
             case GET_ALL_COMPLAINTS ->getAllComplaints();
             case HANDLE_COMPLAINT_TABLE -> updateComplaint((List<Complaint>) request.getData());
+            case SUBMIT_COMPLAINT -> createComplaint(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
@@ -48,6 +49,44 @@ public class ComplaintController {
             }
         }
     }
+
+    public Response createComplaint(Request request) {
+        Response response = new Response(Response.ResponseType.COMPLAINT_CREATED, null, ERROR, THIS_CLIENT);
+        System.out.println("Creating complaint...");
+
+        try {
+            // Extract data from the request
+            Complaint complaint = (Complaint) request.getData(); // Assume we send a Complaint object in the request
+
+            // Ensure complaintDate is set to the current LocalDateTime if not already set
+            if (complaint.getComplaintDate() == null) {
+                complaint.setComplaintDate(LocalDateTime.now()); // Set current LocalDateTime
+            }
+
+            // Create the complaint and check the result
+            boolean isCreated = ComplaintRepository.populateComplaint(complaint);
+
+            // If the complaint was created successfully, set the response status to SUCCESS
+            if (isCreated) {
+                response.setStatus(SUCCESS);
+                response.setData(complaint); // include complaint in the response
+            } else {
+                // If creation fails, set the response status to ERROR
+                response.setStatus(ERROR);
+                response.setMessage("Failed to create complaint");
+            }
+
+        } catch (Exception exception) {
+            // Handle exceptions and set the response status to ERROR
+            response.setStatus(ERROR);
+            response.setMessage("Error while creating the complaint: " + exception.getMessage());
+            System.err.println("Error while creating complaint: " + exception.getMessage());
+            exception.printStackTrace();
+        }
+
+        return response;
+    }
+
     public boolean checkIfEmpty()
     {
         return (complaintRepository.checkIfEmpty());
