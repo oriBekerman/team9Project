@@ -30,28 +30,21 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
     }
 
     // Populate and save a new delivery along with its order items and customer
-// Populate and save a new delivery along with its order items and customer
     public boolean populateDelivery(Delivery delivery) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
-//            // Check if the customer is transient (not saved in the database yet)
-//            if (delivery.getCustomer() != null && delivery.getCustomer().getId() == 0) {
-//                // Save the customer before saving the delivery
-//                session.save(delivery.getCustomer());
-//            }
-            String email = delivery.getCustomer().getEmail();
-            // Save the customer before saving the delivery
-            Customer customer=getCustomerByEmail(email);
-            if(customer == null)
-            {
-                session.save(delivery.getCustomer());
+            if (delivery.getCustomer() != null) {
+                if (delivery.getCustomer().getId() == null) {
+                    session.save(delivery.getCustomer());  // Save if customer is new
+                } else {
+                    delivery.setCustomer((Customer) session.merge(delivery.getCustomer()));  // Merge if customer exists
+                }
             }
-            setCustomer(delivery);
-            // Now save the delivery
-            session.save(delivery);
 
-            session.getTransaction().commit();  // Commit the transaction
+            session.save(delivery);  // Save the delivery
+
+            session.getTransaction().commit();
             System.out.println("Delivery saved successfully: " + delivery);
             return true;
         } catch (Exception e) {
@@ -59,7 +52,6 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
             return false;
         }
     }
-
 
 
     // Get all deliveries from the database

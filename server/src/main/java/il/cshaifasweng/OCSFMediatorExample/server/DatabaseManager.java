@@ -215,8 +215,6 @@ private static void initialize(String password) {
                     "456"                                // CVV
             );
 
-            customerController.populateCustomers(List.of(customer1, customer2));  // חדש
-
             // Create OrderItems from MenuItem and quantity
             OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences
             OrderItem orderItem2 = new OrderItem(item4, 1, "Extra ketchup", null); // 1 of "Hamburger" with preferences
