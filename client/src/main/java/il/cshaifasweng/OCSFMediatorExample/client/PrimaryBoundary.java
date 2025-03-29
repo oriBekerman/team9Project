@@ -10,6 +10,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -32,6 +33,7 @@ public class PrimaryBoundary {
 
 	public Button MenuBtn;
 	public Button subCompBtn;
+	public Button complaintsTableBtn;
 	@FXML
 	private ResourceBundle resources;
 
@@ -82,7 +84,6 @@ public class PrimaryBoundary {
 	@FXML
 	void givePermit(ActionEvent event) {
 		try {
-			// Create a Request object for the PERMIT_GRANTED category with the PERMISSION_REQUEST type
 			Request<Void> request = new Request<>(ReqCategory.PERMIT_GRANTED, RequestType.PERMISSION_REQUEST, null);
 
 			// Send the request to the server
@@ -329,4 +330,39 @@ public class PrimaryBoundary {
 	public void goToSubCompPage(ActionEvent actionEvent) {
 		switchScreen("SubComplaint");
 	}
+
+	public void viewComplaints(ActionEvent actionEvent) {
+		openComplaintsTablePage();
+	}
+
+	public void openComplaintsTablePage() {
+		System.out.println("in open complaints");
+
+			switchScreen("Complaints");
+
+//
+//		new Thread(() -> {
+//			try {
+//				FXMLLoader loader = new FXMLLoader(getClass().getResource("HandleCompTablePage.fxml"));
+//				Parent complaintsPageRoot = loader.load();
+//				HandleComplaintTableBoundary boundary = loader.getController();
+//				synchronized (boundary) {
+//					boundary.setPage();
+//					while (!boundary.pageIsSet) {
+//						System.out.println("Waiting for page to be set");
+//						boundary.wait();
+//					}
+//				}
+//				Platform.runLater(() -> {
+//					try {
+//						App.setContent(complaintsPageRoot);
+//					} catch (IOException e) {
+//						throw new RuntimeException(e);
+//					}});
+//			} catch (IOException | InterruptedException e) {
+//				e.printStackTrace();
+//				Thread.currentThread().interrupt();}
+//		}).start();
+	}
+
 }

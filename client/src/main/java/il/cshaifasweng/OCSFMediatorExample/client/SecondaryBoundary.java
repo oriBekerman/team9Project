@@ -1,6 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.DishType;
@@ -16,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.TableColumnHeader;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,7 +26,9 @@ import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.AcknowledgmentEvent;
-
+import il.cshaifasweng.OCSFMediatorExample.client.Events.RemoveDishEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.AddDishEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateIngredientsEvent;
 public class SecondaryBoundary
 {
 
@@ -81,8 +86,7 @@ public class SecondaryBoundary
 
 
     @FXML
-    void UpdateIngridients(ActionEvent event)
-    {
+    void UpdateIngridients(ActionEvent event) {
         // Get the selected MenuItem from the table view
         MenuItem selectedItem = menuTableView.getSelectionModel().getSelectedItem();
 
@@ -100,13 +104,37 @@ public class SecondaryBoundary
         dialog.setContentText("Ingredients:");
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(newIngredients -> {
-            // Update the selected item’s ingredients
+        result.ifPresent(newIngredients ->
+        {
             selectedItem.setIngredients(newIngredients);
-            menuTableView.refresh();  // Refresh the TableView to show the updated ingredients
 
-            // Send the updated ingredients to the server
             SimpleClient.getClient().updateDishIngredients(selectedItem);
+
+
+            Platform.runLater(() -> {
+                menuTableView.refresh();
+                EventBus.getDefault().post(new UpdateIngredientsEvent(selectedItem));
+            });
+        });
+    }
+
+
+    // Event handler for updating ingredients
+    @Subscribe
+    public void onUpdateIngredientsEvent(UpdateIngredientsEvent event) {
+        Platform.runLater(() -> {
+            MenuItem updatedItem = event.getUpdatedMenuItem();
+
+            // Find and update the item in the local lists
+            for (MenuItem item : allMenuItems) {
+                if (item.getItemID() == updatedItem.getItemID()) {
+                    item.setIngredients(updatedItem.getIngredients());
+                    break;
+                }
+            }
+
+            // Refresh the TableView
+            menuTableView.refresh();
         });
     }
 
@@ -158,15 +186,39 @@ public class SecondaryBoundary
                         // Create a default byte[] for the picture (empty for now)
                         byte[] defaultPicture = new byte[0];  // Empty byte array for now
 
-                        // Create a new MenuItem with the selected dish type
-                        MenuItem newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, dishType);
+                        // Final variables for use in lambda
+                        final String finalDishName = dishName;
+                        final double finalPrice = price;
+                        final String finalDishIngredients = dishIngredients;
+                        final String finalDishPreference = dishPreference;
+                        final DishType finalDishType = dishType;
 
                         // Send the new dish to the server for saving
-                        SimpleClient.getClient().addDishToDatabase(newDish);
+                        SimpleClient.getClient().addDishToDatabase(
+                                new MenuItem(finalDishName, finalPrice, finalDishIngredients, finalDishPreference, defaultPicture, finalDishType)
+                        );
 
-                        // Add to the local menu and TableView
-                        allMenuItems.add(newDish);
-                        menuTableView.getItems().add(newDish);
+                        // Update UI and post event on JavaFX Application Thread
+                        Platform.runLater(() -> {
+                            // Create the MenuItem within the runLater block
+                            MenuItem newDish = new MenuItem(
+                                    finalDishName,
+                                    finalPrice,
+                                    finalDishIngredients,
+                                    finalDishPreference,
+                                    defaultPicture,
+                                    finalDishType
+                            );
+
+                            // Add to the local menu and TableView
+                            allMenuItems.add(newDish);
+                            menuTableView.getItems().add(newDish);
+
+                            // Post an event to notify other parts of the application
+                            Platform.runLater(() -> {EventBus.getDefault().post(new AddDishEvent(newDish));});
+
+                        });
+
                     } catch (NumberFormatException e) {
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid price format.");
                         alert.showAndWait();
@@ -174,6 +226,18 @@ public class SecondaryBoundary
                 }
             }
         }
+    }
+
+    // You'll need to create this event class in the same package as other events
+    @Subscribe
+    public void onAddDishEvent(AddDishEvent event) {
+        Platform.runLater(() -> {
+            MenuItem addedItem = event.getAddedMenuItem();
+            if (!allMenuItems.contains(addedItem)) {
+                allMenuItems.add(addedItem);
+                menuTableView.getItems().add(addedItem);
+            }
+        });
     }
 
 
@@ -189,31 +253,25 @@ public class SecondaryBoundary
             alert.showAndWait();
             return;
         }
-
-        // Ask for confirmation before removing the item
-        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to remove this dish?");
-        confirmAlert.setTitle("Remove Dish");
-        confirmAlert.setHeaderText("You are about to remove: " + selectedItem.getName());
-        Optional<ButtonType> result = confirmAlert.showAndWait();
-
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Remove the dish from the local menu (observable list)
             allMenuItems.remove(selectedItem);
-
             // Remove the dish from the TableView
             menuTableView.getItems().remove(selectedItem);
 
-            // Optionally, send a request to the server to remove the dish
-            // You can use something like SimpleClient.getClient().removeDishFromDatabase(selectedItem);
+            // Send the dish removal request to the server and post an event for all clients
             SimpleClient.getClient().removeDishFromDatabase(selectedItem);
+            // Post a remove dish event to EventBus
 
-            // Optionally, you can show a confirmation message after removing the dish
-            Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Dish removed successfully.");
-            successAlert.showAndWait();
-        }
+        Platform.runLater(() ->  EventBus.getDefault().post(new RemoveDishEvent(selectedItem)));
     }
 
-
+    @Subscribe
+    public void onRemoveDishEvent(RemoveDishEvent event) {
+        Platform.runLater(() -> {
+            MenuItem removedItem = event.getRemovedMenuItem();
+            allMenuItems.remove(removedItem);
+            menuTableView.getItems().remove(removedItem);
+        });
+    }
 
     //    @FXML
 //   private TableColumn<MenuItem,String> branchSpecialColumn;
@@ -235,7 +293,7 @@ public class SecondaryBoundary
             // שמירה של כל הפריטים ברשימה קבועה לחיפוש
             allMenuItems.setAll(menu.getMenuItems());
 
-            System.out.println("Menu items loaded: " + allMenuItems.size()); // Debugging
+          //  System.out.println("Menu items loaded: " + allMenuItems.size()); // Debugging
         });
     }
 
@@ -331,7 +389,8 @@ public class SecondaryBoundary
     }
 
     @Subscribe
-    public void onAcknowledgmentEvent(AcknowledgmentEvent event) {
+    public void onAcknowledgmentEvent(AcknowledgmentEvent event)
+    {
         System.out.println("AcknowledgmentEvent received! Enabling button...");
         Platform.runLater(() -> UpdatePriceBtn.setDisable(true));
     }
@@ -477,6 +536,20 @@ public class SecondaryBoundary
         });
 
 
+        imageColum.setCellValueFactory(cellData -> {
+            byte[] imageBytes = cellData.getValue().getPicture();
+            if (imageBytes != null && imageBytes.length > 0) {
+                InputStream is = new ByteArrayInputStream(imageBytes);
+                Image image = new Image(is);
+                ImageView imageView = new ImageView(image);
+                imageView.setFitHeight(80);
+                imageView.setFitWidth(80);
+                imageView.setPreserveRatio(true);
+                return new javafx.beans.property.SimpleObjectProperty<>(imageView);
+            } else {
+                return new javafx.beans.property.SimpleObjectProperty<>(null);
+            }
+        });
 
 
         Platform.runLater(() -> {

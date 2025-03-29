@@ -31,10 +31,6 @@ public class ResInfo implements Serializable {
     private Set<RestTable> tables = new HashSet<>();
 
 
-
-//    @Column(nullable = false)
-//    private LocalDate resDate;
-
     @Column(nullable = false)
     private LocalTime hours;
 
@@ -56,8 +52,7 @@ public class ResInfo implements Serializable {
     public boolean branchIsSet=false;
     @Transient
     public boolean tableIsSet=false;
-//    @Transient
-//    Set<RestTable> tempTables = new HashSet<>();
+
     @Column(name = "isCancelled")
     private boolean isCancelled = false;
 

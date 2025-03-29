@@ -139,14 +139,7 @@ public class BranchPageBoundary {
     }
     public void loadBranchMap(ActionEvent actionEvent){
         openBranchMap();
-//        try {
-//            SimpleClient.getClient().fetchTables(branch);
-//        } catch (IOException e) {
-//            System.out.println("fetch failed");
-//            throw new RuntimeException(e);
-//        }
     }
-
     public void openBranchMap() {
         System.out.println("in open mao in branch boundary");
         try {
@@ -205,25 +198,5 @@ public class BranchPageBoundary {
         }
     }
 
-    //open selected branch page
-    private void openMap(Branch branch) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("TableMapPage.fxml"));
-            Parent mapPageRoot = loader.load();
-            // Get the controller and pass the branch
-            TableMapBoundary boundary = loader.getController();
-            boundary.setMap(branch);
-            if (boundary.mapIsSet) {
-                System.out.println("map is already set");
-            }
-            while (!boundary.mapIsSet) {
-                System.out.println("Waiting for map to be set");
-            }
-            App.setContent(mapPageRoot);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 }
 //change

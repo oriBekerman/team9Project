@@ -10,7 +10,7 @@
         <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/restaurantDB1?useSSL=false&amp;serverTimezone=UTC</property> <!--changed database name here and in hibernate.properties file!-->
         <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">poolgirL1?</property>  <!-- change to your password here -->
+        <property name="hibernate.connection.password">Bekitnt26@</property>  <!-- change to your password here -->
 
         <!-- Dialect -->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
@@ -18,7 +18,8 @@
         <!-- אפשרויות דיבאג -->
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
-
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
 
         <!-- יצירת טבלה אוטומטית (רק בעת פיתוח, לא בשימוש בייצור) -->
         <property name="hibernate.hbm2ddl.auto">update</property>
@@ -33,7 +34,6 @@
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.OrderItem" />
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.ResInfo" />
         <mapping class="il.cshaifasweng.OCSFMediatorExample.entities.Complaint" />
-
 
 
     </session-factory>

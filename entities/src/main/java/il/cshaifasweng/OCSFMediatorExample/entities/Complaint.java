@@ -23,15 +23,15 @@ public class Complaint implements Serializable {
     @Column(nullable = false)
     private ComplaintStatus status;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "employee_id", nullable = true)
     private Employee employee; // Employee handling the complaint
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "branch_id")
     private Branch branch; // Branch associated with the complaint
 
@@ -39,6 +39,7 @@ public class Complaint implements Serializable {
     long compensation;
 
     public boolean customerIsSet=false;
+
 
     // Constructors
     public Complaint() {
@@ -52,6 +53,7 @@ public class Complaint implements Serializable {
         this.status = status;
         this.customer = customer;
         this.branch = branch;
+        this.customerIsSet=true;
     }
     public Complaint(String complaintText, ComplaintStatus status){
         this.complaintDate = LocalDateTime.now();
@@ -88,6 +90,7 @@ public class Complaint implements Serializable {
     }
     public void setCustomer(Customer customer) {
         this.customer = customer;
+        this.customerIsSet=true;
     }
     public Employee getEmployee() {
         return employee;

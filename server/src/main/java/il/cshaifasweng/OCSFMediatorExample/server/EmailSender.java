@@ -11,7 +11,7 @@ import javax.mail.Transport;
 public class EmailSender {
     public static void sendEmail(String to, String subject, String body)
     {
-        final String from="mamaskitchenteam99@gmail.com";
+        final String from="mamaskitchenteam9@gmail.com";
         final String password="mama'sKitchen99";
 
         Properties props = new Properties();

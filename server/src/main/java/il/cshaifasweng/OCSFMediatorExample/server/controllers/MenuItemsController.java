@@ -10,6 +10,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Response.Status;
 import il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType;
 import java.util.List;
 
+
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.ALL_CLIENTS;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.THIS_CLIENT;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
@@ -39,20 +40,21 @@ public class MenuItemsController {
         boolean success = menuItemsRepository.addMenuItem(newDish);
 
         if (success) {
-            return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully", Status.SUCCESS, ALL_CLIENTS);
         } else {
-            return new Response<>(ResponseType.ADD_DISH, null, "Failed to add dish", Status.ERROR, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.ADD_DISH, null, "Failed to add dish", Status.ERROR, ALL_CLIENTS);
         }
     }
+// In the MenuItemsController's handleRequest method
 
     public Response handleRemoveDishRequest(Request<MenuItem> request) {
         MenuItem dishToRemove = request.getData();  // Retrieve the dish to be removed from the request
         boolean success = menuItemsRepository.removeDish(dishToRemove);  // Remove the dish from the repository
 
         if (success) {
-            return new Response<>(ResponseType.REMOVE_DISH, dishToRemove, "Dish removed successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.REMOVE_DISH, dishToRemove, "Dish removed successfully", Status.SUCCESS, ALL_CLIENTS);
         } else {
-            return new Response<>(ResponseType.REMOVE_DISH, null, "Failed to remove dish", Status.ERROR, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.REMOVE_DISH, null, "Failed to remove dish", Status.ERROR, ALL_CLIENTS);
         }
     }
 
@@ -125,9 +127,9 @@ public class MenuItemsController {
         boolean success = menuItemsRepository.updateDishIngredients(itemId, newIngredients);  // Call repository method to update ingredients
 
         if (success) {
-            return new Response<>(ResponseType.UPDATE_INGREDIENTS, dishToUpdate, "Dish ingredients updated successfully", Status.SUCCESS, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.UPDATE_INGREDIENTS, dishToUpdate, "Dish ingredients updated successfully", Status.SUCCESS, ALL_CLIENTS);
         } else {
-            return new Response<>(ResponseType.UPDATE_INGREDIENTS, null, "Failed to update dish ingredients", Status.ERROR, Response.Recipient.THIS_CLIENT);
+            return new Response<>(ResponseType.UPDATE_INGREDIENTS, null, "Failed to update dish ingredients", Status.ERROR, ALL_CLIENTS);
         }
     }
 
@@ -154,15 +156,6 @@ public class MenuItemsController {
         return menuItemsRepository.getAllItems();
     }
 
-    // Helper method to remove dish from the database
-    public void removeDishFromDatabase(MenuItem dishToRemove) {
-        boolean success = menuItemsRepository.removeDish(dishToRemove);
-        if (success) {
-            System.out.println("Dish removed successfully");
-        } else {
-            System.out.println("Failed to remove dish");
-        }
-    }
 
     // Handle update of dish type
     public Response handleUpdateDishTypeRequest(Request<MenuItem> request) {

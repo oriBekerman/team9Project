@@ -88,6 +88,7 @@ public class Response<T> implements Serializable {
         UPDATE_DISH_TYPE,
         PERMIT_GRANTED_ACK,
 
+
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,
         RETURN_BRANCH,
@@ -109,8 +110,13 @@ public class Response<T> implements Serializable {
         CANCELED_RESERVATION,
         ADDED_RESERVATION,
         UPDATE_BRANCH_TABLES,
+        RETURN_ACTIVE_RESERVATIONS,
 
-        COMPLAINT_CREATED,
+        //COMPLAINT RELATED RESPONSES
+        RETURN_ALL_COMPLAINTS,
+        Complaint_BY_EMPLOYEE,
+        Complaint_BY_DATE,
+        UPDATE_COMPLAINT
     }
 
     public enum Status {
