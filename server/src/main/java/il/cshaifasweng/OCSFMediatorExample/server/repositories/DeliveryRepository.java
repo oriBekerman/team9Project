@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
+import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
 import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
@@ -30,28 +31,23 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
     }
 
     // Populate and save a new delivery along with its order items and customer
-// Populate and save a new delivery along with its order items and customer
     public boolean populateDelivery(Delivery delivery) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
-//            // Check if the customer is transient (not saved in the database yet)
-//            if (delivery.getCustomer() != null && delivery.getCustomer().getId() == 0) {
-//                // Save the customer before saving the delivery
-//                session.save(delivery.getCustomer());
-//            }
-            String email = delivery.getCustomer().getEmail();
-            // Save the customer before saving the delivery
-            Customer customer=getCustomerByEmail(email);
-            if(customer == null)
-            {
-                session.save(delivery.getCustomer());
-            }
-            setCustomer(delivery);
-            // Now save the delivery
+            // Save the customer associated with the delivery (if necessary)
+            session.saveOrUpdate(delivery.getCustomer());
+
+            // Save the delivery first to generate its ID
             session.save(delivery);
 
-            session.getTransaction().commit();  // Commit the transaction
+            // Now that the delivery has an ID, we can save the associated order items
+            for (OrderItem orderItem : delivery.getOrderItems()) {
+                orderItem.setDelivery(delivery); // Make sure each order item knows its delivery
+                session.save(orderItem); // Save each order item
+            }
+
+            session.getTransaction().commit(); // Commit the transaction
             System.out.println("Delivery saved successfully: " + delivery);
             return true;
         } catch (Exception e) {
@@ -60,6 +56,14 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         }
     }
 
+    // Helper method to find a customer by email
+    private Customer findCustomerByEmail(String email) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Customer WHERE email = :email", Customer.class)
+                    .setParameter("email", email)
+                    .uniqueResult();
+        }
+    }
 
 
     // Get all deliveries from the database
