@@ -4,7 +4,6 @@ USE restaurantDB1;
 
 
 
-
 -- יצירת טבלת פריטי תפריט
 CREATE TABLE IF NOT EXISTS menuItems (
     ID INT AUTO_INCREMENT PRIMARY KEY, -- שינוי: הפיכת ID למפתח ראשי
