@@ -56,6 +56,15 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         }
     }
 
+    // Helper method to find a customer by email
+    private Customer findCustomerByEmail(String email) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Customer WHERE email = :email", Customer.class)
+                    .setParameter("email", email)
+                    .uniqueResult();
+        }
+    }
+
 
     // Get all deliveries from the database
     public List<Delivery> getAllDeliveries() {
