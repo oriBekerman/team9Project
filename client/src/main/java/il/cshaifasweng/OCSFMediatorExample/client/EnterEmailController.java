@@ -26,14 +26,20 @@ public class EnterEmailController {
     @FXML private Button backBtn;
 
     @FXML
-    void initialize() {
-        EventBus.getDefault().register(this);
+    void initialize()
+    {
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
     }
     @FXML
-    void handleCheckReservations() {
+    void handleCheckReservations()
+    {
         String email = emailField.getText().trim();
 
-        if (email.isEmpty()) {
+        if (email.isEmpty())
+        {
             showAlert("Email field cannot be empty");
             return;
         }

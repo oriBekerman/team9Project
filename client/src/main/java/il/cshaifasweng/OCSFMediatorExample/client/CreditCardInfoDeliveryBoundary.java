@@ -124,8 +124,10 @@ public class CreditCardInfoDeliveryBoundary {
         assert cvvText != null : "fx:id=\"cvvText\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
         assert errorLabel != null : "fx:id=\"errorLabel\" was not injected: check your FXML file 'creditCardInfo.fxml'.";
 
-        // Register to EventBus
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
     }
 
 

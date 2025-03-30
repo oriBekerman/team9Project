@@ -106,17 +106,18 @@ public class LoginBoundary {
 
 
     @FXML
-    void initialize() {
-        System.out.println("LoginController initialized. Registering EventBus...");
-        EventBus.getDefault().register(this);
+    void initialize()
+    {
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
         assert backToHPBtn != null : "fx:id=\"backToHPBtn\" was not injected: check your FXML file 'delivery.fxml'.";
         assert loginBtn != null : "fx:id=\"loginBtn\" was not injected: check your FXML file 'login.fxml'.";
         assert passwordTextF != null : "fx:id=\"passwordTextF\" was not injected: check your FXML file 'login.fxml'.";
         assert statusLabel != null : "fx:id=\"statusLabel\" was not injected: check your FXML file 'login.fxml'.";
         assert userNameTextF != null : "fx:id=\"userNameTextF\" was not injected: check your FXML file 'login.fxml'.";
         setStyle();
-
-
     }
     public void setStyle()
     {

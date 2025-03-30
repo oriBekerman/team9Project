@@ -24,26 +24,30 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "Bekitnt26@"; // Change database password here
+    public static String dataBasePassword = "1234"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
-    public SimpleServer(int port) {
+    public SimpleServer(int port)
+    {
         super(port);
         getControllers();
     }
 
     @Override
-    protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
+    protected void handleMessageFromClient(Object msg, ConnectionToClient client)
+    {
         System.out.println("Received request from client: " + msg);
 
-        // Handling the "add client" string command
-        if (msg instanceof String msgString && msgString.startsWith("add client")) {
-            System.out.println("Client added successfully");
+        if (msg instanceof String msgString && msgString.startsWith("add client"))
+        {
             SubscribedClient connection = new SubscribedClient(client);
             SubscribersList.add(connection);
-            try {
+            try
+            {
                 client.sendToClient("Client added successfully");
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 System.err.println("Error sending client confirmation: " + e.getMessage());
             }
             return;
@@ -68,23 +72,23 @@ public class SimpleServer extends AbstractServer {
                 case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
                 case PERMIT_GRANTED ->
                 {
-                    System.out.println("Permit granted request received.");
                     Response permitResponse = handlePermitGranted(request);
                     yield permitResponse;
                 }
 
-                case ADD_DISH -> {
+                case ADD_DISH ->
+                {
                     Response addDishResponse = menuItemsController.handleRequest(request);
                     yield addDishResponse;
                 }
                 default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
             };
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             System.err.println("Error processing request: " + e.getMessage());
             return;
         }
-
-        System.out.println("Response prepared for client: " + response.getResponseType());
         sendResponseToClient(response, client);
         if(response.getMessage() !=null)
         {
@@ -137,14 +141,12 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
-    private Response handlePermitGranted(Request request) {
-        System.out.println("Handling permit granted message...");
+    private Response handlePermitGranted(Request request)
+    {
         Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
                 "Your permit request has been granted.",
                 Response.Status.SUCCESS,
                 Response.Recipient.ALL_CLIENTS);
-
-        // Return the response
         return response;
     }
 
