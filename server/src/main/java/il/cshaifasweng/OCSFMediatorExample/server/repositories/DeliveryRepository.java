@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
+import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
 import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
@@ -34,6 +35,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
+            // Handle Customer saving or merging
             if (delivery.getCustomer() != null) {
                 if (delivery.getCustomer().getId() == null) {
                     session.save(delivery.getCustomer());  // Save if customer is new
@@ -42,8 +44,19 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
                 }
             }
 
+            // Explicitly save or merge each OrderItem (optional, depending on how cascading works)
+            for (OrderItem orderItem : delivery.getOrderItems()) {
+                if (orderItem.getId() == 0) { // Assuming `0` means new OrderItem (since ID is auto-generated)
+                    session.save(orderItem);  // Save new OrderItem
+                } else {
+                    session.merge(orderItem);  // Merge existing OrderItem (optional)
+                }
+            }
+
+            // Save the delivery itself
             session.save(delivery);  // Save the delivery
 
+            // Commit the transaction
             session.getTransaction().commit();
             System.out.println("Delivery saved successfully: " + delivery);
             return true;
@@ -52,6 +65,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
             return false;
         }
     }
+
 
 
     // Get all deliveries from the database

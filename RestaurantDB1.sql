@@ -67,14 +67,28 @@ CREATE TABLE IF NOT EXISTS branchSpecialItems (
     FOREIGN KEY (menu_item_id) REFERENCES menuItems(ID) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS deliveries (
+                                          ID INT AUTO_INCREMENT PRIMARY KEY,
+                                          customer_id INT,
+                                          delivery_time TIMESTAMP,
+                                          delivery_method ENUM('DELIVERY', 'PICKUP') NOT NULL,
+    total_price DECIMAL(14,2),
+    is_canceled BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (customer_id) REFERENCES customers(ID) ON DELETE SET NULL
+    );
+
+
 -- יצירת טבלת פריטים בהזמנות
 CREATE TABLE IF NOT EXISTS OrderItem (
     order_id INT,
     menu_item_id INT,
     quantity INT NOT NULL,
+    delivery_id INT,
     PRIMARY KEY (order_id, menu_item_id),
-    FOREIGN KEY (menu_item_id) REFERENCES menuItems(ID) ON DELETE CASCADE
+    FOREIGN KEY (menu_item_id) REFERENCES menuItems(ID) ON DELETE CASCADE,
+    FOREIGN KEY (delivery_id) REFERENCES deliveries(ID) ON DELETE SET NULL  -- Foreign key to deliveries table
 );
+
 
 -- יצירת טבלת הזמנות
 CREATE TABLE IF NOT EXISTS orders (
@@ -85,5 +99,7 @@ CREATE TABLE IF NOT EXISTS orders (
     status ENUM('PENDING', 'COMPLETED', 'CANCELLED') NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customers(ID) ON DELETE SET NULL
 );
+
+
 
 
