@@ -167,11 +167,10 @@ public class MenuItemsController
 
     public Response handleUpdateDishTypeRequest(Request<MenuItem> request)
     {
-        MenuItem dishToUpdate = request.getData();  // Retrieve the dish with updated dish type from the request
-        int itemId = dishToUpdate.getItemID();  // Get the item ID
-        DishType newDishType = dishToUpdate.getDishType();  // Get the new dish type
-
-        boolean success = menuItemsRepository.updateDishType(itemId, newDishType);  // Call repository method to update dish type
+        MenuItem dishToUpdate = request.getData();
+        int itemId = dishToUpdate.getItemID();
+        DishType newDishType = dishToUpdate.getDishType();
+        boolean success = menuItemsRepository.updateDishType(itemId, newDishType);
 
         if (success)
         {
