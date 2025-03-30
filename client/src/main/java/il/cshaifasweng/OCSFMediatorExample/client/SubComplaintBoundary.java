@@ -64,8 +64,11 @@ public class SubComplaintBoundary {
         assert errorMessage != null : "fx:id=\"errorMessage\" was not injected: check your FXML file.";
 
         setBranchesList();
-        // Register the event bus
-        EventBus.getDefault().register(this);
+
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
     }
 
     private void setBranchesList() {

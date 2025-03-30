@@ -29,19 +29,14 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         appStage = stage;
-    	EventBus.getDefault().register(this);
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Please enter host: ");
-//        String host = scanner.nextLine();
-//        System.out.println("Please enter port: ");
-//        String port = scanner.nextLine();
-//        int port2 = Integer.parseInt(port);
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
     	client = SimpleClient.getClient();
         client.setHost("localhost");//change later for two computer connection
         client.setPort(3000);//change later for two computer connection
     	client.openConnection();
-        System.out.println("try client add");
-
         stage.setTitle("Team 9 - Mom's kitchen");
         scene = new Scene(loadFXML("primary"), 1295, 782);
         stage.setScene(scene);

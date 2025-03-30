@@ -5,10 +5,11 @@ import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
 
 import java.util.List;
 
-public class MenuEvent {
+public class MenuEvent
+{
     private Menu menu;
-
-    public MenuEvent(Menu menu){
+    public MenuEvent(Menu menu)
+    {
         this.menu = menu;
     }
 
@@ -18,4 +19,4 @@ public class MenuEvent {
     public Menu getMenu() {
         return menu;
     }
-} //change
+}

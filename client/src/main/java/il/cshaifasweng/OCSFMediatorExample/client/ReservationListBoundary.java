@@ -43,7 +43,8 @@ public class ReservationListBoundary {
         guestsCol.setCellValueFactory(new PropertyValueFactory<>("numOfGuests"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         setStyle();
-        if (!EventBus.getDefault().isRegistered(this)) {
+        if (!EventBus.getDefault().isRegistered(this))
+        {
             EventBus.getDefault().register(this);
         }
 

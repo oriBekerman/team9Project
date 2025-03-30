@@ -303,11 +303,12 @@ public class CancelDeliveryBoundary {
         cancelFee.setText("Delivery Cancellation Fees: \n Up to 3 hours - full refund \n 3-1 hours - 50% refund \n 1 hour or less - no refund");
         cancelFee.setWrapText(true); // Optional: wrap text in the label if the content overflows
 
-
-        //set default values
         cancelBtn.setDisable(true);
-        // Register to EventBus
-        EventBus.getDefault().register(this);
+
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
     }
 
 
