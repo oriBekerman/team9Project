@@ -14,6 +14,7 @@ import java.util.Set;
 @Table(name = "branch", uniqueConstraints = {
         @UniqueConstraint(columnNames = "ID")})
 public class Branch implements Serializable  {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,7 +75,6 @@ public class Branch implements Serializable  {
     public int getId() {
         return branchID;
     }
-
     public void setId(int id) {
         this.branchID = id;
     }
@@ -82,7 +82,6 @@ public class Branch implements Serializable  {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -90,17 +89,18 @@ public class Branch implements Serializable  {
     public String getLocation() {
         return location;
     }
-
     public void setLocation(String location) {
         this.location = location;
     }
 
     public Set<MenuItem> getBranchMenuItems() { return menuItems; }
     public void setBranchMenuItems(Set<MenuItem> menuItems) { this.menuItems = menuItems; }
+
     public void setDeliverableItems(Set<MenuItem> deliverableItems) { this.deliverableItems = deliverableItems; }
     public Set<MenuItem> getDeliverableItems() {
         return deliverableItems;
     }
+
     public void addMenuItem(MenuItem menuItem) { this.menuItems.add(menuItem); }
     public void addDeliverableItem(MenuItem menuItem) { this.deliverableItems.add(menuItem); }
     public int getBranchID() {

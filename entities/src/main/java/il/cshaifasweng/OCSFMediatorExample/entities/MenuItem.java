@@ -10,6 +10,8 @@ import java.util.*;
 @Table(name ="menuItems",uniqueConstraints = {
         @UniqueConstraint(columnNames = "ID")})
 public class MenuItem implements Serializable {
+    private static final long serialVersionUID = 1L;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

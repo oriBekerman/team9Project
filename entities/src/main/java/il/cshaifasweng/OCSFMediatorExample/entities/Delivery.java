@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "Deliveries")
 public class Delivery implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,7 +71,6 @@ public class Delivery implements Serializable {
     public int getOrderNumber() {
         return orderNumber;
     }
-
     public void setOrderNumber(int orderNumber) {
         this.orderNumber = orderNumber;
     }
@@ -78,7 +78,6 @@ public class Delivery implements Serializable {
     public String getDate() {
         return date;
     }
-
     public void setDate(String date) {
         this.date = date;
     }
@@ -86,7 +85,6 @@ public class Delivery implements Serializable {
     public List<OrderItem> getOrderItems() {
         return orderItems;
     }
-
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
         this.totalPrice = calculateTotalPrice(); // Recalculate total price when items change
@@ -95,7 +93,6 @@ public class Delivery implements Serializable {
     public Customer getCustomer() {
         return customer;
     }
-
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
@@ -103,7 +100,6 @@ public class Delivery implements Serializable {
     public DeliveryMethod getDeliveryMethod() {
         return deliveryMethod;
     }
-
     public void setDeliveryMethod(DeliveryMethod deliveryMethod) {
         this.deliveryMethod = deliveryMethod;
         this.totalPrice = calculateTotalPrice(); // Recalculate total price when delivery method changes
@@ -112,7 +108,6 @@ public class Delivery implements Serializable {
     public Branch getBranch() {
         return branch;
     }
-
     public void setBranch(Branch branch) {
         this.branch = branch;
     }
@@ -120,7 +115,6 @@ public class Delivery implements Serializable {
     public double getTotalPrice() {
         return totalPrice;
     }
-
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }

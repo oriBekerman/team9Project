@@ -39,6 +39,7 @@ public class ResInfoController {
 
     //initialize menuItem table with base items
     public void PopulateResSInfo(List<ResInfo>resSInfo) {
+        System.out.println("[ResInfoController] Populating " + resSInfo.size() + " reservations.");
         resInfoRepository.populate(resSInfo);
     }
 
@@ -91,7 +92,5 @@ public class ResInfoController {
         response.setStatus(SUCCESS);
         return response;
     }
-
-
 
 }

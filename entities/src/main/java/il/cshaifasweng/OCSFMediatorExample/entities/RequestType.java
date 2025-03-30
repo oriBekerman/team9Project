@@ -1,6 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
-public enum RequestType{
+public enum  RequestType{
 
       //base menu related requests
       GET_BASE_MENU,//menuItems
@@ -22,10 +22,11 @@ public enum RequestType{
      FETCH_BRANCH_TABLES,
 
     GET_RES_REPORT,
+    GET_DELIV_REPORT,
+    GET_COMP_REPORT,
 
     CANCEL_RESERVATION,
 
     SUBMIT_COMPLAINT
-
 
 }

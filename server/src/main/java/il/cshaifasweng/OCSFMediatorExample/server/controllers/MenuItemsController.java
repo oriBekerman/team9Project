@@ -26,7 +26,7 @@ public class MenuItemsController {
         return switch (request.getRequestType())
         {
             case GET_BASE_MENU->getBaseItems();
-             case UPDATE_PRICE->updatePrice(request);
+            case UPDATE_PRICE->updatePrice(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }

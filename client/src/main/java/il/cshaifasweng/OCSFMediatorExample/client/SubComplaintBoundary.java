@@ -33,7 +33,16 @@ public class SubComplaintBoundary {
     public Label errorMessage;
 
     @FXML
+    private Button backToHPBtn;
+
+    @FXML
+    void navToHP(ActionEvent event) {
+        switchScreen("Home Page");
+    }
+
+    @FXML
     void initialize() {
+        assert backToHPBtn != null : "fx:id=\"backToHPBtn\" was not injected: check your FXML file 'SubComplaint.fxml'.";
         assert branchComboBox != null : "fx:id=\"branchesList\" was not injected: check your FXML file 'reservation.fxml'.";
         assert continueBtn != null : "fx:id=\"continueBtn\" was not injected: check your FXML file 'reservation.fxml'.";
         setBranchesList();

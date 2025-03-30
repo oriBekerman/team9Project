@@ -3,8 +3,10 @@ package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
 import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
             session.save(delivery);
 
             session.getTransaction().commit();  // Commit the transaction
-            System.out.println("Delivery saved successfully: " + delivery);
+            System.out.println("[DeliveryRepository] Delivery saved successfully: " + delivery);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,7 +71,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
             data = session.createQuery(query).getResultList();
 
             session.getTransaction().commit();  // Commit the transaction
-            System.out.println("Getting all deliveries: " + data);
+            System.out.println("[DeliveryRepository]Getting all deliveries: " + data);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to fetch deliveries", e);
@@ -105,5 +107,80 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         return delivery;
     }
 
+
+
+//    public List<Delivery> getDeliveriesForReport(int branchId) {
+//        System.out.println("[DeliveryRepository] fetching deliveries for branchId: " + branchId);
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            Query<Delivery> query = session.createQuery("FROM Delivery WHERE branch.id = :branchId", Delivery.class);
+//            query.setParameter("branchId", branchId);
+//            List<Delivery> result = query.getResultList();
+//            System.out.println("[DeliveryRepository] Deliveries fetched: " + result.size());
+//            return result;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ArrayList<>();
+//        }
+//    }
+
+
+//    public List<Delivery> getDeliveriesForReport(int branchId) {
+//        System.out.println("DeliveryRepository - getDeliveriesForReport do you even get here?? ");
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            Query<Delivery> query = session.createQuery("FROM Delivery WHERE branch.id = :branchId", Delivery.class);
+//            query.setParameter("branchId", branchId);
+//            return query.getResultList();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ArrayList<>();
+//        }
+//    }
+
+//  the version that worked when the "MARCH" was on the right side
+//    public List<Delivery> getDeliveriesForReport(int branchId) {
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            String hql = "FROM Delivery d LEFT JOIN FETCH d.customer LEFT JOIN FETCH d.branch LEFT JOIN FETCH d.orderItems WHERE d.branch.id = :branchId";
+//            List<Delivery> deliveries = session.createQuery(hql, Delivery.class)
+//                    .setParameter("branchId", branchId)
+//                    .getResultList();
+//
+//            // Explicitly initialize lazy relationships
+//            deliveries.forEach(delivery -> {
+//                Hibernate.initialize(delivery.getCustomer());
+//                Hibernate.initialize(delivery.getBranch());
+//                Hibernate.initialize(delivery.getOrderItems());
+//            });
+//
+//            return deliveries;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ArrayList<>();
+//        }
+//    }
+
+    public List<Delivery> getDeliveriesForReport(int branchId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT DISTINCT d FROM Delivery d " +
+                    "LEFT JOIN FETCH d.customer " +
+                    "LEFT JOIN FETCH d.branch " +
+                    "LEFT JOIN FETCH d.orderItems " +
+                    "WHERE d.branch.id = :branchId";
+            List<Delivery> deliveries = session.createQuery(hql, Delivery.class)
+                    .setParameter("branchId", branchId)
+                    .getResultList();
+
+            // Initialize lazy relationships if needed
+            deliveries.forEach(delivery -> {
+                Hibernate.initialize(delivery.getCustomer());
+                Hibernate.initialize(delivery.getBranch());
+                Hibernate.initialize(delivery.getOrderItems());
+            });
+
+            return deliveries;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
 
 }

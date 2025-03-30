@@ -1,19 +1,21 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
 @Table(name = "resSInfo")
-public class ResInfo {
+public class ResInfo implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer resID;
 
     @ManyToOne  // Assuming Branch is an entity
-    @JoinColumn(name = "branch_id", referencedColumnName = "id")
+    @JoinColumn(name = "branch_id", referencedColumnName = "ID")
     private Branch branch;
 
     @ManyToOne
@@ -21,7 +23,7 @@ public class ResInfo {
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name="tableId", referencedColumnName = "id")
+    @JoinColumn(name="tableId", referencedColumnName = "ID")
     RestTable table;
 
     @Column(nullable = false)
@@ -81,6 +83,7 @@ public class ResInfo {
     public void setBranch(Branch branch) {
         this.branch = branch;
         branchIsSet=true;
+        System.out.println("[ResInfo - setBranch] Branch set to: " + branch.getName() + " (id: " + branch.getId() + ")");
     }
 
     public Customer getCustomer() {

@@ -72,7 +72,23 @@ public class BranchRepository extends BaseRepository<Branch> {
         catch (Exception e) {
             throw new RuntimeException(e);
         }
-        System.out.println("fetch in rep");
+        System.out.println("[BranchRepository]fetch in rep");
         return result;
     }
+
+    @Override
+    public Branch getByName(String name) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Branch WHERE name = :name";
+            Query<Branch> query = session.createQuery(hql, Branch.class);
+            query.setParameter("name", name);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to fetch branch by name", e);
+        }
+    }
+
+
+
 }

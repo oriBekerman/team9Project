@@ -9,7 +9,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.EventBus;
@@ -114,25 +113,23 @@ public class LoginBoundary {
         assert passwordTextF != null : "fx:id=\"passwordTextF\" was not injected: check your FXML file 'login.fxml'.";
         assert statusLabel != null : "fx:id=\"statusLabel\" was not injected: check your FXML file 'login.fxml'.";
         assert userNameTextF != null : "fx:id=\"userNameTextF\" was not injected: check your FXML file 'login.fxml'.";
-        setStyle();
-
-
+//        setStyle();
     }
-    public void setStyle()
-    {
-        root.setStyle("-fx-background-color: #fbe9d0;");
-
-        // Buttons Styling
-        String buttonStyle = "-fx-background-color: #8a6f48;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-size: 14px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-padding: 8px 16px;" +
-                "-fx-border-radius: 5px;";
-
-        backToHPBtn.setStyle(buttonStyle);
-        loginBtn.setStyle(buttonStyle);
-
-    }
+//    public void setStyle()
+//    {
+//        root.setStyle("-fx-background-color: #fbe9d0;");
+//
+//        // Buttons Styling
+//        String buttonStyle = "-fx-background-color: #8a6f48;" +
+//                "-fx-text-fill: white;" +
+//                "-fx-font-size: 14px;" +
+//                "-fx-font-weight: bold;" +
+//                "-fx-padding: 8px 16px;" +
+//                "-fx-border-radius: 5px;";
+//
+//        backToHPBtn.setStyle(buttonStyle);
+//        loginBtn.setStyle(buttonStyle);
+//
+//    }
 
 }

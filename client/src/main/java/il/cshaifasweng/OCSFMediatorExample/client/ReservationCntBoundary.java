@@ -35,7 +35,7 @@ public class ReservationCntBoundary {
 
     @FXML
     void BackAct(ActionEvent event) {
-        switchScreen("Reservation");
+        switchScreen("Home Page");
     }
 
     @FXML

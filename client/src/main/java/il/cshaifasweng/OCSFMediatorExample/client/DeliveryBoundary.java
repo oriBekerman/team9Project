@@ -32,6 +32,8 @@ public class DeliveryBoundary {
     private Button payBtn;
 
     @FXML
+    private Button getDeliveryBtn;
+    @FXML
     void navToPay(ActionEvent event) {
         switchScreen("Credit Card Info");
     }
@@ -40,8 +42,10 @@ public class DeliveryBoundary {
     void navToHP(ActionEvent event) {
         switchScreen("Home Page");
     }
+
     @FXML
-    private Button getDeliveryBtn;
+    void navToPersonalDFill(ActionEvent event) {switchScreen("Personal Details Filling");}
+
 
     @FXML
     void getDeliveryRequest(ActionEvent event) throws IOException {

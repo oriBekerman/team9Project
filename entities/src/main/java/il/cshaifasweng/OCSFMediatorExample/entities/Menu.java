@@ -10,8 +10,10 @@ import java.io.Serializable;
 //@Table(name = "Menus")
 
 public class Menu implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-//    @Id
+
+    //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int menuID;
 

@@ -46,6 +46,7 @@ public class BranchController {
         Response response=new Response<>(RETURN_BRANCH,null,null,THIS_CLIENT);
         String branchNameString = (String) branchName;
         Branch branch= branchRepository.getByName(branchNameString);
+
         if(branch == null)
         {
             response.setStatus(ERROR);
@@ -57,6 +58,8 @@ public class BranchController {
         }
         return response;
     }
+
+
     public Response getALLBranches()
     {
         Response response=new Response<>(BRANCHES_SENT,null,ERROR,THIS_CLIENT);

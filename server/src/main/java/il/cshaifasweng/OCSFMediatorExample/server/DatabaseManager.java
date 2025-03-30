@@ -10,7 +10,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.*;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.ComplaintStatus.*;
@@ -61,7 +63,8 @@ private static void initialize(String password) {
                 logInController.checkIfEmpty() &&
                 restTableController.checkIfEmpty() &&
                 deliveryController.checkIfEmpty() &&
-                complaintController.checkIfEmpty()) {
+                complaintController.checkIfEmpty()&&
+                resInfoController.checkIfEmpty()){
 
             // ==========================
             // 1. Populate Employees
@@ -151,10 +154,8 @@ private static void initialize(String password) {
             // ==========================
             // 6. Define Customers & Delivery Orders
             // ==========================
-//            Customer customer1 = new Customer(1, "Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "1234-5678-9876-5432", "12/25", "123");
-//            Customer customer2 = new Customer(2, "Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
             Customer customer1 = new Customer("Michael Johnson", "7890 Maple Ave, Tel Aviv", "michael.johnson@example.com", "1234-5678-9876-5432", "12/25", "123");
-           Customer customer2 = new Customer("Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
+            Customer customer2 = new Customer("Sarah Williams", "1234 Birch St, Haifa", "sarah.williams@example.com", "9876-5432-1234-5678", "11/24", "456");
 
             List<OrderItem> orderItems1 = List.of(
                     new OrderItem(item1, 2, "No dressing", null),
@@ -166,29 +167,72 @@ private static void initialize(String password) {
                     new OrderItem(item7, 1, "Well done", null)
             );
 
+
+            List<OrderItem> orderItems3 = List.of(
+                    new OrderItem(item3, 3, "Vegan", null),
+                    new OrderItem(item5, 1, "No salt", null)
+            );
+
+
+
             // Create deliveries
             Delivery order1 = new Delivery("2025-03-05", new ArrayList<>(orderItems1), customer1, DeliveryMethod.DELIVERY, telAvivBranch);
-            Delivery order2 = new Delivery("2025-03-05", new ArrayList<>(orderItems2), customer2, DeliveryMethod.SELF_PICKUP, haifaBranch);
+            Delivery order2 = new Delivery("2025-05-05", new ArrayList<>(orderItems2), customer2, DeliveryMethod.SELF_PICKUP, haifaBranch);
+            Delivery order3 = new Delivery("2025-05-10", new ArrayList<>(orderItems3), customer1, DeliveryMethod.SELF_PICKUP, haifaBranch);
+
 
             orderItems1.forEach(item -> item.setDelivery(order1));
             orderItems2.forEach(item -> item.setDelivery(order2));
+            orderItems3.forEach(item -> item.setDelivery(order3));
+
 
             // Populate delivery orders
             deliveryController.populateDelivery(order1);
             deliveryController.populateDelivery(order2);
+            deliveryController.populateDelivery(order3);
 
+            System.out.println("Adding new reservations:");
 
-            ResInfo reservation = new ResInfo(LocalDate.of(2025, 3, 15), LocalTime.of(19, 30), 4, "Inside");
-            reservation.setBranch(haifaBranch);
-            reservation.setCustomer(customer1);
-            reservation.setStatus(APPROVED);
-            resInfoController.PopulateResSInfo(List.of(reservation));
+            ResInfo reservation1 = new ResInfo(LocalDate.of(2025, 3, 15), LocalTime.of(19, 30), 4, "inside");
+            reservation1.setBranch(haifaBranch);
+            reservation1.setCustomer(customer1);
+            reservation1.setStatus(APPROVED);
+
+            ResInfo reservation2 = new ResInfo(LocalDate.of(2025, 5, 15), LocalTime.of(20, 30), 2, "inside");
+            reservation2.setBranch(telAvivBranch);
+            reservation2.setCustomer(customer2);
+            reservation2.setStatus(APPROVED);
+
+            ResInfo reservation3 = new ResInfo(LocalDate.of(2025, 5, 25), LocalTime.of(20, 30), 5, "outside");
+            reservation3.setBranch(telAvivBranch);
+            reservation3.setCustomer(customer1);
+            reservation3.setStatus(APPROVED);
+
+            resInfoController.PopulateResSInfo(List.of(reservation1, reservation2,reservation3));
+
             // Create a Complaint instance without a Branch
-            Complaint complaint = new Complaint( "Delayed order delivery",NEW);
-            complaint.setBranch(telAvivBranch);
-            complaint.setCustomer(customer1);
-            complaintController.populateComplaints(List.of(complaint));
+            Complaint complaint1 = new Complaint( "Delayed order delivery",NEW);
+            complaint1.setBranch(telAvivBranch);
+            complaint1.setCustomer(customer1);
+            complaint1.setComplaintDate(LocalDateTime.of(2025, 11, 5, 9, 45));
 
+            Complaint complaint2 = new Complaint( "Delayed order delivery",NEW);
+            complaint2.setBranch(haifaBranch);
+            complaint2.setCustomer(customer1);
+
+            Complaint complaint3 = new Complaint( "Delayed order delivery",NEW);
+            complaint3.setBranch(telAvivBranch);
+            complaint3.setCustomer(customer2);
+            complaint3.setComplaintDate(LocalDateTime.of(2025, 2, 5, 9, 45));
+
+
+            Complaint complaint4 = new Complaint( "Delayed order delivery",NEW);
+            complaint4.setBranch(haifaBranch);
+            complaint4.setCustomer(customer2);
+
+
+            complaintController.populateComplaints(List.of(complaint1,complaint2,complaint3,complaint4));
+            //    alice.manager
         }
     }
     //get controllers
@@ -236,6 +280,7 @@ private static void initialize(String password) {
         }
         return complaintController;
     }
+
     // shuts down Hibernate.
     public static void shutdown() {
         HibernateUtil.shutdown();

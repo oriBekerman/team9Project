@@ -167,22 +167,22 @@ public class App extends Application {
                     }
                 });
                 break;
-            case "secondary":
+            case "Update Menu":
                 Platform.runLater(() -> {
                     setWindowTitle("Update Menu");
                     try {
-                        setContent("secondary");
+                        setContent("updatMenu");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
                 break;
 
-            case "reservationCnt":
+            case "ReservationCnt":
                 Platform.runLater(() -> {
                     setWindowTitle("Reservation");
                     try {
-                        setContent("reservationCnt");
+                        setContent("ReservationCnt");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -191,6 +191,8 @@ public class App extends Application {
 
             case "SubComplaint":
                 Platform.runLater(() -> {
+                    setWindowTitle("Complaint");
+
                     try {
                         setContent("SubComplaint");
                     } catch (IOException e) {
