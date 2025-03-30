@@ -220,6 +220,22 @@ public class SimpleClient extends AbstractClient
 					System.out.println("event posted");
 				}
 			}
+			//COMPLAINT
+			if (response.getResponseType().equals(COMPLAINT_CREATED)) {
+				System.out.println("in complaint created");
+
+				// Check if complaint is null
+				Complaint complaint = (Complaint) response.getData();
+				if (complaint == null) {
+					System.err.println("Error: Complaint object is null in response.");
+					return;
+				}
+
+				System.out.println("Complaint successfully created: " + complaint);
+
+				// Post the event with the complaint data to the EventBus
+				EventBus.getDefault().post(new ComplaintCreatedEvent(complaint));
+			}
 
 			if (response.getResponseType().equals(UPDATE_BRANCH_TABLES)) {
 				System.out.println("in updateBRANCH_TABLES");
@@ -316,19 +332,19 @@ public class SimpleClient extends AbstractClient
 		Request request = new Request(BRANCH, FETCH_BRANCH_TABLES, branch);
 		client.sendToServer(request);
 	}
-	public void submitComplaint(List<String> customerDetails,Complaint complaint) throws IOException
-	{
-		Pair<Complaint,List<String>> pair=new Pair<>(complaint, customerDetails);
-		Request request=new Request(COMPLAINT,SUBMIT_COMPLAINT,pair);
-		try {
-			sendToServer(request);
-			System.out.println("complaint sent to server");
-		}
-		catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
-	}
+//	public void submitComplaint(List<String> customerDetails,Complaint complaint) throws IOException
+//	{
+//		Pair<Complaint,List<String>> pair=new Pair<>(complaint, customerDetails);
+//		Request request=new Request(COMPLAINT,SUBMIT_COMPLAINT,pair);
+//		try {
+//			sendToServer(request);
+//			System.out.println("complaint sent to server");
+//		}
+//		catch (IOException e) {
+//			throw new RuntimeException(e);
+//		}
+//
+//	}
 
 	public void removeDishFromDatabase(MenuItem dishToRemove) {
 		// Create a request to remove the dish
