@@ -33,17 +33,20 @@ public class SimpleServer extends AbstractServer {
     }
 
     @Override
-    protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
+    protected void handleMessageFromClient(Object msg, ConnectionToClient client)
+    {
         System.out.println("Received request from client: " + msg);
 
-        // Handling the "add client" string command
-        if (msg instanceof String msgString && msgString.startsWith("add client")) {
-            System.out.println("Client added successfully");
+        if (msg instanceof String msgString && msgString.startsWith("add client"))
+        {
             SubscribedClient connection = new SubscribedClient(client);
             SubscribersList.add(connection);
-            try {
+            try
+            {
                 client.sendToClient("Client added successfully");
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 System.err.println("Error sending client confirmation: " + e.getMessage());
             }
             return;
@@ -137,14 +140,12 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
-    private Response handlePermitGranted(Request request) {
-        System.out.println("Handling permit granted message...");
+    private Response handlePermitGranted(Request request)
+    {
         Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
                 "Your permit request has been granted.",
                 Response.Status.SUCCESS,
                 Response.Recipient.ALL_CLIENTS);
-
-        // Return the response
         return response;
     }
 

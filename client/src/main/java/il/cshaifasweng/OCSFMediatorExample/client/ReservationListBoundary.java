@@ -13,6 +13,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,7 +44,8 @@ public class ReservationListBoundary {
         guestsCol.setCellValueFactory(new PropertyValueFactory<>("numOfGuests"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         setStyle();
-        if (!EventBus.getDefault().isRegistered(this)) {
+        if (!EventBus.getDefault().isRegistered(this))
+        {
             EventBus.getDefault().register(this);
         }
 
@@ -92,13 +94,35 @@ public class ReservationListBoundary {
             if (selected != null) {
                 reservationsTable.getItems().remove(selected);
 
+                // Calculate penalty
+                int penalty = 0;
+                LocalTime now = LocalTime.now();
+                LocalTime reservationTime = selected.getHours();
+                long minutesBetween = java.time.Duration.between(now, reservationTime).toMinutes();
+
+                if (minutesBetween < 60) {
+                    penalty = selected.getNumOfGuests() * 10;
+                }
+
+                // Build message
+                StringBuilder message = new StringBuilder();
+                message.append("Reservation:\nfor ")
+                        .append(selected.getBranch().getName())
+                        .append("\nat ").append(selected.getHours())
+                        .append("\nhas been cancelled.");
+
+                if (penalty > 0) {
+                    message.append("\nA cancellation fee of ")
+                            .append(penalty).append("₪ applies (10₪ per guest).");
+                } else {
+                    message.append("\nNo cancellation fee applies.");
+                }
+
+                // Show alert
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Confirmation");
                 alert.setHeaderText(null);
-                alert.setContentText(
-                        "Reservation:\nfor " + selected.getBranch().getName() +
-                                "\nat " + selected.getHours() + "\nhas been cancelled"
-                );
+                alert.setContentText(message.toString());
                 alert.getButtonTypes().setAll(ButtonType.OK);
 
                 Optional<ButtonType> result = alert.showAndWait();
@@ -110,6 +134,7 @@ public class ReservationListBoundary {
             }
         });
     }
+
 
     private void performAdditionalAction() {
         System.out.println("in preform addi");

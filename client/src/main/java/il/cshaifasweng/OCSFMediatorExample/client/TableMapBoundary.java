@@ -61,17 +61,17 @@ public class TableMapBoundary {
 
     public TableMapBoundary()
     {
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
         mapIsSet=false;
     }
-    public void initialize() {
-        if (branch != null) {
-//            buttons=insideGridPane.getChildren();
-//           setMap(branch);
+    public void initialize()
+    {
+        if (branch != null)
+        {
         }
-//        if (!EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().register(this);
-//        }
     }
     // initialize the map before letting the map page be opened
     public void setMap(Branch branch) {
