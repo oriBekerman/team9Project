@@ -238,6 +238,7 @@ private static void initialize(String password) {
                     "17:00"
             );
 
+
             // Now associate the OrderItems with the Delivery orders
             orderItem1.setDelivery(order1); // Associate orderItem1 with order1
             orderItem2.setDelivery(order1); // Associate orderItem2 with order1
@@ -251,6 +252,11 @@ private static void initialize(String password) {
             // Set the OrderItems in the respective Delivery objects
             order1.setOrderItems(orderItems1);
             order2.setOrderItems(orderItems2);
+
+
+            //calc total price
+            order1.setTotalPrice(order1.calculateTotalPrice());
+            order2.setTotalPrice(order2.calculateTotalPrice());
 
             // Adding delivery orders to the delivery controller
             deliveryController.populateDelivery(order1);

@@ -137,7 +137,6 @@ public class DeliveryController {
 
 
 
-
     public boolean checkIfEmpty()
     {
         return (deliveryRepository.checkIfEmpty());

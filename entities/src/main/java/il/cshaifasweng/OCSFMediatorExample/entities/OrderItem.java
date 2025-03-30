@@ -17,10 +17,9 @@ public class OrderItem implements Serializable {
     private int quantity=0; // Quantity of the item
     private String preferences=""; // Preferences for the item (e.g., special instructions)
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "delivery_id")
-    private Delivery delivery;
-
+    private Delivery delivery; // Many-to-one relationship with Delivery
 
     // Default constructor
     public OrderItem() {}

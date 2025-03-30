@@ -35,29 +35,19 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
-            // Handle Customer saving or merging
-            if (delivery.getCustomer() != null) {
-                if (delivery.getCustomer().getId() == null) {
-                    session.save(delivery.getCustomer());  // Save if customer is new
-                } else {
-                    delivery.setCustomer((Customer) session.merge(delivery.getCustomer()));  // Merge if customer exists
-                }
-            }
+            // Save the customer associated with the delivery (if necessary)
+            session.saveOrUpdate(delivery.getCustomer());
 
-            // Explicitly save or merge each OrderItem (optional, depending on how cascading works)
+            // Save the delivery first to generate its ID
+            session.save(delivery);
+
+            // Now that the delivery has an ID, we can save the associated order items
             for (OrderItem orderItem : delivery.getOrderItems()) {
-                if (orderItem.getId() == 0) { // Assuming `0` means new OrderItem (since ID is auto-generated)
-                    session.save(orderItem);  // Save new OrderItem
-                } else {
-                    session.merge(orderItem);  // Merge existing OrderItem (optional)
-                }
+                orderItem.setDelivery(delivery); // Make sure each order item knows its delivery
+                session.save(orderItem); // Save each order item
             }
 
-            // Save the delivery itself
-            session.save(delivery);  // Save the delivery
-
-            // Commit the transaction
-            session.getTransaction().commit();
+            session.getTransaction().commit(); // Commit the transaction
             System.out.println("Delivery saved successfully: " + delivery);
             return true;
         } catch (Exception e) {
@@ -65,7 +55,6 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
             return false;
         }
     }
-
 
 
     // Get all deliveries from the database
