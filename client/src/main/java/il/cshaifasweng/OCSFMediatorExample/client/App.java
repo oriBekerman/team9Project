@@ -245,6 +245,7 @@ public class App extends Application {
                 DeliveryBoundary deliveryBoundary = loader.getController();
 
                 deliveryBoundary.setDelivery(delivery);
+                deliveryBoundary.initialize();
 
                 // Set the scene and show the stage
                 scene = new Scene(root);
