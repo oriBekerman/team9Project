@@ -109,7 +109,6 @@ private static void initialize(String password) {
             // ==========================
 
 
-
             MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce", "Low calorie", loadImageFromResources("salad.jpeg"), BASE);
             MenuItem item2 = new MenuItem("Pizza", 45.00, "Mushrooms, onions, tomatoes", "Includes vegan option", loadImageFromResources("pizza.jpeg"), BASE);
             MenuItem item3 = new MenuItem("Pasta", 70.00, "Mushroom cream sauce", "Available gluten-free", loadImageFromResources("pasta.jpeg"), BASE);

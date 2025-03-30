@@ -69,6 +69,12 @@ public class SecondaryBoundary
     private Button addDishBtn;
     @FXML
     private Button removeDishBtn;
+
+    private Branch currentbranch;
+
+    public void setBranch(Branch branch){
+        currentbranch= branch;
+    }
     @FXML
 
     void UpdateIngridients(ActionEvent event)
@@ -298,7 +304,12 @@ public class SecondaryBoundary
     {
         try
         {
-            SimpleClient.getClient().displayNetworkMenu();
+            if(currentbranch == null) {
+                SimpleClient.getClient().displayNetworkMenu();
+            }
+            else{
+                SimpleClient.getClient().displayBranchMenu(currentbranch);
+            }
             menuTableView.refresh();
         }
         catch (IOException e)
@@ -498,7 +509,12 @@ public class SecondaryBoundary
         }
             try
             {
-                SimpleClient.getClient().displayNetworkMenu();
+                if(currentbranch == null) {
+                    SimpleClient.getClient().displayNetworkMenu();
+                }
+                else{
+                    SimpleClient.getClient().displayBranchMenu(currentbranch);
+                }
                 System.out.println("get menu from initialize ");
             }
             catch (IOException e)

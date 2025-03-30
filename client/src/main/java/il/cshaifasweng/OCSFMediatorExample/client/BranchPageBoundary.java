@@ -134,30 +134,31 @@ public class BranchPageBoundary
 
     public void displayMenu(ActionEvent actionEvent)
     {
-        if (!isMenuLoaded)
-        {
-            System.out.println("Requesting menu...");
-            try
-            {
-                SimpleClient.getClient().displayBranchMenu(branch);
-            }
-            catch (Exception e)
-            {
-            e.printStackTrace();
-            }
-            isMenuLoaded = true;
-        }
-        else
-        {
-            System.out.println("Menu already loaded, skipping request.");
-        }
-        switchScreen("secondary");
-        try
-        {
-            App.setRoot("secondary");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        switchToBranchMenu(branch);
+//        if (!isMenuLoaded)
+//        {
+//            System.out.println("Requesting menu...");
+//            try
+//            {
+//                SimpleClient.getClient().displayBranchMenu(branch);
+//            }
+//            catch (Exception e)
+//            {
+//            e.printStackTrace();
+//            }
+//            isMenuLoaded = true;
+//        }
+//        else
+//        {
+//            System.out.println("Menu already loaded, skipping request.");
+//        }
+//        switchScreen("secondary");
+//        try
+//        {
+//            App.setRoot("secondary");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
 
