@@ -80,12 +80,15 @@ public class PrimaryBoundary
 		System.out.println("Error: " + message);
 	}
 	@FXML
-	void navToLoginP(ActionEvent event) {
+	void navToLoginP(ActionEvent event)
+	{
+		onExit();
 		switchScreen("Login");
 	}
 	@FXML
 	void navToDeliv(ActionEvent event)
 	{
+		onExit();
 		switchScreen("Delivery");
 		try
 		{
@@ -122,6 +125,7 @@ public class PrimaryBoundary
 	@FXML
 	void displayMenuFunc(ActionEvent event) throws IOException
 	{
+		onExit();
 		switchScreen("secondary");
 		try
 		{
