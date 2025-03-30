@@ -28,8 +28,7 @@ import javafx.stage.Popup;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.*;
 
-public class PrimaryBoundary
-{
+public class PrimaryBoundary {
 	public Button MenuBtn;
 	public Button subCompBtn;
 	public Button complaintsTableBtn;
@@ -63,81 +62,77 @@ public class PrimaryBoundary
 	private Button SaveBtn;
 	@FXML
 	private Button givePermitBtn;
+
 	@FXML
-	void givePermit(ActionEvent event)
-	{
-		try
-		{
+	void givePermit(ActionEvent event) {
+		try {
 			Request<Void> request = new Request<>(ReqCategory.PERMIT_GRANTED, RequestType.PERMISSION_REQUEST, null);
 			SimpleClient.getClient().sendToServer(request);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 			showErrorMessage("Network error occurred while granting the permit.");
 		}
 	}
+
 	private void showErrorMessage(String message) {
 		System.out.println("Error: " + message);
 	}
+
 	@FXML
 	void navToLoginP(ActionEvent event) {
 		switchScreen("Login");
 	}
+
 	@FXML
-	void navToDeliv(ActionEvent event)
-	{
+	void navToDeliv(ActionEvent event) {
 		switchScreen("Delivery");
-		try
-		{
+		try {
 			SimpleClient.getClient().displayNetworkMenu();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
+
 	@FXML
 	void cancelDel(ActionEvent event) {
 		switchScreen("CancelDelivery");
 	}
+
 	@FXML
-	void navToHP(ActionEvent event)
-	{
+	void navToHP(ActionEvent event) {
 		onExit();
 		switchScreen("Home Page");
 	}
+
 	@FXML
 	void navToReservation(ActionEvent event) {
 		switchScreen("Reservation");
 	}
+
 	@FXML
-	void navToBranches(ActionEvent event)
-	{
+	void navToBranches(ActionEvent event) {
 		onExit();
 		switchScreen("Branch");
 	}
 
-	public void onExit()
-	{
+	public void onExit() {
 		EventBus.getDefault().unregister(this);
 	}
-	@FXML
-	void displayMenuFunc(ActionEvent event) throws IOException
-	{
-		switchScreen("secondary");
-		try
-		{
-			App.setRoot("secondary");
-		//	SimpleClient.getClient().displayNetworkMenu();
 
-		}
-		catch (IOException e)
-		{
+	@FXML
+	void displayMenuFunc(ActionEvent event) throws IOException {
+		switchScreen("secondary");
+		try {
+			App.setRoot("secondary");
+			//	SimpleClient.getClient().displayNetworkMenu();
+
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@FXML
-	void LogOut(ActionEvent event)
-	{
+	void LogOut(ActionEvent event) {
 		SimpleClient.getClient().logout();
 		logoutBttn.setVisible(false);
 		loginBttn.setVisible(true);
@@ -155,8 +150,7 @@ public class PrimaryBoundary
 		assert logoutBttn != null : "fx:id=\"logoutBttn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert givePermitBtn != null : "fx:id=\"givePermitBtn\" was not injected: check your FXML file 'primary.fxml'.";
 
-		if (!EventBus.getDefault().isRegistered(this))
-		{
+		if (!EventBus.getDefault().isRegistered(this)) {
 			EventBus.getDefault().register(this);
 		}
 
@@ -171,41 +165,29 @@ public class PrimaryBoundary
 		Image image = new Image(imagePath);
 		MOMSImage.setImage(image);
 
-		if (SimpleClient.getClient().getActiveUser() != null)
-		{
+		if (SimpleClient.getClient().getActiveUser() != null) {
 			logoutBttn.setVisible(true);
 			loginBttn.setVisible(false);
 
-			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN)
-			{
+			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN) {
 				UpdateMenuBtn.setVisible(true);
-			}
-			else
-			{
+			} else {
 				UpdateMenuBtn.setVisible(false);
 			}
-			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.COMPANY_MANAGER)
-			{
+			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.COMPANY_MANAGER) {
 				givePermitBtn.setVisible(true);
-			}
-			 else
-			 {
+			} else {
 				givePermitBtn.setVisible(false);
-			 }
-		}
-		else
-		{
+			}
+		} else {
 			logoutBttn.setVisible(false);
 			loginBttn.setVisible(true);
 			UpdateMenuBtn.setVisible(false);
 			givePermitBtn.setVisible(false);
 		}
-		try
-		{
+		try {
 			SimpleClient.getClient().sendToServer("add client");
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		toggleButtonBranch.setOnAction(e ->
@@ -214,8 +196,7 @@ public class PrimaryBoundary
 		});
 	}
 
-	private void GetBranchListPopup()
-	{
+	private void GetBranchListPopup() {
 		synchronized (lock) {
 			if (!branchListInit) {
 				try {
@@ -230,8 +211,7 @@ public class PrimaryBoundary
 				}
 			}
 		}
-		try
-		{
+		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("BranchList.fxml"));
 			Parent popupContent = loader.load();
 
@@ -243,14 +223,11 @@ public class PrimaryBoundary
 			popup.getContent().add(popupContent);
 			popup.setAutoHide(true);
 			// Ensure popup shows correctly
-			if (toggleButtonBranch.getScene() != null)
-			{
+			if (toggleButtonBranch.getScene() != null) {
 				popup.show(toggleButtonBranch.getScene().getWindow(),
 						toggleButtonBranch.localToScreen(0, 0).getX(),
 						toggleButtonBranch.localToScreen(0, 0).getY() + toggleButtonBranch.getHeight());
-			}
-			else
-			{
+			} else {
 				System.out.println("toggleButtonBranch scene is NULL - cannot display popup");
 			}
 
@@ -260,61 +237,54 @@ public class PrimaryBoundary
 	}
 
 	@FXML
-	public void getPopup(ActionEvent actionEvent)
-	{
+	public void getPopup(ActionEvent actionEvent) {
 		System.out.println("getPopup");
 		GetBranchListPopup();
 	}
 
 	@Subscribe
-	public void onBranchSelectedEvent(BranchSelectedEvent event)
-	{
+	public void onBranchSelectedEvent(BranchSelectedEvent event) {
 		Branch branch = event.getBranch();
-		if (branch == null)
-		{
+		if (branch == null) {
 			System.out.println("branch is null");
 		}
 		openBranchPage(branch);
 	}
 
-	private void openBranchPage(Branch branch)
-	{
-		try
-		{
+	private void openBranchPage(Branch branch) {
+		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("Branch.fxml"));
 			Parent branchPageRoot = loader.load();
 			// Get the controller and pass the branch
 			BranchPageBoundary controller = loader.getController();
 			controller.setBranch(branch);
-			while (!controller.branchIsSet)
-			{
+			while (!controller.branchIsSet) {
 				System.out.println("Waiting for branch to be set");
 			}
 			App.setContent(branchPageRoot);
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Subscribe
-	public void onBranchListSentEvent(BranchListSentEvent event)
-	{
-		synchronized (lock)
-		{
+	public void onBranchListSentEvent(BranchListSentEvent event) {
+		synchronized (lock) {
 			this.branchList = event.branches;
 			this.branchListInit = true;
 			lock.notifyAll();
 		}
 	}
+
 	public void goToSubCompPage(ActionEvent actionEvent) {
 		switchScreen("SubComplaint");
 	}
+
 	public void viewComplaints(ActionEvent actionEvent) {
 		openComplaintsTablePage();
 	}
+
 	public void openComplaintsTablePage() {
-			switchScreen("Complaints");
+		switchScreen("Complaints");
 	}
 }

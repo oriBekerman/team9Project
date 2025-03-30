@@ -220,6 +220,7 @@ public class SimpleClient extends AbstractClient
 			if(response.getResponseType().equals(RETURN_ALL_COMPLAINTS))
 			{
 				ReceivedAllComplaintsEvent event=new ReceivedAllComplaintsEvent((List<Complaint>) response.getData());
+				EventBus.getDefault().post(event);
 			}
 			if(response.getResponseType().equals(RETURN_ACTIVE_RESERVATIONS))
 			{

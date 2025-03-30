@@ -8,13 +8,12 @@ public class ReceivedAllComplaintsEvent {
     List<Complaint> complaintList;
     String message;
     public ReceivedAllComplaintsEvent(String message) {
-
+        this.message = message;
     }
     public ReceivedAllComplaintsEvent(List<Complaint> complaintList, String message) {
         this.complaintList = complaintList;
         this.message = "";
     }
-
     public ReceivedAllComplaintsEvent(List<Complaint> complaintList) {
         this.complaintList = complaintList;
 

@@ -42,12 +42,11 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
 //            }
             String email = delivery.getCustomer().getEmail();
             // Save the customer before saving the delivery
-            Customer customer=getCustomerByEmail(email);
-            if(customer == null)
-            {
+            Customer customer = getCustomerByEmail(email);
+            if (customer == null) {
                 session.save(delivery.getCustomer());
             }
-            setCustomer(delivery);
+//            setCustomer(delivery);
             // Now save the delivery
             session.save(delivery);
 
@@ -59,7 +58,6 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
             return false;
         }
     }
-
 
 
     // Get all deliveries from the database
@@ -150,39 +148,56 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         }
     }
 
-    public Customer getCustomerByEmail(String email) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Delivery> cq = cb.createQuery(Delivery.class);
-            Root<Delivery> root = cq.from(Delivery.class);
+//    public Customer getCustomerByEmail(String email) {
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            CriteriaBuilder cb = session.getCriteriaBuilder();
+//            CriteriaQuery<Delivery> cq = cb.createQuery(Delivery.class);
+//            Root<Delivery> root = cq.from(Delivery.class);
+//
+//            // Access nested customer.email
+//            Predicate emailMatch = cb.equal(root.get("customer").get("email"), email);
+//
+//            cq.select(root).where(emailMatch);
+//
+//            Delivery delivery = session.createQuery(cq)
+//                    .setMaxResults(1)
+//                    .uniqueResult();
+//
+//            return (delivery != null) ? delivery.getCustomer() : null;
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+public Customer getCustomerByEmail(String email) {
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Customer> cq = cb.createQuery(Customer.class);
+        Root<Customer> root = cq.from(Customer.class);
 
-            // Access nested customer.email
-            Predicate emailMatch = cb.equal(root.get("customer").get("email"), email);
+        Predicate emailMatch = cb.equal(root.get("email"), email);
+        cq.select(root).where(emailMatch);
 
-            cq.select(root).where(emailMatch);
-
-            Delivery delivery = session.createQuery(cq)
-                    .setMaxResults(1)
-                    .uniqueResult();
-
-            return (delivery != null) ? delivery.getCustomer() : null;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return session.createQuery(cq)
+                .setMaxResults(1)
+                .uniqueResult();
+    } catch (Exception e) {
+        e.printStackTrace();
+        return null;
     }
-    public void setCustomer(Delivery newDelivery) {
-        Transaction tx=null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession())
-        {
-            tx = session.beginTransaction();
-            session.saveOrUpdate(newDelivery);
-            tx.commit();
-        }
-        catch (Exception e) {
-            if (tx != null) tx.rollback();
-        }
-    }
+}
 
 }
+//    public void setCustomer(Delivery newDelivery) {
+//        Transaction tx=null;
+//        try (Session session = HibernateUtil.getSessionFactory().openSession())
+//        {
+//            tx = session.beginTransaction();
+//            session.saveOrUpdate(newDelivery);
+//            tx.commit();
+//        }
+//        catch (Exception e) {
+//            if (tx != null) tx.rollback();
+//        }
+//    }
+

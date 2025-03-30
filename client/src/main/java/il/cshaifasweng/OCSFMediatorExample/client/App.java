@@ -218,14 +218,19 @@ public class App extends Application {
                 break;
             case "Complaints":
                 Platform.runLater(() -> {
-                    setWindowTitle(" Complaints");
+                    setWindowTitle("Complaints");
                     try {
-                        setContent("HandleCompTablePage");
+                        FXMLLoader loader = new FXMLLoader(App.class.getResource("HandleCompTablePage.fxml"));
+                        Parent root = loader.load();
+                        HandleComplaintTableBoundary boundary = loader.getController();
+                        boundary.setPage();  // fetch complaints & update table
+                        setContent(root);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
                 break;
+
 
 
 
