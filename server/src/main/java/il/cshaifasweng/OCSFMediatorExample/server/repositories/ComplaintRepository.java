@@ -32,11 +32,8 @@ public class ComplaintRepository extends BaseRepository<Complaint>
             // Check if the customer is transient (not saved in the database yet)
             if (complaint.getCustomer() != null) {
                 // Save the customer before saving the complaint
-                session.save(complaint.getCustomer());
-            }else {
-                complaint.setCustomer((Customer) session.merge(complaint.getCustomer()));  // Merge if customer exists
+                session.saveOrUpdate(complaint.getCustomer());
             }
-
             // Save the complaint
             session.save(complaint);
 
