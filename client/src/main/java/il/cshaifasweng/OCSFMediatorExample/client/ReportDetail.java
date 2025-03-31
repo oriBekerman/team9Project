@@ -32,26 +32,13 @@ public class ReportDetail {
 
 
     // Constructor for Reservations
-//    public ReportDetail(ResInfo resInfo) {
-//        this.fullNameRES = resInfo.getCustomer().getName();
-//        this.numOfGuests = String.valueOf(resInfo.getNumOfGuests());
-//        this.reservationDate = resInfo.getResDate().toString();
-//        this.hours = resInfo.getHours().toString();
-//        this.inOrOut = resInfo.getInOrOut();
-//        System.out.println("[ReportDetail - Constructor for Reservations ]the details of this reservation are: the customer full name is:"
-//                +fullNameRES+", numOfGuests: "+numOfGuests+", reservationDate: "+reservationDate+", hours: "+hours+", inOrOut: "+inOrOut);
-//    }
-
-
     public ReportDetail(ResInfo resInfo) {
         try {
-            System.out.println("[Constructor Debug] resInfo: " + resInfo);
             this.fullNameRES = resInfo.getCustomer() != null ? resInfo.getCustomer().getName() : "N/A";
             this.numOfGuests = String.valueOf(resInfo.getNumOfGuests());
             this.reservationDate = resInfo.getResDate().toString();
             this.hours = resInfo.getHours().toString();
             this.inOrOut = resInfo.getInOrOut();
-            System.out.println("[Constructor Debug] All values set without error!");
         } catch (Exception e) {
             System.out.println("[Constructor Exception] " + e.getMessage());
             e.printStackTrace();

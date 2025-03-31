@@ -32,7 +32,7 @@
             </children>
         </VBox>
         <AnchorPane fx:id="sideBarBranchPlace" prefHeight="117.0" prefWidth="140.0" />
-      <Label fx:id="ReportType" layoutX="606.0" layoutY="103.0" prefHeight="49.0" prefWidth="295.0" styleClass="main-title">
+      <Label fx:id="ReportType" layoutX="623.0" layoutY="105.0" prefHeight="49.0" prefWidth="295.0" styleClass="main-title">
         <font>
             <Font size="24.0" />
          </font>

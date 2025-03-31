@@ -230,7 +230,6 @@ private static void initialize(String password) {
             complaint4.setBranch(haifaBranch);
             complaint4.setCustomer(customer2);
 
-
             complaintController.populateComplaints(List.of(complaint1,complaint2,complaint3,complaint4));
             //    alice.manager
         }

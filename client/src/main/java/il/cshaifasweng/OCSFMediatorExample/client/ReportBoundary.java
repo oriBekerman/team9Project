@@ -35,6 +35,7 @@ import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 public class ReportBoundary {
     private Branch currentBranch;  // Maintain a current branch state
     private SideBarBranchBoundary sidebarController;
+    private boolean registered = false;
 
     @FXML
     private ResourceBundle resources;
@@ -63,6 +64,8 @@ public class ReportBoundary {
     @FXML
     private TableView<ReportDetail> reportTableView;
 
+
+
     @FXML
     void BackToHP(ActionEvent event) {
         System.out.println("[ReportBoundary] Back to Home Page clicked");
@@ -79,8 +82,12 @@ public class ReportBoundary {
         assert reportTableView != null : "fx:id=\"reportTableView\" was not injected: check your FXML file 'report.fxml'.";
         assert sideBarBranchPlace != null : "fx:id=\"sideBarBranchPlace\" was not injected: check your FXML file 'report.fxml'.";
 
-        System.out.println("[ReportBoundary-initialize ] Registering to EventBus.");
-        EventBus.getDefault().register(this);
+        if (!registered) {
+            EventBus.getDefault().register(this);
+            registered = true;
+            SimpleClient.getClient().getBranchList();
+        }
+
         complaintsChart.setVisible(false);
         reportTableView.setVisible(false);
 
@@ -89,20 +96,7 @@ public class ReportBoundary {
                 "July", "August", "September", "October", "November", "December"
         ));
 
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("sideBarBranch.fxml"));
-//            Parent sideBarBranchRoot = loader.load();
-//            sidebarController = loader.getController();
-//
-//            sideBarBranchPlace.getChildren().clear();
-//            sideBarBranchPlace.getChildren().add(sideBarBranchRoot);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
     }
-
-
 
     // Method to set the branch data explicitly after initialization
     public void setReportTitle(String reportType) {
@@ -203,7 +197,6 @@ public class ReportBoundary {
     private void configureTableForReport(String reportType) {
         reportTableView.getColumns().clear();
         if (reportType.equals("Reservations")) {
-            System.out.println("[ReportBoundary- configureTableForReport]   the reportType is Reservations, now the columns will be filled ");
             reportTableView.getColumns().addAll(
                     createColumn("Full Name", "fullNameRES"),
                     createColumn("Number of Guests", "numOfGuests"),
@@ -242,7 +235,6 @@ public class ReportBoundary {
         }
         try {
             if ("Reservations".equals(reportType)) {
-                System.out.println("[ReportBoundary - requestAndDisplayReportData] the reportType is Reservations, now calling the simpleClient method requestReservationsReport with the branch name: "+ branchName);
                 SimpleClient.getClient().requestReservationsReport(branchName);
             } else if ("Deliveries".equals(reportType)) {
                 SimpleClient.getClient().requestDeliveriesReport(branchName);
@@ -278,8 +270,6 @@ public class ReportBoundary {
             } else if ("Complaints".equals(event.getReportType())) {
                 List<Complaint> complaints = (List<Complaint>) event.getReportData();
                 complaints.forEach(complaint -> details.add(new ReportDetail(complaint)));
-                System.out.println("[DEBUG] Complaint month from ReportDetail: " + complaints.getFirst().getComplaintDate().getMonth());
-                System.out.println("[DEBUG] Complaint month from ReportDetail: " + complaints.getLast().getComplaintDate().getMonth());
                 updateComplaintsChart(details);
             }
         });
@@ -289,11 +279,27 @@ public class ReportBoundary {
     public void setBranch(Branch branch) {
         this.currentBranch = branch;
         System.out.println("[ReportBoundary] Branch explicitly set to: " + branch.getName());
+        injectSidebarBranch();
     }
 
     public void cleanup() {
         EventBus.getDefault().unregister(this);
     }
 
+
+    private void injectSidebarBranch() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("sideBarBranch.fxml"));
+            Parent sideBarBranchRoot = loader.load();
+            sidebarController = loader.getController();
+
+            sidebarController.setBranch(this.currentBranch);  // Safe now, branch is guaranteed to be set
+
+            sideBarBranchPlace.getChildren().clear();
+            sideBarBranchPlace.getChildren().add(sideBarBranchRoot);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 

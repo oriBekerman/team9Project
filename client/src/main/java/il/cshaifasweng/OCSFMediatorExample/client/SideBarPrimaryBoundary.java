@@ -27,9 +27,6 @@ import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
 public class SideBarPrimaryBoundary {
 
-
-    public Branch branch;
-
     @FXML
     private ResourceBundle resources;
 
@@ -61,6 +58,10 @@ public class SideBarPrimaryBoundary {
     public List<Branch> branchList = null;
     public boolean branchListInit = false;
     private final Object lock = new Object();
+
+    public Branch branch;
+    private boolean registered = false;
+
 
 
 //    @FXML
@@ -116,12 +117,15 @@ public class SideBarPrimaryBoundary {
         assert toggleButtonBranch != null : "fx:id=\"toggleButtonBranch\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
         assert updateMenuBtn != null : "fx:id=\"updateMenuBtn\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
 
-        // Set the button action here
-        EventBus.getDefault().register(this);
-        SimpleClient.getClient().getBranchList(); // Request branch list from server
+
+        if (!registered) {
+            EventBus.getDefault().register(this);
+            registered = true;
+            SimpleClient.getClient().getBranchList();
+        }
 
         toggleButtonBranch.setOnAction(e -> {
-            System.out.println("Button clicked - showing popup");
+            System.out.println("[SideBarPrimaryBoundary- initialize]Button clicked - showing branch list popup");
             GetBranchListPopup();
         });
 
@@ -204,12 +208,9 @@ public class SideBarPrimaryBoundary {
     // Handle the branch selected from the list
     @Subscribe
     public void onBranchSelectedEvent(BranchSelectedEvent event) {
-        System.out.println("[SideBarPrimaryBoundary - onBranchSelectedEvent- BEFORE : Branch branch = event.getBranch(); ] Branch selected: " + event.getBranch().getName());
         Branch branch = event.getBranch();
-        System.out.println("[SideBarPrimaryBoundary - onBranchSelectedEvent - AFTER : Branch branch = event.getBranch(); ] Branch selected: " + branch.getName() +
-                " (ID=" + branch.getId() + ")");
         if (branch == null) {
-            System.out.println("[SideBarPrimaryBoundary] branch is null");
+            System.out.println("[SideBarPrimaryBoundary - onBranchSelectedEvent] branch is null");
         }
         openBranchPage(branch);
     }
@@ -240,31 +241,3 @@ public class SideBarPrimaryBoundary {
         }
     }
 }
-
-
-//    @Subscribe
-//    public void onBranchSelectedEvent(BranchSelectedEvent event) {
-//        System.out.println("[SideBarPrimaryBoundary] Branch selected event: " + event.getBranch().getName());
-//        openBranchPage(event.getBranch());
-//    }
-
-
-//    //open selected branch page
-//    private void openBranchPage(Branch branch) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("Branch.fxml"));
-//            Parent branchPageRoot = loader.load();
-//            // Get the controller and pass the branch
-//            BranchPageBoundary controller = loader.getController();
-//            controller.setBranch(branch);
-//            if (controller.branchIsSet) {
-//                System.out.println(" [SideBarPrimaryBoundary]  branch is already set");
-//            }
-//            while (!controller.branchIsSet) {
-//                System.out.println("[SideBarPrimaryBoundary] Waiting for branch to be set");
-//            }
-//            App.setContent(branchPageRoot);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }

@@ -47,7 +47,7 @@ public class BranchPageBoundary {
     @FXML
     void navToHP(ActionEvent event) {
         System.out.println("[BranchPageBoundary] Back to Home Page clicked");
-//        cleanup();  // explicitly unsubscribe from EventBus
+        cleanup();  // explicitly unsubscribe from EventBus
         switchScreen("Home Page");
     }
 
@@ -99,7 +99,7 @@ public class BranchPageBoundary {
         }
     }
 
-//    public void cleanup() {
-//        EventBus.getDefault().unregister(this);
-//    }
+    public void cleanup() {
+        EventBus.getDefault().unregister(this);
+    }
 }

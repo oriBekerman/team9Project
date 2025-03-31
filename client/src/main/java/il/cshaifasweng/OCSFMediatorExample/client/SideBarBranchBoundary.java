@@ -81,9 +81,6 @@ public class SideBarBranchBoundary {
         switchScreen("ReservationCnt");
     }
 
-//    @FXML
-//    void navToMenu(ActionEvent event) {switchScreen("Menu");}
-
     @FXML
     public void navToMenu(ActionEvent actionEvent) {
         switchScreen("menu");
@@ -117,7 +114,7 @@ public class SideBarBranchBoundary {
         toggleButtonReports.setOnAction(this::showReportOptions);
 
         toggleButtonBranch.setOnAction(e -> {
-            System.out.println("Button clicked - showing popup");
+            System.out.println("[SideBarBranchBoundary- initialize] Button clicked - showing branch list popup");
             GetBranchListPopup();
         });
 
@@ -176,14 +173,6 @@ public class SideBarBranchBoundary {
         GetBranchListPopup();
     }
 
-//    // Handle the branch selected from the list in SideBarBranchBoundary
-//    @Subscribe
-//    public void onBranchSelectedEvent(BranchSelectedEvent event) {
-//        this.branch = event.getBranch();  // Set the branch properly
-//        System.out.println("Branch set in SideBarBranchBoundary: " + branch.getName());
-//        openBranchPage(this.branch);
-//        updateReportsButtonVisibility(); // optional if you need additional logic based on branch
-//    }
     @Subscribe
     public void onBranchSelectedEvent(BranchSelectedEvent event) {
         this.branch = event.getBranch();
@@ -192,8 +181,6 @@ public class SideBarBranchBoundary {
         openBranchPage(this.branch);
         updateReportsButtonVisibility();
     }
-
-
 
 
     //open selected branch page
@@ -230,7 +217,6 @@ public class SideBarBranchBoundary {
 
 
 
-
     @Subscribe
     public void onLoginSuccess(UserLoginSuccessEvent event) {
         // Assuming that the role is part of the authorization or similar mapping
@@ -240,88 +226,6 @@ public class SideBarBranchBoundary {
         toggleButtonReports.setVisible(userRole == EmployeeType.BRANCH_MANAGER);
     }
 
-
-//    // Method to show report options and handle user selection
-//    @FXML
-//    void showReportOptions(ActionEvent event) {
-//        try {
-//            if (branch == null) {
-//                System.out.println("Branch is not set. Cannot fetch reports.");
-//                return;  // Or handle more appropriately
-//            }
-//            ContextMenu contextMenu = new ContextMenu();
-//            MenuItem resItem = new MenuItem("Reservations");
-//            resItem.setOnAction(e -> {
-//                try {
-//                    SimpleClient.getClient().requestReservationsReport(branch.getName());
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//            });
-//            MenuItem delItem = new MenuItem("Deliveries");
-//            delItem.setOnAction(e -> {
-//                try {
-//                    SimpleClient.getClient().requestDeliveriesReport(branch.getName());
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//            });
-//            MenuItem compItem = new MenuItem("Complaints");
-//            compItem.setOnAction(e -> {
-//                try {
-//                    SimpleClient.getClient().requestComplaintsReport(branch.getName());
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//            });
-//
-//            contextMenu.getItems().addAll(resItem, delItem, compItem);
-//            contextMenu.show(toggleButtonReports, Side.RIGHT, 0, 0);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    @FXML
-//    void showReportOptions(ActionEvent event) {
-//        if (branch == null) {
-//            System.out.println("[SideBarBranchBoundary] ERROR: Branch is not set when Reports button clicked.");
-//            return;
-//        }
-//        System.out.println("[SideBarBranchBoundary] Reports button clicked. Current branch: " + branch.getName());
-//
-//        ContextMenu contextMenu = new ContextMenu();
-//        MenuItem resItem = new MenuItem("Reservations");
-//        resItem.setOnAction(e -> {
-//            try {
-//                System.out.println("[SideBarBranchBoundary] Requesting reservations report for: " + branch.getName());
-//                SimpleClient.getClient().requestReservationsReport(branch.getName());
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        MenuItem delItem = new MenuItem("Deliveries");
-//        delItem.setOnAction(e -> {
-//            try {
-//                System.out.println("[SideBarBranchBoundary] Requesting deliveries report for: " + branch.getName());
-//                SimpleClient.getClient().requestDeliveriesReport(branch.getName());
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        MenuItem compItem = new MenuItem("Complaints");
-//        compItem.setOnAction(e -> {
-//            try {
-//                System.out.println("[SideBarBranchBoundary] Requesting complaints report for: " + branch.getName());
-//                SimpleClient.getClient().requestComplaintsReport(branch.getName());
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//
-//        contextMenu.getItems().addAll(resItem, delItem, compItem);
-//        contextMenu.show(toggleButtonReports, Side.RIGHT, 0, 0);
-//    }
 
     @FXML
     void showReportOptions(ActionEvent event) {
@@ -358,7 +262,6 @@ public class SideBarBranchBoundary {
             e.printStackTrace();
         }
     }
-
 
 
     private void updateReportsButtonVisibility() {

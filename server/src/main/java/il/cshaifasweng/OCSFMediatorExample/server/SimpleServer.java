@@ -158,17 +158,14 @@ public class SimpleServer extends AbstractServer {
 
 
     private Response handleReportRequest(Request request) {
-        System.out.println("[SimpleServer - handleReportRequest] Received request for report: " + request.getRequestType());
         String branchName = (String) request.getData();
         Branch branch = (Branch) branchController.getByName(branchName).getData();
 
         if (branch == null) {
-            System.out.println("[SimpleServer - handleReportRequest] ERROR: Branch '" + branchName + "' not found.");
             return new Response(ResponseType.RETURN_REPORT, "Branch not found", Status.ERROR, Recipient.THIS_CLIENT);
         }
 
         int branchId = branch.getId();
-        System.out.println("[SimpleServer -handleReportRequest] Branch found. Generating report for branch ID: " + branchId);
         Report report = ReportFactory.getReport(request.getRequestType(), branchId,
                 new ResInfoRepository(), new DeliveryRepository(), new ComplaintRepository());
         report.fetchData();
@@ -182,7 +179,6 @@ public class SimpleServer extends AbstractServer {
             default -> throw new IllegalArgumentException("[SimpleServer- handleReportRequest] Unsupported request type: " + request.getRequestType());
         }
 
-        System.out.println("[SimpleServer- handleReportRequest] Before sending to client: the report data is " + reportData);
         return new Response(responseType, reportData, Status.SUCCESS, Recipient.THIS_CLIENT);
     }
 
