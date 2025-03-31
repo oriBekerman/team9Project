@@ -121,11 +121,9 @@ public class SimpleClient extends AbstractClient
 
 			if(response.getResponseType().equals(RETURN_DELIVERABLES))
 			{
-				List<MenuItem> deliverables = (ArrayList<MenuItem>) response.getData();
-				for (MenuItem item : deliverables)
-				{
-					item.printMenuItem();
-				}
+				Menu menudeliv = (Menu) response.getData();
+				MenuEvent menuEvent = new MenuEvent(menudeliv);
+				EventBus.getDefault().post(menuEvent);
 			}
 			if (response.getResponseType().equals(Response.ResponseType.ADD_DISH))
 			{
@@ -292,25 +290,22 @@ public class SimpleClient extends AbstractClient
 		}
 	}
 
-	public void editMenu(String itemId, String price) throws IOException
-	{
+	public void editMenu(String itemId, String price) throws IOException {
 		String[] data = {itemId, price};
 		Request<String[]> request = new Request<>(BASE_MENU, UPDATE_PRICE, data);
 		client.sendToServer(request);
 	}
 
-	public void getBranchList()
-	{
+	public void getBranchList() {
 		Request request = new Request(BRANCH, GET_BRANCHES, null);
-		try
-		{
+		try {
 			client.sendToServer(request);
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			throw new RuntimeException(e);
 		}
 	}
+
 
 	public void displayNetworkMenu() throws IOException
 	{
@@ -322,6 +317,12 @@ public class SimpleClient extends AbstractClient
 	public void displayBranchMenu(Branch branch) throws IOException
 	{
 		Request<Branch> request = new Request<>(BRANCH, GET_BRANCH_MENU, branch);
+		client.sendToServer(request);
+	}
+
+	public void displayDeliveryMenu(Branch branch) throws IOException
+	{
+		Request<Branch> request = new Request<>(BRANCH, GET_DELIVERABLES, branch);
 		client.sendToServer(request);
 	}
 
