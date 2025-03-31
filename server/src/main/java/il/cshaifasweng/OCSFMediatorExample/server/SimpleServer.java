@@ -24,7 +24,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "poolgirL1?"; // Change database password here
+    public static String dataBasePassword = "1234"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) {
@@ -59,7 +59,8 @@ public class SimpleServer extends AbstractServer {
 
         Response response;
         try {
-            response = switch (request.getCategory()) {
+            response = switch (request.getCategory())
+            {
                 case BASE_MENU -> menuItemsController.handleRequest(request);
                 case BRANCH -> branchController.handleRequest(request);
                 case LOGIN -> logInController.handleRequest(request);
@@ -76,7 +77,8 @@ public class SimpleServer extends AbstractServer {
                     yield permitResponse;
                 }
 
-                case ADD_DISH -> {
+                case ADD_DISH ->
+                {
                     Response addDishResponse = menuItemsController.handleRequest(request);
                     yield addDishResponse;
                 }

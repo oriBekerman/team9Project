@@ -220,7 +220,8 @@ public class PrimaryBoundary
 
 	private void GetBranchListPopup()
 	{
-		synchronized (lock) {
+		synchronized (lock)
+		{
 			if (!branchListInit) {
 				try {
 					SimpleClient.getClient().getBranchList();
