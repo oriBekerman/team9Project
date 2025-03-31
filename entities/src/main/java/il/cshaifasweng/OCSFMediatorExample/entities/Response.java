@@ -77,9 +77,9 @@ public class Response<T> implements Serializable {
         this.recipient = recipient;
     }
 
-    public enum ResponseType {
+    public enum ResponseType
+    {
         NO_ACTION,
-        //menu related responses
         RETURN_MENU,
         UPDATED_PRICE,
         REMOVE_DISH,

@@ -76,7 +76,8 @@ public class SimpleClient extends AbstractClient
 				EventBus.getDefault().post(updateIngredientsEvent);
 			}
 
-			if (msg.getClass().equals(Warning.class)) {
+			if (msg.getClass().equals(Warning.class))
+			{
 				String message = msg.toString();
 				System.out.println(message);
 				EventBus.getDefault().post(new WarningEvent((Warning) msg));
@@ -84,18 +85,9 @@ public class SimpleClient extends AbstractClient
 
 			if (response.getResponseType().equals(RETURN_MENU))
 			{
-//				if (!isMenuLoaded)
-//				{
 					Menu menu = (Menu) response.getData();
 					MenuEvent menuEvent = new MenuEvent(menu);
 					EventBus.getDefault().post(menuEvent);
-//					isMenuLoaded = true;
-//				}
-//				else
-//				{
-//					System.out.println("Menu already loaded, skipping request.");
-//				}
-
 			}
 			if (response.getResponseType().equals(RETURN_BRANCH_MENU))
 			{
@@ -126,10 +118,12 @@ public class SimpleClient extends AbstractClient
 					e.printStackTrace();
 				}
 			}
+
 			if(response.getResponseType().equals(RETURN_DELIVERABLES))
 			{
 				List<MenuItem> deliverables = (ArrayList<MenuItem>) response.getData();
-				for (MenuItem item : deliverables) {
+				for (MenuItem item : deliverables)
+				{
 					item.printMenuItem();
 				}
 			}
@@ -155,9 +149,9 @@ public class SimpleClient extends AbstractClient
 					if (parts.length > 1) {
 						String username = parts[0];
 						String role = parts[1];
-						// Set the active user
+
 						SimpleClient.setActiveUser(new ActiveUser(username, EmployeeType.valueOf(role)));
-						//post to eventbus
+
 						EventBus.getDefault().post(new UserLoginSuccessEvent(username, role));
 					}
 					else
@@ -198,21 +192,29 @@ public class SimpleClient extends AbstractClient
 					EventBus.getDefault().post("delivery not found");
 				}
 			}
-			if (response.getResponseType().equals(DELIVERY_CANCELED)) {
+
+			if (response.getResponseType().equals(DELIVERY_CANCELED))
+			{
 				EventBus.getDefault().post("delivery deleted");
 			}
-			if (response.getResponseType().equals(RETURN_BRANCH_BY_NAME)) {
+
+			if (response.getResponseType().equals(RETURN_BRANCH_BY_NAME))
+			{
 				Branch branch= (Branch) response.getData();
 				EventBus.getDefault().post(new BranchSentEvent(branch));
 			}
-			// Handle ADDED_RESERVATION response
-			if (response.getResponseType().equals(ADDED_RESERVATION)) {
-				if (response.getStatus().equals(SUCCESS)) {
+
+			if (response.getResponseType().equals(ADDED_RESERVATION))
+			{
+				if (response.getStatus().equals(SUCCESS))
+				{
 					System.out.println("in reservation succsess");
 					ReservationAddedEvent event = new ReservationAddedEvent((ResInfo) response.getData(), response.getMessage());
 					EventBus.getDefault().post(event);
 				}
-				if (response.getStatus().equals(ERROR)) {
+
+				if (response.getStatus().equals(ERROR))
+				{
 					System.out.println("in error res");
 					TableIsReservedEvent event = new TableIsReservedEvent((List<ResInfo>) response.getData());
 					System.out.println("event created");
@@ -220,8 +222,9 @@ public class SimpleClient extends AbstractClient
 					System.out.println("event posted");
 				}
 			}
-			//COMPLAINT
-			if (response.getResponseType().equals(COMPLAINT_CREATED)) {
+
+			if (response.getResponseType().equals(COMPLAINT_CREATED))
+			{
 				System.out.println("in complaint created");
 
 				// Check if complaint is null
@@ -247,6 +250,7 @@ public class SimpleClient extends AbstractClient
 			{
 				ReceivedAllComplaintsEvent event=new ReceivedAllComplaintsEvent((List<Complaint>) response.getData());
 			}
+
 			if(response.getResponseType().equals(RETURN_ACTIVE_RESERVATIONS))
 			{
 				if(response.getStatus().equals(SUCCESS))
@@ -286,22 +290,25 @@ public class SimpleClient extends AbstractClient
 		}
 	}
 
-	public void editMenu(String itemId, String price) throws IOException {
+	public void editMenu(String itemId, String price) throws IOException
+	{
 		String[] data = {itemId, price};
 		Request<String[]> request = new Request<>(BASE_MENU, UPDATE_PRICE, data);
 		client.sendToServer(request);
 	}
 
-	public void getBranchList() {
+	public void getBranchList()
+	{
 		Request request = new Request(BRANCH, GET_BRANCHES, null);
-		try {
+		try
+		{
 			client.sendToServer(request);
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			throw new RuntimeException(e);
 		}
 	}
-
 
 	public void displayNetworkMenu() throws IOException
 	{
@@ -328,23 +335,11 @@ public class SimpleClient extends AbstractClient
 	public static void logout() {
 		clearActiveUser();  // Clear active user in SimpleClient
 	}
-	public void fetchTables(Branch branch) throws IOException {
+	public void fetchTables(Branch branch) throws IOException
+	{
 		Request request = new Request(BRANCH, FETCH_BRANCH_TABLES, branch);
 		client.sendToServer(request);
 	}
-//	public void submitComplaint(List<String> customerDetails,Complaint complaint) throws IOException
-//	{
-//		Pair<Complaint,List<String>> pair=new Pair<>(complaint, customerDetails);
-//		Request request=new Request(COMPLAINT,SUBMIT_COMPLAINT,pair);
-//		try {
-//			sendToServer(request);
-//			System.out.println("complaint sent to server");
-//		}
-//		catch (IOException e) {
-//			throw new RuntimeException(e);
-//		}
-//
-//	}
 
 	public void removeDishFromDatabase(MenuItem dishToRemove) {
 		// Create a request to remove the dish

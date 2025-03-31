@@ -69,13 +69,14 @@ public class BranchController {
          {
              response.setStatus(ERROR);
          }
-         else {
+         else
+         {
              response.setStatus(SUCCESS);
              response.setData(branches);
          }
          return response;
-
     }
+
     private Response getBranchMenu(Request request) {
         Response response=new Response<>(RETURN_MENU,null,ERROR,THIS_CLIENT);
         Branch branch= (Branch) request.getData();
