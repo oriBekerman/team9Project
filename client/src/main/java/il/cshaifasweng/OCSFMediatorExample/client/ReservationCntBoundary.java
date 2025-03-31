@@ -249,7 +249,8 @@ public class ReservationCntBoundary {
         });
     }
 
-    private void makeReservation() {
+    private void makeReservation()
+    {
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
         String timeString = SimpleClient.getClient().mapReservation.get("Hours");

@@ -108,7 +108,9 @@ public class PrimaryBoundary
 		switchScreen("Home Page");
 	}
 	@FXML
-	void navToReservation(ActionEvent event) {
+	void navToReservation(ActionEvent event)
+	{
+
 		switchScreen("Reservation");
 	}
 	@FXML
@@ -130,8 +132,6 @@ public class PrimaryBoundary
 		try
 		{
 			App.setRoot("secondary");
-		//	SimpleClient.getClient().displayNetworkMenu();
-
 		}
 		catch (IOException e)
 		{

@@ -12,6 +12,7 @@ import java.util.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.RequestType;
 public class SimpleServer extends AbstractServer {
     private static final List<SubscribedClient> SubscribersList = Collections.synchronizedList(new ArrayList<>());
     public static Session session;

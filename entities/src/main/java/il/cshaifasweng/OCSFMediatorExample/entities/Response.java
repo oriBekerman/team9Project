@@ -87,6 +87,7 @@ public class Response<T> implements Serializable {
         UPDATE_INGREDIENTS,
         UPDATE_DISH_TYPE,
         PERMIT_GRANTED_ACK,
+        UPDATE_BRANCH_MENU,
 
 
         RETURN_BRANCH_MENU,
