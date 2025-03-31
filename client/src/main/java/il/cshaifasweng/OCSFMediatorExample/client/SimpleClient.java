@@ -128,10 +128,9 @@ public class SimpleClient extends AbstractClient
 			}
 			if(response.getResponseType().equals(RETURN_DELIVERABLES))
 			{
-				List<MenuItem> deliverables = (ArrayList<MenuItem>) response.getData();
-				for (MenuItem item : deliverables) {
-					item.printMenuItem();
-				}
+				Menu menudeliv = (Menu) response.getData();
+				MenuEvent menuEvent = new MenuEvent(menudeliv);
+				EventBus.getDefault().post(menuEvent);
 			}
 			if (response.getResponseType().equals(Response.ResponseType.ADD_DISH))
 			{
@@ -313,6 +312,12 @@ public class SimpleClient extends AbstractClient
 	public void displayBranchMenu(Branch branch) throws IOException
 	{
 		Request<Branch> request = new Request<>(BRANCH, GET_BRANCH_MENU, branch);
+		client.sendToServer(request);
+	}
+
+	public void displayDeliveryMenu(Branch branch) throws IOException
+	{
+		Request<Branch> request = new Request<>(BRANCH, GET_DELIVERABLES, branch);
 		client.sendToServer(request);
 	}
 
