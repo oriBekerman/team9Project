@@ -90,6 +90,7 @@ public class BranchPageBoundary
         assert jersualemBtn != null : "fx:id=\"jersualemBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
         assert telAvivBtn != null : "fx:id=\"telAvivBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
         assert zikhronBtn != null : "fx:id=\"zikhronBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
+        getUserAuthorizedTools();
     }
 
     public void navToReservationPage(ActionEvent actionEvent) {
@@ -107,6 +108,7 @@ public class BranchPageBoundary
         openHour.setText(branch.getOpeningTime());
         closeHour.setText(branch.getClosingTime());
         branchIsSet = true;
+        getUserAuthorizedTools();
     }
     // Method to update UI based on the branch data
     private void updateUI() {
@@ -144,8 +146,6 @@ public class BranchPageBoundary
             e.printStackTrace();
         }
     }
-
-
 
     public void loadBranchMap(ActionEvent actionEvent){
         openBranchMap();
@@ -214,4 +214,14 @@ public class BranchPageBoundary
         EventBus.getDefault().unregister(this);
         System.out.println("Unregistered from EventBus");
     }
+    private void getUserAuthorizedTools() {
+        if (SimpleClient.getClient().getActiveUser() != null) {
+            tableBtn.setVisible(true);
+        }
+        else
+        {
+            tableBtn.setVisible(false);
+        }
+    }
+
 }

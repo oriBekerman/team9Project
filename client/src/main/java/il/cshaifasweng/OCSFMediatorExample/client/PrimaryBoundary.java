@@ -32,6 +32,7 @@ public class PrimaryBoundary {
 	public Button MenuBtn;
 	public Button subCompBtn;
 	public Button complaintsTableBtn;
+	public Button reservationBtn;
 	@FXML
 	private ResourceBundle resources;
 	@FXML

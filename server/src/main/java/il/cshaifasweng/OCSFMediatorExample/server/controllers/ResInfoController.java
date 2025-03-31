@@ -142,7 +142,10 @@ public class ResInfoController {
         response2.setStatus(SUCCESS);
         response.setData(List.of(response1, response2));
         response.setStatus(SUCCESS);
-        sendEmail(reservation);
+        if(reservation.getCustomer().getEmail()!=null && !reservation.getCustomer().getEmail().equals(""))
+        {
+            sendEmail(reservation);
+        }
         return response;
     }
     private Customer checkIfCustomerInDB(String email)

@@ -45,7 +45,7 @@
                          <Button fx:id="cancelDelivery" mnemonicParsing="false" onAction="#cancelDel" text="cancel delivery" />
                         <Button fx:id="givePermitBtn" mnemonicParsing="false" onAction="#givePermit" text="give permitions" />
                         <Button fx:id="complaintsTableBtn" mnemonicParsing="false" onAction="#viewComplaints" text="view complaints" />
-                        <Button mnemonicParsing="false" text="make a reservation" />
+                        <Button fx:id="reservationBtn" mnemonicParsing="false" onAction="#navToReservation" text="make a reservation" />
                      </children>
                   </VBox>
                </children>
