@@ -24,7 +24,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "Bekitnt26@"; // Change database password here
+    public static String dataBasePassword = "1234"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) {
