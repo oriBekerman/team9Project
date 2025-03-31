@@ -27,7 +27,6 @@ public class SimpleClient extends AbstractClient
 	private static ActiveUser activeUser = null;
 	public Map <String, String> mapReservation=new HashMap<String, String>();
 	public ResInfo resInfo=new ResInfo();
-	public boolean rebookReservation=false;
 	public  boolean tableAvailable=true;
 	public String userEmail;
 	private Response<?> lastResponse;

@@ -168,22 +168,16 @@ public class PrimaryBoundary {
 		if (SimpleClient.getClient().getActiveUser() != null) {
 			logoutBttn.setVisible(true);
 			loginBttn.setVisible(false);
-
-			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN) {
-				UpdateMenuBtn.setVisible(true);
-			} else {
-				UpdateMenuBtn.setVisible(false);
-			}
-			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.COMPANY_MANAGER) {
-				givePermitBtn.setVisible(true);
-			} else {
-				givePermitBtn.setVisible(false);
-			}
+			UpdateMenuBtn.setVisible(false);
+			givePermitBtn.setVisible(false);
+			complaintsTableBtn.setVisible(false);
+			getUserAuthorizedTools();
 		} else {
 			logoutBttn.setVisible(false);
 			loginBttn.setVisible(true);
 			UpdateMenuBtn.setVisible(false);
 			givePermitBtn.setVisible(false);
+			complaintsTableBtn.setVisible(false);
 		}
 		try {
 			SimpleClient.getClient().sendToServer("add client");
@@ -194,6 +188,27 @@ public class PrimaryBoundary {
 		{
 			GetBranchListPopup();
 		});
+	}
+
+	private void getUserAuthorizedTools()
+	{
+		EmployeeType employeeType=SimpleClient.getClient().getActiveUser().getEmployeeType();
+		switch (employeeType)
+		{
+			case DIETITIAN :
+				UpdateMenuBtn.setVisible(true);
+				break;
+			case COMPANY_MANAGER:
+				givePermitBtn.setVisible(true);
+				complaintsTableBtn.setVisible(true);
+				break;
+			case CUSTOMER_SERVICE:
+				complaintsTableBtn.setVisible(true);
+				break;
+			case CUSTOMER_SERVICE_MANAGER:
+				complaintsTableBtn.setVisible(true);
+				break;
+		}
 	}
 
 	private void GetBranchListPopup() {

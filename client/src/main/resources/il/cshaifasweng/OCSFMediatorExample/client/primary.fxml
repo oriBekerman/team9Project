@@ -44,6 +44,8 @@
                         <Button fx:id="logoutBttn" mnemonicParsing="false" onAction="#LogOut" text="Logout" />
                          <Button fx:id="cancelDelivery" mnemonicParsing="false" onAction="#cancelDel" text="cancel delivery" />
                         <Button fx:id="givePermitBtn" mnemonicParsing="false" onAction="#givePermit" text="give permitions" />
+                        <Button fx:id="complaintsTableBtn" mnemonicParsing="false" onAction="#viewComplaints" text="view complaints" />
+                        <Button mnemonicParsing="false" text="make a reservation" />
                      </children>
                   </VBox>
                </children>
@@ -51,6 +53,5 @@
             <VBox prefHeight="32.0" prefWidth="190.0" />
          </children>
       </VBox>
-      <Button fx:id="complaintsTableBtn" layoutX="426.0" layoutY="391.0" mnemonicParsing="false" onAction="#viewComplaints" text="complaints" />
    </children>
 </AnchorPane>
