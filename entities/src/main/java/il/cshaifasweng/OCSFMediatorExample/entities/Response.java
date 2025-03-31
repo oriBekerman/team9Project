@@ -35,7 +35,6 @@ public class Response<T> implements Serializable {
         this.recipient = recipient;
     }
 
-    // Getters and Setters
     public Status getStatus() {
         return status;
     }
