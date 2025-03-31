@@ -333,4 +333,28 @@ public class App extends Application {
         });
     }
 
+    public static void switchToBranchMenu(Branch branch) {
+        Platform.runLater(() -> {
+            setWindowTitle("secondary");
+            try {
+                // Load the FXML file for the secondary screen
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("secondary.fxml"));
+                Parent root = loader.load();
+
+                // Get the controller of the loaded FXML
+                SecondaryBoundary secondaryBoundary = loader.getController();
+
+                secondaryBoundary.setBranch(branch);
+                secondaryBoundary.initialize();
+
+                // Set the scene and show the stage
+                scene = new Scene(root);
+                appStage.setScene(scene);
+                appStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
 }

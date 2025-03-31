@@ -23,22 +23,14 @@ public class RestTable implements Serializable {
     @Column(nullable = false)
     private String area;
 
-    // Many RestTables belong to one Branch
     @ManyToOne
     @JoinColumn(name = "branch_id", nullable = false)
     private Branch branch;
 
-// Stores the start times when the table becomes unavailable.
-// Each unavailability period lasts for 1.5 hours from the recorded start time.
 @ElementCollection(fetch = FetchType.EAGER)
 @CollectionTable(name = "table_unavailable_from", joinColumns = @JoinColumn(name = "rest_table_id"))
 @Column(name = "start_time")
 private Set<LocalTime> unavailableFromTimes = new HashSet<>();
-
-
-//    //location for gui seating chart
-//    @Embedded
-//    private Coordinates coordinates=new Coordinates();
 
     public RestTable(String area, int capacity, Branch branch, Set<LocalTime> unavailableFromTimes)
     {
@@ -115,8 +107,6 @@ private Set<LocalTime> unavailableFromTimes = new HashSet<>();
         }
         return true;
     }
-
-
 
     public List<LocalTime> getAvailableFromTimes() {
         String start= branch.getOpeningTime();

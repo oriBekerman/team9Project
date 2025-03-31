@@ -27,8 +27,7 @@ public class SimpleServer extends AbstractServer {
     public static String dataBasePassword = "Bekitnt26@"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
-    public SimpleServer(int port)
-    {
+    public SimpleServer(int port) {
         super(port);
         getControllers();
     }
@@ -72,23 +71,23 @@ public class SimpleServer extends AbstractServer {
                 case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
                 case PERMIT_GRANTED ->
                 {
+                    System.out.println("Permit granted request received.");
                     Response permitResponse = handlePermitGranted(request);
                     yield permitResponse;
                 }
 
-                case ADD_DISH ->
-                {
+                case ADD_DISH -> {
                     Response addDishResponse = menuItemsController.handleRequest(request);
                     yield addDishResponse;
                 }
                 default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
             };
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.err.println("Error processing request: " + e.getMessage());
             return;
         }
+
+        System.out.println("Response prepared for client: " + response.getResponseType());
         sendResponseToClient(response, client);
         if(response.getMessage() !=null)
         {

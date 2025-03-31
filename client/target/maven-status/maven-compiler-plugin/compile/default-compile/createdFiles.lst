@@ -43,6 +43,7 @@ il\cshaifasweng\OCSFMediatorExample\client\Events\MenuEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\MenuBarBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\SecondaryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchListBoundary.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateDishTypeEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\SentActiveReservationsEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\ReservationBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableSWRClient.class

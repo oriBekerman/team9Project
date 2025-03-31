@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,6 +47,7 @@ public class BranchPageBoundary
             EventBus.getDefault().register(this);
         }
     }
+
     public Branch branch;
     @FXML
     private ResourceBundle resources;
@@ -61,6 +63,8 @@ public class BranchPageBoundary
     private Button telAvivBtn;
     @FXML
     private Button zikhronBtn;
+    @FXML
+    private TableView<MenuItem> menuTableView;
     @FXML
     void navToHP(ActionEvent event)
     {
@@ -84,6 +88,17 @@ public class BranchPageBoundary
     @FXML
     void initialize()
     {
+
+        try
+        {
+            SimpleClient.getClient().displayBranchMenu(branch);
+            System.out.println("get menu from initialize of branch");
+        }
+        catch (IOException e)
+        {
+            System.err.println("Error sending client confirmation: " + e.getMessage());
+        }
+   //     menuTableView.refresh();
         updateUI();
         assert backToHPBtn != null : "fx:id=\"backToHPBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
         assert haifaBBtn != null : "fx:id=\"haifaBBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
@@ -121,30 +136,31 @@ public class BranchPageBoundary
 
     public void displayMenu(ActionEvent actionEvent)
     {
-        if (!isMenuLoaded)
-        {
-            System.out.println("Requesting menu...");
-            try
-            {
-                SimpleClient.getClient().displayBranchMenu(branch);
-            }
-            catch (Exception e)
-            {
-            e.printStackTrace();
-            }
-            isMenuLoaded = true;
-        }
-        else
-        {
-            System.out.println("Menu already loaded, skipping request.");
-        }
-        switchScreen("secondary");
-        try
-        {
-            App.setRoot("secondary");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        switchToBranchMenu(branch);
+//        if (!isMenuLoaded)
+//        {
+//            System.out.println("Requesting menu...");
+//            try
+//            {
+//                SimpleClient.getClient().displayBranchMenu(branch);
+//            }
+//            catch (Exception e)
+//            {
+//            e.printStackTrace();
+//            }
+//            isMenuLoaded = true;
+//        }
+//        else
+//        {
+//            System.out.println("Menu already loaded, skipping request.");
+//        }
+//        switchScreen("secondary");
+//        try
+//        {
+//            App.setRoot("secondary");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void loadBranchMap(ActionEvent actionEvent){
@@ -211,8 +227,12 @@ public class BranchPageBoundary
     }
     public void onExit()
     {
-        EventBus.getDefault().unregister(this);
-        System.out.println("Unregistered from EventBus");
+        if (EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().unregister(this);
+            System.out.println("Unregistered from EventBus");
+        }
+
     }
     private void getUserAuthorizedTools() {
         if (SimpleClient.getClient().getActiveUser() != null) {

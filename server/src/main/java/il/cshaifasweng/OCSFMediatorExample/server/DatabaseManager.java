@@ -109,7 +109,6 @@ private static void initialize(String password) {
             // ==========================
 
 
-
             MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce", "Low calorie", loadImageFromResources("salad.jpeg"), BASE);
             MenuItem item2 = new MenuItem("Pizza", 45.00, "Mushrooms, onions, tomatoes", "Includes vegan option", loadImageFromResources("pizza.jpeg"), BASE);
             MenuItem item3 = new MenuItem("Pasta", 70.00, "Mushroom cream sauce", "Available gluten-free", loadImageFromResources("pasta.jpeg"), BASE);
@@ -215,8 +214,6 @@ private static void initialize(String password) {
                     "456"                                // CVV
             );
 
-            customerController.populateCustomers(List.of(customer1, customer2));  // חדש
-
             // Create OrderItems from MenuItem and quantity
             OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences
             OrderItem orderItem2 = new OrderItem(item4, 1, "Extra ketchup", null); // 1 of "Hamburger" with preferences
@@ -240,6 +237,7 @@ private static void initialize(String password) {
                     "17:00"
             );
 
+
             // Now associate the OrderItems with the Delivery orders
             orderItem1.setDelivery(order1); // Associate orderItem1 with order1
             orderItem2.setDelivery(order1); // Associate orderItem2 with order1
@@ -253,6 +251,11 @@ private static void initialize(String password) {
             // Set the OrderItems in the respective Delivery objects
             order1.setOrderItems(orderItems1);
             order2.setOrderItems(orderItems2);
+
+
+            //calc total price
+            order1.setTotalPrice(order1.calculateTotalPrice());
+            order2.setTotalPrice(order2.calculateTotalPrice());
 
             // Adding delivery orders to the delivery controller
             deliveryController.populateDelivery(order1);
