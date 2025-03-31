@@ -123,7 +123,6 @@ public class CreditCradInfoBoundary {
     }
 
 
-
     //validate card number
     public boolean isValidCreditCard(String cardNumber) {
         if (!Pattern.compile("^[0-9]{13,19}$").matcher(cardNumber).matches()) {

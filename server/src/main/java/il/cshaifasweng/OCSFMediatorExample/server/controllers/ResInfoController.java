@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
+import il.cshaifasweng.OCSFMediatorExample.server.EmailSender;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import il.cshaifasweng.OCSFMediatorExample.server.SimpleServer;
 //import il.cshaifasweng.OCSFMediatorExample.server.repositories.CustomerRepository;
@@ -141,6 +142,7 @@ public class ResInfoController {
         response2.setStatus(SUCCESS);
         response.setData(List.of(response1, response2));
         response.setStatus(SUCCESS);
+        sendEmail(reservation);
         return response;
     }
     private Customer checkIfCustomerInDB(String email)
@@ -235,6 +237,18 @@ public Response<List<Response>> cancelReservation(Request request) {
     } catch (Exception e) {
         return new Response<>(CANCELED_RESERVATION, null, "Error cancelling reservation: " + e.getMessage(), ERROR, THIS_CLIENT);
     }
+}
+
+private void sendEmail(ResInfo resInfo)
+{
+    Customer customer=resInfo.getCustomer();
+    String body="Dear " + customer.getName() + ",\n" +
+            "Your reservation has been confirmed.\n\n" +
+            "Time: " + resInfo.getHours() + "\n" +
+            "Guests: " + resInfo.getNumOfGuests() + "\n" +
+            "Branch: " + resInfo.getBranch().getName() + "\n\n" +
+            "Enjoy your meal!";
+    EmailSender.sendEmail(customer.getEmail(), "Mama's kitchen complaint",body);
 }
 
 

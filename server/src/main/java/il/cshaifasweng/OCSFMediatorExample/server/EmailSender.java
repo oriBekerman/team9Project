@@ -12,7 +12,7 @@ public class EmailSender {
     public static void sendEmail(String to, String subject, String body)
     {
         final String from="mamaskitchenteam9@gmail.com";
-        final String password="mama'sKitchen99";
+        final String password="lkgkhtokyhqaagrb";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
