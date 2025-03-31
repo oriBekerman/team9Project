@@ -121,7 +121,10 @@ public class SimpleClient extends AbstractClient
 
 			if(response.getResponseType().equals(RETURN_DELIVERABLES))
 			{
-				Menu menudeliv = (Menu) response.getData();
+				System.out.println("in return deliverables");
+				List<MenuItem>  dlivMenuItems = (List<MenuItem> ) response.getData();
+				Menu menudeliv=new Menu(dlivMenuItems);
+				menudeliv.printMenu();
 				MenuEvent menuEvent = new MenuEvent(menudeliv);
 				EventBus.getDefault().post(menuEvent);
 			}

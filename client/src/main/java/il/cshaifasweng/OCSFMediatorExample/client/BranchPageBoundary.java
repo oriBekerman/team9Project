@@ -162,9 +162,6 @@ public class BranchPageBoundary
 //            e.printStackTrace();
 //        }
     }
-
-
-
     public void loadBranchMap(ActionEvent actionEvent){
         openBranchMap();
     }

@@ -12,7 +12,6 @@ import java.util.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.RequestType;
 public class SimpleServer extends AbstractServer {
     private static final List<SubscribedClient> SubscribersList = Collections.synchronizedList(new ArrayList<>());
     public static Session session;
@@ -25,7 +24,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "1234"; // Change database password here
+    public static String dataBasePassword = "Bekitnt26@"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) {
