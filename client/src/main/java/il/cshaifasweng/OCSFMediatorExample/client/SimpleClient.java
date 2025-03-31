@@ -172,7 +172,9 @@ public class SimpleClient extends AbstractClient
 				Delivery delivery = (Delivery) response.getData();
 				if (delivery != null)
 				{
+
 					System.out.println(delivery);
+
 					EventBus.getDefault().post(delivery);
 				}
 				else
@@ -357,10 +359,19 @@ public class SimpleClient extends AbstractClient
 		}
 	}
 
-	public void addDishToDatabase(MenuItem newDish) {
+	public void addDishToDatabase(MenuItem newDish, List<Branch> branchesToUpdate) {
 		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);
 		try {
 			SimpleClient.getClient().sendToServer(request);
+
+			// After adding the dish, update selected branches
+			for (Branch branch : branchesToUpdate) {
+				branch.addMenuItem(newDish); // Add the dish to the branch locally
+				// Send an update request for each branch
+				Request<Branch> updateRequest = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_MENU, branch);
+				SimpleClient.getClient().sendToServer(updateRequest);
+			}
+
 		} catch (IOException e) {
 			System.err.println("Error adding dish to database: " + e.getMessage());
 		}

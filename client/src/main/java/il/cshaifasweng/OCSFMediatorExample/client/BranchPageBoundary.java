@@ -107,7 +107,9 @@ public class BranchPageBoundary
         assert zikhronBtn != null : "fx:id=\"zikhronBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
     }
 
-    public void navToReservationPage(ActionEvent actionEvent) {
+    public void navToReservationPage(ActionEvent actionEvent)
+    {
+        switchScreen("Reservation");
     }
     public void navToDeliveryPage(ActionEvent actionEvent) {
         currentDelivery.setBranch(branch);
