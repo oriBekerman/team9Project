@@ -38,7 +38,7 @@ public class App extends Application {
         client.setPort(3000);//change later for two computer connection
     	client.openConnection();
         stage.setTitle("Team 9 - Mom's kitchen");
-        scene = new Scene(loadFXML("primary"), 1295, 782);
+        scene = new Scene(loadFXML("primary"), 1034, 782);
         stage.setScene(scene);
         stage.show();
     }

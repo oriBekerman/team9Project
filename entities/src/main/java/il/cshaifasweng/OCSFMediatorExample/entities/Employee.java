@@ -58,7 +58,8 @@ public class Employee extends Person implements Serializable {
         this.employeeType = employeeType;
     }
 
-    public int getBranchID() {
+    public int getBranchID()
+    {
         return branchID;
     }
 

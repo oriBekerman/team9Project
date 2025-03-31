@@ -32,6 +32,12 @@ public class SimpleClient extends AbstractClient
 	public  boolean tableAvailable=true;
 	public String userEmail;
 	private Response<?> lastResponse;
+	public List<Branch> branchList = new ArrayList<>();
+
+	public List<Branch> getStoredBranchList()
+	{
+		return branchList;
+	}
 	public Response<?> getResponse() {
 		return lastResponse;
 	}
@@ -68,7 +74,11 @@ public class SimpleClient extends AbstractClient
 				updateDishEvent removeEvent = new updateDishEvent(removedMenuItem);
 				EventBus.getDefault().post(removeEvent);
 			}
-
+			if (response.getResponseType().equals(RequestType.GET_BRANCHES))
+			{
+				this.branchList = (List<Branch>) response.getData(); // Store the branch list
+				System.out.println("Received Branch List: " + branchList.size() + " branches");
+			}
 			if (response.getResponseType().equals(Response.ResponseType.UPDATE_INGREDIENTS))
 			{
 				MenuItem updatedMenuItem = (MenuItem) response.getData();
@@ -292,11 +302,14 @@ public class SimpleClient extends AbstractClient
 		client.sendToServer(request);
 	}
 
-	public void getBranchList() {
+	public void getBranchList()
+	{
 		Request request = new Request(BRANCH, GET_BRANCHES, null);
-		try {
+		try
+		{
 			client.sendToServer(request);
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -332,19 +345,6 @@ public class SimpleClient extends AbstractClient
 		Request request = new Request(BRANCH, FETCH_BRANCH_TABLES, branch);
 		client.sendToServer(request);
 	}
-//	public void submitComplaint(List<String> customerDetails,Complaint complaint) throws IOException
-//	{
-//		Pair<Complaint,List<String>> pair=new Pair<>(complaint, customerDetails);
-//		Request request=new Request(COMPLAINT,SUBMIT_COMPLAINT,pair);
-//		try {
-//			sendToServer(request);
-//			System.out.println("complaint sent to server");
-//		}
-//		catch (IOException e) {
-//			throw new RuntimeException(e);
-//		}
-//
-//	}
 
 	public void removeDishFromDatabase(MenuItem dishToRemove) {
 		// Create a request to remove the dish

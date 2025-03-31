@@ -11,6 +11,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.Events.MenuEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.updateDishEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Menu;
 import il.cshaifasweng.OCSFMediatorExample.entities.MenuItem;
+import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,6 +31,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.Events.RemoveDishEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.AddDishEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateIngredientsEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.UpdateDishTypeEvent;
+
 
 public class SecondaryBoundary
 {
@@ -111,124 +113,100 @@ public class SecondaryBoundary
     }
 
     @FXML
-    void addDish(ActionEvent event)
-    {
+    void addDish(ActionEvent event) {
         TextInputDialog nameDialog = new TextInputDialog();
         nameDialog.setTitle("Add New Dish");
         nameDialog.setHeaderText("Enter the name of the new dish:");
         Optional<String> nameResult = nameDialog.showAndWait();
+        if (nameResult.isEmpty() || nameResult.get().trim().isEmpty()) return;
+        String dishName = nameResult.get();
 
-        if (nameResult.isPresent() && !nameResult.get().trim().isEmpty())
+        TextInputDialog ingredientsDialog = new TextInputDialog();
+        ingredientsDialog.setTitle("Add Ingredients");
+        ingredientsDialog.setHeaderText("Enter the ingredients for: " + dishName);
+        Optional<String> ingredientsResult = ingredientsDialog.showAndWait();
+        if (ingredientsResult.isEmpty() || ingredientsResult.get().trim().isEmpty()) return;
+        String dishIngredients = ingredientsResult.get();
+
+        TextInputDialog preferenceDialog = new TextInputDialog();
+        preferenceDialog.setTitle("Add Preference");
+        preferenceDialog.setHeaderText("Enter any preference for: " + dishName);
+        String dishPreference = preferenceDialog.showAndWait().orElse("");
+
+        TextInputDialog priceDialog = new TextInputDialog("0.0");
+        priceDialog.setTitle("Add Price");
+        priceDialog.setHeaderText("Enter the price for: " + dishName);
+        Optional<String> priceResult = priceDialog.showAndWait();
+        if (priceResult.isEmpty() || priceResult.get().trim().isEmpty()) return;
+
+        double price;
+        try {
+            price = Double.parseDouble(priceResult.get());
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid price format.");
+            alert.showAndWait();
+            return;
+        }
+
+        ChoiceDialog<DishType> typeDialog = new ChoiceDialog<>(DishType.BASE, DishType.BASE, DishType.SPECIAL);
+        typeDialog.setTitle("Dish Type");
+        typeDialog.setHeaderText("Select the type of the dish:");
+        Optional<DishType> typeResult = typeDialog.showAndWait();
+        DishType dishType = typeResult.orElse(DishType.BASE);
+
+        String deliverableBranchId = null;
+        if (dishType == DishType.SPECIAL)
         {
-            String dishName = nameResult.get();
+            SimpleClient.getClient().getBranchList();
+            List<Branch> branchList = SimpleClient.getClient().getStoredBranchList();
 
-            TextInputDialog ingredientsDialog = new TextInputDialog();
-            ingredientsDialog.setTitle("Add Ingredients");
-            ingredientsDialog.setHeaderText("Enter the ingredients for: " + dishName);
-            Optional<String> ingredientsResult = ingredientsDialog.showAndWait();
-
-            if (ingredientsResult.isPresent() && !ingredientsResult.get().trim().isEmpty())
+            if (branchList == null || branchList.isEmpty())
             {
-                String dishIngredients = ingredientsResult.get();
+                Alert alert = new Alert(Alert.AlertType.WARNING, "No branches available.");
+                alert.showAndWait();
+                return;
+            }
 
-                TextInputDialog preferenceDialog = new TextInputDialog();
-                preferenceDialog.setTitle("Add Preference");
-                preferenceDialog.setHeaderText("Enter any preference for: " + dishName);
-                Optional<String> preferenceResult = preferenceDialog.showAndWait();
+            List<String> branchNames = branchList.stream().map(Branch::getName).toList();
+            ChoiceDialog<String> branchDialog = new ChoiceDialog<>(branchNames.get(0), branchNames);
+            branchDialog.setTitle("Select Branch");
+            branchDialog.setHeaderText("Select a deliverable branch:");
+            Optional<String> branchResult = branchDialog.showAndWait();
 
-                String dishPreference = preferenceResult.orElse("");
-
-                TextInputDialog priceDialog = new TextInputDialog("0.0");
-                priceDialog.setTitle("Add Price");
-                priceDialog.setHeaderText("Enter the price for: " + dishName);
-                Optional<String> priceResult = priceDialog.showAndWait();
-
-                if (priceResult.isPresent() && !priceResult.get().trim().isEmpty())
-                {
-                    try
-                    {
-                        double price = Double.parseDouble(priceResult.get());
-
-                        // Dish type selection
-                        ChoiceDialog<DishType> typeDialog = new ChoiceDialog<>(DishType.BASE, DishType.BASE, DishType.SPECIAL);
-                        typeDialog.setTitle("Dish Type");
-                        typeDialog.setHeaderText("Select the type of the dish:");
-                        Optional<DishType> typeResult = typeDialog.showAndWait();
-
-                        DishType dishType = typeResult.orElse(DishType.BASE);
-                        String selectedBranchName = null;
-                        Branch selectedBranch = null;
-
-                        if (dishType == DishType.SPECIAL)
-                        {
-                            List<String> branchNames = getBranchNames();
-
-                            if (branchNames.isEmpty())
-                            {
-                                Alert noBranchesAlert = new Alert(Alert.AlertType.WARNING, "No branches available.");
-                                noBranchesAlert.showAndWait();
-                                return;
-                            }
-
-                            ChoiceDialog<String> branchDialog = new ChoiceDialog<>(branchNames.get(0), branchNames);
-                            branchDialog.setTitle("Select Branch");
-                            branchDialog.setHeaderText("Select a branch:");
-                            branchDialog.setContentText("Choose a branch:");
-
-                            Optional<String> branchResult = branchDialog.showAndWait();
-                            if (branchResult.isPresent())
-                            {
-                                selectedBranchName = branchResult.get();
-                            //    selectedBranch = getBranchNames(selectedBranchName); // Fetch the Branch object
-                                System.out.println("Selected Branch: " + selectedBranch.getName());
-                            }
-                            else
-                            {
-                                return;
-                            }
-                        }
-
-                        byte[] defaultPicture = new byte[0];
-
-                        final String finalDishName = dishName;
-                        final double finalPrice = price;
-                        final String finalDishIngredients = dishIngredients;
-                        final String finalDishPreference = dishPreference;
-                        final DishType finalDishType = dishType;
-                        final Branch finalSelectedBranch = selectedBranch; // Passing Branch object
-
-                        SimpleClient.getClient().addDishToDatabase(
-                                new MenuItem(finalDishName, finalPrice, finalDishIngredients, finalDishPreference, defaultPicture, finalDishType)
-                        );
-
-                        Platform.runLater(() ->
-                        {
-                            MenuItem newDish = new MenuItem(
-                                    finalDishName,
-                                    finalPrice,
-                                    finalDishIngredients,
-                                    finalDishPreference,
-                                    defaultPicture,
-                                    finalDishType
-                            );
-                            allMenuItems.add(newDish);
-                            menuTableView.getItems().add(newDish);
-
-                            if (finalDishType == DishType.SPECIAL) {
-                                System.out.println("Dish assigned to branch: " + finalSelectedBranch.getName());
-                                // Here, you can send this info to the backend if needed
-                            }
-                        });
-
-                    } catch (NumberFormatException e) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid price format.");
-                        alert.showAndWait();
+            if (branchResult.isPresent()) {
+                for (Branch branch : branchList) {
+                    if (branch.getName().equals(branchResult.get())) {
+                        deliverableBranchId = String.valueOf(branch.getBranchID());
+                        break;
                     }
                 }
+            } else {
+                return;
             }
         }
+
+        byte[] defaultPicture = new byte[0];
+
+        // **Fix: Declare as final to be used in Platform.runLater**
+        final MenuItem newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, dishType);
+       // newDish.setDeliverableBranchIds(deliverableBranchId);
+
+        SimpleClient.getClient().addDishToDatabase(newDish);
+
+        Platform.runLater(() -> {
+            allMenuItems.add(newDish);
+            menuTableView.getItems().add(newDish);
+            if (dishType == DishType.SPECIAL) {
+           //     System.out.println("Dish assigned to branch ID: " + deliverableBranchId);
+            }
+        });
     }
-    private List<String> getBranchNames() {
+
+
+
+
+    private List<String> getBranchNames()
+    {
         // Fetch the branch names from the database or another source
         return Arrays.asList("Haifa", "Tel Aviv", "Branch C"); // Replace with real data
     }
