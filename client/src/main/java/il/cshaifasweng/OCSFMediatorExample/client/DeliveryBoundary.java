@@ -208,7 +208,7 @@ public class DeliveryBoundary {
     @Subscribe
     public void onUpdateEvent(updateDishEvent event) {
         try {
-            SimpleClient.getClient().displayDeliveryMenu(currentDelivery.getBranch());
+            SimpleClient.getClient().displayBranchMenu(currentDelivery.getBranch());
             menuTableView.refresh();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -315,7 +315,7 @@ public class DeliveryBoundary {
         // Fetch menu data
         Platform.runLater(() -> {
             try {
-                SimpleClient.getClient().displayDeliveryMenu(currentDelivery.getBranch());
+                SimpleClient.getClient().displayBranchMenu(currentDelivery.getBranch());
             } catch (
                     IOException e) {
                 throw new RuntimeException(e);
