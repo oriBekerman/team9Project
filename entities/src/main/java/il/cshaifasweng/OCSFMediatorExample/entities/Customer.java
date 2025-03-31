@@ -1,9 +1,9 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
+@Table(name = "Customers")
 public class Customer extends Person implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -21,8 +21,8 @@ public class Customer extends Person implements Serializable {
     public Customer() {}
 
     // Constructor with fields
-    public Customer(int id, String name, String address, String email, String creditCardNumber, String expirationDate, String cvv) {
-        super(id, name, address, email);  // Call the Person constructor
+    public Customer(String name, String address, String email,String phoneNumber, String creditCardNumber, String expirationDate, String cvv) {
+        super(name, address,email, phoneNumber);  // Call the Person constructor
         this.creditCardNumber = creditCardNumber;
         this.expirationDate = expirationDate;
         this.cvv = cvv;

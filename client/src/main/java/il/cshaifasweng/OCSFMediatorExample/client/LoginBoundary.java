@@ -105,31 +105,34 @@ public class LoginBoundary {
 
 
     @FXML
-    void initialize() {
-        System.out.println("LoginController initialized. Registering EventBus...");
-        EventBus.getDefault().register(this);
+    void initialize()
+    {
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
         assert backToHPBtn != null : "fx:id=\"backToHPBtn\" was not injected: check your FXML file 'delivery.fxml'.";
         assert loginBtn != null : "fx:id=\"loginBtn\" was not injected: check your FXML file 'login.fxml'.";
         assert passwordTextF != null : "fx:id=\"passwordTextF\" was not injected: check your FXML file 'login.fxml'.";
         assert statusLabel != null : "fx:id=\"statusLabel\" was not injected: check your FXML file 'login.fxml'.";
         assert userNameTextF != null : "fx:id=\"userNameTextF\" was not injected: check your FXML file 'login.fxml'.";
-//        setStyle();
+        setStyle();
     }
-//    public void setStyle()
-//    {
-//        root.setStyle("-fx-background-color: #fbe9d0;");
-//
-//        // Buttons Styling
-//        String buttonStyle = "-fx-background-color: #8a6f48;" +
-//                "-fx-text-fill: white;" +
-//                "-fx-font-size: 14px;" +
-//                "-fx-font-weight: bold;" +
-//                "-fx-padding: 8px 16px;" +
-//                "-fx-border-radius: 5px;";
-//
-//        backToHPBtn.setStyle(buttonStyle);
-//        loginBtn.setStyle(buttonStyle);
-//
-//    }
+    public void setStyle()
+    {
+        root.setStyle("-fx-background-color: #fbe9d0;");
+
+        // Buttons Styling
+        String buttonStyle = "-fx-background-color: #8a6f48;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 14px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-padding: 8px 16px;" +
+                "-fx-border-radius: 5px;";
+
+        backToHPBtn.setStyle(buttonStyle);
+        loginBtn.setStyle(buttonStyle);
+
+    }
 
 }

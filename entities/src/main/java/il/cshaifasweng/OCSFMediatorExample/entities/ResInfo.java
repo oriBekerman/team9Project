@@ -4,30 +4,32 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "resSInfo")
 public class ResInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer resID;
-
-    @ManyToOne  // Assuming Branch is an entity
-    @JoinColumn(name = "branch_id", referencedColumnName = "ID")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "branch_id", referencedColumnName = "id")
     private Branch branch;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
-    @ManyToOne
-    @JoinColumn(name="tableId", referencedColumnName = "ID")
-    RestTable table;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "reservation_tables",
+            joinColumns = @JoinColumn(name = "reservation_id"),
+            inverseJoinColumns = @JoinColumn(name = "table_id")
+    )
+    private Set<RestTable> tables = new HashSet<>();
 
-    @Column(nullable = false)
-    private LocalDate resDate;
 
     @Column(nullable = false)
     private LocalTime hours;
@@ -41,29 +43,47 @@ public class ResInfo implements Serializable {
     @Column(nullable = false)
     private Status status;
 
+    @Column
+    private String walk_in;
+
+    @Transient
     public boolean customerIsSet=false;
+    @Transient
     public boolean branchIsSet=false;
+    @Transient
     public boolean tableIsSet=false;
+
+    @Column(name = "isCancelled")
+    private boolean isCancelled = false;
+
+    public boolean getIsCancelled() {
+        return isCancelled;
+    }
+
+    public void setIsCancelled(boolean isCancelled) {
+        this.isCancelled = isCancelled;
+    }
 
 
     // Default constructor
     public ResInfo() {}
 
-    // Constructor with fields
-    public ResInfo(Branch branch, Customer customer, LocalDate resDate, LocalTime hours, int numOfGuests, String inOrOut, RestTable table) {
+    public ResInfo(Branch branch, Customer customer,LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
         this.branch = branch;
         this.customer = customer;
-        this.resDate = resDate;
         this.hours = hours;
         this.numOfGuests = numOfGuests;
         this.inOrOut = inOrOut;
-        this.table = table;
+        this.tables = table;
         branchIsSet=true;
         customerIsSet=true;
         tableIsSet=true;
+        for(RestTable t: table)
+        {
+            t.addUnavailableFromTime(hours);
+        }
     }
-    public ResInfo(LocalDate resDate, LocalTime hours, int numOfGuests, String inOrOut) {
-        this.resDate = resDate;
+    public ResInfo(LocalTime hours, int numOfGuests, String inOrOut) {
         this.hours = hours;
         this.numOfGuests = numOfGuests;
         this.inOrOut = inOrOut;
@@ -83,7 +103,6 @@ public class ResInfo implements Serializable {
     public void setBranch(Branch branch) {
         this.branch = branch;
         branchIsSet=true;
-        System.out.println("[ResInfo - setBranch] Branch set to: " + branch.getName() + " (id: " + branch.getId() + ")");
     }
 
     public Customer getCustomer() {
@@ -92,13 +111,6 @@ public class ResInfo implements Serializable {
     public void setCustomer(Customer customer) {
         this.customer = customer;
         customerIsSet=true;
-    }
-
-    public LocalDate getResDate() {
-        return resDate;
-    }
-    public void setResDate(LocalDate date) {
-        this.resDate = date;
     }
 
     public LocalTime getHours() {
@@ -127,12 +139,22 @@ public class ResInfo implements Serializable {
     public void setStatus(Status status) {
         this.status = status;
     }
-    public void setTable(RestTable table) {
-        this.table = table;
+    public void setTable(Set<RestTable> tables) {
+        this.tables = tables;
         tableIsSet=true;
+        for (RestTable t: tables)
+        {
+            t.addUnavailableFromTime(hours);
+        }
     }
-    public RestTable getTable() {
-        return table;
+    public Set<RestTable> getTable() {
+        return tables;
+    }
+    public void setWalk_in(String walk_in) {
+        this.walk_in = walk_in;
+    }
+    public String getWalk_in() {
+        return walk_in;
     }
     @Override
     public String toString() {
@@ -140,12 +162,12 @@ public class ResInfo implements Serializable {
                 "resID=" + resID +
                 ", Branch=" + branch +
                 ", customer=" + customer +
-                ", resDate='" + resDate + '\'' +
                 ", hours='" + hours + '\'' +
                 ", numOfGuests=" + numOfGuests +
                 ", inOrOut='" + inOrOut + '\'' +
                 '}';
     }
+
     public enum Status {
         APPROVED,
         DENIED,

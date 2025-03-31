@@ -11,7 +11,7 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.*;
 
 public class DeliveryController {
 
-    private DeliveryRepository deliveryRepository;
+    private  DeliveryRepository deliveryRepository;
 
     // Constructor
     public DeliveryController() {
@@ -25,6 +25,7 @@ public class DeliveryController {
         {
             case CREATE_DELIVERY -> createDelivery(request);
             case GET_DELIVERY -> getDeliveryByOrderNumber(request);
+            case CANCEL_DELIVERY -> cancelDeliveryByOrderNumber(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
@@ -107,14 +108,51 @@ public class DeliveryController {
         return response;
     }
 
+    public Response cancelDeliveryByOrderNumber(Request request) {
+        // Default response with an error status
+        Response response = new Response(Response.ResponseType.DELIVERY_CANCELED, null, ERROR, THIS_CLIENT);
+        System.out.println("Deleting delivery...");
+
+        // Extract order number from the request
+        Integer orderNumber = (Integer) request.getData();
+
+        if (orderNumber == null) {
+            response.setMessage("Order number is missing");
+            return response;
+        }
+
+        // Try to delete the delivery from the repository
+        boolean isDeleted = deliveryRepository.cancelDeliveryByOrderNumber(orderNumber);
+
+        // Check if the deletion was successful
+        if (isDeleted) {
+            response.setStatus(SUCCESS);
+            response.setMessage("Delivery successfully deleted.");
+        } else {
+            response.setStatus(ERROR);
+            response.setMessage("Failed to delete delivery with order number: " + orderNumber);
+        }
+
+        return response;
+    }
+
+
+
     public boolean checkIfEmpty()
     {
         return (deliveryRepository.checkIfEmpty());
     }
 
-    public void populateDelivery(Delivery delivery)
-    {
-        deliveryRepository.populateDelivery(delivery);
+    public void populateDelivery(Delivery delivery) {
+        if (delivery == null) {
+            System.err.println("Error: Attempted to populate a null delivery.");
+            return;
+        }
+        boolean success = deliveryRepository.populateDelivery(delivery);
+        if (!success) {
+            System.err.println("Error: Failed to populate delivery.");
+        }
     }
+
 
 }

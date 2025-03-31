@@ -7,37 +7,41 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="701.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ReservationBoundary">
+<AnchorPane fx:id="root" prefHeight="701.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ReservationBoundary">
    <children>
-      <Label layoutX="326.0" layoutY="34.0" prefHeight="39.0" prefWidth="184.0" text="Make a Reservation">
+      <Label fx:id="titleLabel" layoutX="326.0" layoutY="34.0" prefHeight="39.0" prefWidth="184.0" text="Make a Reservation">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
+
       <Button fx:id="continueBtn" layoutX="692.0" layoutY="580.0" mnemonicParsing="false" onAction="#navToPersonalDetailsFilling" text="Continue" />
       <ComboBox fx:id="branchesList" layoutX="326.0" layoutY="92.0" onAction="#chooseBranch" prefWidth="150.0" />
-      <Label layoutX="189.0" layoutY="94.0" prefHeight="25.0" prefWidth="118.0" text="Selecta a branch :">
+      <Label layoutX="84.0" layoutY="92.0" prefHeight="25.0" prefWidth="222.0" styleClass="subtitle" text="Select  a branch :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="189.0" layoutY="163.0" prefHeight="25.0" prefWidth="118.0" text="Select a date :">
+      <Label layoutX="78.0" layoutY="145.0" prefHeight="25.0" prefWidth="203.0" text="Select a time :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="189.0" layoutY="253.0" prefHeight="25.0" prefWidth="96.0" text="Select a time :">
+      <Label layoutX="74.0" layoutY="202.0" text="where to sit?">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="189.0" layoutY="325.0" text="Mark the places you want to save :">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="hoursList" layoutX="323.0" layoutY="253.0" onAction="#chooseHour" prefWidth="150.0" />
+      <ComboBox fx:id="hoursList" layoutX="323.0" layoutY="145.0" onAction="#chooseHour" prefWidth="150.0" />
       <Pane fx:id="MapPane" layoutX="165.0" layoutY="380.0" prefHeight="301.0" prefWidth="467.0" />
-      <Button fx:id="backBtn" layoutX="58.0" layoutY="580.0" mnemonicParsing="false" onAction="#backToHP" text="Back to HP" />
+      <Button fx:id="backBtn" layoutX="31.0" layoutY="24.0" mnemonicParsing="false" onAction="#backToHP" text="Back to HP" />
+      <ComboBox fx:id="InOutdoorList" layoutX="323.0" layoutY="200.0" onAction="#chooseInOutdoor" prefWidth="150.0" />
+      <ComboBox fx:id="numpeopleList" layoutX="323.0" layoutY="258.0" onAction="#chooseNumPeople" prefWidth="150.0" />
+      <Label layoutX="90.0" layoutY="260.0" prefHeight="21.0" prefWidth="150.0" text="Number of people:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Button layoutX="27.0" layoutY="587.0" onAction="#cancelReservation" text="Cancel Reservation" />
    </children>
 </AnchorPane>

@@ -1,7 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Employees.Employee;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -44,8 +42,12 @@ public class Complaint implements Serializable {
 
     public boolean customerIsSet=false;
 
+
     // Constructors
-    public Complaint() {}
+    public Complaint() {
+        this.status = ComplaintStatus.NEW; // Default status
+    }
+
 
     public Complaint(String complaintText, ComplaintStatus status, Customer customer,Branch branch) {
         this.complaintDate = LocalDateTime.now();
@@ -53,6 +55,7 @@ public class Complaint implements Serializable {
         this.status = status;
         this.customer = customer;
         this.branch = branch;
+        this.customerIsSet=true;
     }
     public Complaint(String complaintText, ComplaintStatus status){
         this.complaintDate = LocalDateTime.now();
@@ -89,6 +92,7 @@ public class Complaint implements Serializable {
     }
     public void setCustomer(Customer customer) {
         this.customer = customer;
+        this.customerIsSet=true;
     }
     public Employee getEmployee() {
         return employee;

@@ -6,15 +6,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ReservationCntBoundary">
+<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ReservationCntBoundary">
    <children>
-      <Button fx:id="CntBtn" layoutX="444.0" layoutY="296.0" mnemonicParsing="false" onAction="#continueAct" prefHeight="49.0" prefWidth="128.0" styleClass="menu-btn" text="Continue" />
-      <Button fx:id="BackBtn" layoutX="14.0" layoutY="296.0" mnemonicParsing="false" onAction="#BackAct" prefHeight="49.0" prefWidth="128.0" styleClass="menu-btn" text="back" />
-      <Label layoutX="150.0" layoutY="40.0" styleClass="main-title" text="Please choose available hours">
+      <Button fx:id="CntBtn" layoutX="452.0" layoutY="296.0" mnemonicParsing="false" onAction="#continueAct" styleClass="return-btn" text="continue" />
+      <Button fx:id="BackBtn" layoutX="111.0" layoutY="296.0" mnemonicParsing="false" onAction="#BackAct" styleClass="return-btn" text="back" />
+      <Label fx:id="titleLabel" layoutX="168.0" layoutY="37.0" prefHeight="41.0" prefWidth="250.0" styleClass="subtitle" text="Please choose available hours">
          <font>
             <Font size="19.0" />
          </font>
       </Label>
-      <ComboBox fx:id="hoursList" layoutX="217.0" layoutY="108.0" onAction="#chooseHours" prefWidth="150.0" />
+      <ComboBox fx:id="hoursList" layoutX="217.0" layoutY="95.0" onAction="#chooseHours" prefWidth="150.0" />
+      <Label fx:id="noTablesLabel" layoutX="81.0" layoutY="162.0" prefHeight="72.0" prefWidth="459.0" />
    </children>
 </AnchorPane>

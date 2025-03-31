@@ -1,15 +1,15 @@
 package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
-import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.MenuItemsRepository;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
-import java.util.ArrayList;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response.Status;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType;
 import java.util.List;
+
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.ALL_CLIENTS;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.THIS_CLIENT;
@@ -17,44 +17,76 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
 
-public class MenuItemsController {
+public class MenuItemsController
+{
 
     private MenuItemsRepository menuItemsRepository;
-    public Response handleRequest(Request request)
-    {
+
+    public Response handleRequest(Request request) {
         System.out.println("Handling request: " + request.getRequestType());
         return switch (request.getRequestType())
         {
-            case GET_BASE_MENU->getBaseItems();
-            case UPDATE_PRICE->updatePrice(request);
+            case GET_BASE_MENU -> getBaseItems();
+            case UPDATE_PRICE -> updateThePrice(request);
+            case ADD_DISH -> handleAddDishRequest(request);
+            case REMOVE_DISH -> handleRemoveDishRequest(request);
+            case UPDATE_INGREDIENTS -> handleUpdateDishIngredientsRequest(request);
+            case UPDATE_DISH_TYPE -> handleUpdateDishTypeRequest(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
-    //constructor
-    public MenuItemsController() {
-        this.menuItemsRepository = new MenuItemsRepository();
-    };
-    public boolean checkIfEmpty()
+
+    public Response handleAddDishRequest(Request<MenuItem> request)
     {
-        return (menuItemsRepository.checkIfEmpty());
+        MenuItem newDish = request.getData();
+        boolean success = menuItemsRepository.addMenuItem(newDish);
+        if (success)
+        {
+            return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully", Status.SUCCESS, ALL_CLIENTS);
+        }
+        else
+        {
+            return new Response<>(ResponseType.ADD_DISH, null, "Failed to add dish", Status.ERROR, ALL_CLIENTS);
+        }
     }
 
-    //initialize menuItem table with base items
-    public void PopulateMenuItems(List<MenuItem>menuItems) {
+    public Response handleRemoveDishRequest(Request<MenuItem> request)
+    {
+        MenuItem dishToRemove = request.getData();
+        boolean success = menuItemsRepository.removeDish(dishToRemove);
+        if (success)
+        {
+            return new Response<>(ResponseType.REMOVE_DISH, dishToRemove, "Dish removed successfully", Status.SUCCESS, ALL_CLIENTS);
+        }
+        else
+        {
+            return new Response<>(ResponseType.REMOVE_DISH, null, "Failed to remove dish", Status.ERROR, ALL_CLIENTS);
+        }
+    }
+
+    public MenuItemsController() {
+        this.menuItemsRepository = new MenuItemsRepository();
+    }
+    public boolean checkIfEmpty() {
+        return (menuItemsRepository.checkIfEmpty());
+    }
+    public void PopulateMenuItems(List<MenuItem> menuItems) {
         menuItemsRepository.populate(menuItems);
     }
-   //get base menu items
-    public Response getBaseItems() {
-        Response response=new Response(RETURN_MENU,null,null,THIS_CLIENT);
+
+    public Response getBaseItems()
+    {
+        Response response = new Response(RETURN_MENU, null, null, ALL_CLIENTS);
         System.out.println("getBaseItems control");
-        List<MenuItem> menuItems= menuItemsRepository.getBaseItems();
-        if(menuItems.isEmpty())
+        List<MenuItem> menuItems = menuItemsRepository.getBaseItems();
+        if (menuItems.isEmpty())
         {
             response.setStatus(ERROR);
             System.out.println("getBaseItems returned empty list");
         }
-        else{
-            Menu menu=new Menu(menuItems);
+        else
+        {
+            Menu menu = new Menu(menuItems);
             response.setStatus(SUCCESS);
             response.setData(menu);
             System.out.println("getBaseItems returned successfully");
@@ -63,7 +95,8 @@ public class MenuItemsController {
         return response;
     }
 
-    public List<MenuItem> searchMenuItems(String keyword, Double maxPrice, DishType type) {
+    public List<MenuItem> searchMenuItems(String keyword, Double maxPrice, DishType type)
+    {
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "FROM MenuItem m WHERE 1=1 ";
         if (keyword != null && !keyword.isEmpty()) {
@@ -90,18 +123,34 @@ public class MenuItemsController {
         return results;
     }
 
-
-    public Response updatePrice(Request request)
+    public Response handleUpdateDishIngredientsRequest(Request<MenuItem> request)
     {
-        Response response=new Response(UPDATED_PRICE,null,null,ALL_CLIENTS);
-        System.out.println("in MenuController updatePrice1");
+        MenuItem dishToUpdate = request.getData();  // Retrieve the dish with updated ingredients from the request
+        int itemId = dishToUpdate.getItemID();  // Get the item ID
+        String newIngredients = dishToUpdate.getIngredients();
+
+        boolean success = menuItemsRepository.updateDishIngredients(itemId, newIngredients);
+
+        if (success)
+        {
+            return new Response<>(ResponseType.UPDATE_INGREDIENTS, dishToUpdate, "Dish ingredients updated successfully", Status.SUCCESS, ALL_CLIENTS);
+        }
+        else
+        {
+            return new Response<>(ResponseType.UPDATE_INGREDIENTS, null, "Failed to update dish ingredients", Status.ERROR, ALL_CLIENTS);
+        }
+    }
+
+    public Response updateThePrice(Request request)
+    {
+        Response response = new Response(UPDATED_PRICE, null, null, ALL_CLIENTS);
+        System.out.println("in MenuController updateThePrice1");
         String[] data = (String[]) request.getData();
         int id = Integer.parseInt(data[0]);
-        double price =Double.parseDouble(data[1]);
-        System.out.println("in MenuController updatePrice2");
-        MenuItem item= menuItemsRepository.updatePrice(id, price);
-        if(item == null)
-        {
+        double price = Double.parseDouble(data[1]);
+        System.out.println("in MenuController updateThePrice2");
+        MenuItem item = menuItemsRepository.updateThePrice(id, price);
+        if (item == null) {
             response.setStatus(ERROR);
         }
         else
@@ -111,10 +160,25 @@ public class MenuItemsController {
         }
         return response;
     }
-    public List <MenuItem> getAllItems()
-    {
+
+    public List<MenuItem> getAllItems() {
         return menuItemsRepository.getAllItems();
     }
 
+    public Response handleUpdateDishTypeRequest(Request<MenuItem> request)
+    {
+        MenuItem dishToUpdate = request.getData();
+        int itemId = dishToUpdate.getItemID();
+        DishType newDishType = dishToUpdate.getDishType();
+        boolean success = menuItemsRepository.updateDishType(itemId, newDishType);
 
+        if (success)
+        {
+            return new Response<>(ResponseType.UPDATE_DISH_TYPE, dishToUpdate, "Dish type updated successfully", Status.SUCCESS, ALL_CLIENTS);
+        }
+        else
+        {
+            return new Response<>(ResponseType.UPDATE_DISH_TYPE, null, "Failed to update dish type", Status.ERROR, ALL_CLIENTS);
+        }
+    }
 }

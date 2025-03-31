@@ -1,6 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
-public enum  RequestType{
+public enum RequestType{
 
     ADD_DISH,
     REMOVE_DISH,
@@ -40,5 +40,4 @@ public enum  RequestType{
      SUBMIT_COMPLAINT,
      GET_ALL_COMPLAINTS,
      HANDLE_COMPLAINT_TABLE
-
 }

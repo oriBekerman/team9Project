@@ -1,10 +1,13 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -14,10 +17,13 @@ import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 
+//get reservation details from user and stores in map in simpleClient -> on continue go to ReservationCntPage
+
 public class ReservationBoundary {
     public SimpleClient client;
     public AnchorPane root;
     public Label titleLabel;
+    public boolean isRegistered=false;
 
 
     @FXML
@@ -59,12 +65,18 @@ public class ReservationBoundary {
         client = SimpleClient.getClient();
         client.mapReservation.put("Branch",chosen);
     }
-
     @FXML
     void chooseHour(ActionEvent event) {
         String chosen = hoursList.getSelectionModel().getSelectedItem();
         client = SimpleClient.getClient();
         client.mapReservation.put("Hours",chosen);
+        LocalTime time=LocalTime.parse(chosen);
+        client.resInfo.setHours(time);
+    }
+
+    @FXML
+    void cancelReservation(ActionEvent event) {
+        App.switchScreen("enterEmail");
     }
 
 
@@ -73,6 +85,7 @@ public class ReservationBoundary {
         String chosen = InOutdoorList.getSelectionModel().getSelectedItem();
         client = SimpleClient.getClient();
         client.mapReservation.put("Area",chosen);
+        SimpleClient.getClient().resInfo.setInOrOut(chosen);
     }
 
     @FXML
@@ -80,6 +93,7 @@ public class ReservationBoundary {
         String chosen = numpeopleList.getSelectionModel().getSelectedItem();
         client = SimpleClient.getClient();
         client.mapReservation.put("num",chosen);
+        SimpleClient.getClient().resInfo.setNumOfGuests(Integer.parseInt(chosen));
     }
 
     @FXML
@@ -114,18 +128,42 @@ public class ReservationBoundary {
         hoursList.getItems().add("14:45");
 
         hoursList.getItems().add("15:00");
+
+        hoursList.getItems().add("15:15");
+        hoursList.getItems().add("15:30");
+        hoursList.getItems().add("15:45");
+        hoursList.getItems().add("16:00");
+        hoursList.getItems().add("16:15");
+        hoursList.getItems().add("16:30");
+        hoursList.getItems().add("16:45");
+        hoursList.getItems().add("17:00");
+        hoursList.getItems().add("17:15");
+        hoursList.getItems().add("17:30");
+        hoursList.getItems().add("17:45");
+        hoursList.getItems().add("18:00");
+        hoursList.getItems().add("18:15");
+        hoursList.getItems().add("18:30");
+        hoursList.getItems().add("18:45");
+        hoursList.getItems().add("19:00");
+        hoursList.getItems().add("19:15");
+        hoursList.getItems().add("19:30");
+        hoursList.getItems().add("19:45");
+        hoursList.getItems().add("20:00");
+        hoursList.getItems().add("20:15");
+        hoursList.getItems().add("20:30");
+
     }
     void setBranchesList(){
         branchesList.getItems().add("Haifa");
-        branchesList.getItems().add("Tel-Aviv");
+        branchesList.getItems().add("Tel Aviv");
         branchesList.getItems().add("Jerusalem");
         branchesList.getItems().add("Zikhron Ya'akov");
     }
 
     void setInOutdoorList()
     {
-        InOutdoorList.getItems().add("indoor");
-        InOutdoorList.getItems().add("outdoor");
+        InOutdoorList.getItems().add("inside");
+        InOutdoorList.getItems().add("outside");
     }
 
     void setNumpeopleList()
@@ -136,6 +174,9 @@ public class ReservationBoundary {
         numpeopleList.getItems().add("4");
         numpeopleList.getItems().add("5");
         numpeopleList.getItems().add("6");
+        numpeopleList.getItems().add("7");
+        numpeopleList.getItems().add("8");
+        numpeopleList.getItems().add("9");
     }
 
 
@@ -163,27 +204,23 @@ public class ReservationBoundary {
         setNumpeopleList();
         setStyle();
     }
-    public void setStyle()
-    {
+    private void setStyle() {
         root.setStyle("-fx-background-color: #fbe9d0;");
-        titleLabel.setStyle(
-                "-fx-font-size: 24px;\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-text-fill: #4e453c;\n" +
-                "    -fx-alignment: center;\n" +
-                "    -fx-padding: 20px 0;\n" +
-                "    -fx-font-family: \"Serif\";");
-        // Buttons Styling
-        String buttonStyle = "-fx-background-color: #8a6f48;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-size: 14px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-padding: 8px 16px;" +
-                "-fx-border-radius: 5px;";
-
-        backBtn.setStyle(buttonStyle);
-
+        for (Node node : root.getChildrenUnmodifiable()) {
+            if (node instanceof Button)
+            {
+                node.setStyle("-fx-background-color: #8a6f48;\n" +
+                        "    -fx-text-fill: white;");
+            }
+            if (node instanceof Label)
+            {
+                node.setStyle("-fx-font-size: 18px;\n" +
+                        "    -fx-font-weight: bold;\n" +
+                        "    -fx-text-fill: #6c5339;\n" +
+                        "    -fx-padding: 10px 0;\n" +
+                        "    -fx-font-family: \"Serif\";");
+            }
+        }
 
     }
-
 }

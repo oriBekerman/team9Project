@@ -13,6 +13,8 @@ import il.cshaifasweng.OCSFMediatorExample.server.repositories.DeliveryRepositor
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.ResInfoRepository;
 import javafx.util.Pair;
 import org.hibernate.Session;
+import java.io.IOException;
+import java.util.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
@@ -26,7 +28,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient;
 
 public class SimpleServer extends AbstractServer {
     private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
-
+    private static final List<SubscribedClient> SubscribersList = Collections.synchronizedList(new ArrayList<>());
     public static Session session;
 
     //controllers
@@ -37,113 +39,230 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController = null;
     private ResInfoController resInfoController = null;
     private ComplaintController complaintController=null;
-
-    public static String dataBasePassword="282817SMAY ";//change database password here
-    public String password="";//used only when entering a new password through cmd
+    public static String dataBasePassword="282817SMAY";//change database password here
     private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
     public SimpleServer(int port) {
         super(port);
-        //change to password and remove comments if we want to enter another database passwords
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Please enter the database password: ");
-//        this.password = scanner.nextLine();
-//        System.out.println("after password ");
-//        DatabaseManager.initialize();// (if we want a different password to be entered when running change databasePassword-> password
-        getControllers();
+       getControllers();
     }
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client){
-        System.out.println("[SimpleServer] received request from client ");
+        System.out.println("received request from client: ");
 
-        String msgString = msg.toString();
-        Request request=(Request)msg;
+//        String msgString = msg.toString();
+//        Request request=(Request)msg;
+//
+//        //connect client
+//        if (msgString.startsWith("add client")) {
+//            SubscribedClient connection = new SubscribedClient(client);
+//            SubscribersList.add(connection);
+//            try {
+//                client.sendToClient("client added successfully");
+//                System.out.println("Client added successfully");
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        //navigate client's request to the appropriate controller and sent the controller's response to the client
+//        Response response = switch (request.getCategory())
+//        {
+//            case BASE_MENU -> menuItemsController.handleRequest(request);
+//            case BRANCH -> branchController.handleRequest(request);
+//            case LOGIN -> logInController.handleRequest(request);
+//            case DELIVERY -> deliveryController.handleRequest(request);
+//            case REPORTS -> handleReportRequest(request);
+//            default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
+//        };
+//
+//        System.out.println("Response prepared for client:");
+//        System.out.println("Response Type: " + response.getResponseType());
+//        System.out.println("Response Status: " + response.getStatus());
+//        System.out.println("Response Data: " + (response.getData() != null ? response.getData().toString() : "No data"));
+//
+//
+//        //check if the response should be sent to all clients or just one
+//        if (response.getRecipient()==ALL_CLIENTS) {
+//            sendToAllClients(response);
+//            System.out.println("response sent to client "+ response.getResponseType().toString());
+//        }
+//        if (response.getRecipient()==THIS_CLIENT)
+//        {
+//            try {
+////                System.out.println("Sending response to client: " + response.getResponseType() + " with data: " + response.getData());
+//                client.sendToClient(response);
+//                System.out.println("response sent to client: " + response.getResponseType() + " with data: " + response.getData());
+//            } catch (Exception e)
+//            {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        //server needs to send one response to all clients and one to a specific client
+//        //the response.data from the controller has both responses
+//        if(response.getRecipient()==BOTH)
+//        {
+//            List<Response> responses= (List<Response>) response.getData();
+//            if(responses.get(0).getRecipient()==ALL_CLIENTS)
+//            {
+//                try {
+//                    sendToAllClients(responses.get(0));
+//                    client.sendToClient(responses.get(1));
+//                }
+//                catch (Exception e)
+//                {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//            else {
+//                try {
+//                    sendToAllClients(responses.get(1));
+//                    client.sendToClient(responses.get(0));
+//                }
+//                catch (Exception e)
+//                {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        }
+//    }
 
-        System.out.println("[SimpleServer] Request Type: " + request.getRequestType());
-        System.out.println("[SimpleServer] Request Category: " + request.getCategory());
 
-
-        //connect client
-        if (msgString.startsWith("add client")) {
+////////////////// //////////////// NEW FROM MANINN TO HANDELL
+        if (msg instanceof String msgString && msgString.startsWith("add client"))
+        {
             SubscribedClient connection = new SubscribedClient(client);
             SubscribersList.add(connection);
-            try {
-                client.sendToClient("client added successfully");
-                System.out.println("Client added successfully");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        //navigate client's request to the appropriate controller and sent the controller's response to the client
-        Response response = switch (request.getCategory())
-        {
-            case BASE_MENU -> menuItemsController.handleRequest(request);
-            case BRANCH -> branchController.handleRequest(request);
-            case LOGIN -> logInController.handleRequest(request);
-            case DELIVERY -> deliveryController.handleRequest(request);
-            case REPORTS -> handleReportRequest(request);
-            default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
-        };
-
-        System.out.println("[SimpleServer -handleMessageFromClient ]Response prepared for client:");
-        System.out.println("Response Type: " + response.getResponseType());
-        System.out.println("Response Status: " + response.getStatus());
-        System.out.println("Response Data: " + (response.getData() != null ? response.getData().toString() : "No data"));
-
-
-        //check if the response should be sent to all clients or just one
-        if (response.getRecipient()==ALL_CLIENTS) {
-            sendToAllClients(response);
-            System.out.println("response sent to client "+ response.getResponseType().toString());
-        }
-        if (response.getRecipient()==THIS_CLIENT)
-        {
-            try {
-//                System.out.println("Sending response to client: " + response.getResponseType() + " with data: " + response.getData());
-                client.sendToClient(response);
-                System.out.println("response sent to client: " + response.getResponseType() + " with data: " + response.getData());
-            } catch (Exception e)
+            try
             {
-                throw new RuntimeException(e);
+                client.sendToClient("Client added successfully");
             }
-        }
-        //server needs to send one response to all clients and one to a specific client
-        //the response.data from the controller has both responses
-        if(response.getRecipient()==BOTH)
-        {
-            List<Response> responses= (List<Response>) response.getData();
-            if(responses.get(0).getRecipient()==ALL_CLIENTS)
+            catch (IOException e)
             {
-                try {
-                    sendToAllClients(responses.get(0));
-                    client.sendToClient(responses.get(1));
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimeException(e);
-                }
+                System.err.println("Error sending client confirmation: " + e.getMessage());
             }
-            else {
-                try {
-                    sendToAllClients(responses.get(1));
-                    client.sendToClient(responses.get(0));
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimeException(e);
-                }
-            }
+            return;
         }
-    }
 
-    public void sendToAllClients(String message) {
+        if (!(msg instanceof Request request)) {
+            System.err.println("Invalid message received. Expected Request object.");
+            return;
+        }
+
+        Response response;
         try {
-            for (SubscribedClient subscribedClient : SubscribersList) {
-                subscribedClient.getClient().sendToClient(message);
-            }
-        } catch (IOException e1) {
-            e1.printStackTrace();
+            response = switch (request.getCategory()) {
+                case BASE_MENU -> menuItemsController.handleRequest(request);
+                case BRANCH -> branchController.handleRequest(request);
+                case LOGIN -> logInController.handleRequest(request);
+                case DELIVERY -> deliveryController.handleRequest(request);
+                case RESERVATION -> resInfoController.handleRequest(request);
+                case COMPLAINT -> complaintController.handleRequest(request);
+                case REMOVE_DISH -> menuItemsController.handleRequest(request);
+                case UPDATE_INGREDIENTS -> menuItemsController.handleRequest(request);
+                case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
+                case PERMIT_GRANTED ->
+                {
+                    System.out.println("Permit granted request received.");
+                    Response permitResponse = handlePermitGranted(request);
+                    yield permitResponse;
+                }
+
+                case ADD_DISH -> {
+                    Response addDishResponse = menuItemsController.handleRequest(request);
+                    yield addDishResponse;
+                }
+                default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
+            };
+        } catch (Exception e) {
+            System.err.println("Error processing request: " + e.getMessage());
+            return;
+        }
+
+        System.out.println("Response prepared for client: " + response.getResponseType());
+        sendResponseToClient(response, client);
+        if(response.getMessage() !=null)
+        {
+            System.out.println("response msg =" +response.getMessage());
         }
     }
+
+    private void sendResponseToClient(Response response, ConnectionToClient client) {
+        try {
+            switch (response.getRecipient()) {
+                case ALL_CLIENTS -> {
+                    sendToAllClients(response);
+                    System.out.println("Response sent to all clients.");
+                }
+                case ALL_CLIENTS_EXCEPT_SENDER -> {
+                    sendToAllClientsExceptSender(response, client);
+                    System.out.println("Response sent to all clients except sender.");
+                }
+                case THIS_CLIENT -> {
+                    client.sendToClient(response);
+                    System.out.println("Response sent to client: " + response.getResponseType());
+                }
+                case BOTH -> {
+                    List<Response> responses = (List<Response>) response.getData();
+                    if (responses.get(0).getRecipient().equals(THIS_CLIENT) && responses.get(1).getRecipient().equals(ALL_CLIENTS)) {
+                        sendToAllClients(responses.get(1));
+                        client.sendToClient(responses.get(0));
+                    }
+                    if (responses.get(0).getRecipient().equals(ALL_CLIENTS) && responses.get(1).getRecipient().equals(THIS_CLIENT)) {
+                        sendToAllClients(responses.get(0));
+                        client.sendToClient(responses.get(1));
+                    }
+                }
+                default -> System.err.println("Unknown response recipient: " + response.getRecipient());
+            }
+        } catch (IOException e) {
+            System.err.println("Error sending response: " + e.getMessage());
+        }
+    }
+////////////////////////// NEW FROM MAIN  TO HANDELL
+
+
+
+
+
+    public void sendToAllClients(Object message) {
+        synchronized (SubscribersList) {
+            for (SubscribedClient subscribedClient : SubscribersList) {
+                try {
+                    subscribedClient.getClient().sendToClient(message);
+                } catch (IOException e) {
+                    System.err.println("Error sending message to client: " + e.getMessage());
+                }
+            }
+        }
+    }
+
+    private Response handlePermitGranted(Request request)
+    {
+        Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
+                "Your permit request has been granted.",
+                Response.Status.SUCCESS,
+                Response.Recipient.ALL_CLIENTS);
+        return response;
+    }
+
+
+    public void sendToAllClientsExceptSender(Object message, ConnectionToClient client) {
+        synchronized (SubscribersList) {
+            Iterator<SubscribedClient> iterator = SubscribersList.iterator();
+            while (iterator.hasNext()) {
+                SubscribedClient subscribedClient = iterator.next();
+                try {
+                    if (!subscribedClient.getClient().equals(client) && subscribedClient.getClient().getInetAddress() != null) {
+                        subscribedClient.getClient().sendToClient(message);
+                    }
+                } catch (IOException e) {
+                    System.err.println("Client disconnected. Removing from list.");
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+
     private void getControllers()
     {
         this.menuItemsController =databaseManager.getMenuItemsController();

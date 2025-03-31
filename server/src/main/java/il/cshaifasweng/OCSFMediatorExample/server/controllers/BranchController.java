@@ -4,6 +4,9 @@ import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.*;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.THIS_CLIENT;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.ALL_CLIENTS;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.ALL_CLIENTS_EXCEPT_SENDER;
+
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.*;
 import org.hibernate.SessionFactory;
@@ -30,6 +33,7 @@ public class BranchController {
             case GET_BRANCH_MENU->getBranchMenu(request);
             case GET_DELIVERABLES -> getDeliverableItems(request);
             case FETCH_BRANCH_TABLES -> getRestTables(request);
+            case UPDATE_BRANCH -> updateBranch(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
@@ -43,7 +47,7 @@ public class BranchController {
     }
     public Response getByName(Object branchName)
     {
-        Response response=new Response<>(RETURN_BRANCH,null,null,THIS_CLIENT);
+        Response response=new Response<>(RETURN_BRANCH_BY_NAME,null,null,THIS_CLIENT);
         String branchNameString = (String) branchName;
         Branch branch= branchRepository.getByName(branchNameString);
 
@@ -120,6 +124,23 @@ public class BranchController {
             }
         }
         return response;
+    }
+
+    public Response updateBranch(Request request)
+    {
+        Response response=new Response<>(UPDATE_BRANCH_RESERVATION,null,ERROR,ALL_CLIENTS_EXCEPT_SENDER);
+        Branch branch= (Branch) request.getData();
+        Branch branches=branchRepository.updateBranch(branch);
+        if(branches==null)
+        {
+            response.setStatus(ERROR);
+        }
+        else {
+            response.setStatus(SUCCESS);
+            response.setData(branches);
+        }
+        return response;
+
     }
     
 }

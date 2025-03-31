@@ -4,3 +4,4 @@ public enum DeliveryMethod {
     DELIVERY,
     SELF_PICKUP
 }
+

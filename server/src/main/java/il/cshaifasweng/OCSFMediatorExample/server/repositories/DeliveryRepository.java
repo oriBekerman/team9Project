@@ -1,7 +1,9 @@
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
 import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
+import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -10,6 +12,7 @@ import org.hibernate.query.Query;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DeliveryRepository extends BaseRepository<Delivery> {
@@ -21,7 +24,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
 
     @Override
     public int getId(Delivery entity) {
-        return entity.getOrderNumber();
+        return entity.getDeliveryNumber();
     }
 
     @Override
@@ -30,25 +33,37 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
     }
 
     // Populate and save a new delivery along with its order items and customer
-// Populate and save a new delivery along with its order items and customer
     public boolean populateDelivery(Delivery delivery) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
-            // Save the customer first if it's not null
-            if (delivery.getCustomer() != null) {
-                session.saveOrUpdate(delivery.getCustomer());  // Ensure the customer is saved or updated
-            }
+            // Save the customer associated with the delivery (if necessary)
+            session.saveOrUpdate(delivery.getCustomer());
 
-            // Save the delivery, which will also cascade save the orderItems due to the @OneToMany(cascade = CascadeType.ALL) in Delivery
+            // Save the delivery first to generate its ID
             session.save(delivery);
 
-            session.getTransaction().commit();  // Commit the transaction
-            System.out.println("[DeliveryRepository] Delivery saved successfully: " + delivery);
+            // Now that the delivery has an ID, we can save the associated order items
+            for (OrderItem orderItem : delivery.getOrderItems()) {
+                orderItem.setDelivery(delivery); // Make sure each order item knows its delivery
+                session.save(orderItem); // Save each order item
+            }
+
+            session.getTransaction().commit(); // Commit the transaction
+            System.out.println("Delivery saved successfully: " + delivery);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    // Helper method to find a customer by email
+    private Customer findCustomerByEmail(String email) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Customer WHERE email = :email", Customer.class)
+                    .setParameter("email", email)
+                    .uniqueResult();
         }
     }
 
@@ -71,7 +86,7 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
             data = session.createQuery(query).getResultList();
 
             session.getTransaction().commit();  // Commit the transaction
-            System.out.println("[DeliveryRepository]Getting all deliveries: " + data);
+            System.out.println("Getting all deliveries: " + data);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to fetch deliveries", e);
@@ -107,56 +122,75 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         return delivery;
     }
 
+    // Method to cancel a delivery by setting the isCanceled flag to true
+    public boolean cancelDeliveryByOrderNumber(int orderNumber) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
 
+            // Get the delivery by order number
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Delivery> query = builder.createQuery(Delivery.class);
+            Root<Delivery> deliveryRoot = query.from(Delivery.class);
+            query.select(deliveryRoot).where(builder.equal(deliveryRoot.get("orderNumber"), orderNumber));
 
-//    public List<Delivery> getDeliveriesForReport(int branchId) {
-//        System.out.println("[DeliveryRepository] fetching deliveries for branchId: " + branchId);
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            Query<Delivery> query = session.createQuery("FROM Delivery WHERE branch.id = :branchId", Delivery.class);
-//            query.setParameter("branchId", branchId);
-//            List<Delivery> result = query.getResultList();
-//            System.out.println("[DeliveryRepository] Deliveries fetched: " + result.size());
-//            return result;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ArrayList<>();
-//        }
-//    }
+            List<Delivery> result = session.createQuery(query).getResultList();
 
+            if (!result.isEmpty()) {
+                // Delivery found, cancel it by setting the isCanceled flag to true
+                Delivery delivery = result.get(0);
+                delivery.setCanceled(true); // Set the delivery status as canceled
 
-//    public List<Delivery> getDeliveriesForReport(int branchId) {
-//        System.out.println("DeliveryRepository - getDeliveriesForReport do you even get here?? ");
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            Query<Delivery> query = session.createQuery("FROM Delivery WHERE branch.id = :branchId", Delivery.class);
-//            query.setParameter("branchId", branchId);
-//            return query.getResultList();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ArrayList<>();
-//        }
-//    }
+                // Save the updated delivery
+                session.update(delivery);
+                session.getTransaction().commit();  // Commit the transaction
+                System.out.println("Delivery with order number " + orderNumber + " has been canceled.");
+                return true;  // Successfully canceled
+            } else {
+                // No delivery found with the given order number
+                System.out.println("No delivery found with order number: " + orderNumber);
+                return false;  // Failed to cancel
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;  // Failed to cancel due to an error
+        }
+    }
 
-//  the version that worked when the "MARCH" was on the right side
-//    public List<Delivery> getDeliveriesForReport(int branchId) {
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            String hql = "FROM Delivery d LEFT JOIN FETCH d.customer LEFT JOIN FETCH d.branch LEFT JOIN FETCH d.orderItems WHERE d.branch.id = :branchId";
-//            List<Delivery> deliveries = session.createQuery(hql, Delivery.class)
-//                    .setParameter("branchId", branchId)
-//                    .getResultList();
-//
-//            // Explicitly initialize lazy relationships
-//            deliveries.forEach(delivery -> {
-//                Hibernate.initialize(delivery.getCustomer());
-//                Hibernate.initialize(delivery.getBranch());
-//                Hibernate.initialize(delivery.getOrderItems());
-//            });
-//
-//            return deliveries;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ArrayList<>();
-//        }
-//    }
+    public Customer getCustomerByEmail(String email) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Delivery> cq = cb.createQuery(Delivery.class);
+            Root<Delivery> root = cq.from(Delivery.class);
+
+            // Access nested customer.email
+            Predicate emailMatch = cb.equal(root.get("customer").get("email"), email);
+
+            cq.select(root).where(emailMatch);
+
+            Delivery delivery = session.createQuery(cq)
+                    .setMaxResults(1)
+                    .uniqueResult();
+
+            return (delivery != null) ? delivery.getCustomer() : null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public void setCustomer(Delivery newDelivery) {
+        Transaction tx=null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession())
+        {
+            tx = session.beginTransaction();
+            session.saveOrUpdate(newDelivery);
+            tx.commit();
+        }
+        catch (Exception e) {
+            if (tx != null) tx.rollback();
+        }
+    }
+
 
     public List<Delivery> getDeliveriesForReport(int branchId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

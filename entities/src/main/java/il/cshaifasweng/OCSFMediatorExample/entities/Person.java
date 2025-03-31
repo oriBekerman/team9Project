@@ -14,34 +14,39 @@ public abstract class Person implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String name;
     private String address;
     private String email;
+    private String phone;
+
 
     // Default constructor (important for JPA)
     public Person() {}
 
     // Constructor with fields
-    public Person(int id, String name, String address, String email) {
+    public Person(int id, String name, String address, String email,String phone) {
         this.id =id;
         this.name = name;
         this.address = address;
         this.email = email;
+        this.phone = phone;
     }
     // Constructor with fields
-    public Person(String name, String address, String email) {
+    public Person(String name, String address, String email, String phone) {
         this.name = name;
         this.address = address;
         this.email = email;
+        this.phone = phone;
     }
 
+
     // Getters and Setters
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -77,5 +82,11 @@ public abstract class Person implements Serializable {
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+    public String getPhone() {
+        return phone;
+    }
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
