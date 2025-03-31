@@ -83,27 +83,45 @@ public class Response<T> implements Serializable {
         //menu related responses
         RETURN_MENU,
         UPDATED_PRICE,
+        REMOVE_DISH,
+        ADD_DISH,
+        UPDATE_INGREDIENTS,
+        UPDATE_DISH_TYPE,
+        PERMIT_GRANTED_ACK,
+
 
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,
         RETURN_BRANCH,
+        RETURN_BRANCH_BY_NAME,
         RETURN_DELIVERABLES,
         GET_ALL_DELIVERIES,
 
         RETURN_BRANCH_TABLES,
+        UPDATE_BRANCH_RESERVATION,
         //login
         CORRECTNESS_USER,
 
         DELIVERY_CREATED,
         SEND_DELIVERY,
+        DELIVERY_CANCELED,
 
         RETURN_RES_REPORT,
         RETURN_DELIV_REPORT,
         RETURN_COMP_REPORT,
+        RETURN_REPORT,
 
         CANCELED_RESERVATION,
+        ADDED_RESERVATION,
+        UPDATE_BRANCH_TABLES,
+        RETURN_ACTIVE_RESERVATIONS,
 
-        RETURN_REPORT
+        //COMPLAINT RELATED RESPONSES
+        RETURN_ALL_COMPLAINTS,
+        Complaint_BY_EMPLOYEE,
+        Complaint_BY_DATE,
+        UPDATE_COMPLAINT,
+        COMPLAINT_CREATED
     }
 
     public enum Status {
@@ -113,6 +131,7 @@ public class Response<T> implements Serializable {
     public enum Recipient {
         ALL_CLIENTS,
         THIS_CLIENT,
-        BOTH
+        BOTH,
+        ALL_CLIENTS_EXCEPT_SENDER
     }
 }
