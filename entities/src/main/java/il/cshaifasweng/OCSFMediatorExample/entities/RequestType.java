@@ -2,16 +2,15 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 public enum RequestType{
 
-    ADD_DISH,
-    REMOVE_DISH,
-    UPDATE_INGREDIENTS,
-    UPDATE_DISH_TYPE,
-
+      ADD_DISH,
+      REMOVE_DISH,
+      UPDATE_INGREDIENTS,
+      UPDATE_DISH_TYPE,
+      UPDATE_BRANCH_MENU,
     //base menu related requests
-    GET_BASE_MENU,//menuItems
-    UPDATE_PRICE,//need two one for branch one for base
-    PERMISSION_REQUEST,
-
+      GET_BASE_MENU,//menuItems
+      UPDATE_PRICE,//need two one for branch one for base
+      PERMISSION_REQUEST,
      //login related requests
      CHECK_USER,
      //delivery related requests
@@ -33,11 +32,12 @@ public enum RequestType{
      GET_DELIV_REPORT,
      GET_COMP_REPORT,
 
-     CANCEL_RESERVATION,
-     ADD_RESERVATION,
-     GET_ACTIVE_RESERVATIONS,
+    CANCEL_RESERVATION,
+    ADD_RESERVATION,
+    GET_ACTIVE_RESERVATIONS,
 
-     SUBMIT_COMPLAINT,
-     GET_ALL_COMPLAINTS,
-     HANDLE_COMPLAINT_TABLE
+    SUBMIT_COMPLAINT,
+    GET_ALL_COMPLAINTS,
+    HANDLE_COMPLAINT_TABLE
+
 }

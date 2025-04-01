@@ -2,27 +2,24 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.application.Platform;
-
-import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+import static il.cshaifasweng.OCSFMediatorExample.client.App.*;
 
 public class BranchPageBoundary
 {
@@ -52,24 +49,22 @@ public class BranchPageBoundary
     }
 
     public Branch branch;
-
-    private SideBarBranchBoundary sidebarController;
-
     @FXML
     private ResourceBundle resources;
-
     @FXML
     private URL location;
-
     @FXML
     private Button backToHPBtn;
-
     @FXML
-    private AnchorPane sideBarPlace;
-
+    private Button haifaBBtn;
+    @FXML
+    private Button jersualemBtn;
+    @FXML
+    private Button telAvivBtn;
+    @FXML
+    private Button zikhronBtn;
     @FXML
     private TableView<MenuItem> menuTableView;
-
     @FXML
     void navToHP(ActionEvent event)
     {
@@ -79,45 +74,42 @@ public class BranchPageBoundary
 
     @FXML
     void navToHaifaBranch(ActionEvent event) {
-
     }
-
     @FXML
     void navToJersualemBranch(ActionEvent event) {
-
     }
-
     @FXML
     void navToTelAvivBranch(ActionEvent event) {
-
+    }
+    @FXML
+    void navToZikhronBranch(ActionEvent event) {
     }
 
     @FXML
-    void initialize() throws IOException {
-        updateUI();
-        assert backToHPBtn != null : "fx:id=\"backToHPBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
-        assert sideBarPlace != null : "fx:id=\"sideBarPlace\" was not injected: check your FXML file 'new.fxml'.";
+    void initialize()
+    {
 
-        try {
+        try
+        {
             SimpleClient.getClient().displayBranchMenu(branch);
             System.out.println("get menu from initialize of branch");
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             System.err.println("Error sending client confirmation: " + e.getMessage());
         }
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("sideBarBranch.fxml"));
-            Parent sideBarBranchRoot = loader.load();
-            sidebarController = loader.getController();
-
-            sideBarPlace.getChildren().clear();
-            sideBarPlace.getChildren().add(sideBarBranchRoot);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+   //     menuTableView.refresh();
+        updateUI();
+        assert backToHPBtn != null : "fx:id=\"backToHPBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
+        assert haifaBBtn != null : "fx:id=\"haifaBBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
+        assert jersualemBtn != null : "fx:id=\"jersualemBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
+        assert telAvivBtn != null : "fx:id=\"telAvivBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
+        assert zikhronBtn != null : "fx:id=\"zikhronBtn\" was not injected: check your FXML file 'BranchPage.fxml'.";
     }
 
-    public void navToReservationPage(ActionEvent actionEvent) {
+    public void navToReservationPage(ActionEvent actionEvent)
+    {
+        switchScreen("Reservation");
     }
     public void navToDeliveryPage(ActionEvent actionEvent) {
         currentDelivery.setBranch(branch);
@@ -127,30 +119,16 @@ public class BranchPageBoundary
     }
     // Method to set the branch data
     public void setBranch(Branch branch) {
-        if (branch == null) {
-            System.out.println("[BranchPageBoundary] ERROR: Received null branch!");
-            return;
-        }
         this.branch = branch;
         branchTitle.setText("Branch: " + branch.getName());
         openHour.setText(branch.getOpeningTime());
         closeHour.setText(branch.getClosingTime());
         branchIsSet = true;
-        System.out.println("in branch page controller");
-        System.out.println("opening: " + branch.getOpeningTime());
-        System.out.println("[BranchPageBoundary] Branch explicitly set: " + branch.getName());
-
-        if (sidebarController != null) {
-            sidebarController.setBranch(branch);
-            System.out.println("[BranchPageBoundary] Sidebar set explicitly with branch: " + branch.getName());
-        } else {
-            System.out.println("[BranchPageBoundary] ERROR: sidebarController is null!");
-        }
-
     }
     // Method to update UI based on the branch data
     private void updateUI() {
-        if (branch != null && branchTitle != null) {
+        if (branch != null && branchTitle != null)
+        {
             branchTitle.setText("Branch: " + branch.getName());
             openingHoursLabel.setText("opening hours: " + branch.getOpeningTime() + " - " + branch.getClosingTime());
         }
@@ -184,9 +162,6 @@ public class BranchPageBoundary
 //            e.printStackTrace();
 //        }
     }
-
-
-
     public void loadBranchMap(ActionEvent actionEvent){
         openBranchMap();
     }

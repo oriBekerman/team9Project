@@ -208,7 +208,7 @@ public class DeliveryBoundary {
     @Subscribe
     public void onUpdateEvent(updateDishEvent event) {
         try {
-            SimpleClient.getClient().displayNetworkMenu();
+            SimpleClient.getClient().displayDeliveryMenu(currentDelivery.getBranch());
             menuTableView.refresh();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -313,14 +313,35 @@ public class DeliveryBoundary {
 
 
         // Fetch menu data
-        try
-        {
-            SimpleClient.getClient().displayNetworkMenu();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        Platform.runLater(() -> {
+            try {
+                if(currentDelivery != null)
+                {
+                    if(currentDelivery.getBranch()!=null)
+                    {
+                        System.out.println(currentDelivery.getBranch().getName());
+                    }
+                    else{
+                        System.out.println("currentDelivery.getBranch() is null");
+                    }
+                }
+                if(currentDelivery != null)
+                {
+                    if(currentDelivery.getBranch()!=null)
+                    {
+                        System.out.println(currentDelivery.getBranch().getName());
+                    }
+                    else{
+                        System.out.println("currentDelivery.getBranch() is null");
+                    }
+                }
+                SimpleClient.getClient().displayDeliveryMenu(currentDelivery.getBranch());
+            } catch (
+                    IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         isOrderValid();
     }
 

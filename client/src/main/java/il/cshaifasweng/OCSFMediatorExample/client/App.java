@@ -156,22 +156,22 @@ public class App extends Application {
                     }
                 });
                 break;
-            case "Update Menu":
+            case "secondary":
                 Platform.runLater(() -> {
                     setWindowTitle("Update Menu");
                     try {
-                        setContent("updatMenu");
+                        setContent("secondary");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
                 break;
 
-            case "ReservationCnt":
+            case "reservationCnt":
                 Platform.runLater(() -> {
                     setWindowTitle("Reservation");
                     try {
-                        setContent("ReservationCnt");
+                        setContent("reservationCnt");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -180,8 +180,6 @@ public class App extends Application {
 
             case "SubComplaint":
                 Platform.runLater(() -> {
-                    setWindowTitle("Complaint");
-
                     try {
                         setContent("SubComplaint");
                     } catch (IOException e) {
@@ -247,6 +245,7 @@ public class App extends Application {
                 DeliveryBoundary deliveryBoundary = loader.getController();
 
                 deliveryBoundary.setDelivery(delivery);
+                deliveryBoundary.initialize();
 
                 // Set the scene and show the stage
                 scene = new Scene(root);

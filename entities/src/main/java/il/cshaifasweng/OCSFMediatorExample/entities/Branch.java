@@ -75,6 +75,7 @@ public class Branch implements Serializable  {
     public int getId() {
         return branchID;
     }
+
     public void setId(int id) {
         this.branchID = id;
     }
@@ -82,6 +83,7 @@ public class Branch implements Serializable  {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -89,32 +91,35 @@ public class Branch implements Serializable  {
     public String getLocation() {
         return location;
     }
+
     public void setLocation(String location) {
         this.location = location;
     }
 
     public Set<MenuItem> getBranchMenuItems() { return menuItems; }
     public void setBranchMenuItems(Set<MenuItem> menuItems) { this.menuItems = menuItems; }
-
     public void setDeliverableItems(Set<MenuItem> deliverableItems) { this.deliverableItems = deliverableItems; }
     public Set<MenuItem> getDeliverableItems() {
         return deliverableItems;
     }
-
     public void addMenuItem(MenuItem menuItem) { this.menuItems.add(menuItem); }
     public void addDeliverableItem(MenuItem menuItem) { this.deliverableItems.add(menuItem); }
     public int getBranchID() {
         return branchID;
     }
+
     public String getOpeningTime() {
         return openingTime;
     }
+
     public void setOpeningTime(String openingTime) {
         this.openingTime = openingTime;
     }
+
     public String getClosingTime() {
         return closingTime;
     }
+
     public void setClosingTime(String closingTime) {
         this.closingTime = closingTime;
     }
@@ -310,34 +315,9 @@ public class Branch implements Serializable  {
         tablesAreSet = true;
         this.notifyAll();  // Notify any thread waiting for tables
     }
-    //    public ResInfo getReservationByTable(RestTable table,LocalTime time)
-//    {
-//        for(ResInfo reservation : reservations)
-//        {
-//            System.out.println("reservation.branch for");
-//            System.out.println(reservation.getHours());
-//            if ((reservation.getHours().equals(time)))
-//            {
-//                System.out.println("reservation.getResID() 1111");
-//                Set<RestTable> restTables=reservation.getTable();
-//                for(RestTable restTable : restTables)
-//                {
-//                    System.out.println("reservation.getResID() 2222");
-//                    System.out.println(restTable.getId());
-//                    if(table.getId()==restTable.getId())
-//                    {
-//                        System.out.println("reservation.getResID() 3333");
-//                        System.out.println(restTable.getId());
-//                        return reservation;
-//                    }
-//                }
-//            }
-//        }
-//
-//        System.out.println("reservation.getResID()");
-//        return null;
-//
-//    }
+
+
+
     public Set<ResInfo> getAllReservations()
     {
         return reservations;

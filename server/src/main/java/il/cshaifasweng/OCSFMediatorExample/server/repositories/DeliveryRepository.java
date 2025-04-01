@@ -8,7 +8,6 @@ import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -191,7 +190,6 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         }
     }
 
-
     public List<Delivery> getDeliveriesForReport(int branchId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT DISTINCT d FROM Delivery d " +
@@ -218,3 +216,5 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
     }
 
 }
+
+

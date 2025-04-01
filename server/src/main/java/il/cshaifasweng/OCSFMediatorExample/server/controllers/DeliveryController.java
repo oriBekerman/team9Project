@@ -39,7 +39,6 @@ public class DeliveryController {
         try {
             // Extract data from the request
             Delivery delivery = (Delivery) request.getData(); // Assume we send a Delivery object in the request
-            delivery.setTotalPrice(delivery.calculateTotalPrice());
 
             // Create the delivery and check the result
             boolean isCreated = deliveryRepository.populateDelivery(delivery);

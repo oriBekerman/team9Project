@@ -1,12 +1,14 @@
 
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
+import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
+import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import javax.persistence.criteria.*;
 import java.time.LocalTime;
@@ -56,22 +58,18 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             populateResInfo(resInfo);
         }
     }
-    public void populateResInfo(ResInfo resSInfo)
-    {
+    public void populateResInfo(ResInfo resSInfo) {
         Transaction tx = null;
-        try(Session session = HibernateUtil.getSessionFactory().openSession())
-        {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
+
             if (resSInfo.getCustomer() != null) {
-                session.saveOrUpdate(resSInfo.getCustomer());  // Ensure the customer is saved or updated
-            }
-            // Print the branch information to confirm branch association
-            if (resSInfo.getBranch() == null) {
-                System.out.println("[ResInfoRepository] ERROR: Reservation does not have a branch set!");
-            } else {
-                System.out.println("[ResInfoRepository] Saving reservation for branch id: " + resSInfo.getBranch().getId());
+                session.saveOrUpdate(resSInfo.getCustomer());
             }
 
+            if (resSInfo.getBranch() != null) {
+                session.saveOrUpdate(resSInfo.getBranch());
+            }
 
             if (resSInfo.getTable() != null && !resSInfo.getTable().isEmpty()) {
                 for (RestTable table : resSInfo.getTable()) {
@@ -80,8 +78,8 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
                 }
             }
             session.save(resSInfo);
-            // session.flush();  // Force execution of SQL statements
             tx.commit();
+
         } catch (Exception e) {
             if (tx != null && tx.getStatus().canRollback()) {
                 try {
@@ -113,7 +111,6 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             return new ArrayList<>();
         }
     }
-
     public ResInfo addReservation(ResInfo reservation) {
         Transaction tx = null;
 
@@ -154,7 +151,6 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
     {
         deleteById(reservation.getResID());
     }
-
     public void saveCustomer(Customer customer)
     {
         Transaction tx = null;
@@ -300,7 +296,6 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
         }
     }
 
-
     public List<ResInfo> getReservationsForReport(int branchId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM ResInfo r LEFT JOIN FETCH r.customer LEFT JOIN FETCH r.branch WHERE r.branch.id = :branchId";
@@ -320,5 +315,4 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             return new ArrayList<>();
         }
     }
-
 }

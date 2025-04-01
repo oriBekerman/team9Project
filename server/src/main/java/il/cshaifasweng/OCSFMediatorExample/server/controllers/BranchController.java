@@ -72,13 +72,14 @@ public class BranchController {
          {
              response.setStatus(ERROR);
          }
-         else {
+         else
+         {
              response.setStatus(SUCCESS);
              response.setData(branches);
          }
          return response;
-
     }
+
     private Response getBranchMenu(Request request) {
         Response response=new Response<>(RETURN_MENU,null,ERROR,THIS_CLIENT);
         Branch branch= (Branch) request.getData();
@@ -98,15 +99,15 @@ public class BranchController {
     {
         Branch branch= (Branch) request.getData();
         Response response=new Response<>(RETURN_DELIVERABLES,null,ERROR,THIS_CLIENT);
-        List<MenuItem> deliverables=new ArrayList<>();
-       deliverables= branchRepository.getDeliverableMenuItems(branch);
-       if(deliverables != null)
-       {
-           response.setStatus(SUCCESS);
-           response.setData(deliverables);
-       }
-       return response;
+        List<MenuItem> deliverables= branchRepository.getDeliverableMenuItems(branch);
+           if(deliverables != null)
+           {
+               response.setStatus(SUCCESS);
+               response.setData(deliverables);
+           }
+           return response;
     }
+
     public Response getRestTables(Request request)
     {
         Branch branch= (Branch) request.getData();

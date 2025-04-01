@@ -47,7 +47,6 @@ public class ResInfoController {
 
     //initialize menuItem table with base items
     public void PopulateResSInfo(List<ResInfo>resSInfo) {
-        System.out.println("[ResInfoController] Populating " + resSInfo.size() + " reservations.");
         resInfoRepository.populate(resSInfo);
     }
 
@@ -249,6 +248,8 @@ public Response<List<Response>> cancelReservation(Request request) {
         return new Response<>(CANCELED_RESERVATION, null, "Error cancelling reservation: " + e.getMessage(), ERROR, THIS_CLIENT);
     }
 }
+
+
 
 
 

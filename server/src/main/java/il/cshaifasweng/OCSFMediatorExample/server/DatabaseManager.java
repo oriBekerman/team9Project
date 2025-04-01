@@ -36,22 +36,20 @@ public class DatabaseManager {
     private ComplaintController complaintController;
     private CustomerController customerController;
 
-
     public DatabaseManager(String password) {
         initialize(password);
         initControllers();
         checkAndPopulateTables();
         System.out.println("Database initialized & populated successfully!");
     }
-
-    private static void initialize(String password) {
-        System.out.println("initializing database...");
-        if (sessionFactory == null) {
-            System.err.println("failed to initialize Hibernate! SessionFactory is null.");
-            throw new HibernateException("SessionFactory creation failed.");
-        }
-        System.out.println("SessionFactory initialized successfully!");
+private static void initialize(String password) {
+    System.out.println("initializing database...");
+    if (sessionFactory == null) {
+        System.err.println("failed to initialize Hibernate! SessionFactory is null.");
+        throw new HibernateException("SessionFactory creation failed.");
     }
+    System.out.println("SessionFactory initialized successfully!");
+}
 
     private byte[] loadImageFromResources(String fileName) {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("images/" + fileName)) {
@@ -67,19 +65,21 @@ public class DatabaseManager {
     }
 
 
-    public void initControllers() {
+
+
+    public void initControllers()
+    {
         this.menuItemsController = new MenuItemsController();
         this.branchController = new BranchController();
         this.logInController = new LogInController();
         this.restTableController = new RestTableController();
         this.deliveryController = new DeliveryController();
-        this.resInfoController = new ResInfoController();
-        this.complaintController = new ComplaintController();
+        this.resInfoController=new ResInfoController();
+        this.complaintController=new ComplaintController();
         this.customerController = new CustomerController(); // חדש
 
     }
 
-    //if  database tables are empty initialize them
     public void checkAndPopulateTables() {
         // If database tables are empty, initialize them
         if (menuItemsController.checkIfEmpty() &&
@@ -91,6 +91,7 @@ public class DatabaseManager {
                 resInfoController.checkIfEmpty() &&
                 complaintController.checkIfEmpty() &&
                 customerController.checkIfEmpty()) {
+        {
 
             // ==========================
             // 1. Populate Employees
@@ -107,6 +108,8 @@ public class DatabaseManager {
             // ==========================
             // 2. Define Menu Items
             // ==========================
+
+
 
             MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce", "Low calorie", loadImageFromResources("salad.jpeg"), BASE);
             MenuItem item2 = new MenuItem("Pizza", 45.00, "Mushrooms, onions, tomatoes", "Includes vegan option", loadImageFromResources("pizza.jpeg"), BASE);
@@ -134,56 +137,43 @@ public class DatabaseManager {
             // ==========================
             // 4. Define Restaurant Tables & Availability
             // ==========================
-            RestTable table1 = new RestTable("inside", 2);
-            RestTable table2 = new RestTable("inside", 4);
-            RestTable table3 = new RestTable("inside", 3);
-            RestTable table4 = new RestTable("inside", 4);
-            RestTable table5 = new RestTable("inside", 3);
-            RestTable table6 = new RestTable("inside", 2);
-            RestTable table7 = new RestTable("outside", 2);
-            RestTable table8 = new RestTable("outside", 3);
-            RestTable table9 = new RestTable("outside", 4);
-            RestTable table10 = new RestTable("outside", 2);
+            RestTable table1= new RestTable("inside", 2);
+            RestTable table2= new RestTable("inside", 4);
+            RestTable table3= new RestTable("inside", 3);
+            RestTable table4= new RestTable("inside", 4);
+            RestTable table5= new RestTable("inside", 3);
+            RestTable table6= new RestTable("inside", 2);
+            RestTable table7= new RestTable("outside", 2);
+            RestTable table8= new RestTable("outside", 3);
+            RestTable table9= new RestTable("outside", 4);
+            RestTable table10= new RestTable("outside", 2);
 //           List<RestTable> restTablesHaifa = List.of(table1, table2, table3, table4,table5,table6,table7,table8,table9,table10);
-            List<RestTable> restTablesHaifa = List.of(table1, table2, table3, table4, table5, table6, table7, table8, table9, table10);
+            List<RestTable> restTablesHaifa = List.of(table1, table2, table3,table4,table5,table6,table7,table8,table9,table10);
 
-            RestTable table11 = new RestTable("inside", 2);
-            RestTable table12 = new RestTable("inside", 4);
-            RestTable table13 = new RestTable("inside", 3);
-            RestTable table14 = new RestTable("inside", 4);
-            RestTable table15 = new RestTable("inside", 3);
-            RestTable table16 = new RestTable("inside", 2);
-            RestTable table17 = new RestTable("outside", 2);
-            RestTable table18 = new RestTable("outside", 3);
-            RestTable table19 = new RestTable("outside", 4);
-            RestTable table20 = new RestTable("outside", 2);
-            List<RestTable> restTablesTelAviv = List.of(table11, table12, table13, table14, table15, table16, table17, table18, table19, table20);
 
-            // Set unavailable times
-            LocalTime time1 = LocalTime.of(9, 0);
-            LocalTime time2 = LocalTime.of(10, 30);
-            LocalTime time3 = LocalTime.of(11, 0);
-            LocalTime time4 = LocalTime.of(12, 30);
-            LocalTime time5 = LocalTime.of(14, 30);
-
-            restTables.get(0).setUnavailableFromTimes(Set.of(time1, time2, time3, time5));
-            restTables.get(1).setUnavailableFromTimes(Set.of(time1, time4, time5));
-            restTables.get(2).addUnavailableFromTime(time3);
-            restTables.get(3).addUnavailableFromTime(time4);
-            restTables.get(4).addUnavailableFromTime(time5);
-
+            RestTable table11= new RestTable("inside", 2);
+            RestTable table12= new RestTable("inside", 4);
+            RestTable table13= new RestTable("inside", 3);
+            RestTable table14= new RestTable("inside", 4);
+            RestTable table15= new RestTable("inside", 3);
+            RestTable table16= new RestTable("inside", 2);
+            RestTable table17= new RestTable("outside", 2);
+            RestTable table18= new RestTable("outside", 3);
+            RestTable table19= new RestTable("outside", 4);
+            RestTable table20= new RestTable("outside", 2);
+            List<RestTable> restTablesTelAviv = List.of(table11, table12, table13, table14,table15,table16,table17,table18,table19,table20);
             // Assign tables to Haifa branch
-            for (RestTable table : restTables) {
+            for (RestTable table : restTablesHaifa) {
                 table.setBranch(haifaBranch);
             }
-            haifaBranch.setRestTables(new HashSet<>(restTables));
+            //haifaBranch.setRestTables(new HashSet<>(restTablesHaifa));
+            haifaBranch.setRestTables(restTablesHaifa);
 
             // Assign tables to Tel Aviv branch
             for (RestTable table : restTablesTelAviv) {
                 table.setBranch(telAvivBranch);
             }
             telAvivBranch.setRestTables(restTablesTelAviv);
-
             // ==========================
             // 5. Assign Menu Items & Deliverables to Branches
             // ==========================
@@ -421,11 +411,9 @@ public class DatabaseManager {
         }
         return complaintController;
     }
-
     // shuts down Hibernate.
     public static void shutdown() {
         HibernateUtil.shutdown();
     }
-  }
-
+}
 

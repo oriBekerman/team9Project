@@ -12,10 +12,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.EventBus;
-import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
-import il.cshaifasweng.OCSFMediatorExample.entities.Request;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
 
@@ -251,7 +249,8 @@ public class ReservationCntBoundary {
         });
     }
 
-    private void makeReservation() {
+    private void makeReservation()
+    {
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
         String timeString = SimpleClient.getClient().mapReservation.get("Hours");

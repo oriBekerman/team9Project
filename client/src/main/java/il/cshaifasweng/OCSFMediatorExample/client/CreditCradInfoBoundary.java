@@ -42,14 +42,13 @@ public class CreditCradInfoBoundary {
     @FXML
     private Button paymentBtn;
     private String type;
-    public boolean typeIsSet = false;
+    public boolean typeIsSet=false;
 
-    public CreditCradInfoBoundary() {
-    }
+    public CreditCradInfoBoundary() {}
 
     public CreditCradInfoBoundary(String type) {
         this.type = type;
-        this.typeIsSet = true;
+        this.typeIsSet=true;
     }
 
     @FXML
@@ -62,20 +61,28 @@ public class CreditCradInfoBoundary {
         String cardNum = cardNumText.getText();
         String expDate = expDateText.getText();
         String cvv = cvvText.getText();
-        if (cardNum.isEmpty() || expDate.isEmpty() || cvv.isEmpty()) {
+        if(cardNum.isEmpty() || expDate.isEmpty() || cvv.isEmpty()) {
             errorLabel.setText("Please fill all the fields");
-        } else if (!isValidCreditCard(cardNum)) {
+        }
+        else if(!isValidCreditCard(cardNum))
+        {
             errorLabel.setText("Invalid Card Number");
-        } else if (!isValidExpDate(expDate)) {
+        }
+        else if(!isValidExpDate(expDate))
+        {
             errorLabel.setText("Invalid Expiry Date");
-        } else if (!isValidCVV(cvv)) {
+        }
+        else if (!isValidCVV(cvv))
+        {
             errorLabel.setText("Invalid CVV");
-        } else {
-            if (type == "reservation") {
+        }
+        else {
+            if(type=="reservation")
+            {
                 SimpleClient.getClient().mapReservation.put("cardNum", cardNum);
                 SimpleClient.getClient().mapReservation.put("expDate", expDate);
                 SimpleClient.getClient().mapReservation.put("cvv", cvv);
-                Customer customer = SimpleClient.getClient().resInfo.getCustomer();
+                Customer customer=SimpleClient.getClient().resInfo.getCustomer();
                 customer.setCreditCardNumber(cardNum);
                 customer.setCvv(cvv);
                 customer.setExpirationDate(expDate);
@@ -99,7 +106,6 @@ public class CreditCradInfoBoundary {
         setStyle();
 
     }
-
     public void setType(String type) {
         System.out.println("in set type before sync");
         synchronized (this) {
@@ -113,6 +119,7 @@ public class CreditCradInfoBoundary {
     }
 
 
+
     //validate card number
     public boolean isValidCreditCard(String cardNumber) {
         if (!Pattern.compile("^[0-9]{13,19}$").matcher(cardNumber).matches()) {
@@ -120,7 +127,6 @@ public class CreditCradInfoBoundary {
         }
         return luhnCheck(cardNumber);
     }
-
     //used to validate card number
     private boolean luhnCheck(String cardNumber) {
         int sum = 0;
@@ -138,7 +144,6 @@ public class CreditCradInfoBoundary {
         }
         return sum % 10 == 0;
     }
-
     public static boolean isValidCVV(String cvv) {
         return Pattern.compile("^[0-9]{3,4}$").matcher(cvv).matches();
     }
@@ -150,7 +155,6 @@ public class CreditCradInfoBoundary {
         }
         return isNotExpired(expDate);
     }
-
     //check exp date has not passed
     private static boolean isNotExpired(String expDate) {
         try {
@@ -162,23 +166,25 @@ public class CreditCradInfoBoundary {
             return false;
         }
     }
-
-    public void setFields() {
-        if (SimpleClient.getClient().resInfo != null) {
-            cardNumText.setText(SimpleClient.getClient().resInfo.getCustomer().getCreditCardNumber());
-            expDateText.setText(SimpleClient.getClient().resInfo.getCustomer().getExpirationDate());
-            cvvText.setText(SimpleClient.getClient().resInfo.getCustomer().getCvv());
+    public void setFields()
+    {
+        if(SimpleClient.getClient().resInfo != null)
+        {
+           cardNumText.setText(SimpleClient.getClient().resInfo.getCustomer().getCreditCardNumber());
+           expDateText.setText(SimpleClient.getClient().resInfo.getCustomer().getExpirationDate());
+           cvvText.setText(SimpleClient.getClient().resInfo.getCustomer().getCvv());
         }
     }
-
     private void setStyle() {
         root.setStyle("-fx-background-color: #fbe9d0;");
         for (Node node : root.getChildrenUnmodifiable()) {
-            if (node instanceof Button) {
+            if (node instanceof Button)
+            {
                 node.setStyle("-fx-background-color: #8a6f48;\n" +
                         "    -fx-text-fill: white;");
             }
-            if (node instanceof Label) {
+            if (node instanceof Label)
+            {
                 node.setStyle("-fx-font-size: 18px;\n" +
                         "    -fx-font-weight: bold;\n" +
                         "    -fx-text-fill: #6c5339;\n" +
@@ -186,5 +192,8 @@ public class CreditCradInfoBoundary {
                         "    -fx-font-family: \"Serif\";");
             }
         }
+
     }
+
+
 }
