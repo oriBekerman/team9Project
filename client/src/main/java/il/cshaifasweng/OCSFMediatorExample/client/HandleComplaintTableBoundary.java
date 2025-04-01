@@ -25,7 +25,6 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 public class HandleComplaintTableBoundary {
     public AnchorPane root;
     public Label complaintsTitle;
-    public Button returnBtn;
     public TableView<Complaint> complaintTable;
     public TableColumn<Complaint, String> numColumn;
     public TableColumn<Complaint, String> dateColumn;

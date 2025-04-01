@@ -9,7 +9,6 @@
 <AnchorPane fx:id="root" prefHeight="871.0" prefWidth="1194.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.HandleComplaintTableBoundary">
    <children>
       <Label fx:id="complaintsTitle" layoutX="483.0" layoutY="60.0" text="Complaints" AnchorPane.bottomAnchor="793.4" AnchorPane.leftAnchor="483.0" AnchorPane.topAnchor="60.0" />
-      <Button fx:id="returnBtn" layoutX="62.0" layoutY="35.0" mnemonicParsing="false" text="Return" />
        <TableView fx:id="complaintTable" layoutX="106.0" layoutY="125.0" prefHeight="400.0" prefWidth="812.0">
            <columns>
                <TableColumn fx:id="numColumn" text="ID" />

@@ -27,6 +27,7 @@ public enum RequestType{
      GET_BRANCH_MENU,
      FETCH_BRANCH_TABLES,
     UPDATE_BRANCH,
+
     GET_RES_REPORT,
 
     CANCEL_RESERVATION,
@@ -35,7 +36,8 @@ public enum RequestType{
 
     SUBMIT_COMPLAINT,
     GET_ALL_COMPLAINTS,
-    HANDLE_COMPLAINT_TABLE
+    HANDLE_COMPLAINT_TABLE,
 
+    ADD_CLIENT
 
 }
