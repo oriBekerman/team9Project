@@ -315,6 +315,26 @@ public class DeliveryBoundary {
         // Fetch menu data
         Platform.runLater(() -> {
             try {
+                if(currentDelivery != null)
+                {
+                    if(currentDelivery.getBranch()!=null)
+                    {
+                        System.out.println(currentDelivery.getBranch().getName());
+                    }
+                    else{
+                        System.out.println("currentDelivery.getBranch() is null");
+                    }
+                }
+                if(currentDelivery != null)
+                {
+                    if(currentDelivery.getBranch()!=null)
+                    {
+                        System.out.println(currentDelivery.getBranch().getName());
+                    }
+                    else{
+                        System.out.println("currentDelivery.getBranch() is null");
+                    }
+                }
                 SimpleClient.getClient().displayDeliveryMenu(currentDelivery.getBranch());
             } catch (
                     IOException e) {

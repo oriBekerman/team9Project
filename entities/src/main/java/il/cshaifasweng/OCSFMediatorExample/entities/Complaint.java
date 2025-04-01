@@ -27,11 +27,11 @@ public class Complaint implements Serializable {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id")
     private Employee employee; // Employee handling the complaint
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "branch_id")
     private Branch branch; // Branch associated with the complaint
 

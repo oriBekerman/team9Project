@@ -7,7 +7,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
+import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +77,41 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
             throw new RuntimeException(e);
         }
         return items;
+    }
+
+    public boolean updateBranchMenu(Branch branch) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            session.update(branch);  // Save updated branch menu
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
+    }
+
+    public List<Branch> getBranchesWithDish(MenuItem dish) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        List<Branch> branches = new ArrayList<>();
+
+        try {
+            branches = session.createQuery(
+                            "SELECT b FROM Branch b JOIN b.menuItems m WHERE m.id = :dishId", Branch.class)
+                    .setParameter("dishId", dish.getItemID())
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return branches;
     }
 
     public MenuItem updateThePrice(int id, double price)

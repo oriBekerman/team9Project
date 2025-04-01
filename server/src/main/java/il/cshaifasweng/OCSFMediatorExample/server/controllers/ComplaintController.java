@@ -1,10 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 //import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
-import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
-import il.cshaifasweng.OCSFMediatorExample.entities.Employee;
-import il.cshaifasweng.OCSFMediatorExample.entities.Request;
-import il.cshaifasweng.OCSFMediatorExample.entities.Response;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.server.EmailSender;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.ComplaintRepository;
 import javafx.util.Pair;
 
@@ -115,9 +113,47 @@ public class ComplaintController {
             response.setMessage("No complaints found");
             return response;
         }
+
         response.setStatus(SUCCESS);
         response.setData(complaints);
+        for(Complaint complaint : complaints)
+        {
+            sendEmail(complaint);
+        }
         return response;
+    }
+    private void sendEmail(Complaint complaint)
+    {
+        Customer customer=complaint.getCustomer();
+        String body;
+        if(complaint.getCompensation()==0)
+        {
+             body="Dear"+customer.getName()+",\n" +
+                    "\n" +
+                    "Thanks for your message. We’ve reviewed your complaint and taken care of it.\n" +
+                    "\n" +
+                    "Sorry again for the inconvenience, and thank you for helping us improve!\n" +
+                    "\n" +
+                    "Let us know if there’s anything else we can do.\n" +
+                    "\n" +
+                    "Best,  \n" +
+                    "Mama’s Kitchen Team";
+        }
+        else
+        {
+            body="Dear"+customer.getName()+",\n" +
+                    "\n" +
+                    "Thanks for your message. We’ve reviewed your complaint and it has already been handled.\n" +
+                    "\n" +
+                    "As a small apology, we’ve added a refund of"+complaint.getCompensation()+"$ to your account.\n" +
+                    "\n" +
+                    "Sorry again for the inconvenience, and thank you for helping us improve!\n" +
+                    "\n" +
+                    "Best,  \n" +
+                    "Mama’s Kitchen Team";
+        }
+
+        EmailSender.sendEmail(customer.getEmail(), "Mama's kitchen complaint",body);
     }
 
     private Response<List<Complaint>> getComplaintByEmployee(Request request)

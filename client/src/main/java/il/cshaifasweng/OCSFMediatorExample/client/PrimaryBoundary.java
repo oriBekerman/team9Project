@@ -33,6 +33,7 @@ public class PrimaryBoundary
 	public Button MenuBtn;
 	public Button subCompBtn;
 	public Button complaintsTableBtn;
+	public Button reservationBtn;
 	@FXML
 	private ResourceBundle resources;
 	@FXML
@@ -108,7 +109,9 @@ public class PrimaryBoundary
 		switchScreen("Home Page");
 	}
 	@FXML
-	void navToReservation(ActionEvent event) {
+	void navToReservation(ActionEvent event)
+	{
+
 		switchScreen("Reservation");
 	}
 	@FXML
@@ -130,8 +133,6 @@ public class PrimaryBoundary
 		try
 		{
 			App.setRoot("secondary");
-		//	SimpleClient.getClient().displayNetworkMenu();
-
 		}
 		catch (IOException e)
 		{
@@ -175,41 +176,23 @@ public class PrimaryBoundary
 		Image image = new Image(imagePath);
 		MOMSImage.setImage(image);
 
-		if (SimpleClient.getClient().getActiveUser() != null)
-		{
+		if (SimpleClient.getClient().getActiveUser() != null) {
 			logoutBttn.setVisible(true);
 			loginBttn.setVisible(false);
-
-			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN)
-			{
-				UpdateMenuBtn.setVisible(true);
-			}
-			else
-			{
-				UpdateMenuBtn.setVisible(false);
-			}
-			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.COMPANY_MANAGER)
-			{
-				givePermitBtn.setVisible(true);
-			}
-			 else
-			 {
-				givePermitBtn.setVisible(false);
-			 }
-		}
-		else
-		{
+			UpdateMenuBtn.setVisible(false);
+			givePermitBtn.setVisible(false);
+			complaintsTableBtn.setVisible(false);
+			getUserAuthorizedTools();
+		} else {
 			logoutBttn.setVisible(false);
 			loginBttn.setVisible(true);
 			UpdateMenuBtn.setVisible(false);
 			givePermitBtn.setVisible(false);
+			complaintsTableBtn.setVisible(false);
 		}
-		try
-		{
+		try {
 			SimpleClient.getClient().sendToServer("add client");
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		toggleButtonBranch.setOnAction(e ->
@@ -218,10 +201,29 @@ public class PrimaryBoundary
 		});
 	}
 
-	private void GetBranchListPopup()
+	private void getUserAuthorizedTools()
 	{
-		synchronized (lock)
+		EmployeeType employeeType=SimpleClient.getClient().getActiveUser().getEmployeeType();
+		switch (employeeType)
 		{
+			case DIETITIAN :
+				UpdateMenuBtn.setVisible(true);
+				break;
+			case COMPANY_MANAGER:
+				givePermitBtn.setVisible(true);
+				complaintsTableBtn.setVisible(true);
+				break;
+			case CUSTOMER_SERVICE:
+				complaintsTableBtn.setVisible(true);
+				break;
+			case CUSTOMER_SERVICE_MANAGER:
+				complaintsTableBtn.setVisible(true);
+				break;
+		}
+	}
+
+	private void GetBranchListPopup() {
+		synchronized (lock) {
 			if (!branchListInit) {
 				try {
 					SimpleClient.getClient().getBranchList();

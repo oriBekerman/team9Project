@@ -16,6 +16,7 @@ il\cshaifasweng\OCSFMediatorExample\client\DeliverySummeryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationPersonalInfoSet.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\TableIsReservedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.class
+il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\ocsf\ObservableClient.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\DeliverableItemsSentEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary$2.class
