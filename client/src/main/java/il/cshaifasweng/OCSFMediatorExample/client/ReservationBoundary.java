@@ -177,6 +177,27 @@ public class ReservationBoundary {
         numpeopleList.getItems().add("7");
         numpeopleList.getItems().add("8");
         numpeopleList.getItems().add("9");
+        numpeopleList.getItems().add("10");
+        numpeopleList.getItems().add("11");
+        numpeopleList.getItems().add("12");
+        numpeopleList.getItems().add("13");
+        numpeopleList.getItems().add("14");
+        numpeopleList.getItems().add("15");
+        numpeopleList.getItems().add("16");
+        numpeopleList.getItems().add("17");
+        numpeopleList.getItems().add("18");
+        numpeopleList.getItems().add("19");
+        numpeopleList.getItems().add("20");
+        numpeopleList.getItems().add("21");
+        numpeopleList.getItems().add("22");
+        numpeopleList.getItems().add("23");
+        numpeopleList.getItems().add("24");
+        numpeopleList.getItems().add("25");
+        numpeopleList.getItems().add("26");
+        numpeopleList.getItems().add("27");
+        numpeopleList.getItems().add("28");
+        numpeopleList.getItems().add("29");
+
     }
 
 

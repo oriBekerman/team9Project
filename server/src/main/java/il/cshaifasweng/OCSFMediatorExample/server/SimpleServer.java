@@ -24,7 +24,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "abcd1234"; // Change database password here
+    public static String dataBasePassword = "Bekitnt26@"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) {
@@ -141,16 +141,6 @@ public class SimpleServer extends AbstractServer {
             }
         }
     }
-
-    private Response handlePermitGranted(Request request)
-    {
-        Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
-                "Your permit request has been granted.",
-                Response.Status.SUCCESS,
-                Response.Recipient.ALL_CLIENTS);
-        return response;
-    }
-
     public void sendToAllClientsExceptSender(Object message, ConnectionToClient client) {
         synchronized (SubscribersList) {
             Iterator<SubscribedClient> iterator = SubscribersList.iterator();
@@ -166,6 +156,14 @@ public class SimpleServer extends AbstractServer {
                 }
             }
         }
+    }
+    private Response handlePermitGranted(Request request)
+    {
+        Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
+                "Your permit request has been granted.",
+                Response.Status.SUCCESS,
+                Response.Recipient.ALL_CLIENTS);
+        return response;
     }
 
     private void getControllers() {

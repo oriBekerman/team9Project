@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -9,9 +10,12 @@ import java.util.regex.Pattern;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.CreditCardInfoSet;
 import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -53,7 +57,7 @@ public class CreditCradInfoBoundary {
 
     @FXML
     void backToPersonalD(ActionEvent event) {
-        switchScreen("Personal Details Filling");
+        openPersonalDetailsPage();
     }
 
     @FXML
@@ -117,7 +121,6 @@ public class CreditCradInfoBoundary {
             }
         }
     }
-
 
 
     //validate card number
@@ -193,6 +196,39 @@ public class CreditCradInfoBoundary {
             }
         }
 
+    }
+    public void openPersonalDetailsPage()
+    {
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("personalDetailsFilling.fxml"));
+            Parent PersonalInfoPageRoot = loader.load();
+            // Get the controller and set the type before waiting
+            PersonalDetailsFillingBoundary boundary = loader.getController();
+            boundary.setType("reservation");  // This should be set before waiting
+            synchronized (boundary) {
+                while (!boundary.typeIsSet) {
+                    System.out.println("Waiting for type to be set...");
+                    boundary.wait();
+                }
+            }
+            Platform.runLater(() ->
+            {
+                try
+                {
+                    App.setContent(PersonalInfoPageRoot);
+                }
+                catch (IOException e)
+                {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+        catch (IOException | InterruptedException e)
+        {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();  // Restore interrupted state
+        }
     }
 
 

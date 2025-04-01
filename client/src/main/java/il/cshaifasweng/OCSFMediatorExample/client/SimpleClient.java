@@ -28,7 +28,6 @@ public class SimpleClient extends AbstractClient
 	private static ActiveUser activeUser = null;
 	public Map <String, String> mapReservation=new HashMap<String, String>();
 	public ResInfo resInfo=new ResInfo();
-	public boolean rebookReservation=false;
 	public  boolean tableAvailable=true;
 	public String userEmail;
 	private Response<?> lastResponse;
@@ -252,6 +251,7 @@ public class SimpleClient extends AbstractClient
 			if(response.getResponseType().equals(RETURN_ALL_COMPLAINTS))
 			{
 				ReceivedAllComplaintsEvent event=new ReceivedAllComplaintsEvent((List<Complaint>) response.getData());
+				EventBus.getDefault().post(event);
 			}
 
 			if(response.getResponseType().equals(RETURN_ACTIVE_RESERVATIONS))

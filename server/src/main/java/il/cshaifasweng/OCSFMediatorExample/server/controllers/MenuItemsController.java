@@ -23,7 +23,8 @@ public class MenuItemsController
 
     public Response handleRequest(Request request) {
         System.out.println("Handling request: " + request.getRequestType());
-        return switch (request.getRequestType()) {
+        return switch (request.getRequestType())
+        {
             case GET_BASE_MENU -> getBaseItems();
             case UPDATE_PRICE -> updateThePrice(request);
             case ADD_DISH -> handleAddDishRequest(request);
@@ -110,7 +111,6 @@ public class MenuItemsController
         }
         return response;
     }
-
     public List<MenuItem> searchMenuItems(String keyword, Double maxPrice, DishType type)
     {
         Session session = HibernateUtil.getSessionFactory().openSession();
