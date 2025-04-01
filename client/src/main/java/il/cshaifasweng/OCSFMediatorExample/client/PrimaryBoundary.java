@@ -28,147 +28,125 @@ import javafx.stage.Popup;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.*;
 
-//
-public class PrimaryBoundary {
-
+public class PrimaryBoundary
+{
 	public Button MenuBtn;
 	public Button subCompBtn;
 	public Button complaintsTableBtn;
 	@FXML
 	private ResourceBundle resources;
-
 	@FXML
 	private URL location;
-
 	@FXML
 	private Label HomePageLabel;
-
 	@FXML
 	private Button UpdateMenuBtn;
-
 	@FXML
 	private Label WelcomeLabel;
-
 	@FXML
 	private ImageView MOMSImage;
-
 	@FXML
 	private Pane MenuBarPane;
-
 	@FXML
 	private Button toggleButtonBranch;
-
 	@FXML
 	private Button cancelDelivery;
 	private Popup popup = new Popup();
-
 	public List<Branch> branchList = null;
 	public boolean branchListInit = false;
 	private final Object lock = new Object();
-
 	@FXML
 	private Button loginBttn;
-
 	@FXML
 	private Button logoutBttn;
-
 	@FXML
 	private Button SaveBtn;
-
 	@FXML
 	private Button givePermitBtn;
-
-
-
-
 	@FXML
-	void givePermit(ActionEvent event) {
-		try {
-			// Create a Request object for the PERMIT_GRANTED category with the PERMISSION_REQUEST type
+	void givePermit(ActionEvent event)
+	{
+		try
+		{
 			Request<Void> request = new Request<>(ReqCategory.PERMIT_GRANTED, RequestType.PERMISSION_REQUEST, null);
-
-			// Send the request to the server
 			SimpleClient.getClient().sendToServer(request);
-
-			System.out.println("Permit granted to dietitian.");
-		} catch (IOException e) {
-			e.printStackTrace();  // Print the stack trace for debugging
+		} catch (IOException e)
+		{
+			e.printStackTrace();
 			showErrorMessage("Network error occurred while granting the permit.");
 		}
 	}
-
-
-	// Helper method to show error messages to the user
 	private void showErrorMessage(String message) {
-		// Example of showing the error message to the user
 		System.out.println("Error: " + message);
-		// You can also display a pop-up or dialog to the user with the error message
 	}
-
-
-
-
-
 	@FXML
-	void navToLoginP(ActionEvent event) {
+	void navToLoginP(ActionEvent event)
+	{
+		onExit();
 		switchScreen("Login");
 	}
-
 	@FXML
-	void navToDeliv(ActionEvent event) {
+	void navToDeliv(ActionEvent event)
+	{
+		onExit();
 		switchScreen("Delivery");
-		try {
+		try
+		{
 			SimpleClient.getClient().displayNetworkMenu();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-
 	@FXML
 	void cancelDel(ActionEvent event) {
 		switchScreen("CancelDelivery");
 	}
-
 	@FXML
-	void navToHP(ActionEvent event) {
+	void navToHP(ActionEvent event)
+	{
+		onExit();
 		switchScreen("Home Page");
 	}
-
 	@FXML
-	void navToReservation(ActionEvent event) {
+	void navToReservation(ActionEvent event)
+	{
+
 		switchScreen("Reservation");
 	}
-
 	@FXML
-	void navToBranches(ActionEvent event) {
+	void navToBranches(ActionEvent event)
+	{
+		onExit();
 		switchScreen("Branch");
 	}
 
-
+	public void onExit()
+	{
+		EventBus.getDefault().unregister(this);
+	}
 	@FXML
-	void displayMenuFunc(ActionEvent event) throws IOException {
+	void displayMenuFunc(ActionEvent event) throws IOException
+	{
+		onExit();
 		switchScreen("secondary");
-		try {
+		try
+		{
 			App.setRoot("secondary");
-			SimpleClient.getClient().displayNetworkMenu();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			throw new RuntimeException(e);
 		}
 	}
 
-
 	@FXML
-	void LogOut(ActionEvent event) {
-		// Call the logout method in SimpleClient to clear active user
+	void LogOut(ActionEvent event)
+	{
 		SimpleClient.getClient().logout();
-
-		// Hide the logout button and show the login button again
 		logoutBttn.setVisible(false);
 		loginBttn.setVisible(true);
-		// Hide the Update button after logging out
 		UpdateMenuBtn.setVisible(false);
 	}
-
 
 	@FXML
 	void initialize() throws IOException {
@@ -181,8 +159,12 @@ public class PrimaryBoundary {
 		assert logoutBttn != null : "fx:id=\"logoutBttn\" was not injected: check your FXML file 'primary.fxml'.";
 		assert givePermitBtn != null : "fx:id=\"givePermitBtn\" was not injected: check your FXML file 'primary.fxml'.";
 
-		EventBus.getDefault().register(this);
-		SimpleClient.getClient().getBranchList(); // Request branch list from server
+		if (!EventBus.getDefault().isRegistered(this))
+		{
+			EventBus.getDefault().register(this);
+		}
+
+		SimpleClient.getClient().getBranchList();
 		// Menu bar (in the home page - this is the menu bar that is shown as "ALL")
 		Parent menuBarParent = App.loadFXML("MenuBar");
 		MenuBarPane.getChildren().clear();
@@ -193,55 +175,53 @@ public class PrimaryBoundary {
 		Image image = new Image(imagePath);
 		MOMSImage.setImage(image);
 
-		// Check if the user is logged in (activeUser is not null)
-		if (SimpleClient.getClient().getActiveUser() != null) {
-			// If logged in, show logout button and hide login button
+		if (SimpleClient.getClient().getActiveUser() != null)
+		{
 			logoutBttn.setVisible(true);
 			loginBttn.setVisible(false);
-			// Check if the user is a "DIETITIAN" and display the Update button if true
+
 			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN)
 			{
-				System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
-				UpdateMenuBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
+				UpdateMenuBtn.setVisible(true);
 			}
 			else
 			{
-				UpdateMenuBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
+				UpdateMenuBtn.setVisible(false);
 			}
-			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.COMPANY_MANAGER) {
-				System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
+			if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.COMPANY_MANAGER)
+			{
 				givePermitBtn.setVisible(true);
 			}
 			 else
 			 {
 				givePermitBtn.setVisible(false);
-			}
-		} else {
-			// If not logged in, show login button and hide logout button
+			 }
+		}
+		else
+		{
 			logoutBttn.setVisible(false);
 			loginBttn.setVisible(true);
-			UpdateMenuBtn.setVisible(false); // Hide Update button if not logged in
-			givePermitBtn.setVisible(false); // Hide Give Permission button if not logged in
+			UpdateMenuBtn.setVisible(false);
+			givePermitBtn.setVisible(false);
 		}
-
-
-		try {
+		try
+		{
 			SimpleClient.getClient().sendToServer("add client");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
-		// Set the button action here
-		toggleButtonBranch.setOnAction(e -> {
-			System.out.println("Button clicked - showing popup");
+		toggleButtonBranch.setOnAction(e ->
+		{
 			GetBranchListPopup();
 		});
-
 	}
 
-	//get list of brunches pop up
-	private void GetBranchListPopup() {
-		synchronized (lock) {
+	private void GetBranchListPopup()
+	{
+		synchronized (lock)
+		{
 			if (!branchListInit) {
 				try {
 					SimpleClient.getClient().getBranchList();
@@ -255,7 +235,8 @@ public class PrimaryBoundary {
 				}
 			}
 		}
-		try {
+		try
+		{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("BranchList.fxml"));
 			Parent popupContent = loader.load();
 
@@ -267,11 +248,14 @@ public class PrimaryBoundary {
 			popup.getContent().add(popupContent);
 			popup.setAutoHide(true);
 			// Ensure popup shows correctly
-			if (toggleButtonBranch.getScene() != null) {
+			if (toggleButtonBranch.getScene() != null)
+			{
 				popup.show(toggleButtonBranch.getScene().getWindow(),
 						toggleButtonBranch.localToScreen(0, 0).getX(),
 						toggleButtonBranch.localToScreen(0, 0).getY() + toggleButtonBranch.getHeight());
-			} else {
+			}
+			else
+			{
 				System.out.println("toggleButtonBranch scene is NULL - cannot display popup");
 			}
 
@@ -281,89 +265,61 @@ public class PrimaryBoundary {
 	}
 
 	@FXML
-	public void getPopup(ActionEvent actionEvent) {
+	public void getPopup(ActionEvent actionEvent)
+	{
 		System.out.println("getPopup");
 		GetBranchListPopup();
 	}
 
-	// Handle the branch selected from the list
 	@Subscribe
-	public void onBranchSelectedEvent(BranchSelectedEvent event) {
-		System.out.println("Branch selected: " + event.getBranch().getName());
+	public void onBranchSelectedEvent(BranchSelectedEvent event)
+	{
 		Branch branch = event.getBranch();
-		if (branch == null) {
+		if (branch == null)
+		{
 			System.out.println("branch is null");
 		}
 		openBranchPage(branch);
 	}
 
-	//open selected branch page
-	private void openBranchPage(Branch branch) {
-		try {
+	private void openBranchPage(Branch branch)
+	{
+		try
+		{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("Branch.fxml"));
 			Parent branchPageRoot = loader.load();
 			// Get the controller and pass the branch
 			BranchPageBoundary controller = loader.getController();
 			controller.setBranch(branch);
-			if (controller.branchIsSet) {
-				System.out.println("branch is already set");
-			}
-			while (!controller.branchIsSet) {
+			while (!controller.branchIsSet)
+			{
 				System.out.println("Waiting for branch to be set");
 			}
 			App.setContent(branchPageRoot);
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
-
 	}
 
-	//handle branch list sent
 	@Subscribe
-	public void onBranchListSentEvent(BranchListSentEvent event) {
-		synchronized (lock) {
+	public void onBranchListSentEvent(BranchListSentEvent event)
+	{
+		synchronized (lock)
+		{
 			this.branchList = event.branches;
 			this.branchListInit = true;
-			System.out.println("onBranchesSentEvent");
-			lock.notifyAll(); // Notify waiting threads that branches are initialized
+			lock.notifyAll();
 		}
 	}
 	public void goToSubCompPage(ActionEvent actionEvent) {
 		switchScreen("SubComplaint");
 	}
-
 	public void viewComplaints(ActionEvent actionEvent) {
 		openComplaintsTablePage();
 	}
-
 	public void openComplaintsTablePage() {
-		System.out.println("in open complaints");
-
 			switchScreen("Complaints");
-
-//
-//		new Thread(() -> {
-//			try {
-//				FXMLLoader loader = new FXMLLoader(getClass().getResource("HandleCompTablePage.fxml"));
-//				Parent complaintsPageRoot = loader.load();
-//				HandleComplaintTableBoundary boundary = loader.getController();
-//				synchronized (boundary) {
-//					boundary.setPage();
-//					while (!boundary.pageIsSet) {
-//						System.out.println("Waiting for page to be set");
-//						boundary.wait();
-//					}
-//				}
-//				Platform.runLater(() -> {
-//					try {
-//						App.setContent(complaintsPageRoot);
-//					} catch (IOException e) {
-//						throw new RuntimeException(e);
-//					}});
-//			} catch (IOException | InterruptedException e) {
-//				e.printStackTrace();
-//				Thread.currentThread().interrupt();}
-//		}).start();
 	}
-
 }

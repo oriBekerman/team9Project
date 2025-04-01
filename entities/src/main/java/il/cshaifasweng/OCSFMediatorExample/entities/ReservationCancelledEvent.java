@@ -1,7 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 public class ReservationCancelledEvent {
-    private final String message;
+    private  String message;
 
     public ReservationCancelledEvent(String message) {
         this.message = message;

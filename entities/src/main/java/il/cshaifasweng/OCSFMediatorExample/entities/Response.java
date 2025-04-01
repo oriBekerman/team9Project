@@ -35,7 +35,6 @@ public class Response<T> implements Serializable {
         this.recipient = recipient;
     }
 
-    // Getters and Setters
     public Status getStatus() {
         return status;
     }
@@ -77,15 +76,17 @@ public class Response<T> implements Serializable {
         this.recipient = recipient;
     }
 
-    public enum ResponseType {
+    public enum ResponseType
+    {
         NO_ACTION,
-        //menu related responses
         RETURN_MENU,
         UPDATED_PRICE,
         REMOVE_DISH,
         ADD_DISH,
         UPDATE_INGREDIENTS,
         UPDATE_DISH_TYPE,
+        PERMIT_GRANTED_ACK,
+        UPDATE_BRANCH_MENU,
 
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,
@@ -108,12 +109,14 @@ public class Response<T> implements Serializable {
         CANCELED_RESERVATION,
         ADDED_RESERVATION,
         UPDATE_BRANCH_TABLES,
+        RETURN_ACTIVE_RESERVATIONS,
 
         //COMPLAINT RELATED RESPONSES
         RETURN_ALL_COMPLAINTS,
         Complaint_BY_EMPLOYEE,
         Complaint_BY_DATE,
-        UPDATE_COMPLAINT
+        UPDATE_COMPLAINT,
+        COMPLAINT_CREATED
     }
 
     public enum Status {

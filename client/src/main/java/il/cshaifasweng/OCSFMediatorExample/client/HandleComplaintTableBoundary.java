@@ -48,43 +48,41 @@ public class HandleComplaintTableBoundary {
     @FXML
     void initialize() {
         System.out.println("Initializing HandleComplaintTableBoundary...");
-
-
-        if (!EventBus.getDefault().isRegistered(this)) {
+        if (!EventBus.getDefault().isRegistered(this))
+        {
             EventBus.getDefault().register(this);
         }
-
         setColumns();
-
-
-        try {
+        try
+        {
             SimpleClient.getClient().getAllComplaints();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
             showError("Failed to request complaints from server.");
         }
-
-
         complaintTable.setOnMouseClicked(this::openComplaintPage);
     }
 
-
-    public void setPage() {
-        System.out.println("Page is being set...");
-        synchronized (this) {
+    public void setPage()
+    {
+        synchronized (this)
+        {
             this.pageIsSet = false;
             this.complaintsAreSet = false;
             waitForComplaints();
             InitTableAfterAllComplaintEvent();
         }
     }
-
-    private void waitForComplaints() {
+    private void waitForComplaints()
+    {
         System.out.println("Waiting for complaints from the server...");
         SimpleClient.getClient().getAllComplaints();
-
-        try {
-            while (!complaintsAreSet) {
+        try
+        {
+            while (!complaintsAreSet)
+            {
                 wait();
             }
             System.out.println("Complaints received from the server!");

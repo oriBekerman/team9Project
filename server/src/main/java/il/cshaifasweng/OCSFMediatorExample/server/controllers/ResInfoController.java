@@ -16,6 +16,7 @@ import java.util.Set;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.RETURN_ACTIVE_RESERVATIONS;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
 
@@ -31,7 +32,8 @@ public class ResInfoController {
         {
             case ADD_RESERVATION -> handleNewReservation(request);
             case CANCEL_RESERVATION-> cancelReservation(request);
-            case GET_RES_REPORT -> getAllReservations();
+            case GET_RES_REPORT -> getAllActiveReservationList();
+            case GET_ACTIVE_RESERVATIONS -> getAllActiveReservationList();
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
@@ -49,33 +51,20 @@ public class ResInfoController {
     }
 
     // Method to fetch all reservations and wrap in a response
-    public Response<List<ResInfo>> getAllReservations() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            List<ResInfo> reservations = session.createQuery(
-                    "SELECT DISTINCT r FROM ResInfo r JOIN FETCH r.customer WHERE r.isCancelled = false",
-                    ResInfo.class).list();
-
-            return new Response<>(
-                    Response.ResponseType.RETURN_RES_REPORT,
-                    reservations,
-                    "Reservations loaded successfully",
-                    Response.Status.SUCCESS,
-                    Response.Recipient.THIS_CLIENT
-            );
+    public Response<List<ResInfo>> getAllActiveReservationList() {
+        List<ResInfo> reservations =new ArrayList<>();
+        try {
+            reservations= resInfoRepository.getAllActiveReservations();
+            return new Response<>(RETURN_ACTIVE_RESERVATIONS, reservations,
+                    "Reservations loaded successfully", SUCCESS, THIS_CLIENT);
         } catch (Exception e) {
-            e.printStackTrace();
-            return new Response<>(
-                    Response.ResponseType.RETURN_RES_REPORT,
-                    new ArrayList<>(),
+            return new Response<>(RETURN_ACTIVE_RESERVATIONS, new ArrayList<>(),
                     "Failed to load reservations: " + e.getMessage(),
-                    Response.Status.ERROR,
-                    Response.Recipient.THIS_CLIENT
-            );
+                    ERROR, THIS_CLIENT);
         }
     }
 
-
-    public List <ResInfo> getAllResSInfo()
+    public List <ResInfo> getAllResInfo()
     {
         return resInfoRepository.getAllResSInfo();
     }
@@ -180,6 +169,10 @@ public class ResInfoController {
         {
             return null;
         }
+        for(ResInfo res:conflictingReservations)
+        {
+            System.out.println("reservation- "+res.getResID()+" is conflicting with "+resInfo.getCustomer().getName());
+        }
         return conflictingReservations;
     }
     public Response handleNewReservation(Request request) {
@@ -188,74 +181,74 @@ public class ResInfoController {
         Response response=new Response(ADDED_RESERVATION, null, null, BOTH);
         List<ResInfo> conflictingReservations=checkTableAvailability(reservation);
         if (!(conflictingReservations==null)) {
+            for(ResInfo res:conflictingReservations)
+            {
+                System.out.println("reservation: "+res.getResID()+" conflict with this reservation in tables:\n");
+                for (RestTable t:res.getTable())
+                {
+                    System.out.println(t.getId()+"\n");
+                }
+            }
             return new Response<>(ADDED_RESERVATION, conflictingReservations,
-                    "One or more selected tables are already reserved at this time.", ERROR, THIS_CLIENT);
+                    "One or more selected tables are already reserved at this time."+conflictingReservations.get(0).getResID(), ERROR, THIS_CLIENT);
         }
         response=addReservation(reservation);
 
         return response;
     }
 
+public Response<List<Response>> cancelReservation(Request request) {
+    try {
+        Integer resID = (Integer) request.getData();
 
-
-    public Response<String> cancelReservation(Request request) {
-        Integer resID= (Integer) request.getData();
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
-
-            ResInfo reservation = session.get(ResInfo.class, resID);
-
-            if (reservation == null || reservation.getIsCancelled()) {
-                tx.rollback();
-                return new Response<>(
-                        CANCELED_RESERVATION,
-                        null,
-                        "Reservation not found or already cancelled",
-                        Response.Status.ERROR,
-                        Response.Recipient.THIS_CLIENT
-                );
-            }
-
-            LocalTime reservationTime = reservation.getHours();
-            LocalTime currentTime = LocalTime.now();
-            int guests = reservation.getNumOfGuests();
-
-            boolean penalty = currentTime.isAfter(reservationTime.minusHours(1));
-
-            reservation.setIsCancelled(true);
-
-            Set<RestTable> tables = reservation.getTable();
-            for (RestTable table : tables) {
-                table.removeUnavailableFromTime(reservationTime);
-                session.update(table);
-            }
-
-            session.update(reservation);
-            tx.commit();
-
-            int penaltyAmount = penalty ? guests * 10 : 0;
-            String message = penalty ?
-                    "Reservation cancelled with penalty: " + penaltyAmount + " ILS" :
-                    "Reservation cancelled successfully, no penalty.";
-
+        // Retrieve reservation object
+        ResInfo reservation = resInfoRepository.findById(resID);
+        if (reservation == null || reservation.getIsCancelled()) {
             return new Response<>(
-                    CANCELED_RESERVATION,
-                    String.valueOf(penaltyAmount),
-                    message,
-                    Response.Status.SUCCESS,
-                    Response.Recipient.THIS_CLIENT
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new Response<>(
-                    CANCELED_RESERVATION,
+                    Response.ResponseType.CANCELED_RESERVATION,
                     null,
-                    "Error cancelling reservation: " + e.getMessage(),
+                    "Reservation not found or already cancelled",
                     Response.Status.ERROR,
                     Response.Recipient.THIS_CLIENT
             );
         }
+
+        // Cancel in DB and get penalty result
+        String cancelResult = resInfoRepository.cancelReservation(resID);  // updates isCancelled, table times, etc.
+
+        // Update branch tables & reservations
+        Branch branch = reservation.getBranch();
+        List<Integer> tableIds = new ArrayList<>();
+        for (RestTable table : reservation.getTable()) {
+            tableIds.add(table.getId());
+        }
+        synchronized (branch) {
+            branch.cancelReservation(reservation, reservation.getTable(), tableIds);
+            reservation = resInfoRepository.refreshReservationWithBranch(resID);
+        }
+
+
+        // Prepare responses
+        String message;
+        String penalty = "0";
+
+        if (cancelResult.startsWith("PENALTY")) {
+            penalty = cancelResult.split(":")[1];
+            message = "Reservation cancelled with penalty: " + penalty + " ILS";
+        } else {
+            message = "Reservation cancelled successfully, no penalty.";
+        }
+        Response<String> clientRes = new Response<>(CANCELED_RESERVATION, penalty, message, SUCCESS, THIS_CLIENT);
+        Response<ResInfo> updateRes = new Response<>(UPDATE_BRANCH_TABLES, reservation, message, SUCCESS, ALL_CLIENTS);
+        Response<List<Response>> combined = new Response<>(CANCELED_RESERVATION, List.of(clientRes, updateRes), message, SUCCESS, BOTH);
+        System.out.println("returned combined from res controller");
+        return combined;
+
+    } catch (Exception e) {
+        return new Response<>(CANCELED_RESERVATION, null, "Error cancelling reservation: " + e.getMessage(), ERROR, THIS_CLIENT);
     }
+}
+
 
 
 

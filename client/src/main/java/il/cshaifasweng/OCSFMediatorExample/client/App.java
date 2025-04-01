@@ -29,19 +29,14 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         appStage = stage;
-    	EventBus.getDefault().register(this);
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Please enter host: ");
-//        String host = scanner.nextLine();
-//        System.out.println("Please enter port: ");
-//        String port = scanner.nextLine();
-//        int port2 = Integer.parseInt(port);
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
     	client = SimpleClient.getClient();
         client.setHost("localhost");//change later for two computer connection
         client.setPort(3000);//change later for two computer connection
     	client.openConnection();
-        System.out.println("try client add");
-
         stage.setTitle("Team 9 - Mom's kitchen");
         scene = new Scene(loadFXML("primary"), 1295, 782);
         stage.setScene(scene);
@@ -250,6 +245,7 @@ public class App extends Application {
                 DeliveryBoundary deliveryBoundary = loader.getController();
 
                 deliveryBoundary.setDelivery(delivery);
+                deliveryBoundary.initialize();
 
                 // Set the scene and show the stage
                 scene = new Scene(root);
@@ -322,6 +318,30 @@ public class App extends Application {
 
                 // Pass the branchId to the controller
                 boundary.setDelivery(delivery);
+
+                // Set the scene and show the stage
+                scene = new Scene(root);
+                appStage.setScene(scene);
+                appStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static void switchToBranchMenu(Branch branch) {
+        Platform.runLater(() -> {
+            setWindowTitle("secondary");
+            try {
+                // Load the FXML file for the secondary screen
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("secondary.fxml"));
+                Parent root = loader.load();
+
+                // Get the controller of the loaded FXML
+                SecondaryBoundary secondaryBoundary = loader.getController();
+
+                secondaryBoundary.setBranch(branch);
+                secondaryBoundary.initialize();
 
                 // Set the scene and show the stage
                 scene = new Scene(root);

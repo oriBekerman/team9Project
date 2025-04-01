@@ -24,7 +24,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "abcd1234"; // Change database password here
+    public static String dataBasePassword = "1234"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) {
@@ -33,16 +33,20 @@ public class SimpleServer extends AbstractServer {
     }
 
     @Override
-    protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
+    protected void handleMessageFromClient(Object msg, ConnectionToClient client)
+    {
         System.out.println("Received request from client: " + msg);
 
-        if (msg instanceof String msgString && msgString.startsWith("add client")) {
-            System.out.println("Client added successfully");
+        if (msg instanceof String msgString && msgString.startsWith("add client"))
+        {
             SubscribedClient connection = new SubscribedClient(client);
             SubscribersList.add(connection);
-            try {
+            try
+            {
                 client.sendToClient("Client added successfully");
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 System.err.println("Error sending client confirmation: " + e.getMessage());
             }
             return;
@@ -55,7 +59,8 @@ public class SimpleServer extends AbstractServer {
 
         Response response;
         try {
-            response = switch (request.getCategory()) {
+            response = switch (request.getCategory())
+            {
                 case BASE_MENU -> menuItemsController.handleRequest(request);
                 case BRANCH -> branchController.handleRequest(request);
                 case LOGIN -> logInController.handleRequest(request);
@@ -65,6 +70,18 @@ public class SimpleServer extends AbstractServer {
                 case REMOVE_DISH -> menuItemsController.handleRequest(request);
                 case UPDATE_INGREDIENTS -> menuItemsController.handleRequest(request);
                 case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
+                case PERMIT_GRANTED ->
+                {
+                    System.out.println("Permit granted request received.");
+                    Response permitResponse = handlePermitGranted(request);
+                    yield permitResponse;
+                }
+
+                case ADD_DISH ->
+                {
+                    Response addDishResponse = menuItemsController.handleRequest(request);
+                    yield addDishResponse;
+                }
                 default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
             };
         } catch (Exception e) {
@@ -97,13 +114,11 @@ public class SimpleServer extends AbstractServer {
                 }
                 case BOTH -> {
                     List<Response> responses = (List<Response>) response.getData();
-                    if(responses.get(0).getRecipient().equals(THIS_CLIENT) && responses.get(1).getRecipient().equals(ALL_CLIENTS))
-                    {
+                    if (responses.get(0).getRecipient().equals(THIS_CLIENT) && responses.get(1).getRecipient().equals(ALL_CLIENTS)) {
                         sendToAllClients(responses.get(1));
                         client.sendToClient(responses.get(0));
                     }
-                    if(responses.get(0).getRecipient().equals(ALL_CLIENTS) && responses.get(1).getRecipient().equals(THIS_CLIENT))
-                    {
+                    if (responses.get(0).getRecipient().equals(ALL_CLIENTS) && responses.get(1).getRecipient().equals(THIS_CLIENT)) {
                         sendToAllClients(responses.get(0));
                         client.sendToClient(responses.get(1));
                     }
@@ -125,6 +140,15 @@ public class SimpleServer extends AbstractServer {
                 }
             }
         }
+    }
+
+    private Response handlePermitGranted(Request request)
+    {
+        Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
+                "Your permit request has been granted.",
+                Response.Status.SUCCESS,
+                Response.Recipient.ALL_CLIENTS);
+        return response;
     }
 
     public void sendToAllClientsExceptSender(Object message, ConnectionToClient client) {

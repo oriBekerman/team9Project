@@ -6,6 +6,7 @@ public enum RequestType{
       REMOVE_DISH,
       UPDATE_INGREDIENTS,
       UPDATE_DISH_TYPE,
+      UPDATE_BRANCH_MENU,
     //base menu related requests
       GET_BASE_MENU,//menuItems
       UPDATE_PRICE,//need two one for branch one for base
@@ -26,11 +27,11 @@ public enum RequestType{
      GET_BRANCH_MENU,
      FETCH_BRANCH_TABLES,
     UPDATE_BRANCH,
-
     GET_RES_REPORT,
 
     CANCEL_RESERVATION,
     ADD_RESERVATION,
+    GET_ACTIVE_RESERVATIONS,
 
     SUBMIT_COMPLAINT,
     GET_ALL_COMPLAINTS,

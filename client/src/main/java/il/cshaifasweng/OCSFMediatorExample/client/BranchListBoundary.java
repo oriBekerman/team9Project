@@ -22,7 +22,6 @@ public class BranchListBoundary {
         // Handle selection
         branchListView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null) {
-                System.out.println("Selected: " + newValue);
 
                 // Find the selected branch object
                 for (Branch branch : branches) {
@@ -36,7 +35,6 @@ public class BranchListBoundary {
             }
         });
     }
-    //change
 
     // Set branch list and populate ListView
     public void setBranches(List<Branch> branches) {
@@ -48,7 +46,6 @@ public class BranchListBoundary {
         branchListView.setItems(FXCollections.observableArrayList(branchNames));
     }
 
-    // Set reference to PrimaryController
     public void setPrimaryController(PrimaryBoundary primaryController) {
         this.primaryController = primaryController;
     }

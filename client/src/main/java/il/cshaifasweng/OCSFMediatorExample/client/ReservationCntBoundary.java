@@ -48,7 +48,8 @@ public class ReservationCntBoundary {
     @FXML
     void initialize() throws IOException {
         System.out.println("finally!!!!!!!!!!!!!!");
-        if (!EventBus.getDefault().isRegistered(this)) {
+        if (!EventBus.getDefault().isRegistered(this))
+        {
             EventBus.getDefault().register(this);
         }
         setStyle();
@@ -87,12 +88,6 @@ public class ReservationCntBoundary {
     void continueAct(ActionEvent event) {
         client = SimpleClient.getClient();
         client.mapReservation.put("Hours",chosen);
-        // Start a 15-minute timer to ensure the user fills personal details in time
-        // if the user does not fill details within 15 min cancel table allocation
-//        TimerManager.getInstance().startTimer("reservationTimeout", () -> {
-//            System.out.println("Reservation expired! Taking action...");
-//            timeViolation();
-//        }, 15);
         openPersonalDetailsPage();
 
     }
@@ -120,25 +115,6 @@ public class ReservationCntBoundary {
     public void onBranchSelected(BranchSentEvent event) {
         this.branch = event.getBranch();
         SimpleClient.getClient().resInfo.setBranch(branch);
-        updateAvailableTimesAndUI();
-    }
-
-    @Subscribe
-    public void OnUpdateBranchResEvent(UpdateBranchResEvent event) {
-        System.out.println("Received UpdateBranchResEvent!!!!!!!!!!!");
-        this.branch = event.getBranch();
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("hours occupied");
-            alert.setHeaderText(null);
-            alert.setContentText("Please press OK to refresh to see the latest changes.");
-            alert.showAndWait();
-            try {
-                setHoursList();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
         updateAvailableTimesAndUI();
     }
 
@@ -173,12 +149,11 @@ public class ReservationCntBoundary {
                 optionalTablesMap.put(time, availableTables);
             }
             System.out.println("Available tables at " + time + " for " + numPeople + " people: " + availableTables.size());
-
         }
-
         // Update the ComboBox on the JavaFX thread
-        Platform.runLater(() -> {
-            hoursList.getItems().clear();  // Clear existing items
+        Platform.runLater(() ->
+        {
+            hoursList.getItems().clear();
             if (availableTimes.isEmpty())
             {
                 noTablesLabel.setText("No available tables match your selected time, area, branch, and guest count. " +
@@ -190,11 +165,16 @@ public class ReservationCntBoundary {
             }
         });
         EventBus.getDefault().unregister(this);
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
     }
 
-    public void openPersonalDetailsPage() {
-        try {
+    public void openPersonalDetailsPage()
+    {
+        try
+        {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("personalDetailsFilling.fxml"));
             Parent PersonalInfoPageRoot = loader.load();
             // Get the controller and set the type before waiting
@@ -207,46 +187,42 @@ public class ReservationCntBoundary {
             synchronized (boundary) {
                 while (!boundary.typeIsSet) {
                     System.out.println("Waiting for type to be set...");
-                    boundary.wait();  // Waits until notifyAll() is called
+                    boundary.wait();
                 }
             }
-            Platform.runLater(() -> {
-                try {
+            Platform.runLater(() ->
+            {
+                try
+                {
                     App.setContent(PersonalInfoPageRoot);
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                     throw new RuntimeException(e);
                 }
             });
-
-        } catch (IOException | InterruptedException e) {
+        }
+        catch (IOException | InterruptedException e)
+        {
             e.printStackTrace();
             Thread.currentThread().interrupt();  // Restore interrupted state
         }
     }
 
     @Subscribe
-    public void onDetailsSetEvent(CreditCardInfoSet event) {
-//        makeReservation();
+    public void onDetailsSetEvent(CreditCardInfoSet event)
+    {
         System.out.println("in on details filled event:" );
         System.out.println("reservation:");
         System.out.println("customer name: " +SimpleClient.getClient().resInfo.getCustomer().getName() );
         System.out.println("customer card: " +SimpleClient.getClient().resInfo.getCustomer().getCreditCardNumber() );
         System.out.println("customer email: "+SimpleClient.getClient().resInfo.getCustomer().getEmail());
         LocalTime time=SimpleClient.getClient().resInfo.getHours();
-//        Set<RestTable> restTables=SimpleClient.getClient().resInfo.getTable();
-//        for(RestTable table:restTables)
-//        {
-//            if(!(table.isAvailableAt(time)))
-//            {
-//                System.out.println("is available = "+table.isAvailableAt(time));
-//                tableNotAvailable();
-//                return;
-//            }
-//        }
         SimpleClient.getClient().resInfo.setTable(SimpleClient.getClient().resInfo.getTable());
         SimpleClient.getClient().rebookReservation=false;
         Request request=new Request(RESERVATION,ADD_RESERVATION,SimpleClient.getClient().resInfo);
-        try{
+        try
+        {
             SimpleClient.getClient().sendToServer(request);
         } catch (IOException e) {
             System.out.println("fail to send reservation to server");
@@ -273,7 +249,8 @@ public class ReservationCntBoundary {
         });
     }
 
-    private void makeReservation() {
+    private void makeReservation()
+    {
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
         String timeString = SimpleClient.getClient().mapReservation.get("Hours");
@@ -375,16 +352,17 @@ public class ReservationCntBoundary {
     @Subscribe
     public void onUpdateBranchTablesEvent(UpdateBranchTablesEvent event) {
         System.out.println("in onUpdateBranchTables");
-        ResInfo reservation = event.getReservation();
-        if (reservation==null)
+        ResInfo newReservation = event.getReservation();
+        if (newReservation==null)
         {
             System.out.println("reservation is null");
         }
-        assert reservation != null;
-        if (Objects.equals(this.branch.getName(), reservation.getBranch().getName()))
+
+        //update this page if this branch and the new reservation's branch are the same
+        if(newReservation.getBranch().getBranchID()==this.branch.getBranchID())
         {
             System.out.println("in onUpdateBranchTables if");
-            updatePage(reservation);
+            updatePage(newReservation);
         }
     }
     private void updatePage(ResInfo reservation)

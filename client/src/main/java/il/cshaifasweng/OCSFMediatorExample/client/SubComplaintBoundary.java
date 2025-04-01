@@ -64,8 +64,11 @@ public class SubComplaintBoundary {
         assert errorMessage != null : "fx:id=\"errorMessage\" was not injected: check your FXML file.";
 
         setBranchesList();
-        // Register the event bus
-        EventBus.getDefault().register(this);
+
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
     }
 
     private void setBranchesList() {
@@ -101,6 +104,7 @@ public class SubComplaintBoundary {
         // Validate name
         if (nameText.getText().trim().isEmpty()) {
             errorMessage.setText("Name cannot be empty.");
+            errorMessage.setTextFill(javafx.scene.paint.Color.RED);
             return false;
         }
 
@@ -108,9 +112,11 @@ public class SubComplaintBoundary {
         String email = emailText.getText().trim();
         if (email.isEmpty()) {
             errorMessage.setText("Email cannot be empty.");
+            errorMessage.setTextFill(javafx.scene.paint.Color.RED);
             return false;
         } else if (!isValidEmail(email)) {
             errorMessage.setText("Invalid email format.");
+            errorMessage.setTextFill(javafx.scene.paint.Color.RED);
             return false;
         }
 
@@ -118,15 +124,18 @@ public class SubComplaintBoundary {
         String phone = phoneText.getText().trim();
         if (phone.isEmpty()) {
             errorMessage.setText("Phone number cannot be empty.");
+            errorMessage.setTextFill(javafx.scene.paint.Color.RED);
             return false;
         } else if (!isValidPhone(phone)) {
             errorMessage.setText("Invalid phone number format.");
+            errorMessage.setTextFill(javafx.scene.paint.Color.RED);
             return false;
         }
 
         // Validate complaint text
         if (complaintTextArea.getText().trim().isEmpty()) {
             errorMessage.setText("Complaint text cannot be empty.");
+            errorMessage.setTextFill(javafx.scene.paint.Color.RED);
             return false;
         }
 
@@ -155,6 +164,7 @@ public class SubComplaintBoundary {
     public void getCustomer() {
         if (areFieldsEmpty()) {
             errorMessage.setText("Please fill all the fields.");
+            errorMessage.setTextFill(javafx.scene.paint.Color.RED);
             return; // Stop execution if any field is empty
         }
 

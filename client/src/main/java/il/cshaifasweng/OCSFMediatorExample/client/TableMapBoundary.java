@@ -19,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -28,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
+import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.BRANCH;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.RESERVATION;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.ADD_RESERVATION;
 import static java.lang.Math.min;
@@ -36,28 +38,19 @@ public class TableMapBoundary {
 
     public Pane outsideAreaPane;
     public Pane insideAreaPane;
-    public Button tableBtn1;
     public Branch branch;
     public GridPane insideGridPane;
-    public Button tableBtn2;
-    public Button tableBtn3;
     public ComboBox<String> timesBox;
-    public Button tableBtn4;
-    public Button tableBtn5;
-    public Button tableBtn6;
     public AnchorPane root;
     public Button backBtn;
-    public Button tableBtn7;
-    public Button tableBtn9;
-    public Button tableBtn8;
-    public Button tableBtn10;
     public Label reservationLabel;
     public GridPane outsideGridPane;
     public Button selectTablesBtn;
     public Button doneBtn;
 
+
     public boolean mapIsSet=false;
-//    public boolean mapIsUpdated=false;
+    //    public boolean mapIsUpdated=false;
     private boolean selectionEnabled = false;
     private List<Button> buttons=new ArrayList<>();
     private Map<Integer,RestTable>idMap=new HashMap<>();
@@ -66,20 +59,19 @@ public class TableMapBoundary {
     private Set<Button> selectedButtons = new HashSet<>();
     private final Object tableSyncLock=new Object();
 
-
     public TableMapBoundary()
     {
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
         mapIsSet=false;
     }
-    public void initialize() {
-        if (branch != null) {
-//            buttons=insideGridPane.getChildren();
-//           setMap(branch);
+    public void initialize()
+    {
+        if (branch != null)
+        {
         }
-//        if (!EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().register(this);
-//        }
     }
     // initialize the map before letting the map page be opened
     public void setMap(Branch branch) {
@@ -110,7 +102,6 @@ public class TableMapBoundary {
             System.out.println("Thread interrupted while waiting for tables.");
         }
     }
-
     //get branch tables from server
     private void loadBranchTables()
     {
@@ -123,7 +114,6 @@ public class TableMapBoundary {
             }
         }
     }
-
     //get the branch tables from the event client posted (wake setMap thread after wait for loadTables)
     @Subscribe
     public void onBranchTablesEvent(BranchTablesReceivedEvent event) {
@@ -137,38 +127,59 @@ public class TableMapBoundary {
             notifyAll();  // Wake up threads waiting for tables
         }
     }
-
     private void initializeUIAfterTablesAreReady(Branch branch) {
         System.out.println("Initializing UI with fetched tables...");
 
-        Set<RestTable> tables = branch.getTables();
-        List<RestTable> tableList = new ArrayList<>(tables);
+        List<RestTable> tableList = branch.getTablesSortedByID();
 
-        // Add buttons to the list
         buttons.clear();
-        buttons.addAll(List.of(
-                tableBtn1, tableBtn2, tableBtn3, tableBtn4, tableBtn5,
-                tableBtn6, tableBtn7, tableBtn8, tableBtn9, tableBtn10
-        ));
+        idMap.clear();
+        tablesMap.clear();
+        buttonsMap.clear();
 
-        // Map tables to buttons
-        for (int i = 0; i < Math.min(tableList.size(), buttons.size()); i++) {
-            RestTable table = tableList.get(i);
-            Button button = buttons.get(i);
-            idMap.put(table.getId(), table);
+        int insideColCount = 2;
+        int outsideColCount = 2;
+
+        int insideIndex = 0;
+        int outsideIndex = 0;
+
+        for (RestTable table : tableList) {
+            Button button = new Button();
+            int id = table.getId();
+
+            setDefaultButton(button,id+","+table.getCapacity());
+
+            buttons.add(button);
+            idMap.put(id, table);
             tablesMap.put(table, button);
             buttonsMap.put(button, table);
-            setDefaultButton(button, String.valueOf(i));
+
+            Pair<Integer, String> pair = new Pair<>(id, "");
+            button.setUserData(pair);
+
+            if ("inside".equalsIgnoreCase(table.getArea())) {
+                int row = insideIndex / insideColCount;
+                int col = insideIndex % insideColCount;
+                insideGridPane.add(button, col, row);
+                insideIndex++;
+            } else if ("outside".equalsIgnoreCase(table.getArea())) {
+                int row = outsideIndex / outsideColCount;
+                int col = outsideIndex % outsideColCount;
+                outsideGridPane.add(button, col, row);
+                outsideIndex++;
+                if (row >= 2) {
+                    System.out.println("⚠ Too many outside tables for 2x2 grid!");
+                }
+            } else {
+                System.out.println("Unknown area for table ID " + id + ": " + table.getArea());
+            }
         }
-
-        setTimesBox(); // Populate time slots
-        setupStyles(); //set the style of the map
+        setTimesBox();
+        setupStyles();
         reservationLabel.setVisible(false);
-        doneBtn.setVisible(false);
-        mapIsSet = true;  //make mapIsSet flag true
-
+        mapIsSet = true;
         System.out.println("UI initialized, map is set.");
-        notifyAll(); //notify all waiting threads that mapIsSet=true ->can switch to this screen in UI
+        notifyAll();
     }
     private void setTimesBox() {
         try {
@@ -196,7 +207,6 @@ public class TableMapBoundary {
                 "    -fx-border-radius: 6px;\n" +
                 "    -fx-cursor: hand;");
     }
-
     //user selected time from timesBox
     public void chooseTime(ActionEvent actionEvent) {
         System.out.println("in choose time");
@@ -204,7 +214,6 @@ public class TableMapBoundary {
         LocalTime localTime = LocalTime.parse(chosen);
         displayMapAt(localTime);
     }
-
     //given the chosen time set the map button according to the availability of the tables matching the button
     private void displayMapAt(LocalTime localTime) {
         Set<RestTable> branchAvailableTables = branch.getAvailableTablesAt(localTime);
@@ -238,18 +247,22 @@ public class TableMapBoundary {
         }
     }
     private void updatePage(ResInfo resInfo) {
+        System.out.println("In update page");
 
-        // Update internal branch reference
+        updateBranchReference(resInfo);
+        remapTables();
+        updateTableAvailabilityUI(resInfo);
+    }
+    private void updateBranchReference(ResInfo resInfo) {
         this.branch = resInfo.getBranch();
-
-        // Rebuild maps to reflect updated table references
+    }
+    private void remapTables() {
         Set<RestTable> updatedTables = branch.getTables();
         Map<Integer, RestTable> updatedById = new HashMap<>();
         for (RestTable table : updatedTables) {
             updatedById.put(table.getId(), table);
         }
 
-        // Rebuild idMap and remap buttons
         for (Button button : buttons) {
             RestTable oldTable = buttonsMap.get(button);
             if (oldTable != null) {
@@ -262,22 +275,30 @@ public class TableMapBoundary {
                 }
             }
         }
+    }
+    private void updateTableAvailabilityUI(ResInfo resInfo) {
+        String selected = timesBox.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
 
-        // Update UI only if the reservation is at the selected time
-        LocalTime selectedTime = LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
-        if (resInfo.getHours().equals(selectedTime)) {
-            for (RestTable t : resInfo.getTable()) {
-                RestTable updated = idMap.get(t.getId());
-                if (updated != null) {
-                    Button btn = tablesMap.get(updated);
-                    if (btn != null) {
+        LocalTime selectedTime = LocalTime.parse(selected);
+        if (!resInfo.getHours().equals(selectedTime)) return;
+
+        for (RestTable t : resInfo.getTable()) {
+            RestTable updated = idMap.get(t.getId());
+            if (updated != null) {
+                Button btn = tablesMap.get(updated);
+                if (btn != null) {
+                    if (resInfo.getIsCancelled()) {
+                        setTableButtonAvailable(btn);
+                        System.out.println("Marked table available (cancelled): " + btn.getText());
+                    } else {
                         setTableButtonsUnavailable(btn);
+                        System.out.println("Marked table unavailable: " + btn.getText());
                     }
                 }
             }
         }
     }
-
     private void setTableButtonAvailable(Button button)
     {
         button.setStyle(" -fx-font-size: 16px;\n" +
@@ -288,7 +309,10 @@ public class TableMapBoundary {
                 "    -fx-padding: 8px 16px;\n" +
                 "    -fx-border-radius: 6px;\n" +
                 "    -fx-cursor: hand;");
-        button.setUserData("available");
+        Pair<Integer,String>pair= (Pair<Integer, String>) button.getUserData();
+        Integer id=pair.getKey();
+        pair = new Pair<>(id, "available");
+        button.setUserData(pair);
     }
     private void setTableButtonsUnavailable(Button button) {
         button.setStyle(" -fx-font-size: 16px;\n" +
@@ -299,15 +323,16 @@ public class TableMapBoundary {
                 "    -fx-padding: 8px 16px;\n" +
                 "    -fx-border-radius: 6px;\n" +
                 "    -fx-cursor: hand;");
-        button.setUserData("unavailable");
+        Pair<Integer,String>pair= (Pair<Integer, String>) button.getUserData();
+        Integer id=pair.getKey();
+        pair = new Pair<>(id, "unavailable");
+        button.setUserData(pair);
     }
-
     //when return is clicked
     public void BackToBranch(ActionEvent actionEvent) {
         openBranchPage(branch);
 
     }
-
     //open  branch page after return
     private void openBranchPage(Branch branch) {
         try {
@@ -344,7 +369,6 @@ public class TableMapBoundary {
         }
         updatePage(reservation);
     }
-
     public void tableBtnAction(ActionEvent actionEvent) {
 //        LocalTime time=LocalTime.parse(timesBox.getSelectionModel().getSelectedItem());
 //        Button bt=(Button)actionEvent.getSource();
@@ -355,7 +379,7 @@ public class TableMapBoundary {
         Button bt=(Button)actionEvent.getSource();
         selectedButtons.add(bt);
     }
-//    private void openReservationDetails(Button button,LocalTime time) {
+    //    private void openReservationDetails(Button button,LocalTime time) {
 //        RestTable t=biMap.getKey(button);
 //        System.out.println("reser boundary teble id: "+t.getId());
 //        ResInfo res=branch.getReservationByTable(t,time);
@@ -394,7 +418,6 @@ public class TableMapBoundary {
         pause.setOnFinished(event -> node.setVisible(false)); // Hide after duration
         pause.play();
     }
-
     public void markSelected(MouseEvent mouseEvent) {
     }
     //set selection mode
@@ -402,22 +425,22 @@ public class TableMapBoundary {
         selectedButtons.clear();
         selectionEnabled = true;
         for (Button button : tablesMap.values()) {
-            if ("available".equals(button.getUserData())) {
+            Pair<Integer, String> pair = (Pair<Integer, String>) button.getUserData();
+            if ("available".equals(pair.getValue())) {
                 button.setDisable(false);
                 button.setOnAction(this::handleSelectionClick);  // attach listener
             } else {
                 button.setDisable(true); // prevent clicking unavailable tables
             }
         }
-        doneBtn.setVisible(true);
         reservationLabel.setText("Selection mode enabled. Click tables to select.");
-//        showTemporarily(reservationLabel, 4);
-    }
 
+    }
     public void disableSelection() {
         selectionEnabled = false;
         for (Button button : tablesMap.values()) {
-            if ("unavailable".equals(button.getUserData())) {
+            Pair<Integer, String> pair = (Pair<Integer, String>) button.getUserData();
+            if ("unavailable".equals(pair.getValue())) {
                 button.setDisable(false);
             }
         }
@@ -460,7 +483,6 @@ public class TableMapBoundary {
         {
             setTableButtonsUnavailable(button);
         }
-        doneBtn.setVisible(false);
         disableSelection();
     }
     private void reserveTables(LocalTime time)

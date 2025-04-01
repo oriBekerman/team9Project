@@ -1,22 +1,19 @@
 package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
-import com.sun.glass.ui.Clipboard;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
+
 
 import org.hibernate.Transaction;
-import java.util.ArrayList;
-import java.util.List;
 
+import java.util.List;
 
 
 public abstract class BaseRepository<T> {
 
 
-    public BaseRepository() {}
-
+    public BaseRepository()
+    {}
     public T findById(int id) {
         //search in the database
        try (Session session = HibernateUtil.getSessionFactory().openSession())

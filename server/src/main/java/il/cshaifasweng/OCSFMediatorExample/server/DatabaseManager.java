@@ -11,6 +11,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -47,6 +49,20 @@ private static void initialize(String password) {
     }
     System.out.println("SessionFactory initialized successfully!");
 }
+
+    private byte[] loadImageFromResources(String fileName) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("images/" + fileName)) {
+            if (is == null) {
+                System.err.println("Image not found: " + fileName);
+                return null;
+            }
+            return is.readAllBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 
 
@@ -91,13 +107,16 @@ private static void initialize(String password) {
             // ==========================
             // 2. Define Menu Items
             // ==========================
-            MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce", "Low calorie", null, BASE);
-            MenuItem item2 = new MenuItem("Pizza", 45.00, "Mushrooms, onions, tomatoes", "Includes vegan option", null, BASE);
-            MenuItem item3 = new MenuItem("Pasta", 70.00, "Mushroom cream sauce", "Available gluten-free", null, BASE);
-            MenuItem item4 = new MenuItem("Hamburger", 80.00, "Meatball, pickle, tomato, lettuce", "Choice of meat or plant-based", null, BASE);
-            MenuItem item5 = new MenuItem("Edamame", 30.00, "Edamame", "Served with sea salt", null, BASE);
-            MenuItem item6 = new MenuItem("Fries", 15.00, "potato", "Served with sea salt", null, DishType.SPECIAL);
-            MenuItem item7 = new MenuItem("Salmon", 70.00, "Salmon", "Served with lemon", null, DishType.SPECIAL);
+
+
+
+            MenuItem item1 = new MenuItem("Salad", 35.00, "Tomatoes, cucumbers, lettuce", "Low calorie", loadImageFromResources("salad.jpeg"), BASE);
+            MenuItem item2 = new MenuItem("Pizza", 45.00, "Mushrooms, onions, tomatoes", "Includes vegan option", loadImageFromResources("pizza.jpeg"), BASE);
+            MenuItem item3 = new MenuItem("Pasta", 70.00, "Mushroom cream sauce", "Available gluten-free", loadImageFromResources("pasta.jpeg"), BASE);
+            MenuItem item4 = new MenuItem("Hamburger", 80.00, "Meatball, pickle, tomato, lettuce", "Choice of meat or plant-based", loadImageFromResources("hamburger.jpeg"), BASE);
+            MenuItem item5 = new MenuItem("Edamame", 30.00, "Edamame", "Served with sea salt", loadImageFromResources("edamame.jpeg"), BASE);
+            MenuItem item6 = new MenuItem("Fries", 15.00, "potato", "Served with sea salt", loadImageFromResources("fries.jpeg"), DishType.SPECIAL);
+            MenuItem item7 = new MenuItem("Salmon", 70.00, "Salmon", "Served with lemon", loadImageFromResources("salmon.jpeg"), DishType.SPECIAL);
 
             Set<MenuItem> menuItems1 = Set.of(item1, item2, item3, item4, item5, item6);
             Set<MenuItem> menuItems2 = Set.of(item1, item2, item3, item4, item5, item7);
@@ -196,8 +215,6 @@ private static void initialize(String password) {
                     "456"                                // CVV
             );
 
-            customerController.populateCustomers(List.of(customer1, customer2));  // חדש
-
             // Create OrderItems from MenuItem and quantity
             OrderItem orderItem1 = new OrderItem(item1, 2, "No dressing", null); // 2 of "Salad" with preferences
             OrderItem orderItem2 = new OrderItem(item4, 1, "Extra ketchup", null); // 1 of "Hamburger" with preferences
@@ -221,6 +238,7 @@ private static void initialize(String password) {
                     "17:00"
             );
 
+
             // Now associate the OrderItems with the Delivery orders
             orderItem1.setDelivery(order1); // Associate orderItem1 with order1
             orderItem2.setDelivery(order1); // Associate orderItem2 with order1
@@ -234,6 +252,11 @@ private static void initialize(String password) {
             // Set the OrderItems in the respective Delivery objects
             order1.setOrderItems(orderItems1);
             order2.setOrderItems(orderItems2);
+
+
+            //calc total price
+            order1.setTotalPrice(order1.calculateTotalPrice());
+            order2.setTotalPrice(order2.calculateTotalPrice());
 
             // Adding delivery orders to the delivery controller
             deliveryController.populateDelivery(order1);

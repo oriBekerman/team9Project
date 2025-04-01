@@ -21,8 +21,8 @@ public class Delivery implements Serializable {
     private String time;
 
     // One-to-many relationship with OrderItem
-    @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems; // A list of OrderItem objects
+    @OneToMany(mappedBy = "delivery")
+    private List<OrderItem> orderItems;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -33,13 +33,13 @@ public class Delivery implements Serializable {
     private DeliveryMethod deliveryMethod;
 
     @ManyToOne
-    @JoinColumn(name = "branch_id", nullable = false)
+    @JoinColumn(name = "branch_id")
     private Branch branch;
 
-    @Column(nullable = false)
-    private double totalPrice;
+    @Column(name = "total_price")
+    private double totalPrice = 0.0;
 
-    @Column(nullable = false)
+    @Column(name = "is_canceled")
     private boolean isCanceled = false;
 
     public static final double DELIVERY_FEE = 15.0;
@@ -59,7 +59,7 @@ public class Delivery implements Serializable {
 
     // Calculate total price dynamically
     public double calculateTotalPrice() {
-        double total = 0;
+        double total = 0.0;
         for (OrderItem orderItem : orderItems) {
             total += orderItem.getMenuItem().getPrice() * orderItem.getQuantity(); // MenuItem price * quantity
         }
