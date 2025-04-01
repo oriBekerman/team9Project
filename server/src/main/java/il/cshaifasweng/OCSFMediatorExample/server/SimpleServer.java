@@ -127,7 +127,6 @@ public class SimpleServer extends AbstractServer {
             System.err.println("Error sending response: " + e.getMessage());
         }
     }
-
     public void sendToAllClients(Object message) {
         synchronized (SubscribersList) {
             for (SubscribedClient subscribedClient : SubscribersList) {
@@ -139,16 +138,6 @@ public class SimpleServer extends AbstractServer {
             }
         }
     }
-
-    private Response handlePermitGranted(Request request)
-    {
-        Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
-                "Your permit request has been granted.",
-                Response.Status.SUCCESS,
-                Response.Recipient.ALL_CLIENTS);
-        return response;
-    }
-
     public void sendToAllClientsExceptSender(Object message, ConnectionToClient client) {
         synchronized (SubscribersList) {
             Iterator<SubscribedClient> iterator = SubscribersList.iterator();
@@ -164,6 +153,14 @@ public class SimpleServer extends AbstractServer {
                 }
             }
         }
+    }
+    private Response handlePermitGranted(Request request)
+    {
+        Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
+                "Your permit request has been granted.",
+                Response.Status.SUCCESS,
+                Response.Recipient.ALL_CLIENTS);
+        return response;
     }
 
     private void getControllers() {

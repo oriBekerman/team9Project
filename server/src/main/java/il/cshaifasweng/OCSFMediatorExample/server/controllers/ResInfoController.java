@@ -251,7 +251,7 @@ private void sendEmail(ResInfo resInfo)
             "Guests: " + resInfo.getNumOfGuests() + "\n" +
             "Branch: " + resInfo.getBranch().getName() + "\n\n" +
             "Enjoy your meal!";
-    EmailSender.sendEmail(customer.getEmail(), "Mama's kitchen complaint",body);
+    EmailSender.sendEmail(customer.getEmail(),"MAMA'S KITCHEN reservation",body);
 }
 
 

@@ -122,7 +122,6 @@ public class BranchController {
         }
         return response;
     }
-
     public Response updateBranch(Request request)
     {
         Response response=new Response<>(UPDATE_BRANCH_RESERVATION,null,ERROR,ALL_CLIENTS_EXCEPT_SENDER);
@@ -139,5 +138,6 @@ public class BranchController {
         return response;
 
     }
+    
     
 }

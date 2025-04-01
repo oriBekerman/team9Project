@@ -49,7 +49,6 @@ public class MenuItemsController
             return new Response<>(ResponseType.ADD_DISH, null, "Failed to add dish", Status.ERROR, ALL_CLIENTS);
         }
     }
-
     public Response handleRemoveDishRequest(Request<MenuItem> request)
     {
         MenuItem dishToRemove = request.getData();
@@ -63,7 +62,6 @@ public class MenuItemsController
             return new Response<>(ResponseType.REMOVE_DISH, null, "Failed to remove dish", Status.ERROR, ALL_CLIENTS);
         }
     }
-
     public MenuItemsController() {
         this.menuItemsRepository = new MenuItemsRepository();
     }
@@ -73,7 +71,6 @@ public class MenuItemsController
     public void PopulateMenuItems(List<MenuItem> menuItems) {
         menuItemsRepository.populate(menuItems);
     }
-
     public Response getBaseItems()
     {
         Response response = new Response(RETURN_MENU, null, null, ALL_CLIENTS);
@@ -94,7 +91,6 @@ public class MenuItemsController
         }
         return response;
     }
-
     public List<MenuItem> searchMenuItems(String keyword, Double maxPrice, DishType type)
     {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -122,7 +118,6 @@ public class MenuItemsController
         session.close();
         return results;
     }
-
     public Response handleUpdateDishIngredientsRequest(Request<MenuItem> request)
     {
         MenuItem dishToUpdate = request.getData();  // Retrieve the dish with updated ingredients from the request
@@ -140,7 +135,6 @@ public class MenuItemsController
             return new Response<>(ResponseType.UPDATE_INGREDIENTS, null, "Failed to update dish ingredients", Status.ERROR, ALL_CLIENTS);
         }
     }
-
     public Response updateThePrice(Request request)
     {
         Response response = new Response(UPDATED_PRICE, null, null, ALL_CLIENTS);
@@ -160,11 +154,9 @@ public class MenuItemsController
         }
         return response;
     }
-
     public List<MenuItem> getAllItems() {
         return menuItemsRepository.getAllItems();
     }
-
     public Response handleUpdateDishTypeRequest(Request<MenuItem> request)
     {
         MenuItem dishToUpdate = request.getData();
