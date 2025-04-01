@@ -35,7 +35,6 @@ public class Response<T> implements Serializable {
         this.recipient = recipient;
     }
 
-    // Getters and Setters
     public Status getStatus() {
         return status;
     }
@@ -87,7 +86,7 @@ public class Response<T> implements Serializable {
         UPDATE_INGREDIENTS,
         UPDATE_DISH_TYPE,
         PERMIT_GRANTED_ACK,
-
+        UPDATE_BRANCH_MENU,
 
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,

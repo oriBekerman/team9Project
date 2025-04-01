@@ -201,13 +201,7 @@ public class ReservationBoundary {
     }
 
 
-   // need to modify it according to the as needed
-//    private void updateUIBasedOnUserRole() {
-//        String role = SessionManager.getInstance().getAuthorization();
-//        if (!"Admin".equals(role)) {
-//            continueBtn.setDisable(true);  // Example: Disable the continue button if not an admin
-//        }
-//    }
+
 
 
 

@@ -111,10 +111,10 @@ public class SecondaryBoundary
             menuTableView.refresh();
         });
     }
-
     @FXML
     void addDish(ActionEvent event)
     {
+        // Step 1: Get the name of the new dish
         TextInputDialog nameDialog = new TextInputDialog();
         nameDialog.setTitle("Add New Dish");
         nameDialog.setHeaderText("Enter the name of the new dish:");
@@ -124,6 +124,7 @@ public class SecondaryBoundary
         {
             String dishName = nameResult.get();
 
+            // Step 2: Get the ingredients of the dish
             TextInputDialog ingredientsDialog = new TextInputDialog();
             ingredientsDialog.setTitle("Add Ingredients");
             ingredientsDialog.setHeaderText("Enter the ingredients for: " + dishName);
@@ -133,6 +134,7 @@ public class SecondaryBoundary
             {
                 String dishIngredients = ingredientsResult.get();
 
+                // Step 3: Get any preference for the dish
                 TextInputDialog preferenceDialog = new TextInputDialog();
                 preferenceDialog.setTitle("Add Preference");
                 preferenceDialog.setHeaderText("Enter any preference for: " + dishName);
@@ -140,6 +142,7 @@ public class SecondaryBoundary
 
                 String dishPreference = preferenceResult.orElse("");
 
+                // Step 4: Get the price of the dish
                 TextInputDialog priceDialog = new TextInputDialog("0.0");
                 priceDialog.setTitle("Add Price");
                 priceDialog.setHeaderText("Enter the price for: " + dishName);
@@ -151,6 +154,7 @@ public class SecondaryBoundary
                     {
                         double price = Double.parseDouble(priceResult.get());
 
+                        // Step 5: Get the type of the dish (BASE or SPECIAL)
                         ChoiceDialog<DishType> typeDialog = new ChoiceDialog<>(DishType.BASE, DishType.BASE, DishType.SPECIAL);
                         typeDialog.setTitle("Dish Type");
                         typeDialog.setHeaderText("Select the type of the dish:");
@@ -158,8 +162,10 @@ public class SecondaryBoundary
 
                         DishType dishType = typeResult.orElse(DishType.BASE);
 
+                        // Step 6: If the dish is SPECIAL, select a branch
+                        final Branch[] finalSelectedBranch = {null};
+                        List<Branch> branchesToUpdate = new ArrayList<>();
 
-                        Branch selectedBranch = null;
                         if (dishType == DishType.SPECIAL)
                         {
                             List<String> branchNames = branchList.stream().map(Branch::getName).toList();
@@ -178,37 +184,39 @@ public class SecondaryBoundary
                             if (branchResult.isPresent())
                             {
                                 String selectedBranchName = branchResult.get();
-                                selectedBranch = branchList.stream()
+                                finalSelectedBranch[0] = branchList.stream()
                                         .filter(branch -> branch.getName().equals(selectedBranchName))
                                         .findFirst()
                                         .orElse(null);
 
-                                if (selectedBranch == null) {
+                                if (finalSelectedBranch[0] == null) {
                                     Alert alert = new Alert(Alert.AlertType.ERROR, "Selected branch not found.");
                                     alert.showAndWait();
                                     return;
                                 }
+                                branchesToUpdate.add(finalSelectedBranch[0]); // Add selected branch to the list
                             }
                             else
                             {
-                                return;
+                                return; // If no branch selected, exit method
                             }
                         }
 
+                        // Step 7: Create the MenuItem object
                         byte[] defaultPicture = new byte[0];
-
-                        // Make copies of variables for lambda use
                         final String finalDishName = dishName;
                         final double finalPrice = price;
                         final String finalDishIngredients = dishIngredients;
                         final String finalDishPreference = dishPreference;
                         final DishType finalDishType = dishType;
-                        final Branch finalSelectedBranch = selectedBranch;
 
+                        // Step 8: Add the dish to the database
                         SimpleClient.getClient().addDishToDatabase(
-                                new MenuItem(finalDishName, finalPrice, finalDishIngredients, finalDishPreference, defaultPicture, finalDishType)
+                                new MenuItem(finalDishName, finalPrice, finalDishIngredients, finalDishPreference, defaultPicture, finalDishType),
+                                branchesToUpdate // Pass the list of branches (can be empty or with selected branch)
                         );
 
+                        // Step 9: Update the GUI with the new dish
                         Platform.runLater(() ->
                         {
                             MenuItem newDish = new MenuItem(
@@ -222,13 +230,16 @@ public class SecondaryBoundary
                             allMenuItems.add(newDish);
                             menuTableView.getItems().add(newDish);
 
-                            if (finalDishType == DishType.SPECIAL && finalSelectedBranch != null) {
-                                System.out.println("Dish assigned to branch: " + finalSelectedBranch.getName());
-                                // Here, you can send this info to the backend if needed
+                            if (finalDishType == DishType.SPECIAL && finalSelectedBranch[0] != null)
+                            {
+                                System.out.println("Dish assigned to branch: " + finalSelectedBranch[0].getName());
+                                // You can send this information to the backend if needed
                             }
                         });
-
-                    } catch (NumberFormatException e) {
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        // Handle invalid price format
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid price format.");
                         alert.showAndWait();
                     }
@@ -237,14 +248,12 @@ public class SecondaryBoundary
         }
     }
 
+
     @Subscribe
     public void onBranchListSentEvent(BranchListSentEvent event)
     {
         this.branchList = event.branches;
     }
-
-
-
 
     @Subscribe
     public void onAddDishEvent(AddDishEvent event)

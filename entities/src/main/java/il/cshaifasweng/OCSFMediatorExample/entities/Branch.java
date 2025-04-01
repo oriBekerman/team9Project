@@ -310,34 +310,9 @@ public class Branch implements Serializable  {
         tablesAreSet = true;
         this.notifyAll();  // Notify any thread waiting for tables
     }
-    //    public ResInfo getReservationByTable(RestTable table,LocalTime time)
-//    {
-//        for(ResInfo reservation : reservations)
-//        {
-//            System.out.println("reservation.branch for");
-//            System.out.println(reservation.getHours());
-//            if ((reservation.getHours().equals(time)))
-//            {
-//                System.out.println("reservation.getResID() 1111");
-//                Set<RestTable> restTables=reservation.getTable();
-//                for(RestTable restTable : restTables)
-//                {
-//                    System.out.println("reservation.getResID() 2222");
-//                    System.out.println(restTable.getId());
-//                    if(table.getId()==restTable.getId())
-//                    {
-//                        System.out.println("reservation.getResID() 3333");
-//                        System.out.println(restTable.getId());
-//                        return reservation;
-//                    }
-//                }
-//            }
-//        }
-//
-//        System.out.println("reservation.getResID()");
-//        return null;
-//
-//    }
+
+
+
     public Set<ResInfo> getAllReservations()
     {
         return reservations;

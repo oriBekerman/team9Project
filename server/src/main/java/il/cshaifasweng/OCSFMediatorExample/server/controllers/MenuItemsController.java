@@ -9,8 +9,7 @@ import org.hibernate.SessionFactory;
 import il.cshaifasweng.OCSFMediatorExample.entities.Response.Status;
 import il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType;
 import java.util.List;
-
-
+import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.ALL_CLIENTS;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.THIS_CLIENT;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
@@ -32,23 +31,42 @@ public class MenuItemsController
             case REMOVE_DISH -> handleRemoveDishRequest(request);
             case UPDATE_INGREDIENTS -> handleUpdateDishIngredientsRequest(request);
             case UPDATE_DISH_TYPE -> handleUpdateDishTypeRequest(request);
+            case UPDATE_BRANCH_MENU -> handleUpdateBranchMenuRequest(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
 
-    public Response handleAddDishRequest(Request<MenuItem> request)
-    {
+    public Response handleAddDishRequest(Request<MenuItem> request) {
         MenuItem newDish = request.getData();
         boolean success = menuItemsRepository.addMenuItem(newDish);
-        if (success)
-        {
-            return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully", Status.SUCCESS, ALL_CLIENTS);
-        }
-        else
-        {
+
+        if (success) {
+            List<Branch> branchesToUpdate = menuItemsRepository.getBranchesWithDish(newDish);
+
+            for (Branch branch : branchesToUpdate) {
+                branch.addMenuItem(newDish);
+                menuItemsRepository.updateBranchMenu(branch);
+            }
+
+            return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully and branches updated", Status.SUCCESS, ALL_CLIENTS);
+        } else {
             return new Response<>(ResponseType.ADD_DISH, null, "Failed to add dish", Status.ERROR, ALL_CLIENTS);
         }
     }
+
+    public Response handleUpdateBranchMenuRequest(Request<Branch> request) {
+        Branch branchToUpdate = request.getData();
+
+        boolean success = menuItemsRepository.updateBranchMenu(branchToUpdate);
+
+        if (success) {
+
+            return new Response<>(ResponseType.UPDATE_BRANCH_MENU, branchToUpdate, "Branch menu updated successfully", Status.SUCCESS, ALL_CLIENTS);
+        } else {
+            return new Response<>(ResponseType.UPDATE_BRANCH_MENU, null, "Failed to update branch menu", Status.ERROR, ALL_CLIENTS);
+        }
+    }
+
     public Response handleRemoveDishRequest(Request<MenuItem> request)
     {
         MenuItem dishToRemove = request.getData();
@@ -62,6 +80,7 @@ public class MenuItemsController
             return new Response<>(ResponseType.REMOVE_DISH, null, "Failed to remove dish", Status.ERROR, ALL_CLIENTS);
         }
     }
+
     public MenuItemsController() {
         this.menuItemsRepository = new MenuItemsRepository();
     }
@@ -71,6 +90,7 @@ public class MenuItemsController
     public void PopulateMenuItems(List<MenuItem> menuItems) {
         menuItemsRepository.populate(menuItems);
     }
+
     public Response getBaseItems()
     {
         Response response = new Response(RETURN_MENU, null, null, ALL_CLIENTS);
@@ -118,6 +138,7 @@ public class MenuItemsController
         session.close();
         return results;
     }
+
     public Response handleUpdateDishIngredientsRequest(Request<MenuItem> request)
     {
         MenuItem dishToUpdate = request.getData();  // Retrieve the dish with updated ingredients from the request
@@ -135,6 +156,7 @@ public class MenuItemsController
             return new Response<>(ResponseType.UPDATE_INGREDIENTS, null, "Failed to update dish ingredients", Status.ERROR, ALL_CLIENTS);
         }
     }
+
     public Response updateThePrice(Request request)
     {
         Response response = new Response(UPDATED_PRICE, null, null, ALL_CLIENTS);
@@ -154,9 +176,11 @@ public class MenuItemsController
         }
         return response;
     }
+
     public List<MenuItem> getAllItems() {
         return menuItemsRepository.getAllItems();
     }
+
     public Response handleUpdateDishTypeRequest(Request<MenuItem> request)
     {
         MenuItem dishToUpdate = request.getData();

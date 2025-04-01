@@ -244,7 +244,8 @@ public class ReservationCntBoundary {
         });
     }
 
-    private void makeReservation() {
+    private void makeReservation()
+    {
         String area = SimpleClient.getClient().mapReservation.get("Area");
         String numPeople = SimpleClient.getClient().mapReservation.get("num");
         String timeString = SimpleClient.getClient().mapReservation.get("Hours");
@@ -312,36 +313,7 @@ public class ReservationCntBoundary {
         switchScreen("Home Page");
         EventBus.getDefault().unregister(this);
     }
-//    public void timeViolation()
-//    {
-//        LocalTime time = LocalTime.parse(chosen, DateTimeFormatter.ofPattern("HH:mm"));
-//        // Ensure unavailable times are removed correctly
-//        for (RestTable table : availableTables) {
-//            Set<LocalTime> updatedTimes = new HashSet<>(table.getUnavailableFromTimes());
-//            updatedTimes.remove(time);
-//            table.setUnavailableFromTimes(updatedTimes);
-//        }
-//        Request<Branch> request = new Request<>(BRANCH, UPDATE_BRANCH, branch);
-//        try {
-//            SimpleClient.getClient().sendToServer(request);
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        Platform.runLater(() -> {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setTitle("Time violation");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Your reservation was canceled as personal details and payment were not provided within 15 minutes. You can start over anytime!");
-//            alert.getButtonTypes().setAll(ButtonType.OK);
-//            Optional<ButtonType> result = alert.showAndWait();
-//            // on OK
-//            if (result.isPresent() && result.get() == ButtonType.OK) {
-//                performAdditionalAction();
-//            };
-//        });
-//
-//    }
+
 
     @Subscribe
     public void onUpdateBranchTablesEvent(UpdateBranchTablesEvent event) {

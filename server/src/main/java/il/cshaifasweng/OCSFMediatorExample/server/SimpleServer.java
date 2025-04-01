@@ -129,6 +129,7 @@ public class SimpleServer extends AbstractServer {
             System.err.println("Error sending response: " + e.getMessage());
         }
     }
+
     public void sendToAllClients(Object message) {
         synchronized (SubscribersList) {
             for (SubscribedClient subscribedClient : SubscribersList) {

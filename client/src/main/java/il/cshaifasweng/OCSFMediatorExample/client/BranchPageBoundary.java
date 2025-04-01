@@ -108,7 +108,9 @@ public class BranchPageBoundary
         getUserAuthorizedTools();
     }
 
-    public void navToReservationPage(ActionEvent actionEvent) {
+    public void navToReservationPage(ActionEvent actionEvent)
+    {
+        switchScreen("Reservation");
     }
     public void navToDeliveryPage(ActionEvent actionEvent) {
         currentDelivery.setBranch(branch);
