@@ -190,11 +190,6 @@ public class PrimaryBoundary
 			givePermitBtn.setVisible(false);
 			complaintsTableBtn.setVisible(false);
 		}
-		try {
-			SimpleClient.getClient().sendToServer("add client");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		toggleButtonBranch.setOnAction(e ->
 		{
 			GetBranchListPopup();
@@ -322,6 +317,6 @@ public class PrimaryBoundary
 		openComplaintsTablePage();
 	}
 	public void openComplaintsTablePage() {
-			switchScreen("Complaints");
+		switchScreen("Complaints");
 	}
 }

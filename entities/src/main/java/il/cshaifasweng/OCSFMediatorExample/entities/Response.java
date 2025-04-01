@@ -35,6 +35,7 @@ public class Response<T> implements Serializable {
         this.recipient = recipient;
     }
 
+    // Getters and Setters
     public Status getStatus() {
         return status;
     }
@@ -116,7 +117,9 @@ public class Response<T> implements Serializable {
         Complaint_BY_EMPLOYEE,
         Complaint_BY_DATE,
         UPDATE_COMPLAINT,
-        COMPLAINT_CREATED
+        COMPLAINT_CREATED,
+        CLIENT_ADDED,
+
     }
 
     public enum Status {
