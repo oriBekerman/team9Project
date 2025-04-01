@@ -153,7 +153,7 @@ public class ComplaintController {
                     "Mama’s Kitchen Team";
         }
 
-        EmailSender.sendEmail(customer.getEmail(), "Mama's kitchen complaint",body);
+        EmailSender.sendEmailAsync(customer.getEmail(), "Mama's kitchen complaint",body);
     }
 
     private Response<List<Complaint>> getComplaintByEmployee(Request request)
