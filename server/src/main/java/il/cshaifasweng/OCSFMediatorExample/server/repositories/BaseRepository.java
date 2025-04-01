@@ -150,7 +150,7 @@ public abstract class BaseRepository<T> {
 //            HibernateUtil.closeSession();
 //        }
 //    }
-    protected void persist(T entity) {
+    public void persist(T entity) {
         Transaction transaction = null;
             try (Session session = HibernateUtil.getSessionFactory().openSession())
         {

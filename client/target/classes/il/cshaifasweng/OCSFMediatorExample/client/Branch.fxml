@@ -33,7 +33,7 @@
                   </font>
               </Button>
             <Button fx:id="menuBtn" mnemonicParsing="false" onAction="#displayMenu" prefHeight="49.0" prefWidth="190.0" text="Menu" />
-            <Button fx:id="tableBtn" mnemonicParsing="false" onAction="#loadBranchMap" text="Tables" />
+            <Button fx:id="tableBtn" mnemonicParsing="false" onAction="#loadBranchMap" text="Tables Map" />
           </VBox>
       </children></VBox>
     <AnchorPane prefHeight="138.0" prefWidth="190.0">

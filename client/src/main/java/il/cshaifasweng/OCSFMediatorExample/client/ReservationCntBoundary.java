@@ -180,10 +180,6 @@ public class ReservationCntBoundary {
             // Get the controller and set the type before waiting
             PersonalDetailsFillingBoundary boundary = loader.getController();
             boundary.setType("reservation");  // This should be set before waiting
-            if(SimpleClient.getClient().rebookReservation)
-            {
-                boundary.setFields();
-            }
             synchronized (boundary) {
                 while (!boundary.typeIsSet) {
                     System.out.println("Waiting for type to be set...");
@@ -219,7 +215,6 @@ public class ReservationCntBoundary {
         System.out.println("customer email: "+SimpleClient.getClient().resInfo.getCustomer().getEmail());
         LocalTime time=SimpleClient.getClient().resInfo.getHours();
         SimpleClient.getClient().resInfo.setTable(SimpleClient.getClient().resInfo.getTable());
-        SimpleClient.getClient().rebookReservation=false;
         Request request=new Request(RESERVATION,ADD_RESERVATION,SimpleClient.getClient().resInfo);
         try
         {

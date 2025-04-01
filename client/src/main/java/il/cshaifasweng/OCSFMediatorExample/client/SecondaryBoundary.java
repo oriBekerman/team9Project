@@ -609,7 +609,6 @@ public class SecondaryBoundary
         });
         setStyle();
     }
-
     private void setStyle()
     {
         root.setStyle("-fx-background-color: #fbe9d0;");

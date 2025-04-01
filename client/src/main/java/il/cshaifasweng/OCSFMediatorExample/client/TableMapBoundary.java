@@ -379,38 +379,6 @@ public class TableMapBoundary {
         Button bt=(Button)actionEvent.getSource();
         selectedButtons.add(bt);
     }
-    //    private void openReservationDetails(Button button,LocalTime time) {
-//        RestTable t=biMap.getKey(button);
-//        System.out.println("reser boundary teble id: "+t.getId());
-//        ResInfo res=branch.getReservationByTable(t,time);
-//        if(res==null)
-//        {
-//            System.out.println("reservation not found");
-//        }
-////        reservationLabel.setText("reservation:" +
-////                "name -"+res.getCustomer().getName());
-////        showTemporarily(reservationLabel,60);
-//        Platform.runLater(() -> {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setTitle("Table Reservation:");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Name: " + res.getCustomer().getName());
-//            alert.getButtonTypes().setAll(ButtonType.CLOSE);
-//
-//            alert.show(); // Non-blocking
-//
-//            // Close alert after 30 seconds if not manually closed
-//            PauseTransition delay = new PauseTransition(Duration.seconds(30));
-//            delay.setOnFinished(event -> {
-//                // Check if the alert is still showing before closing
-//                if (alert.isShowing()) {
-//                    alert.close();
-//                }
-//            });
-//            delay.play();
-//        });
-//
-//    }
     public void showTemporarily(Node node, double seconds) {
         node.setVisible(true); // Show the node
 
