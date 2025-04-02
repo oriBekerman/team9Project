@@ -279,9 +279,9 @@ public class SecondaryBoundary
             alert.showAndWait();
             return;
         }
-            allMenuItems.remove(selectedItem);
-            menuTableView.getItems().remove(selectedItem);
-            SimpleClient.getClient().removeDishFromDatabase(selectedItem);
+        allMenuItems.remove(selectedItem);
+        menuTableView.getItems().remove(selectedItem);
+        SimpleClient.getClient().removeDishFromDatabase(selectedItem);
     }
 
     @Subscribe
@@ -518,21 +518,21 @@ public class SecondaryBoundary
         {
             EventBus.getDefault().register(this);
         }
-            try
+        try
+        {
+            if(currentbranch == null)
             {
-                if(currentbranch == null)
-                {
-                    SimpleClient.getClient().displayNetworkMenu();
-                }
-                else{
-                    SimpleClient.getClient().displayBranchMenu(currentbranch);
-                }
+                SimpleClient.getClient().displayNetworkMenu();
+            }
+            else{
+                SimpleClient.getClient().displayBranchMenu(currentbranch);
+            }
 
-            }
-            catch (IOException e)
-            {
-                System.err.println("Error sending client confirmation: " + e.getMessage());
-            }
+        }
+        catch (IOException e)
+        {
+            System.err.println("Error sending client confirmation: " + e.getMessage());
+        }
         menuTableView.refresh();
 
         if (branchList==null)
@@ -618,7 +618,6 @@ public class SecondaryBoundary
         });
         setStyle();
     }
-
     private void setStyle()
     {
         root.setStyle("-fx-background-color: #fbe9d0;");

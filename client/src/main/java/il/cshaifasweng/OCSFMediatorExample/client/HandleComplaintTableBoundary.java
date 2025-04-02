@@ -25,7 +25,6 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 public class HandleComplaintTableBoundary {
     public AnchorPane root;
     public Label complaintsTitle;
-    public Button returnBtn;
     public TableView<Complaint> complaintTable;
     public TableColumn<Complaint, String> numColumn;
     public TableColumn<Complaint, String> dateColumn;
@@ -43,38 +42,56 @@ public class HandleComplaintTableBoundary {
     private boolean complaintsAreSet = false;
     private List<Complaint> complaints = new ArrayList<>();
 
-    public HandleComplaintTableBoundary() {}
-
-    @FXML
-    void initialize() {
-        System.out.println("Initializing HandleComplaintTableBoundary...");
+    public HandleComplaintTableBoundary()
+    {
         if (!EventBus.getDefault().isRegistered(this))
         {
             EventBus.getDefault().register(this);
         }
-        setColumns();
-        try
-        {
-            SimpleClient.getClient().getAllComplaints();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            showError("Failed to request complaints from server.");
-        }
-        complaintTable.setOnMouseClicked(this::openComplaintPage);
     }
 
-    public void setPage()
-    {
-        synchronized (this)
-        {
-            this.pageIsSet = false;
-            this.complaintsAreSet = false;
-            waitForComplaints();
-            InitTableAfterAllComplaintEvent();
-        }
+//    @FXML
+//    void initialize() {
+//        System.out.println("Initializing HandleComplaintTableBoundary...");
+//        if (!EventBus.getDefault().isRegistered(this))
+//        {
+//            EventBus.getDefault().register(this);
+//        }
+//        setColumns();
+//        try
+//        {
+//            SimpleClient.getClient().getAllComplaints();
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//            showError("Failed to request complaints from server.");
+//        }
+//        complaintTable.setOnMouseClicked(this::openComplaintPage);
+//    }
+        @FXML
+    void initialize() {
+        System.out.println("Initializing HandleComplaintTableBoundary...");
+//            setColumns();
+//            complaintTable.setOnMouseClicked(this::openComplaintPage);
     }
+
+//    public void setPage()
+//    {
+//        synchronized (this)
+//        {
+//            this.pageIsSet = false;
+//            this.complaintsAreSet = false;
+//            waitForComplaints();
+//            InitTableAfterAllComplaintEvent();
+//        }
+//    }
+public void setPage() {
+    System.out.println("Fetching complaints...");
+    complaintsAreSet = false;
+    SimpleClient.getClient().getAllComplaints();  // Trigger fetch
+}
+
     private void waitForComplaints()
     {
         System.out.println("Waiting for complaints from the server...");
@@ -199,36 +216,31 @@ public class HandleComplaintTableBoundary {
 
     @Subscribe
     public void onAllComplaintEvent(ReceivedAllComplaintsEvent event) {
-        synchronized (this) {
+        Platform.runLater(() -> {
             if (event.getComplaintList() == null) {
-                System.out.println(event.getMessage());
-                pageIsSet = true;
-                notifyAll();
+                showError("No complaints received.");
                 return;
             }
-            complaints = event.getComplaintList();
-            complaintsAreSet = true;
-            System.out.println("Complaints received! Notifying all waiting threads...");
-            notifyAll();
-            InitTableAfterAllComplaintEvent();
-        }
-    }
 
+            complaints = event.getComplaintList();
+            System.out.println("Received " + complaints.size() + " complaints.");
+            InitTableAfterAllComplaintEvent();
+        });
+    }
     private void InitTableAfterAllComplaintEvent() {
         Platform.runLater(() -> {
-            synchronized (this) {
-                complaintTable.getItems().clear();
-                complaintTable.getItems().setAll(complaints);
-                setColumns();
-                pageIsSet = true;
-                System.out.println("Complaints loaded into table.");
-                this.notifyAll();
-            }
+            complaintTable.getItems().clear();
+            complaintTable.getItems().setAll(complaints);
+            setColumns();
+            complaintTable.setOnMouseClicked(this::openComplaintPage);
+            pageIsSet = true;
+            System.out.println("Complaints loaded into table.");
         });
     }
 
     @FXML
     void OnBackAct(ActionEvent event) {
         switchScreen("Home Page");
+        EventBus.getDefault().unregister(this);
     }
 }

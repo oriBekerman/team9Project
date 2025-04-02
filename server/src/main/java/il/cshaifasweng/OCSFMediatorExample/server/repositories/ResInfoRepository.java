@@ -151,20 +151,20 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
     {
         deleteById(reservation.getResID());
     }
-    public void saveCustomer(Customer customer)
-    {
-        Transaction tx = null;
-        try(Session session = HibernateUtil.getSessionFactory().openSession())
-        {
-            tx = session.beginTransaction();
-            session.saveOrUpdate(customer);
-            tx.commit();
-        }
-        catch (Exception e) {
-            System.out.println("customer save failed");
-            e.printStackTrace();
-        }
-    }
+    //    public void saveCustomer(Customer customer)
+//    {
+//        Transaction tx = null;
+//        try(Session session = HibernateUtil.getSessionFactory().openSession())
+//        {
+//            tx = session.beginTransaction();
+//            session.saveOrUpdate(customer);
+//            tx.commit();
+//        }
+//        catch (Exception e) {
+//            System.out.println("customer save failed");
+//            e.printStackTrace();
+//        }
+//    }
     public List<ResInfo> findConflictingReservations(Set<RestTable> tables, LocalTime time) {
         List<ResInfo> conflicts = new ArrayList<>();
 
@@ -199,37 +199,31 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
     public Customer getCustomerByEmail(String email) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<ResInfo> cq = cb.createQuery(ResInfo.class);
-            Root<ResInfo> root = cq.from(ResInfo.class);
+            CriteriaQuery<Customer> cq = cb.createQuery(Customer.class);
+            Root<Customer> root = cq.from(Customer.class);
 
-            // Access nested customer.email
-            Predicate emailMatch = cb.equal(root.get("customer").get("email"), email);
-
+            Predicate emailMatch = cb.equal(root.get("email"), email);
             cq.select(root).where(emailMatch);
 
-            ResInfo res = session.createQuery(cq)
-                    .setMaxResults(1)
-                    .uniqueResult();
-
-            return (res != null) ? res.getCustomer() : null;
-
+            return session.createQuery(cq).setMaxResults(1).uniqueResult();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    public void setCustomer(ResInfo newReservation) {
-        Transaction tx=null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession())
-        {
-            tx = session.beginTransaction();
-            session.saveOrUpdate(newReservation);
-            tx.commit();
-        }
-        catch (Exception e) {
-            if (tx != null) tx.rollback();
-        }
-    }
+
+    //    public void setCustomer(Customer c) {
+//        Transaction tx=null;
+//        try (Session session = HibernateUtil.getSessionFactory().openSession())
+//        {
+//            tx = session.beginTransaction();
+//            session.saveOrUpdate(newReservation);
+//            tx.commit();
+//        }
+//        catch (Exception e) {
+//            if (tx != null) tx.rollback();
+//        }
+//    }
     public String cancelReservation(Integer resID) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();

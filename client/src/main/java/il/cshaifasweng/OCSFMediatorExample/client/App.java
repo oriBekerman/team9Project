@@ -12,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Scanner;
 
 import org.greenrobot.eventbus.EventBus;
@@ -28,19 +29,37 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
         appStage = stage;
         if (!EventBus.getDefault().isRegistered(this))
         {
             EventBus.getDefault().register(this);
         }
-    	client = SimpleClient.getClient();
-        client.setHost("localhost");//change later for two computer connection
-        client.setPort(3000);//change later for two computer connection
-    	client.openConnection();
-        stage.setTitle("Team 9 - Mom's kitchen");
-        scene = new Scene(loadFXML("primary"), 1295, 782);
+        client = SimpleClient.getClient();
+
+        stage.setTitle("Client Connection");
+        scene = new Scene(loadFXML("clientConnecting"));
         stage.setScene(scene);
         stage.show();
+
+        //OLD LOGIC
+        //        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Please enter host: ");
+//        String host = scanner.nextLine();
+//        System.out.println("Please enter port: ");
+//        String port = scanner.nextLine();
+//        int port2 = Integer.parseInt(port);
+//    	client = SimpleClient.getClient();
+//        client.setHost("localhost");//change later for two computer connection
+//        client.setPort(3000);//change later for two computer connection
+//    	client.openConnection();
+//        System.out.println("try client add");
+//
+//        stage.setTitle("Team 9 - Mom's kitchen");
+//        scene = new Scene(loadFXML("primary"), 1295, 782);
+//        stage.setScene(scene);
+//        stage.show();
+
     }
 
     static void setRoot(String fxml) throws IOException {
@@ -218,14 +237,19 @@ public class App extends Application {
                 break;
             case "Complaints":
                 Platform.runLater(() -> {
-                    setWindowTitle(" Complaints");
+                    setWindowTitle("Complaints");
                     try {
-                        setContent("HandleCompTablePage");
+                        FXMLLoader loader = new FXMLLoader(App.class.getResource("HandleCompTablePage.fxml"));
+                        Parent root = loader.load();
+                        HandleComplaintTableBoundary boundary = loader.getController();
+                        boundary.setPage();  // fetch complaints & update table
+                        setContent(root);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
                 break;
+
 
 
 

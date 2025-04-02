@@ -127,8 +127,8 @@ private static void initialize(String password) {
             // ==========================
             // 3. Define Branches
             // ==========================
-            Branch telAvivBranch = new Branch("Tel Aviv", "Tel Aviv", "9:00", "22:00");
-            Branch haifaBranch = new Branch("Haifa", "Haifa port", "9:00", "19:00");
+            Branch telAvivBranch = new Branch("Tel Aviv", "Tel Aviv", "09:00", "22:00");
+            Branch haifaBranch = new Branch("Haifa", "Haifa port", "09:00", "19:00");
             List<Branch> branches = List.of(haifaBranch, telAvivBranch);
 
             // ==========================
@@ -147,7 +147,6 @@ private static void initialize(String password) {
             RestTable table8= new RestTable("outside", 3);
             RestTable table9= new RestTable("outside", 4);
             RestTable table10= new RestTable("outside", 2);
-//           List<RestTable> restTablesHaifa = List.of(table1, table2, table3, table4,table5,table6,table7,table8,table9,table10);
             List<RestTable> restTablesHaifa = List.of(table1, table2, table3,table4,table5,table6,table7,table8,table9,table10);
 
 

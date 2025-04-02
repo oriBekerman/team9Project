@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.entities.Request;
+import il.cshaifasweng.OCSFMediatorExample.server.EmailSender;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import il.cshaifasweng.OCSFMediatorExample.server.SimpleServer;
 //import il.cshaifasweng.OCSFMediatorExample.server.repositories.CustomerRepository;
@@ -84,7 +85,6 @@ public class ResInfoController {
         Response response = new Response(ADDED_RESERVATION, null, null, BOTH);
         Response response1 = new Response(ADDED_RESERVATION, null, null, THIS_CLIENT);
         Response response2 = new Response(UPDATE_BRANCH_TABLES, null, null, ALL_CLIENTS);
-        boolean customerInDB=false;
 
         if (reservation.getBranch() == null) {
             return new Response(ADDED_RESERVATION, null, "Reservation must include a branch.", ERROR, THIS_CLIENT);
@@ -107,7 +107,6 @@ public class ResInfoController {
         //wait for branch tables to be set
         synchronized (branch) {
             branch.addReservation(reservation,tables,tableIds);
-
             try {
                 while (!branch.tablesAreSet) {
                     branch.wait();
@@ -117,23 +116,16 @@ public class ResInfoController {
                 return new Response(ADDED_RESERVATION, null, "Thread interrupted.", ERROR, THIS_CLIENT);
             }
         }
-        Customer customerDB=checkIfCustomerInDB(customer.getEmail());
+        reservation.setBranch(branch); //reset the updated branch in reservation
+        reservation.setTable(tables); //reset the updated tables in reservation
+        Customer customerDB=checkIfCustomerInDB(customer.getEmail()); //get customer from DB if exists
         if(customerDB!=null) //customer is in DB
         {
-            reservation.setCustomer(null);
-            customerInDB=true;
+            //if customer already in DB set the res customer to be the DB customer
+            reservation.setCustomer(customerDB);
         }
+
         ResInfo newReservation = resInfoRepository.addReservation(reservation);
-        newReservation.setBranch(branch); //set the branch with the updated tables to reservation
-        if(customerInDB) //set newReservation customer to be the one in DB
-        {
-            System.out.println("customerInDB if set");
-            newReservation.setCustomer(customerDB);
-            //add customer info to reservation in db
-            resInfoRepository.setCustomer(newReservation);
-
-
-        }
         if (newReservation == null) {
             return new Response(ADDED_RESERVATION, null, "Failed to save reservation.", ERROR, THIS_CLIENT);
         }
@@ -148,17 +140,18 @@ public class ResInfoController {
 
         response2.setData(newReservation);
         response2.setStatus(SUCCESS);
-
         response.setData(List.of(response1, response2));
         response.setStatus(SUCCESS);
+        if(reservation.getCustomer().getEmail()!=null && !reservation.getCustomer().getEmail().equals(""))
+        {
+            sendEmail(reservation);
+        }
         return response;
     }
     private Customer checkIfCustomerInDB(String email)
     {
         return resInfoRepository.getCustomerByEmail(email);
     }
-
-
     public List<ResInfo> checkTableAvailability(ResInfo resInfo)
     {
         boolean available=false;
@@ -247,6 +240,18 @@ public Response<List<Response>> cancelReservation(Request request) {
     } catch (Exception e) {
         return new Response<>(CANCELED_RESERVATION, null, "Error cancelling reservation: " + e.getMessage(), ERROR, THIS_CLIENT);
     }
+}
+
+private void sendEmail(ResInfo resInfo)
+{
+    Customer customer=resInfo.getCustomer();
+    String body="Dear " + customer.getName() + ",\n" +
+            "Your reservation has been confirmed.\n\n" +
+            "Time: " + resInfo.getHours() + "\n" +
+            "Guests: " + resInfo.getNumOfGuests() + "\n" +
+            "Branch: " + resInfo.getBranch().getName() + "\n\n" +
+            "Enjoy your meal!";
+    EmailSender.sendEmailAsync(customer.getEmail(),"MAMA'S KITCHEN reservation",body);
 }
 
 

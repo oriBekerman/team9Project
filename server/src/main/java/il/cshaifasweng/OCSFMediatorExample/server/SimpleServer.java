@@ -14,6 +14,8 @@ import il.cshaifasweng.OCSFMediatorExample.server.repositories.ResInfoRepository
 import javafx.util.Pair;
 import org.hibernate.Session;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
@@ -27,103 +29,39 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Response.Status;
 import il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient;
 
 public class SimpleServer extends AbstractServer {
-    private static ArrayList<SubscribedClient> SubscribersList = new ArrayList<>();
     private static final List<SubscribedClient> SubscribersList = Collections.synchronizedList(new ArrayList<>());
     public static Session session;
 
-    //controllers
-    private MenuItemsController menuItemsController =null;
-    private BranchController branchController=null;
-    private RestTableController restTableController=null;
-    private LogInController logInController = null;
-    private DeliveryController deliveryController = null;
-    private ResInfoController resInfoController = null;
-    private ComplaintController complaintController=null;
-    public static String dataBasePassword="282817SMAY";//change database password here
-    private final DatabaseManager databaseManager=new DatabaseManager(dataBasePassword);
-    public SimpleServer(int port) {
-        super(port);
-       getControllers();
-    }
-    @Override
-    protected void handleMessageFromClient(Object msg, ConnectionToClient client){
-        System.out.println("received request from client: ");
+    public static String host;
 
-//        String msgString = msg.toString();
-//        Request request=(Request)msg;
-//
-//        //connect client
-//        if (msgString.startsWith("add client")) {
-//            SubscribedClient connection = new SubscribedClient(client);
-//            SubscribersList.add(connection);
-//            try {
-//                client.sendToClient("client added successfully");
-//                System.out.println("Client added successfully");
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//        //navigate client's request to the appropriate controller and sent the controller's response to the client
-//        Response response = switch (request.getCategory())
-//        {
-//            case BASE_MENU -> menuItemsController.handleRequest(request);
-//            case BRANCH -> branchController.handleRequest(request);
-//            case LOGIN -> logInController.handleRequest(request);
-//            case DELIVERY -> deliveryController.handleRequest(request);
-//            case REPORTS -> handleReportRequest(request);
-//            default -> throw new IllegalArgumentException("Unknown request category: " + request.getCategory());
-//        };
-//
-//        System.out.println("Response prepared for client:");
-//        System.out.println("Response Type: " + response.getResponseType());
-//        System.out.println("Response Status: " + response.getStatus());
-//        System.out.println("Response Data: " + (response.getData() != null ? response.getData().toString() : "No data"));
-//
-//
-//        //check if the response should be sent to all clients or just one
-//        if (response.getRecipient()==ALL_CLIENTS) {
-//            sendToAllClients(response);
-//            System.out.println("response sent to client "+ response.getResponseType().toString());
-//        }
-//        if (response.getRecipient()==THIS_CLIENT)
-//        {
-//            try {
-////                System.out.println("Sending response to client: " + response.getResponseType() + " with data: " + response.getData());
-//                client.sendToClient(response);
-//                System.out.println("response sent to client: " + response.getResponseType() + " with data: " + response.getData());
-//            } catch (Exception e)
-//            {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//        //server needs to send one response to all clients and one to a specific client
-//        //the response.data from the controller has both responses
-//        if(response.getRecipient()==BOTH)
-//        {
-//            List<Response> responses= (List<Response>) response.getData();
-//            if(responses.get(0).getRecipient()==ALL_CLIENTS)
-//            {
-//                try {
-//                    sendToAllClients(responses.get(0));
-//                    client.sendToClient(responses.get(1));
-//                }
-//                catch (Exception e)
-//                {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//            else {
-//                try {
-//                    sendToAllClients(responses.get(1));
-//                    client.sendToClient(responses.get(0));
-//                }
-//                catch (Exception e)
-//                {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        }
-//    }
+    public static int port;
+    // Controllers
+    private MenuItemsController menuItemsController;
+    private BranchController branchController;
+    private RestTableController restTableController;
+    private LogInController logInController;
+    private DeliveryController deliveryController;
+    private ResInfoController resInfoController;
+    private ComplaintController complaintController;
+    public static String dataBasePassword = "282817SMAY"; // Change database password here
+    private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
+
+    public SimpleServer(int port) throws UnknownHostException {
+        super(port);
+        //set host and port
+        this.host = InetAddress.getLocalHost().getHostAddress(); //get the server host
+        //FOR NOW ONLY USE LOCAL HOST---------REMOVE IN PRESENTATION
+        this.host = "127.0.0.1";
+        this.port = port;
+
+        System.out.println("connected on host "+ this.host+" and port "+ this.port);
+        getControllers();
+    }
+
+    @Override
+    protected void handleMessageFromClient(Object msg, ConnectionToClient client)
+    {
+        System.out.println("Received request from client: " + msg);
 
 
 ////////////////// //////////////// NEW FROM MANINN TO HANDELL
@@ -165,8 +103,10 @@ public class SimpleServer extends AbstractServer {
                     Response permitResponse = handlePermitGranted(request);
                     yield permitResponse;
                 }
+                case CONNECTION -> addClient(request, client);
 
-                case ADD_DISH -> {
+                case ADD_DISH ->
+                {
                     Response addDishResponse = menuItemsController.handleRequest(request);
                     yield addDishResponse;
                 }
@@ -179,9 +119,8 @@ public class SimpleServer extends AbstractServer {
 
         System.out.println("Response prepared for client: " + response.getResponseType());
         sendResponseToClient(response, client);
-        if(response.getMessage() !=null)
-        {
-            System.out.println("response msg =" +response.getMessage());
+        if (response.getMessage() != null) {
+            System.out.println("response msg =" + response.getMessage());
         }
     }
 
@@ -235,16 +174,6 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
-    private Response handlePermitGranted(Request request)
-    {
-        Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
-                "Your permit request has been granted.",
-                Response.Status.SUCCESS,
-                Response.Recipient.ALL_CLIENTS);
-        return response;
-    }
-
-
     public void sendToAllClientsExceptSender(Object message, ConnectionToClient client) {
         synchronized (SubscribersList) {
             Iterator<SubscribedClient> iterator = SubscribersList.iterator();
@@ -262,17 +191,101 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
-
-    private void getControllers()
+    private Response handlePermitGranted(Request request)
     {
-        this.menuItemsController =databaseManager.getMenuItemsController();
-        this.branchController=databaseManager.getBranchController();
+        Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
+                "Your permit request has been granted.",
+                Response.Status.SUCCESS,
+                Response.Recipient.ALL_CLIENTS);
+        return response;
+    }
+
+
+    private Response addClient(Request request, ConnectionToClient client) {
+        System.out.println("Handling add client request...");
+        String clientInfo = (String) request.getData();
+        System.out.println("Client info received: " + clientInfo);
+
+        // Extract host and port from clientInfo
+        String[] parts = clientInfo.split(":");
+        if (parts.length != 2) {
+            return new Response(
+                    Response.ResponseType.CLIENT_ADDED,
+                    "Invalid client info format. Expected 'host:port'.",
+                    Response.Status.ERROR,
+                    Response.Recipient.THIS_CLIENT
+            );
+        }
+
+        String clientHost = parts[0];
+        int clientPort;
+
+        try {
+            clientPort = Integer.parseInt(parts[1]);
+        } catch (NumberFormatException e) {
+            return new Response(
+                    Response.ResponseType.CLIENT_ADDED,
+                    "Invalid port number.",
+                    Response.Status.ERROR,
+                    Response.Recipient.THIS_CLIENT
+            );
+        }
+
+        // Normalize "localhost" to "127.0.0.1"
+        if (clientHost.equalsIgnoreCase("localhost")) {
+            clientHost = "127.0.0.1";
+        }
+
+        if (!clientHost.equals(this.host) || clientPort != this.port) {
+            return new Response(
+                    Response.ResponseType.CLIENT_ADDED,
+                    "Connection rejected: Incorrect host or port.",
+                    Response.Status.ERROR,
+                    Response.Recipient.THIS_CLIENT
+            );
+        }
+
+        // Add the client to the SubscribersList
+        SubscribedClient connection = new SubscribedClient(client);
+        SubscribersList.add(connection);
+
+        Response response = new Response(
+                Response.ResponseType.CLIENT_ADDED,
+                "Client added successfully.",
+                Response.Status.SUCCESS,
+                Response.Recipient.THIS_CLIENT
+        );
+
+        try {
+            // Send back a response confirming the client was added successfully
+            client.sendToClient(response);
+            System.out.println("Client added successfully: " + clientInfo);
+            return response;
+        } catch (IOException e) {
+            System.err.println("Error sending client confirmation: " + e.getMessage());
+            try {
+                // Send failure response if adding client fails
+                response.setStatus(Response.Status.ERROR);
+                response.setMessage("Failed to add client.");
+                client.sendToClient(response);
+                return response;
+            } catch (IOException ex) {
+                System.err.println("Error sending failure response: " + ex.getMessage());
+            }
+        }
+        return response;
+    }
+
+
+
+    private void getControllers() {
+        this.menuItemsController = databaseManager.getMenuItemsController();
+        this.branchController = databaseManager.getBranchController();
         this.logInController = databaseManager.getLogInController();
         this.restTableController = databaseManager.getRestTableController();
         this.deliveryController = databaseManager.getDeliveryController();
-        this.resInfoController=databaseManager.getResInfoController();
-        this.complaintController=databaseManager.getComplaintController();
-
+        this.resInfoController = databaseManager.getResInfoController();
+        this.complaintController = databaseManager.getComplaintController();
     }
 
 
@@ -300,5 +313,4 @@ public class SimpleServer extends AbstractServer {
 
         return new Response(responseType, reportData, Status.SUCCESS, Recipient.THIS_CLIENT);
     }
-
 }

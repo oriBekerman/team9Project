@@ -9,19 +9,18 @@
 <AnchorPane fx:id="root" prefHeight="871.0" prefWidth="1194.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.HandleComplaintTableBoundary">
    <children>
       <Label fx:id="complaintsTitle" layoutX="483.0" layoutY="60.0" text="Complaints" AnchorPane.bottomAnchor="793.4" AnchorPane.leftAnchor="483.0" AnchorPane.topAnchor="60.0" />
-      <Button fx:id="returnBtn" layoutX="62.0" layoutY="35.0" mnemonicParsing="false" text="Return" />
-       <TableView fx:id="complaintTable">
+       <TableView fx:id="complaintTable" layoutX="106.0" layoutY="125.0" prefHeight="400.0" prefWidth="812.0">
            <columns>
                <TableColumn fx:id="numColumn" text="ID" />
-               <TableColumn fx:id="dateColumn" text="Date" />
-               <TableColumn fx:id="customerNameColumn" text="Customer" />
-               <TableColumn fx:id="branchColumn" text="Branch" />
-               <TableColumn fx:id="descriptionColumn" text="Description" />
-               <TableColumn fx:id="statusColumn" text="Status" />
-               <TableColumn fx:id="compensationColumn" text="Compensation" />
+               <TableColumn fx:id="dateColumn" prefWidth="88.79998779296875" text="Date" />
+               <TableColumn fx:id="customerNameColumn" prefWidth="92.800048828125" text="Customer" />
+               <TableColumn fx:id="branchColumn" prefWidth="98.4000244140625" text="Branch" />
+               <TableColumn fx:id="descriptionColumn" prefWidth="191.20001220703125" text="Description" />
+               <TableColumn fx:id="statusColumn" prefWidth="102.4000244140625" text="Status" />
+               <TableColumn fx:id="compensationColumn" prefWidth="159.2000732421875" text="Compensation" />
            </columns>
        </TableView>
-      <Button fx:id="BackBTN" layoutX="597.0" layoutY="1.0" mnemonicParsing="false" onAction="#OnBackAct" text="Back" />
+      <Button fx:id="BackBTN" layoutX="898.0" layoutY="34.0" mnemonicParsing="false" onAction="#OnBackAct" text="Back" />
 
    </children>
 </AnchorPane>
