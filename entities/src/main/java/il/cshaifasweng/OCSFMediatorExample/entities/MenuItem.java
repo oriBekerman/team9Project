@@ -4,10 +4,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
+
 @Entity
 @Table(name = "menuItems", uniqueConstraints = {
         @UniqueConstraint(columnNames = "ID")})
-public class MenuItem implements Serializable {
+public class MenuItem implements Serializable
+{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
