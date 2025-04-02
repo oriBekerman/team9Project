@@ -362,6 +362,15 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
+	public void updateBranchSpecialItem(int branchId, int menuItemId) throws IOException {
+
+		UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(branchId, menuItemId);
+		Request<UpdateBranchSpecialItemRequest> request = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_SPECIAL_ITEM, data);
+		client.sendToServer(request);
+
+	}
+
+
 	public void displayNetworkMenu() throws IOException {
 		Request<Object> request = new Request<>(BASE_MENU, GET_BASE_MENU, null);
 		client.sendToServer(request);
@@ -429,6 +438,7 @@ public class SimpleClient extends AbstractClient {
 		} catch (IOException e) {
 			System.err.println("Error adding dish to database: " + e.getMessage());
 		}
+
 	}
 
 	public void updateDishIngredients(MenuItem item)

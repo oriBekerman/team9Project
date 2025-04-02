@@ -7,6 +7,8 @@ import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SubscribedClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.util.Pair;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -29,7 +31,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "Bekitnt26@"; // Change database password here
+    public static String dataBasePassword = "1234"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) throws UnknownHostException {
@@ -70,7 +72,10 @@ public class SimpleServer extends AbstractServer {
 
         Response response;
         try {
-            response = switch (request.getCategory()) {
+
+            response = switch (request.getCategory())
+            {
+
                 case BASE_MENU -> menuItemsController.handleRequest(request);
                 case BRANCH -> branchController.handleRequest(request);
                 case LOGIN -> logInController.handleRequest(request);
@@ -106,6 +111,7 @@ public class SimpleServer extends AbstractServer {
             System.out.println("response msg =" + response.getMessage());
         }
     }
+
 
     private void sendResponseToClient(Response response, ConnectionToClient client) {
         try {

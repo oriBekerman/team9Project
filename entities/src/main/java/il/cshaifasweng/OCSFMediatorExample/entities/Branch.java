@@ -62,7 +62,8 @@ public class Branch implements Serializable  {
 
     public Branch() {}
 
-    public Branch(String name, String location, String openingTime, String closingTime) {
+    public Branch(String name, String location, String openingTime, String closingTime)
+    {
         this.name = name;
         this.location = location;
         this.openingTime = openingTime;
@@ -118,10 +119,14 @@ public class Branch implements Serializable  {
     public void setClosingTime(String closingTime) {
         this.closingTime = closingTime;
     }
-    public List<MenuItem> getBranchSpecial(){
+
+    public List<MenuItem> getBranchSpecial()
+    {
         List<MenuItem> special = new ArrayList<MenuItem>();
-        for(MenuItem menuItem : menuItems){
-            if (menuItem.getDishType().equals(il.cshaifasweng.OCSFMediatorExample.entities.DishType.SPECIAL)){
+        for(MenuItem menuItem : menuItems)
+        {
+            if (menuItem.getDishType().equals(il.cshaifasweng.OCSFMediatorExample.entities.DishType.SPECIAL))
+            {
                 special.add(menuItem);
             }
         }
