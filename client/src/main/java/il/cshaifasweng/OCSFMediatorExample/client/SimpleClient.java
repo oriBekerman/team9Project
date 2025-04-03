@@ -362,8 +362,9 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
-	public void updateBranchSpecialItem(int branchId, int menuItemId) throws IOException {
-
+	public void updateBranchSpecialItem(int branchId, int menuItemId) throws IOException
+	{
+		System.out.println("sending---------------");
 		UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(branchId, menuItemId);
 		Request<UpdateBranchSpecialItemRequest> request = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_SPECIAL_ITEM, data);
 		client.sendToServer(request);

@@ -139,6 +139,7 @@ public class BranchPageBoundary
     public void displayMenu(ActionEvent actionEvent)
     {
         switchToBranchMenu(branch);
+
 //        if (!isMenuLoaded)
 //        {
 //            System.out.println("Requesting menu...");
