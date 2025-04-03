@@ -4,11 +4,15 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="343.0" prefWidth="381.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ClientConnectingBoundary">
-    <Label layoutX="96.0" layoutY="67.0" prefHeight="17.0" prefWidth="176.0" text="Enter Host and Port to Connect" />
-    <TextField fx:id="hostField" layoutX="110.0" layoutY="115.0" promptText="Enter Host (e.g., localhost)" />
-    <TextField fx:id="portField" layoutX="110.0" layoutY="183.0" promptText="Enter Port (e.g., 3000)" />
-    <Button layoutX="155.0" layoutY="237.0" onAction="#handleConnect" text="Connect" />
+<AnchorPane prefHeight="343.0" prefWidth="381.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ClientConnectingBoundary">
+    <Label layoutX="67.0" layoutY="37.0" prefHeight="17.0" prefWidth="248.0" text="Enter Host and Port to Connect">
+      <font>
+         <Font size="17.0" />
+      </font></Label>
+    <TextField fx:id="hostField" layoutX="95.0" layoutY="96.0" prefHeight="34.0" prefWidth="181.0" promptText="Enter Host (e.g., localhost)" />
+    <TextField fx:id="portField" layoutX="95.0" layoutY="155.0" prefHeight="34.0" prefWidth="181.0" promptText="Enter Port (e.g., 3000)" />
+    <Button layoutX="119.0" layoutY="234.0" onAction="#handleConnect" prefHeight="46.0" prefWidth="118.0" styleClass="menu-btn" text="Connect" />
    <Label fx:id="ErrorLabel" layoutX="82.0" layoutY="298.0" prefHeight="17.0" prefWidth="207.0" />
 </AnchorPane>

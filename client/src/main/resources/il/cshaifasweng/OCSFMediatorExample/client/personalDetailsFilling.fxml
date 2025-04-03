@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="335.0" prefWidth="523.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PersonalDetailsFillingBoundary">
+<AnchorPane fx:id="root" prefHeight="335.0" prefWidth="523.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PersonalDetailsFillingBoundary">
    <children>
       <Label fx:id="nameLabel" layoutX="68.0" layoutY="68.0" prefHeight="40.0" prefWidth="91.0" styleClass="subtitle" text="Full name :">
          <font>

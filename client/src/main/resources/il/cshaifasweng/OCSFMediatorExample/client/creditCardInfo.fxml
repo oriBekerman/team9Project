@@ -6,28 +6,28 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.CreditCradInfoBoundary">
+<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.CreditCradInfoBoundary">
    <children>
-      <Label fx:id="cardNumLabel" layoutX="79.0" layoutY="56.0" styleClass="subtitle" text="Credit card number :">
+      <Label fx:id="cardNumLabel" layoutX="79.0" layoutY="56.0" text="Credit card number :">
          <font>
-            <Font size="15.0" />
+            <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="expDateLabel" layoutX="79.0" layoutY="107.0" styleClass="subtitle" text="Expiration date :">
+      <Label fx:id="expDateLabel" layoutX="79.0" layoutY="107.0" text="Expiration date :">
          <font>
-            <Font size="15.0" />
+            <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="cvvLabel" layoutX="77.0" layoutY="146.0" prefHeight="62.0" prefWidth="248.0" styleClass="subtitle" text="Card Verification Value :">
+      <Label fx:id="cvvLabel" layoutX="77.0" layoutY="146.0" prefHeight="62.0" prefWidth="248.0" text="Card Verification Value :">
          <font>
-            <Font size="15.0" />
+            <Font size="20.0" />
          </font>
       </Label>
-      <Button fx:id="paymentBtn" layoutX="496.0" layoutY="327.0" mnemonicParsing="false" onAction="#checkPayment" text="Pay" />
+      <Button fx:id="paymentBtn" layoutX="496.0" layoutY="327.0" mnemonicParsing="false" onAction="#checkPayment" styleClass="menu-btn" text="Pay" />
       <TextField fx:id="cardNumText" layoutX="300.0" layoutY="64.0" />
       <TextField fx:id="expDateText" layoutX="300.0" layoutY="115.0" />
       <TextField fx:id="cvvText" layoutX="300.0" layoutY="165.0" />
-      <Button fx:id="backBtn" layoutX="41.0" layoutY="327.0" mnemonicParsing="false" onAction="#backToPersonalD" text="Back" />
-      <Label fx:id="errorLabel" layoutX="73.0" layoutY="250.0" prefHeight="17.0" prefWidth="384.0" />
+      <Button fx:id="backBtn" layoutX="41.0" layoutY="327.0" mnemonicParsing="false" onAction="#backToPersonalD" styleClass="menu-btn" text="Back" />
+      <Label fx:id="errorLabel" layoutX="73.0" layoutY="250.0" prefHeight="49.0" prefWidth="384.0" />
    </children>
 </AnchorPane>

@@ -1,10 +1,13 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Customers")
-public class Customer extends Person {
+public class Customer extends Person implements Serializable {
+    private static final long serialVersionUID = 1L;
+
 
     @Column(nullable = false)
     private String creditCardNumber;
@@ -25,6 +28,7 @@ public class Customer extends Person {
         this.expirationDate = expirationDate;
         this.cvv = cvv;
     }
+
 
     // Getters and Setters
     public String getCreditCardNumber() {
