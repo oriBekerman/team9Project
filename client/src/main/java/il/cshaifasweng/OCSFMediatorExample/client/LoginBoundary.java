@@ -118,23 +118,7 @@ public class LoginBoundary {
         assert passwordTextF != null : "fx:id=\"passwordTextF\" was not injected: check your FXML file 'login.fxml'.";
         assert statusLabel != null : "fx:id=\"statusLabel\" was not injected: check your FXML file 'login.fxml'.";
         assert userNameTextF != null : "fx:id=\"userNameTextF\" was not injected: check your FXML file 'login.fxml'.";
-        setStyle();
+        System.out.println("LoginController initialized. Registering EventBus...");
+//        EventBus.getDefault().register(this);
     }
-    public void setStyle()
-    {
-        root.setStyle("-fx-background-color: #fbe9d0;");
-
-        // Buttons Styling
-        String buttonStyle = "-fx-background-color: #8a6f48;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-size: 14px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-padding: 8px 16px;" +
-                "-fx-border-radius: 5px;";
-
-        backToHPBtn.setStyle(buttonStyle);
-        loginBtn.setStyle(buttonStyle);
-
-    }
-
 }

@@ -69,6 +69,7 @@ public class BranchController {
         return response;
     }
 
+
     public Response handleUpdateBranchSpecialItem(Request request)
     {
         UpdateBranchSpecialItemRequest specialItemRequest = (UpdateBranchSpecialItemRequest) request.getData();
@@ -96,8 +97,6 @@ public class BranchController {
 
         return new Response<>(Response.ResponseType.UPDATE_BRANCH_SPECIAL_ITEM, null, "Failed to update special item", Response.Status.ERROR, ALL_CLIENTS);
     }
-
-
 
     public Response getALLBranches()
     {

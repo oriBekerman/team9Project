@@ -45,6 +45,7 @@ public class Response<T> implements Serializable {
     }
 
     public T getData() {
+        System.out.println("[getData in Response] the data is: " + data);
         return data;
     }
 
@@ -77,9 +78,9 @@ public class Response<T> implements Serializable {
         this.recipient = recipient;
     }
 
-    public enum ResponseType
-    {
+    public enum ResponseType {
         NO_ACTION,
+        //menu related responses
         RETURN_MENU,
         UPDATED_PRICE,
         REMOVE_DISH,
@@ -107,6 +108,9 @@ public class Response<T> implements Serializable {
         DELIVERY_CANCELED,
 
         RETURN_RES_REPORT,
+        RETURN_DELIV_REPORT,
+        RETURN_COMP_REPORT,
+        RETURN_REPORT,
 
         CANCELED_RESERVATION,
         ADDED_RESERVATION,

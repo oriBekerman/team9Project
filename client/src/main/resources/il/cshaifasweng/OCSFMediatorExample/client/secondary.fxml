@@ -6,35 +6,39 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="871.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryBoundary">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="871.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryBoundary">
     <children>
 
         <!-- Search Field -->
-        <TextField fx:id="searchField" layoutX="52.0" layoutY="22.0" prefWidth="200" promptText="Search..." />
+        <TextField fx:id="searchField" layoutX="14.0" layoutY="15.0" prefHeight="39.0" prefWidth="230.0" promptText="Search..." />
 
         <!-- Search Button -->
-        <Button fx:id="searchButton" layoutX="260" layoutY="10" onAction="#performSearch" prefHeight="34.0" prefWidth="94.0" text="Search" />
+        <Button fx:id="searchButton" layoutX="260" layoutY="10" onAction="#performSearch" prefHeight="34.0" prefWidth="94.0" styleClass="return-btn" text="Search" />
 
         <Button fx:id="BackToHPbtn" layoutX="1019.0" layoutY="14.0" mnemonicParsing="false" onAction="#BackToHPfunc" styleClass="return-btn" text="Back to Home Page" />
-        <Button fx:id="UpdatePriceBtn" layoutX="23.0" layoutY="664.0" mnemonicParsing="false" onAction="#UpdateThePrice" styleClass="menu-btn" text="Update Price" />
-        <Button fx:id="SaveBtn" layoutX="28.0" layoutY="734.0" mnemonicParsing="false" onAction="#SaveTheUpdateMenu" prefHeight="49.0" prefWidth="124.0" styleClass="menu-btn" text="Save" />
+        <Button fx:id="UpdatePriceBtn" layoutX="20.0" layoutY="710.0" mnemonicParsing="false" onAction="#UpdateThePrice" prefHeight="49.0" prefWidth="177.0" styleClass="menu-btn" text="Update Price" />
+        <Button fx:id="SaveBtn" layoutX="20.0" layoutY="780.0" mnemonicParsing="false" onAction="#SaveTheUpdateMenu" prefHeight="49.0" prefWidth="177.0" styleClass="menu-btn" text="Save" />
 
         <!-- TableView for MenuItems -->
-        <TableView fx:id="menuTableView" layoutX="243.0" layoutY="113.0" prefHeight="551.0" prefWidth="821.0">
+        <TableView fx:id="menuTableView" layoutX="250.0" layoutY="127.0" prefHeight="725.0" prefWidth="941.0">
             <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="97.60003662109375" styleClass="column-header-background" text="Name" />
-                <TableColumn fx:id="ingredientsColumn" prefWidth="132.79998779296875" styleClass="column-header-background" text="Ingredients" />
-                <TableColumn fx:id="preferenceColumn" prefWidth="132.0" styleClass="column-header-background" text="Preference" />
-                <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="76.0" styleClass="column-header-background" text="Price" />
-            <TableColumn fx:id="dishTypeColumn" prefWidth="104.7999267578125" styleClass="column-header-background" text="Branch dish" />
-                <TableColumn fx:id="imageColum" minWidth="0.0" prefWidth="85.60009765625" styleClass="column-header-background" text="image" />
+                <TableColumn fx:id="nameColumn" prefWidth="114.0" styleClass="column-header-background" text="Name" />
+                <TableColumn fx:id="ingredientsColumn" prefWidth="224.0" styleClass="column-header-background" text="Ingredients" />
+                <TableColumn fx:id="preferenceColumn" prefWidth="143.0" styleClass="column-header-background" text="Preference" />
+                <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="120.0" styleClass="column-header-background" text="Price" />
+            <TableColumn fx:id="dishTypeColumn" prefWidth="129.0" styleClass="column-header-background" text="Branch dish" />
+                <TableColumn fx:id="imageColum" minWidth="0.0" prefWidth="208.0" styleClass="column-header-background" text="image" />
             </columns>
         </TableView>
-      <Label fx:id="menuLabel" layoutX="589.0" layoutY="23.0" prefHeight="68.0" prefWidth="77.0" styleClass="menuPageTitle" text="Menu" />
-      <Button fx:id="UpdateingridientsBtn" layoutX="20.0" layoutY="597.0" mnemonicParsing="false" onAction="#UpdateIngridients" styleClass="menu-btn" text="Update ingridients" />
-      <Button fx:id="addDishBtn" layoutX="28.0" layoutY="377.0" mnemonicParsing="false" onAction="#addDish" styleClass="menu-btn" text="add dish" />
-      <Button fx:id="removeDishBtn" layoutX="25.0" layoutY="452.0" mnemonicParsing="false" onAction="#removeDish" styleClass="menu-btn" text="remove dish" />
-      <Button fx:id="isBranchDishBtn" layoutX="20.0" layoutY="528.0" mnemonicParsing="false" onAction="#isBranchDish" styleClass="menu-btn" text="is branch dish" />
+      <Label fx:id="menuLabel" layoutX="613.0" layoutY="39.0" prefHeight="66.0" prefWidth="149.0" styleClass="menuPageTitle" text="Menu">
+         <font>
+            <Font size="22.0" />
+         </font></Label>
+      <Button fx:id="UpdateingridientsBtn" layoutX="20.0" layoutY="637.0" mnemonicParsing="false" onAction="#UpdateIngridients" prefHeight="49.0" prefWidth="177.0" styleClass="menu-btn" text="Update ingridients" />
+      <Button fx:id="addDishBtn" layoutX="20.0" layoutY="424.0" mnemonicParsing="false" onAction="#addDish" prefHeight="49.0" prefWidth="177.0" styleClass="menu-btn" text="add dish" />
+      <Button fx:id="removeDishBtn" layoutX="20.0" layoutY="494.0" mnemonicParsing="false" onAction="#removeDish" prefHeight="49.0" prefWidth="177.0" styleClass="menu-btn" text="remove dish" />
+      <Button fx:id="isBranchDishBtn" layoutX="20.0" layoutY="564.0" mnemonicParsing="false" onAction="#isBranchDish" prefHeight="49.0" prefWidth="177.0" styleClass="menu-btn" text="is branch dish" />
     </children>
 </AnchorPane>

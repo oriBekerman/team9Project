@@ -6,6 +6,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Customer;
 import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
 import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -91,6 +92,7 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
             throw new RuntimeException("Failed to populate reservation", e);
         }
     }
+
     public List<ResInfo> getReservationsByBranchAndMonth(int branchId, String monthYear) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -288,5 +290,23 @@ public class ResInfoRepository extends BaseRepository<ResInfo>
         }
     }
 
-}
+    public List<ResInfo> getReservationsForReport(int branchId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM ResInfo r LEFT JOIN FETCH r.customer LEFT JOIN FETCH r.branch WHERE r.branch.id = :branchId";
+            List<ResInfo> reservations = session.createQuery(hql, ResInfo.class)
+                    .setParameter("branchId", branchId)
+                    .getResultList();
 
+            // Explicitly initialize any lazy relationships
+            reservations.forEach(res -> {
+                Hibernate.initialize(res.getCustomer());
+                Hibernate.initialize(res.getBranch());
+            });
+
+            return reservations;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+}
