@@ -121,7 +121,6 @@ public class SideBarBranchBoundary {
             e.printStackTrace();
         }
     }
-
 //    @FXML
 //    public void navToMenu(ActionEvent actionEvent) {
 //        onExit();
