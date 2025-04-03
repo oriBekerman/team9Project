@@ -108,33 +108,19 @@ public class SideBarBranchBoundary {
     }
 
     @FXML
-    public void navToMenu(ActionEvent actionEvent) {
-//        switchToBranchMenu(branch); THAT WAS FROM THE BranchPageBoundary from "displayMenu"
+    public void navToMenu(ActionEvent actionEvent)
+    {
         onExit();
-        switchScreen("secondary");
-        try {
+        App.switchToBranchMenu(branch);
+        try
+        {
             App.setRoot("secondary");
-//            SimpleClient.getClient().displayBranchMenu(branch);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
-
-//    @FXML
-//    public void navToMenu(ActionEvent actionEvent) {
-//        onExit();
-//        switchScreen("secondary");
-//        try
-//        {
-//            App.setRoot("secondary");
-//        }
-//        catch (IOException e)
-//        {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-
 
     @FXML
     void initialize() {

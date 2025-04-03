@@ -55,6 +55,9 @@ public class MenuItemsController
             {
                 branch.addMenuItem(newDish);
                 menuItemsRepository.updateBranchMenu(branch);
+                UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(branch.getId(), newDish.getItemID());
+
+
             }
 
             return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully and branches updated", Status.SUCCESS, ALL_CLIENTS);
