@@ -121,21 +121,6 @@ public class SideBarBranchBoundary {
             e.printStackTrace();
         }
     }
-//    @FXML
-//    public void navToMenu(ActionEvent actionEvent) {
-//        onExit();
-//        switchScreen("secondary");
-//        try
-//        {
-//            App.setRoot("secondary");
-//        }
-//        catch (IOException e)
-//        {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-
 
     @FXML
     void initialize() {
