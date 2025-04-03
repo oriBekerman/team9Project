@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 public class Complaint implements Serializable {
     private static final long serialVersionUID = 1L;
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", unique = true, nullable = false)

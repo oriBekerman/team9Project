@@ -200,14 +200,14 @@ public class ReportBoundary {
             reportTableView.getColumns().addAll(
                     createColumn("Full Name", "fullNameRES"),
                     createColumn("Number of Guests", "numOfGuests"),
-                    createColumn("Reservation Date", "reservationDate"),
+//                    createColumn("Reservation Date", "reservationDate"),
                     createColumn("Hours", "hours"),
                     createColumn("In/Out", "inOrOut")
             );
         } else if (reportType.equals("Deliveries")) {
             reportTableView.getColumns().addAll(
                     createColumn("Full Name", "fullNameDelivery"),
-                    createColumn("Date of Delivery", "deliveryDate"),
+//                    createColumn("Date of Delivery", "deliveryDate"),
                     createColumn("Ordered Items", "orderedItems"),
                     createColumn("Price", "price"),
                     createColumn("Delivery Method", "deliveryMethod")

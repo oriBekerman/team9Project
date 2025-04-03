@@ -1,9 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.server.reports;
 
-import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.DeliveryRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DeliveriesReport extends Report {

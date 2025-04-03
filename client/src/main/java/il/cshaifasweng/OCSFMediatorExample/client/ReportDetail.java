@@ -36,7 +36,7 @@ public class ReportDetail {
         try {
             this.fullNameRES = resInfo.getCustomer() != null ? resInfo.getCustomer().getName() : "N/A";
             this.numOfGuests = String.valueOf(resInfo.getNumOfGuests());
-            this.reservationDate = resInfo.getResDate().toString();
+//            this.reservationDate = resInfo.getResDate().toString();
             this.hours = resInfo.getHours().toString();
             this.inOrOut = resInfo.getInOrOut();
         } catch (Exception e) {
@@ -49,7 +49,7 @@ public class ReportDetail {
     // Constructor for Delivery
     public ReportDetail(Delivery delivery) {
         this.fullNameDelivery = delivery.getCustomer().getName();
-        this.deliveryDate = delivery.getDate();
+//        this.deliveryDate = delivery.getDate();
         this.orderedItems = delivery.getOrderItems().stream()
                 .map(item -> item.getMenuItem().getName() + " x " + item.getQuantity())
                 .collect(Collectors.joining(", "));

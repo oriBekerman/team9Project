@@ -4,19 +4,23 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchListSentEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchTablesReceivedEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.UserLoginSuccessEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
-import il.cshaifasweng.OCSFMediatorExample.entities.Employees.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.RestTable;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -24,11 +28,28 @@ import javafx.stage.Popup;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
+import static il.cshaifasweng.OCSFMediatorExample.client.App.*;
 
 public class SideBarBranchBoundary {
     private static SideBarBranchBoundary instance;
     public Branch branch;
+
+    private boolean isMenuLoaded = false;
+    public boolean branchIsSet = false;
+    private boolean branchTablesSet = false;
+    private Delivery currentDelivery= new Delivery();
+    private SecondaryBoundary secondaryBoundary;
+    private TableView<il.cshaifasweng.OCSFMediatorExample.entities.MenuItem> menuTableView;
+
+
+    public void BranchPageBoundary()
+    {
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
+    }
+
 
     @FXML
     private ResourceBundle resources;
@@ -57,6 +78,9 @@ public class SideBarBranchBoundary {
     @FXML
     private Button toggleButtonReports;
 
+    @FXML
+    private Button tableBtn;
+
 
     @FXML
     private Button toggleButtonBranch;
@@ -71,9 +95,11 @@ public class SideBarBranchBoundary {
         switchScreen("SubComplaint");
     }
 
+
     @FXML
     void navToDeliveryPage(ActionEvent event) {
-        switchScreen("Delivery");
+        currentDelivery.setBranch(branch); //FROM BranchPageBoundary -navToDeliveryPage
+        switchToDelivery(currentDelivery); //FROM BranchPageBoundary -navToDeliveryPage
     }
 
     @FXML
@@ -83,17 +109,31 @@ public class SideBarBranchBoundary {
 
     @FXML
     public void navToMenu(ActionEvent actionEvent) {
-        switchScreen("menu");
+//        switchToBranchMenu(branch); THAT WAS FROM THE BranchPageBoundary from "displayMenu"
+        onExit();
+        switchScreen("secondary");
         try {
-            App.setRoot("menu");
-            SimpleClient.getClient().displayBranchMenu(branch);
-//            Menu menu = new Menu(branch.getBranchMenuItems());
-//            menu.printMenu();
-//            SimpleClient.getClient().showMenu(menu);
+            App.setRoot("secondary");
+//            SimpleClient.getClient().displayBranchMenu(branch);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+//    @FXML
+//    public void navToMenu(ActionEvent actionEvent) {
+//        onExit();
+//        switchScreen("secondary");
+//        try
+//        {
+//            App.setRoot("secondary");
+//        }
+//        catch (IOException e)
+//        {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
 
 
     @FXML
@@ -106,6 +146,7 @@ public class SideBarBranchBoundary {
         assert sideBar != null : "fx:id=\"sideBar\" was not injected: check your FXML file 'sideBarBranch.fxml'.";
         assert toggleButtonBranch != null : "fx:id=\"toggleButtonBranch\" was not injected: check your FXML file 'sideBarBranch.fxml'.";
         assert toggleButtonReports != null : "fx:id=\"toggleReportsButton\" was not injected: check your FXML file 'sideBarBranch.fxml'.";
+
 
         // Set the button action here
         EventBus.getDefault().register(this);
@@ -123,6 +164,74 @@ public class SideBarBranchBoundary {
         String imagePath = "il/cshaifasweng/OCSFMediatorExample/client/mamasKitchen.jpg";
         Image image = new Image(imagePath);
         MOMSImage.setImage(image);
+    }
+
+
+    public void loadBranchMap(ActionEvent actionEvent){
+        openBranchMap();
+    }
+
+    public void openBranchMap()
+    {
+        System.out.println("in open mao in branch boundary");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("TableMapPage.fxml"));
+            Parent mapPageRoot = loader.load();
+            // Get the controller and pass the branch
+            TableMapBoundary boundary = loader.getController();
+            boundary.setMap(branch);
+            synchronized (boundary)
+            {
+                while (!boundary.mapIsSet)
+                {
+                    System.out.println("Waiting for map to be set...");
+                    boundary.wait();  // Waits until notifyAll() is called
+                }
+            }
+            Platform.runLater(() -> {
+                try {
+                    App.setContent(mapPageRoot);
+                }
+                catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
+    }
+
+
+    public void checkTablesList()
+    {
+        if(branch.getTables() != null)
+        {
+            System.out.println("branch tables null");
+        }
+        if (branch.getTables().isEmpty())
+        {
+            System.out.println("branch tables empty");
+        }
+    }
+
+
+    @Subscribe
+    public void onBranchTablesEvent(BranchTablesReceivedEvent event) {
+        synchronized (lock) {
+            System.out.println("Tables received for branch: " + branch.getName());
+            Set<RestTable> tables = event.getTables();
+            List<RestTable> newTables=tables.stream().toList();
+
+            if (tables != null && !tables.isEmpty()) {
+                branch.setRestTables(newTables);
+                branchTablesSet = true;
+                lock.notifyAll(); // Wake up any waiting threads
+            } else {
+                System.out.println("Received empty table list for branch!");
+            }
+        }
     }
 
 
@@ -188,21 +297,38 @@ public class SideBarBranchBoundary {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Branch.fxml"));
             Parent branchPageRoot = loader.load();
-            // Get the controller and pass the branch
             BranchPageBoundary controller = loader.getController();
             controller.setBranch(branch);
-//            if (controller.branchIsSet) {
-//                System.out.println("branch is already set");
-//            }
-//            while (!controller.branchIsSet) {
-//                System.out.println("Waiting for branch to be set");
-//            }
+            getUserAuthorizedTools();
+
+            while (!controller.branchIsSet)
+            {
+                System.out.println("Waiting for branch to be set");
+            }
             App.setContent(branchPageRoot);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
+
+//    public void updateSidebarForUser() {
+//        if (SimpleClient.getClient().getActiveUser() != null) {
+//            tableBtn.setVisible(true);
+//        } else {
+//            tableBtn.setVisible(false);
+//        }
+//    }
+
+    public void getUserAuthorizedTools() {
+        if (SimpleClient.getClient().getActiveUser() != null) {
+            tableBtn.setVisible(true);
+        }
+        else {
+            tableBtn.setVisible(false);
+        }
+    }
+
 
     //handle branch list sent
     @Subscribe
@@ -290,4 +416,8 @@ public class SideBarBranchBoundary {
         System.out.println("[SideBarBranchBoundary] Branch explicitly set: " + branch.getName());
     }
 
+    public void onExit()
+    {
+        EventBus.getDefault().unregister(this);
+    }
 }

@@ -236,7 +236,6 @@ public class SimpleClient extends AbstractClient
                 }
             }
 
-
             if (response.getResponseType().equals(COMPLAINT_CREATED)) {
                 System.out.println("in complaint created");
 
@@ -277,6 +276,11 @@ public class SimpleClient extends AbstractClient
                 String message = (String) response.getMessage();
                 ReservationCancelledEvent event = new ReservationCancelledEvent(message);
                 EventBus.getDefault().post(event);
+            }
+
+            // Insert this specific debug print for RETURN_REPORT responses:
+            if (response.getResponseType().equals(RETURN_REPORT)) {
+                System.out.println("[Client] Report data received: " + response.getData());
             }
             switch (response.getResponseType()) {
                 case RETURN_COMP_REPORT -> {
@@ -436,4 +440,20 @@ public class SimpleClient extends AbstractClient
 			throw new RuntimeException(e);
 		}
 	}
+
+    //Methods to request reports from the server
+    public void requestReservationsReport(String branchName) throws IOException {
+        sendToServer(new Request<>(ReqCategory.REPORTS, RequestType.GET_RES_REPORT, branchName));
+    }
+
+    public void requestDeliveriesReport(String branchName) throws IOException {
+        sendToServer(new Request<>(ReqCategory.REPORTS, RequestType.GET_DELIV_REPORT, branchName));
+        System.out.println("deliveries sent to server");
+    }
+
+    public void requestComplaintsReport(String branchName) throws IOException {
+        System.out.println("[SimpleClient] Sending complaints report request for branch: " + branchName);
+        sendToServer(new Request<>(ReqCategory.REPORTS, RequestType.GET_COMP_REPORT, branchName));
+    }
+
 }

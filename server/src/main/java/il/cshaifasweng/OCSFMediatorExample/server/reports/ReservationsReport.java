@@ -1,7 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.server.reports;
-import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
-import java.util.ArrayList;
-import java.util.List;
+
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.ResInfoRepository;
 
 public class ReservationsReport extends Report {

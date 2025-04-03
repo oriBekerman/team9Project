@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="il.cshaifasweng.OCSFMediatorExample.client.EnterEmailController">
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="366.0" prefWidth="508.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.EnterEmailController">
     <children>
-        <Label layoutX="120" layoutY="80" text="Enter your Email:"/>
-        <TextField fx:id="emailField" layoutX="120" layoutY="110" prefWidth="250"/>
-        <Button fx:id="checkBtn" layoutX="120" layoutY="160" text="Check Reservations" onAction="#handleCheckReservations"/>
-        <Button fx:id="backBtn" layoutX="290" layoutY="160" text="Back" onAction="#handleBack"/>
+        <Label layoutX="184.0" layoutY="41.0" styleClass="subtitle" text="Enter your Email:" />
+        <TextField fx:id="emailField" layoutX="129.0" layoutY="81.0" prefWidth="250" />
+        <Button fx:id="checkBtn" layoutX="301.0" layoutY="289.0" onAction="#handleCheckReservations" prefHeight="49.0" prefWidth="188.0" styleClass="menu-btn" text="Check Reservations" />
+        <Button fx:id="backBtn" layoutX="13.0" layoutY="289.0" onAction="#handleBack" prefHeight="49.0" prefWidth="194.0" styleClass="menu-btn" text="Back" />
     </children>
 </AnchorPane>

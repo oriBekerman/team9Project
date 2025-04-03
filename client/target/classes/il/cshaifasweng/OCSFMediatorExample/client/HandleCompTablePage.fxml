@@ -6,22 +6,21 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="root" prefHeight="871.0" prefWidth="1194.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.HandleComplaintTableBoundary">
-   <children>
-      <Label fx:id="complaintsTitle" layoutX="483.0" layoutY="60.0" text="Complaints" AnchorPane.bottomAnchor="793.4" AnchorPane.leftAnchor="483.0" AnchorPane.topAnchor="60.0" />
-      <Button fx:id="returnBtn" layoutX="62.0" layoutY="35.0" mnemonicParsing="false" text="Return" />
-       <TableView fx:id="complaintTable" layoutX="106.0" layoutY="125.0" prefHeight="400.0" prefWidth="812.0">
-           <columns>
-               <TableColumn fx:id="numColumn" text="ID" />
-               <TableColumn fx:id="dateColumn" prefWidth="88.79998779296875" text="Date" />
-               <TableColumn fx:id="customerNameColumn" prefWidth="92.800048828125" text="Customer" />
-               <TableColumn fx:id="branchColumn" prefWidth="98.4000244140625" text="Branch" />
-               <TableColumn fx:id="descriptionColumn" prefWidth="191.20001220703125" text="Description" />
-               <TableColumn fx:id="statusColumn" prefWidth="102.4000244140625" text="Status" />
-               <TableColumn fx:id="compensationColumn" prefWidth="159.2000732421875" text="Compensation" />
-           </columns>
-       </TableView>
-      <Button fx:id="BackBTN" layoutX="898.0" layoutY="34.0" mnemonicParsing="false" onAction="#OnBackAct" text="Back" />
+<AnchorPane fx:id="root" prefHeight="871.0" prefWidth="1194.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.HandleComplaintTableBoundary">
+    <children>
+        <Label fx:id="complaintsTitle" layoutX="482.0" layoutY="34.0" prefHeight="68.0" prefWidth="168.0" styleClass="main-title" text="Complaints" AnchorPane.bottomAnchor="833.0" AnchorPane.leftAnchor="482.0" AnchorPane.topAnchor="34.0" />
+        <TableView fx:id="complaintTable" layoutX="106.0" layoutY="125.0" prefHeight="663.0" prefWidth="952.0">
+            <columns>
+                <TableColumn fx:id="numColumn" prefWidth="66.0" styleClass="column-header-background" text="ID" />
+                <TableColumn fx:id="dateColumn" prefWidth="103.0" styleClass="column-header-background" text="Date" />
+                <TableColumn fx:id="customerNameColumn" prefWidth="128.0" styleClass="column-header-background" text="Customer" />
+                <TableColumn fx:id="branchColumn" prefWidth="121.0" styleClass="column-header-background" text="Branch" />
+                <TableColumn fx:id="descriptionColumn" prefWidth="229.0" styleClass="column-header-background" text="Description" />
+                <TableColumn fx:id="statusColumn" prefWidth="113.0" styleClass="column-header-background" text="Status" />
+                <TableColumn fx:id="compensationColumn" prefWidth="189.0" styleClass="column-header-background" text="Compensation" />
+            </columns>
+        </TableView>
+        <Button fx:id="BackBTN" layoutX="955.0" layoutY="34.0" mnemonicParsing="false" onAction="#OnBackAct" prefWidth="194.0" styleClass="menu-btn" text="Back to Home Page" />
 
-   </children>
+    </children>
 </AnchorPane>

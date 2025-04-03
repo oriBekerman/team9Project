@@ -7,13 +7,14 @@
 <VBox fx:id="sideBar" prefHeight="871.0" prefWidth="226.0" styleClass="sidebar" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SideBarBranchBoundary">
     <children>
         <ImageView fx:id="MOMSImage" fitHeight="228.0" fitWidth="226.0" pickOnBounds="true" preserveRatio="true" />
-        <VBox prefHeight="329.0" prefWidth="190.0" spacing="10.0" styleClass="sidebar">
+        <VBox prefHeight="426.0" prefWidth="226.0" spacing="10.0" styleClass="sidebar">
             <children>
                 <Button fx:id="menuBtn" mnemonicParsing="false" onAction="#navToMenu" prefHeight="49.0" prefWidth="190.0" text="Menu" />
                 <Button fx:id="toggleButtonBranch" layoutX="25.0" layoutY="239.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="190.0" text="Our Branches" />
                 <Button fx:id="deliveryBtn" mnemonicParsing="false" onAction="#navToDeliveryPage" prefHeight="49.0" prefWidth="190.0" styleClass="menu-btn" text="Make a Delivery" />
                 <Button fx:id="reservationBtn" mnemonicParsing="false" onAction="#navToReservationPage" prefHeight="49.0" prefWidth="190.0" styleClass="menu-btn" text="Make a Reservation" />
                 <Button fx:id="complaintBtn" mnemonicParsing="false" onAction="#navToComplaintPage" prefHeight="49.0" prefWidth="190.0" styleClass="menu-btn" text="Make a Complaint" />
+            <Button fx:id="tableBtn" layoutX="10.0" layoutY="246.0" mnemonicParsing="false" onAction="#loadBranchMap" prefHeight="49.0" prefWidth="190.0" styleClass="menu-btn" text="Tables Map" />
             <Button fx:id="toggleButtonReports" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#showReportOptions" prefHeight="49.0" prefWidth="190.0" text="Reports" />
             </children>
         </VBox>

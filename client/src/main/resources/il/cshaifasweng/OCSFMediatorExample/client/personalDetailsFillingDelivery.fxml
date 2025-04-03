@@ -7,39 +7,39 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="470.0" prefWidth="541.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PersonalDetailsFillingDeliveryBoundary">
+<AnchorPane prefHeight="470.0" prefWidth="541.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PersonalDetailsFillingDeliveryBoundary">
    <children>
-      <Label layoutX="52.0" layoutY="68.0" text="Full name :">
+      <Label layoutX="48.0" layoutY="68.0" text="Full name :">
          <font>
-            <Font size="15.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="52.0" layoutY="112.0" text="Phone number :">
+      <Label layoutX="48.0" layoutY="111.0" text="Phone number :">
          <font>
-            <Font size="15.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="59.0" layoutY="152.0" text="Mail address :">
+      <Label layoutX="48.0" layoutY="152.0" text="Mail address :">
          <font>
-            <Font size="15.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="55.0" layoutY="192.0" text="Delivery Address :">
+      <Label layoutX="48.0" layoutY="192.0" text="Delivery Address :">
          <font>
-            <Font size="15.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <ComboBox fx:id="hoursList" layoutX="206.0" layoutY="246.0" onAction="#chooseHour" prefWidth="150.0" />
-      <TextField fx:id="nameTextField" layoutX="188.0" layoutY="66.0" />
-      <TextField fx:id="phoneTextField" layoutX="188.0" layoutY="110.0" />
-      <TextField fx:id="mailTextField" layoutX="188.0" layoutY="150.0" />
-      <TextField fx:id="addressTextField" layoutX="188.0" layoutY="190.0" />
-      <Button fx:id="contToCCInfoBtn" layoutX="356.0" layoutY="377.0" mnemonicParsing="false" onAction="#contToCCinfoFill" text="Continue" />
-      <Button fx:id="backBtn" layoutX="68.0" layoutY="377.0" mnemonicParsing="false" onAction="#backToDelivery" text="Back" />
-      <Label fx:id="errorLabel" layoutX="55.0" layoutY="286.0" prefHeight="17.0" prefWidth="329.0" />
-      <Label layoutX="55.0" layoutY="248.0" text="Delivery/Pickup time">
+      <ComboBox fx:id="hoursList" layoutX="220.0" layoutY="249.0" onAction="#chooseHour" prefWidth="150.0" />
+      <TextField fx:id="nameTextField" layoutX="207.0" layoutY="68.0" prefHeight="25.0" prefWidth="164.0" />
+      <TextField fx:id="phoneTextField" layoutX="207.0" layoutY="112.0" prefHeight="25.0" prefWidth="164.0" />
+      <TextField fx:id="mailTextField" layoutX="207.0" layoutY="152.0" prefHeight="25.0" prefWidth="164.0" />
+      <TextField fx:id="addressTextField" layoutX="207.0" layoutY="192.0" prefHeight="25.0" prefWidth="164.0" />
+      <Button fx:id="contToCCInfoBtn" layoutX="406.0" layoutY="389.0" mnemonicParsing="false" onAction="#contToCCinfoFill" styleClass="menu-btn" text="Continue" />
+      <Button fx:id="backBtn" layoutX="33.0" layoutY="389.0" mnemonicParsing="false" onAction="#backToDelivery" prefHeight="49.0" prefWidth="105.0" styleClass="menu-btn" text="Back" />
+      <Label fx:id="errorLabel" layoutX="55.0" layoutY="286.0" prefHeight="39.0" prefWidth="329.0" />
+      <Label layoutX="48.0" layoutY="248.0" text="Delivery/Pickup time">
          <font>
-            <Font size="15.0" />
+            <Font size="18.0" />
          </font>
       </Label>
    </children>

@@ -1,8 +1,8 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchListSentEvent;
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSelectedEvent;
-import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
-import il.cshaifasweng.OCSFMediatorExample.entities.Employees.EmployeeType;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.entities.EmployeeType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,19 +34,34 @@ public class SideBarPrimaryBoundary {
     private URL location;
 
     @FXML
-    private VBox sideBar;
+    private ImageView MOMSImage;
 
     @FXML
-    private ImageView MOMSImage;
+    private Button cancelDelivery;
+
+    @FXML
+    private Button complaintsTableBtn;
+
+    @FXML
+    private Button givePermitBtn;
 
     @FXML
     private Button loginBtn;
 
     @FXML
+    private Button logoutBtn;
+
+    @FXML
     private Button menuBtn;
 
     @FXML
-    private Button logoutBtn;
+    private Button reservationBtn;
+
+    @FXML
+    private VBox sideBar;
+
+    @FXML
+    private Button subCompBtn;
 
     @FXML
     private Button updateMenuBtn;
@@ -62,32 +77,65 @@ public class SideBarPrimaryBoundary {
     public Branch branch;
     private boolean registered = false;
 
+    @FXML
+    void givePermit(ActionEvent event)
+    {
+        try
+        {
+            Request<Void> request = new Request<>(ReqCategory.PERMIT_GRANTED, RequestType.PERMISSION_REQUEST, null);
+            SimpleClient.getClient().sendToServer(request);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+            showErrorMessage("Network error occurred while granting the permit.");
+        }
+    }
 
-
-//    @FXML
-//    void navToMenu(ActionEvent event) {switchScreen("Menu");}
+    private void showErrorMessage(String message) {
+        System.out.println("Error: " + message);
+    }
 
     @FXML
-    void navToLogin(ActionEvent event) {switchScreen("Login");}
+    void navToLogin(ActionEvent event) {
+        onExit();
+        switchScreen("Login");
+    }
 
-    //    @FXML
-//    void navToLogOut(ActionEvent event) {switchScreen("LogOut");}
     @FXML
-    void navToUpdateMenu(ActionEvent event) {switchScreen("Update Menu");}
+    void navToDeliv(ActionEvent event)
+    {
+        onExit();
+        switchScreen("Delivery");
+        try
+        {
+            SimpleClient.getClient().displayNetworkMenu();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    @FXML
+    void cancelDel(ActionEvent event) {
+        switchScreen("CancelDelivery");
+    }
+
+    @FXML
+    void navToReservation(ActionEvent event)
+    {
+        switchScreen("Reservation");
+    }
 
     @FXML
     public void navToMenu(ActionEvent actionEvent) {
-        switchScreen("menu");
-        try {
-            App.setRoot("menu");
-            SimpleClient.getClient().displayBranchMenu(branch);
-//            Menu menu = new Menu(branch.getBranchMenuItems());
-//            menu.printMenu();
-//            SimpleClient.getClient().showMenu(menu);
+        onExit();
+        switchScreen("secondary");
+        try
+        {
+            App.setRoot("secondary");
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
         }
     }
 
@@ -102,18 +150,21 @@ public class SideBarPrimaryBoundary {
         // Hide the Update button after logging out
         updateMenuBtn.setVisible(false);
 
-        // Hide the Reports button after logging out
-//        toggleButtonReports.setVisible(false);
     }
 
 
     @FXML
     void initialize() {
         assert MOMSImage != null : "fx:id=\"MOMSImage\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
+        assert cancelDelivery != null : "fx:id=\"cancelDelivery\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
+        assert complaintsTableBtn != null : "fx:id=\"complaintsTableBtn\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
+        assert givePermitBtn != null : "fx:id=\"givePermitBtn\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
         assert loginBtn != null : "fx:id=\"loginBtn\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
         assert logoutBtn != null : "fx:id=\"logoutBtn\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
         assert menuBtn != null : "fx:id=\"menuBtn\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
+        assert reservationBtn != null : "fx:id=\"reservationBtn\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
         assert sideBar != null : "fx:id=\"sideBar\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
+        assert subCompBtn != null : "fx:id=\"subCompBtn\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
         assert toggleButtonBranch != null : "fx:id=\"toggleButtonBranch\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
         assert updateMenuBtn != null : "fx:id=\"updateMenuBtn\" was not injected: check your FXML file 'sideBarPrimary.fxml'.";
 
@@ -135,28 +186,65 @@ public class SideBarPrimaryBoundary {
         Image image = new Image(imagePath);
         MOMSImage.setImage(image);
 
-
-        // Check if the user is logged in (activeUser is not null)
         if (SimpleClient.getClient().getActiveUser() != null) {
-            // If logged in, show logout button and hide login button
             logoutBtn.setVisible(true);
             loginBtn.setVisible(false);
-//            toggleButtonReports.setVisible(false);
-            // Check if the user is a "DIETITIAN" and display the Update button if true
-            if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN) {
-                System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
-                updateMenuBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
-            } else {
-                updateMenuBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
-            }
+            updateMenuBtn.setVisible(false);
+            givePermitBtn.setVisible(false);
+            complaintsTableBtn.setVisible(false);
+            getUserAuthorizedTools();
         } else {
-            // If not logged in, show login button and hide logout button
             logoutBtn.setVisible(false);
             loginBtn.setVisible(true);
-            updateMenuBtn.setVisible(false); // Hide Update button if not logged in
+            updateMenuBtn.setVisible(false);
+            givePermitBtn.setVisible(false);
+            complaintsTableBtn.setVisible(false);
         }
-
+        toggleButtonBranch.setOnAction(e ->
+        {
+            GetBranchListPopup();
+        });
+//        // Check if the user is logged in (activeUser is not null)
+//        if (SimpleClient.getClient().getActiveUser() != null) {
+//            // If logged in, show logout button and hide login button
+//            logoutBtn.setVisible(true);
+//            loginBtn.setVisible(false);
+//            // Check if the user is a "DIETITIAN" and display the Update button if true
+//            if (SimpleClient.getClient().getActiveUser().getEmployeeType() == EmployeeType.DIETITIAN) {
+//                System.out.println("Active User: " + SimpleClient.getClient().getActiveUser().getUsername());
+//                updateMenuBtn.setVisible(true);  // Show Update button if user is a DIETITIAN
+//            } else {
+//                updateMenuBtn.setVisible(false);  // Hide Update button if user is not a DIETITIAN
+//            }
+//        } else {
+//            // If not logged in, show login button and hide logout button
+//            logoutBtn.setVisible(false);
+//            loginBtn.setVisible(true);
+//            updateMenuBtn.setVisible(false); // Hide Update button if not logged in
+//        }
     }
+
+    private void getUserAuthorizedTools()
+    {
+        EmployeeType employeeType=SimpleClient.getClient().getActiveUser().getEmployeeType();
+        switch (employeeType)
+        {
+            case DIETITIAN :
+                updateMenuBtn.setVisible(true);
+                break;
+            case COMPANY_MANAGER:
+                givePermitBtn.setVisible(true);
+                complaintsTableBtn.setVisible(true);
+                break;
+            case CUSTOMER_SERVICE:
+                complaintsTableBtn.setVisible(true);
+                break;
+            case CUSTOMER_SERVICE_MANAGER:
+                complaintsTableBtn.setVisible(true);
+                break;
+        }
+    }
+
 
     //get list of brunches pop up
     private void GetBranchListPopup() {
@@ -221,13 +309,16 @@ public class SideBarPrimaryBoundary {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Branch.fxml"));
             Parent branchPageRoot = loader.load();
             BranchPageBoundary controller = loader.getController();
-            controller.setBranch(branch);  // important!
+            controller.setBranch(branch);
+            while (!controller.branchIsSet)
+            {
+                System.out.println("Waiting for branch to be set");
+            }
             App.setContent(branchPageRoot);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
 
     //handle branch list sent
@@ -236,8 +327,23 @@ public class SideBarPrimaryBoundary {
         synchronized (lock) {
             this.branchList = event.branches;
             this.branchListInit = true;
+
             System.out.println("onBranchesSentEvent");
             lock.notifyAll(); // Notify waiting threads that branches are initialized
         }
+    }
+
+    public void goToSubCompPage(ActionEvent actionEvent) {
+        switchScreen("SubComplaint");
+    }
+    public void viewComplaints(ActionEvent actionEvent) {
+        openComplaintsTablePage();
+    }
+    public void openComplaintsTablePage() {
+        switchScreen("Complaints");
+    }
+    public void onExit()
+    {
+        EventBus.getDefault().unregister(this);
     }
 }
