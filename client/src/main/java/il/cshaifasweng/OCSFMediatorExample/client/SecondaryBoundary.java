@@ -194,7 +194,6 @@ public class SecondaryBoundary
 
             }
         }
-
     }
 
 
@@ -513,9 +512,13 @@ public class SecondaryBoundary
         {
             if(currentbranch == null)
             {
+                System.out.println("HERE1");
                 SimpleClient.getClient().displayNetworkMenu();
+
             }
-            else{
+            else
+            {
+                System.out.println("HERE2");
                 SimpleClient.getClient().displayBranchMenu(currentbranch);
             }
 
