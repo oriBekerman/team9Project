@@ -11,6 +11,8 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
+import il.cshaifasweng.OCSFMediatorExample.entities.UpdateBranchSpecialItemRequest;
+
 
 public class MenuItemsRepository extends BaseRepository<MenuItem>
 {
@@ -138,7 +140,8 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
             save(menuItem);
         }
     }
-    public boolean removeDish(MenuItem dishToRemove) {
+    public boolean removeDish(MenuItem dishToRemove)
+    {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // Start the transaction
@@ -168,7 +171,13 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
             return false;
         }
     }
-    public boolean updateDishIngredients(int itemId, String newIngredients) {
+
+
+
+
+
+    public boolean updateDishIngredients(int itemId, String newIngredients)
+    {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
@@ -194,6 +203,7 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
             return false;
         }
     }
+
     public boolean updateDishType(int itemId, DishType newDishType) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();

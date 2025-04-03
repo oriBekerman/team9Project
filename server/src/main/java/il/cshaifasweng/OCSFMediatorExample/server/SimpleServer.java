@@ -13,6 +13,8 @@ import il.cshaifasweng.OCSFMediatorExample.server.repositories.DeliveryRepositor
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.ResInfoRepository;
 import javafx.util.Pair;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -59,8 +61,7 @@ public class SimpleServer extends AbstractServer {
     }
 
     @Override
-    protected void handleMessageFromClient(Object msg, ConnectionToClient client)
-    {
+    protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         System.out.println("Received request from client: " + msg);
 
 
@@ -276,7 +277,6 @@ public class SimpleServer extends AbstractServer {
         }
         return response;
     }
-
 
 
     private void getControllers() {

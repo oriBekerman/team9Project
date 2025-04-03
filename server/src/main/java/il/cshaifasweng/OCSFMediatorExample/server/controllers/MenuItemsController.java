@@ -10,6 +10,8 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Response.Status;
 import il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType;
 import java.util.List;
 import il.cshaifasweng.OCSFMediatorExample.entities.Branch;
+import org.hibernate.Transaction;
+
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.ALL_CLIENTS;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.THIS_CLIENT;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
@@ -25,6 +27,7 @@ public class MenuItemsController
         System.out.println("Handling request: " + request.getRequestType());
         return switch (request.getRequestType())
         {
+
             case GET_BASE_MENU -> getBaseItems();
             case UPDATE_PRICE -> updateThePrice(request);
             case ADD_DISH -> handleAddDishRequest(request);
@@ -36,14 +39,20 @@ public class MenuItemsController
         };
     }
 
-    public Response handleAddDishRequest(Request<MenuItem> request) {
+
+
+
+    public Response handleAddDishRequest(Request<MenuItem> request)
+    {
         MenuItem newDish = request.getData();
         boolean success = menuItemsRepository.addMenuItem(newDish);
 
-        if (success) {
+        if (success)
+        {
             List<Branch> branchesToUpdate = menuItemsRepository.getBranchesWithDish(newDish);
 
-            for (Branch branch : branchesToUpdate) {
+            for (Branch branch : branchesToUpdate)
+            {
                 branch.addMenuItem(newDish);
                 menuItemsRepository.updateBranchMenu(branch);
             }
@@ -66,6 +75,7 @@ public class MenuItemsController
             return new Response<>(ResponseType.UPDATE_BRANCH_MENU, null, "Failed to update branch menu", Status.ERROR, ALL_CLIENTS);
         }
     }
+
 
     public Response handleRemoveDishRequest(Request<MenuItem> request)
     {

@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.server.controllers;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
 import il.cshaifasweng.OCSFMediatorExample.server.repositories.*;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.THIS_CLIENT;
@@ -9,7 +10,10 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.AL
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.*;
+
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +30,10 @@ public class BranchController {
     //calls the needed method for each request,each method returns response
     public Response handleRequest(Request request)
     {
+
         return switch (request.getRequestType())
         {
+            case UPDATE_BRANCH_SPECIAL_ITEM -> handleUpdateBranchSpecialItem(request);
             case GET_BRANCH_BY_NAME ->getByName(request.getData());
             case GET_BRANCHES->getALLBranches();
             case GET_BRANCH_MENU->getBranchMenu(request);
@@ -35,6 +41,7 @@ public class BranchController {
             case FETCH_BRANCH_TABLES -> getRestTables(request);
             case UPDATE_BRANCH -> updateBranch(request);
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
+
         };
     }
     public boolean checkIfEmpty()
@@ -50,7 +57,6 @@ public class BranchController {
         Response response=new Response<>(RETURN_BRANCH_BY_NAME,null,null,THIS_CLIENT);
         String branchNameString = (String) branchName;
         Branch branch= branchRepository.getByName(branchNameString);
-
         if(branch == null)
         {
             response.setStatus(ERROR);
@@ -63,6 +69,34 @@ public class BranchController {
         return response;
     }
 
+
+    public Response handleUpdateBranchSpecialItem(Request request)
+    {
+        UpdateBranchSpecialItemRequest specialItemRequest = (UpdateBranchSpecialItemRequest) request.getData();
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession())
+        {
+            Transaction transaction = session.beginTransaction();
+
+            Branch branch = session.get(Branch.class, specialItemRequest.getBranchId());
+            MenuItem menuItem = session.get(MenuItem.class, specialItemRequest.getMenuItemId());
+
+            if (branch != null && menuItem != null)
+            {
+                branch.getBranchMenuItems().add(menuItem);
+                session.merge(branch);
+                transaction.commit();
+                return new Response<>(Response.ResponseType.UPDATE_BRANCH_SPECIAL_ITEM, branch, "Special item updated successfully", Response.Status.SUCCESS, ALL_CLIENTS);
+            }
+            transaction.rollback();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return new Response<>(Response.ResponseType.UPDATE_BRANCH_SPECIAL_ITEM, null, "Failed to update special item", Response.Status.ERROR, ALL_CLIENTS);
+    }
 
     public Response getALLBranches()
     {

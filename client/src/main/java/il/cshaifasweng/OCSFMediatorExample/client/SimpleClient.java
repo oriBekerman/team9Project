@@ -18,9 +18,8 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.ERROR
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
 import il.cshaifasweng.OCSFMediatorExample.entities.Response;
 
-public class SimpleClient extends AbstractClient
-{
-	//private boolean isMenuLoaded = false;
+public class SimpleClient extends AbstractClient {
+
 	private static SimpleClient client = null;
 	private static MenuEvent pendingMenuEvent = null;  // Store pending MenuEvent if SecondaryController isn't ready
 	private static boolean isSecondaryControllerInitialized = false;
@@ -36,248 +35,295 @@ public class SimpleClient extends AbstractClient
 	public Response<?> getResponse() {
 		return lastResponse;
 	}
-	private SimpleClient(String host, int port)
-	{
+	private SimpleClient(String host, int port) {
 		super(host, port);
 	}
-	public static SimpleClient getClient()
-	{
-		if (client == null)
-		{
+
+	public static SimpleClient getClient() {
+		if (client == null) {
 			client = new SimpleClient(host, port);
 		}
 		return client;
 	}
+
 	@Override
 	protected void handleMessageFromServer(Object msg)
 	{
-		if (msg instanceof Response) {
-            Response response = (Response) msg;
-            System.out.println("ResponseType: " + response.getResponseType());
-            System.out.println("Status: " + response.getStatus());
+		if (msg instanceof Response)
+		{
+			Response response = (Response) msg;
+			System.out.println("ResponseType: " + response.getResponseType());
+			System.out.println("Status: " + response.getStatus());
 
-            if (response.getResponseType() == Response.ResponseType.PERMIT_GRANTED_ACK
-                    && response.getStatus() == Response.Status.SUCCESS) {
-                EventBus.getDefault().post(new AcknowledgmentEvent());
-            }
+			if (response.getResponseType() == Response.ResponseType.PERMIT_GRANTED_ACK
+					&& response.getStatus() == Response.Status.SUCCESS)
+			{
+				EventBus.getDefault().post(new AcknowledgmentEvent());
+			}
+			//handle add client
+			// Check if the message indicates that a client was added successfully
+			if (response.getResponseType().equals(Response.ResponseType.CLIENT_ADDED)) {
+				if (response.getStatus() == Response.Status.SUCCESS) {
+					// Successfully added client, handle accordingly
+					System.out.println("Client added successfully.");
 
-            //handle add client
-            // Check if the message indicates that a client was added successfully
-            if (response.getResponseType().equals(Response.ResponseType.CLIENT_ADDED)) {
-                if (response.getStatus() == Response.Status.SUCCESS) {
-                    // Successfully added client, handle accordingly
-                    System.out.println("Client added successfully.");
+					// You can post an event to the EventBus to notify other parts of the application
+					EventBus.getDefault().post(new ClientAddedEvent("Client added successfully"));
 
-                    // You can post an event to the EventBus to notify other parts of the application
-                    EventBus.getDefault().post(new ClientAddedEvent("Client added successfully"));
+					// Optionally, you could log or perform additional actions based on the success
+				} else {
+					// Handle failure case if needed
+					String errorMessage = response.getMessage();
+					System.out.println("Failed to add client: " + errorMessage);
+					EventBus.getDefault().post(new ClientAddedEvent(errorMessage != null ? errorMessage : "Unknown error"));
+				}
+			}
 
-                    // Optionally, you could log or perform additional actions based on the success
-                } else {
-                    // Handle failure case if needed
-                    String errorMessage = response.getMessage();
-                    System.out.println("Failed to add client: " + errorMessage);
-                    EventBus.getDefault().post(new ClientAddedEvent(errorMessage != null ? errorMessage : "Unknown error"));
-                }
-            }
+			if (response.getResponseType().equals(Response.ResponseType.REMOVE_DISH)) {
+				MenuItem removedMenuItem = (MenuItem) response.getData();
+				updateDishEvent removeEvent = new updateDishEvent(removedMenuItem);
+				EventBus.getDefault().post(removeEvent);
+			}
+			if (response.getResponseType().equals(Response.ResponseType.UPDATE_INGREDIENTS))
+			{
+				MenuItem updatedMenuItem = (MenuItem) response.getData();
+				updateDishEvent updateIngredientsEvent = new updateDishEvent(updatedMenuItem);
+				EventBus.getDefault().post(updateIngredientsEvent);
+			}
 
-            if (response.getResponseType().equals(Response.ResponseType.REMOVE_DISH)) {
-                MenuItem removedMenuItem = (MenuItem) response.getData();
-                updateDishEvent removeEvent = new updateDishEvent(removedMenuItem);
-                EventBus.getDefault().post(removeEvent);
-            }
+			if (msg.getClass().equals(Warning.class))
+			{
+				String message = msg.toString();
+				System.out.println(message);
+				EventBus.getDefault().post(new WarningEvent((Warning) msg));
+			}
 
-            if (response.getResponseType().equals(Response.ResponseType.UPDATE_INGREDIENTS)) {
-                MenuItem updatedMenuItem = (MenuItem) response.getData();
-                updateDishEvent updateIngredientsEvent = new updateDishEvent(updatedMenuItem);
-                EventBus.getDefault().post(updateIngredientsEvent);
-            }
+			if (response.getResponseType().equals(RETURN_MENU))
+			{
+					Menu menu = (Menu) response.getData();
+					MenuEvent menuEvent = new MenuEvent(menu);
+					EventBus.getDefault().post(menuEvent);
+			}
+			if (response.getResponseType().equals(RETURN_BRANCH_MENU))
+			{
+				System.out.println("Menu received, storing event...");
+				Menu menu = (Menu) response.getData();
+				MenuEvent menuEvent = new MenuEvent(menu);
+				EventBus.getDefault().post(menuEvent);
+			}
+			if (response.getResponseType().equals(UPDATED_PRICE))
+			{
+				MenuItem menuItem = (MenuItem) response.getData();
+				updateDishEvent updateEvent = new updateDishEvent(menuItem);
+				EventBus.getDefault().post(updateEvent);
+			}
 
-            if (msg.getClass().equals(Warning.class)) {
-                String message = msg.toString();
-                System.out.println(message);
-                EventBus.getDefault().post(new WarningEvent((Warning) msg));
-            }
+			// Handle UPDATED_PRICE response
+			if (response.getResponseType().equals(UPDATED_PRICE)) {
+				MenuItem menuItem = (MenuItem) response.getData();
+				// Post immediately if SecondaryController is ready
+				updateDishEvent updateEvent = new updateDishEvent(menuItem);
+				EventBus.getDefault().post(updateEvent);
+			}
 
-            if (response.getResponseType().equals(RETURN_MENU)) {
-                Menu menu = (Menu) response.getData();
-                MenuEvent menuEvent = new MenuEvent(menu);
-                EventBus.getDefault().post(menuEvent);
-            }
-            if (response.getResponseType().equals(RETURN_BRANCH_MENU)) {
-                System.out.println("Menu received, storing event...");
-                Menu menu = (Menu) response.getData();
-                MenuEvent menuEvent = new MenuEvent(menu);
-                EventBus.getDefault().post(menuEvent);
-            }
-            if (response.getResponseType().equals(UPDATED_PRICE)) {
-                MenuItem menuItem = (MenuItem) response.getData();
-                updateDishEvent updateEvent = new updateDishEvent(menuItem);
-                EventBus.getDefault().post(updateEvent);
-            }
+			if (response.getResponseType().equals(BRANCHES_SENT))
+			{
+				try
+				{
+					List<Branch> branches = (List<Branch>) response.getData();
+					BranchListSentEvent branchSentEvent = new BranchListSentEvent(branches);
+					Platform.runLater(() -> {
+						EventBus.getDefault().post(branchSentEvent);
+					});
+				}
+				catch (ClassCastException e)
+				{
+					e.printStackTrace();
+				}
+			}
 
-            if (response.getResponseType().equals(BRANCHES_SENT)) {
-                try {
-                    List<Branch> branches = (List<Branch>) response.getData();
-                    BranchListSentEvent branchSentEvent = new BranchListSentEvent(branches);
-                    Platform.runLater(() -> {
-                        EventBus.getDefault().post(branchSentEvent);
-                    });
-                } catch (ClassCastException e) {
-                    e.printStackTrace();
-                }
-            }
+			if(response.getResponseType().equals(RETURN_DELIVERABLES))
+			{
+				System.out.println("in return deliverables");
+				List<MenuItem>  dlivMenuItems = (List<MenuItem> ) response.getData();
+				Menu menudeliv=new Menu(dlivMenuItems);
+				menudeliv.printMenu();
+				MenuEvent menuEvent = new MenuEvent(menudeliv);
+				EventBus.getDefault().post(menuEvent);
+			}
 
-            if (response.getResponseType().equals(RETURN_DELIVERABLES)) {
-                System.out.println("in return deliverables");
-                List<MenuItem> dlivMenuItems = (List<MenuItem>) response.getData();
-                Menu menudeliv = new Menu(dlivMenuItems);
-                menudeliv.printMenu();
-                MenuEvent menuEvent = new MenuEvent(menudeliv);
-                EventBus.getDefault().post(menuEvent);
-            }
-            if (response.getResponseType().equals(Response.ResponseType.ADD_DISH)) {
-                MenuItem addedMenuItem = (MenuItem) response.getData();
-                updateDishEvent addEvent = new updateDishEvent(addedMenuItem);
-                EventBus.getDefault().post(addEvent);
-            }
+			if (response.getResponseType().equals(Response.ResponseType.ADD_DISH))
+			{
+				MenuItem addedMenuItem = (MenuItem) response.getData();
+				updateDishEvent addEvent = new updateDishEvent(addedMenuItem);
+				EventBus.getDefault().post(addEvent);
+			}
 
-            if (response.getResponseType().equals(RETURN_BRANCH_TABLES)) {
-                Set<RestTable> tables = new HashSet<>((Collection) response.getData());
-                EventBus.getDefault().post(new BranchTablesReceivedEvent(tables));
-            }
+			if (response.getResponseType().equals(RETURN_BRANCH_TABLES))
+			{
+				Set<RestTable> tables = new HashSet<>((Collection) response.getData());
+				EventBus.getDefault().post(new BranchTablesReceivedEvent(tables));
+			}
 
-            if (response.getResponseType().equals(CORRECTNESS_USER)) {
-                if (response.getStatus() == SUCCESS) {
-                    String responseData = response.getMessage();
-                    String[] parts = responseData.split(":");
-                    if (parts.length > 1) {
-                        String username = parts[0];
-                        String role = parts[1];
+			// Handle user authentication response (CORRECTNESS_USER)
+			if (response.getResponseType().equals(CORRECTNESS_USER))
+			{
+				if (response.getStatus() == SUCCESS)
+				{
+					String responseData = response.getMessage();
+					String[] parts = responseData.split(":");
+					if (parts.length > 1) {
+						String username = parts[0];
+						String role = parts[1];
 
-                        SimpleClient.setActiveUser(new ActiveUser(username, EmployeeType.valueOf(role)));
+						SimpleClient.setActiveUser(new ActiveUser(username, EmployeeType.valueOf(role)));
 
-                        EventBus.getDefault().post(new UserLoginSuccessEvent(username, role));
-                    } else {
-                        System.out.println("Error: Response doesn't contain both username and role.");
-                    }
-                } else {
-                    String message = (String) response.getMessage();
-                    System.out.println("Login failed with message: " + message);
-                    EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
-                }
-            }
-            if (response.getResponseType().equals(DELIVERY_CREATED)) {
-                Delivery delivery = (Delivery) response.getData();
-                if (delivery != null) {
+						EventBus.getDefault().post(new UserLoginSuccessEvent(username, role));
+					}
+					else
+					{
+						System.out.println("Error: Response doesn't contain both username and role.");
+					}
+				}
+				else
+				{
+					String message = (String) response.getMessage();
+					System.out.println("Login failed with message: " + message);
+					EventBus.getDefault().post(new UserLoginFailedEvent(message != null ? message : "Unknown error"));
+				}
+			}
 
-                    System.out.println(delivery);
+			// Handle DELIVERY_CREATED response
+			if (response.getResponseType().equals(DELIVERY_CREATED))
+			{
+				Delivery delivery = (Delivery) response.getData();
+				if (delivery != null)
+				{
 
-                    EventBus.getDefault().post(delivery);
-                } else {
-                    System.out.println("No delivery data received.");
-                }
-            }
-            if (response.getResponseType().equals(SEND_DELIVERY)) {
-                Delivery delivery = (Delivery) response.getData();
-                if (delivery != null) {
-                    System.out.println(delivery);
-                    EventBus.getDefault().post(delivery);
-                } else {
-                    System.out.println("No delivery data received.");
-                    EventBus.getDefault().post("delivery not found");
-                }
-            }
+					System.out.println(delivery);
 
-            if (response.getResponseType().equals(DELIVERY_CANCELED)) {
-                EventBus.getDefault().post("delivery deleted");
-            }
+					EventBus.getDefault().post(delivery);
+				}
+				else
+				{
+					System.out.println("No delivery data received.");
+				}
+			}
 
-            if (response.getResponseType().equals(RETURN_BRANCH_BY_NAME)) {
-                Branch branch = (Branch) response.getData();
-                EventBus.getDefault().post(new BranchSentEvent(branch));
-            }
+			// Handle SEND_DELIVERY response
+			if (response.getResponseType().equals(SEND_DELIVERY))
+			{
+				Delivery delivery = (Delivery) response.getData();
+				if (delivery != null) {
+					System.out.println(delivery);
+					EventBus.getDefault().post(delivery);
+				}
+				else
+				{
+					System.out.println("No delivery data received.");
+					EventBus.getDefault().post("delivery not found");
+				}
+			}
 
-            if (response.getResponseType().equals(ADDED_RESERVATION)) {
-                if (response.getStatus().equals(SUCCESS)) {
-                    System.out.println("in reservation succsess");
-                    ReservationAddedEvent event = new ReservationAddedEvent((ResInfo) response.getData(), response.getMessage());
-                    EventBus.getDefault().post(event);
-                }
+			if (response.getResponseType().equals(DELIVERY_CANCELED))
+			{
+				EventBus.getDefault().post("delivery deleted");
+			}
 
-                if (response.getStatus().equals(ERROR)) {
-                    System.out.println("in error res");
-                    TableIsReservedEvent event = new TableIsReservedEvent((List<ResInfo>) response.getData());
-                    System.out.println("event created");
-                    EventBus.getDefault().post(event);
-                    System.out.println("event posted");
-                }
-            }
+			if (response.getResponseType().equals(RETURN_BRANCH_BY_NAME))
+			{
+				Branch branch= (Branch) response.getData();
+				EventBus.getDefault().post(new BranchSentEvent(branch));
+			}
+			if (response.getResponseType().equals(ADDED_RESERVATION))
+			{
+				if (response.getStatus().equals(SUCCESS))
+				{
+					System.out.println("in reservation succsess");
+					ReservationAddedEvent event = new ReservationAddedEvent((ResInfo) response.getData(), response.getMessage());
+					EventBus.getDefault().post(event);
+				}
 
-            // Handle UPDATE_BRANCH_RESERVATION response
-            if (response.getResponseType().equals(UPDATE_BRANCH_RESERVATION)) {
-                System.out.println("updateRES!!!!!");
-                Branch branch = (Branch) response.getData();
-                EventBus.getDefault().removeStickyEvent(UpdateBranchResEvent.class); // Remove old events
-                EventBus.getDefault().post(new UpdateBranchResEvent(branch));
-            }
+				if (response.getStatus().equals(ERROR))
+				{
+					System.out.println("in error res");
+					TableIsReservedEvent event = new TableIsReservedEvent((List<ResInfo>) response.getData());
+					System.out.println("event created");
+					EventBus.getDefault().post(event);
+					System.out.println("event posted");
+				}
+			}
 
-            // Handle ADDED_RESERVATION response
-            if (response.getResponseType().equals(ADDED_RESERVATION)) {
-                if (response.getStatus().equals(SUCCESS)) {
-                    ReservationAddedEvent event = new ReservationAddedEvent((ResInfo) response.getData(), response.getMessage());
-                    EventBus.getDefault().post(event);
-                }
-                if (response.getStatus().equals(ERROR)) {
-                    System.out.println("in error res");
-                    TableIsReservedEvent event = new TableIsReservedEvent((List<ResInfo>) response.getData());
-                    System.out.println("event created");
-                    EventBus.getDefault().post(event);
-                    System.out.println("event posted");
-                }
-            }
+			// Handle UPDATE_BRANCH_RESERVATION response
+			if (response.getResponseType().equals(UPDATE_BRANCH_RESERVATION)) {
+				System.out.println("updateRES!!!!!");
+				Branch branch = (Branch) response.getData();
+				EventBus.getDefault().removeStickyEvent(UpdateBranchResEvent.class); // Remove old events
+				EventBus.getDefault().post(new UpdateBranchResEvent(branch));
+			}
 
-            if (response.getResponseType().equals(COMPLAINT_CREATED)) {
-                System.out.println("in complaint created");
+			// Handle ADDED_RESERVATION response
+			if (response.getResponseType().equals(ADDED_RESERVATION)) {
+				if (response.getStatus().equals(SUCCESS)) {
+					ReservationAddedEvent event = new ReservationAddedEvent((ResInfo) response.getData(), response.getMessage());
+					EventBus.getDefault().post(event);
+				}
+				if (response.getStatus().equals(ERROR)) {
+					System.out.println("in error res");
+					TableIsReservedEvent event = new TableIsReservedEvent((List<ResInfo>) response.getData());
+					System.out.println("event created");
+					EventBus.getDefault().post(event);
+					System.out.println("event posted");
+				}
+			}
+			if (response.getResponseType().equals(COMPLAINT_CREATED))
+			{
+				System.out.println("in complaint created");
 
-                // Check if complaint is null
-                Complaint complaint = (Complaint) response.getData();
-                if (complaint == null) {
-                    System.err.println("Error: Complaint object is null in response.");
-                    return;
-                }
+				// Check if complaint is null
+				Complaint complaint = (Complaint) response.getData();
+				if (complaint == null) {
+					System.err.println("Error: Complaint object is null in response.");
+					return;
+				}
 
-                System.out.println("Complaint successfully created: " + complaint);
+				System.out.println("Complaint successfully created: " + complaint);
 
-                // Post the event with the complaint data to the EventBus
-                EventBus.getDefault().post(new ComplaintCreatedEvent(complaint));
-            }
+				// Post the event with the complaint data to the EventBus
+				EventBus.getDefault().post(new ComplaintCreatedEvent(complaint));
+			}
 
-            if (response.getResponseType().equals(UPDATE_BRANCH_TABLES)) {
-                System.out.println("in updateBRANCH_TABLES");
-                UpdateBranchTablesEvent event = new UpdateBranchTablesEvent((ResInfo) response.getData());
-                EventBus.getDefault().post(event);
-            }
+			if (response.getResponseType().equals(UPDATE_BRANCH_TABLES)) {
+				System.out.println("in updateBRANCH_TABLES");
+				UpdateBranchTablesEvent event=new UpdateBranchTablesEvent((ResInfo) response.getData());
+				EventBus.getDefault().post(event);
+			}
 
-            if (response.getResponseType().equals(RETURN_ALL_COMPLAINTS)) {
-                ReceivedAllComplaintsEvent event = new ReceivedAllComplaintsEvent((List<Complaint>) response.getData());
-            }
+			if(response.getResponseType().equals(RETURN_ALL_COMPLAINTS))
+			{
+				ReceivedAllComplaintsEvent event=new ReceivedAllComplaintsEvent((List<Complaint>) response.getData());
+				EventBus.getDefault().post(event);
+			}
+			if(response.getResponseType().equals(RETURN_ACTIVE_RESERVATIONS))
+			{
+				if(response.getStatus().equals(SUCCESS))
+				{
+					SentActiveReservationsEvent event=new SentActiveReservationsEvent((List<ResInfo>) response.getData());
+					EventBus.getDefault().post(event);
+				}
+				else
+				{
+					System.out.println("no reservations found");
+				}
+			}
 
-            if (response.getResponseType().equals(RETURN_ACTIVE_RESERVATIONS)) {
-                if (response.getStatus().equals(SUCCESS)) {
-                    SentActiveReservationsEvent event = new SentActiveReservationsEvent((List<ResInfo>) response.getData());
-                    EventBus.getDefault().post(event);
-                } else {
-                    System.out.println("no reservations found");
-                }
-            }
-
-            if (response.getResponseType().equals(CANCELED_RESERVATION)) {
-                System.out.println("in CANCELED_RESERVATION");
-                String message = (String) response.getMessage();
-                ReservationCancelledEvent event = new ReservationCancelledEvent(message);
-                EventBus.getDefault().post(event);
-            }
-
+			if (response.getResponseType().equals(CANCELED_RESERVATION))
+			{
+				System.out.println("in CANCELED_RESERVATION");
+				String message= (String) response.getMessage();
+				ReservationCancelledEvent event = new ReservationCancelledEvent(message);
+				EventBus.getDefault().post(event);
+			}
             // Insert this specific debug print for RETURN_REPORT responses:
             if (response.getResponseType().equals(RETURN_REPORT)) {
                 System.out.println("[Client] Report data received: " + response.getData());
@@ -299,20 +345,21 @@ public class SimpleClient extends AbstractClient
                     EventBus.getDefault().post(new ReportReceivedEvent(response.getData(), "Deliveries"));
                 }
             }
-        } else {
-            System.out.println("Received message is not of type Response");
+		} else {
+			System.out.println("Received message is not of type Response");
 			System.out.println("msg="+ msg);
 		}
+
 	}
 
-	public static void setSecondaryControllerInitialized()
-	{
+	//called by SecondaryController to notify when it is initialized
+	public static void setSecondaryControllerInitialized() {
 		isSecondaryControllerInitialized = true;
 
-		if (pendingMenuEvent != null)
-		{
+		// Re-post the pending event if there's any
+		if (pendingMenuEvent != null) {
 			EventBus.getDefault().post(pendingMenuEvent);
-			pendingMenuEvent = null;
+			pendingMenuEvent = null;  // Clear the pending event
 		}
 	}
 
@@ -326,22 +373,25 @@ public class SimpleClient extends AbstractClient
 		Request request = new Request(BRANCH, GET_BRANCHES, null);
 		try {
 			client.sendToServer(request);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
+    public void updateBranchSpecialItem(int branchId, int menuItemId) throws IOException {
 
+        UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(branchId, menuItemId);
+        Request<UpdateBranchSpecialItemRequest> request = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_SPECIAL_ITEM, data);
+        client.sendToServer(request);
 
-	public void displayNetworkMenu() throws IOException
-	{
+    }
+
+	public void displayNetworkMenu() throws IOException {
 		Request<Object> request = new Request<>(BASE_MENU, GET_BASE_MENU, null);
 		client.sendToServer(request);
 		System.out.println("menu base req sent");
 	}
 
-	public void displayBranchMenu(Branch branch) throws IOException
-	{
+	public void displayBranchMenu(Branch branch) throws IOException {
 		Request<Branch> request = new Request<>(BRANCH, GET_BRANCH_MENU, branch);
 		client.sendToServer(request);
 	}
@@ -355,20 +405,25 @@ public class SimpleClient extends AbstractClient
 	public static ActiveUser getActiveUser() {
 		return activeUser;
 	}
+
 	public static void setActiveUser(ActiveUser activeUser) {
 		SimpleClient.activeUser = activeUser;
 	}
+
 	private static void clearActiveUser() {
 		activeUser = null;
 	}
+
 	public static void logout() {
 		clearActiveUser();  // Clear active user in SimpleClient
 	}
+
 	public void fetchTables(Branch branch) throws IOException
 	{
 		Request request = new Request(BRANCH, FETCH_BRANCH_TABLES, branch);
 		client.sendToServer(request);
 	}
+
 
 	public void removeDishFromDatabase(MenuItem dishToRemove) {
 		// Create a request to remove the dish
@@ -381,7 +436,6 @@ public class SimpleClient extends AbstractClient
 			System.out.println("Error sending dish removal request: " + e.getMessage());
 		}
 	}
-
 	public void addDishToDatabase(MenuItem newDish, List<Branch> branchesToUpdate) {
 		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);
 		try {
@@ -427,7 +481,6 @@ public class SimpleClient extends AbstractClient
 			System.err.println("Error updating dish type: " + e.getMessage());
 		}
 	}
-
 	public void getAllComplaints()
 	{
 		Request request=new Request(COMPLAINT,GET_ALL_COMPLAINTS,null);

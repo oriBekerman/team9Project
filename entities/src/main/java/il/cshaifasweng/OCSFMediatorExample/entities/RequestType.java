@@ -13,6 +13,7 @@ public enum RequestType{
       PERMISSION_REQUEST,
      //login related requests
      CHECK_USER,
+     UPDATE_BRANCH_SPECIAL_ITEM,
      //delivery related requests
 
      //branch related requests
