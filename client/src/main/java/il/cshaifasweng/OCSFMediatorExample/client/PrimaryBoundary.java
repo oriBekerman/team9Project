@@ -337,32 +337,28 @@ public class PrimaryBoundary {
 
 	public void openComplaintsTablePage() {
 		System.out.println("in open complaints");
-
-			switchScreen("Complaints");
-
-//
-//		new Thread(() -> {
-//			try {
-//				FXMLLoader loader = new FXMLLoader(getClass().getResource("HandleCompTablePage.fxml"));
-//				Parent complaintsPageRoot = loader.load();
-//				HandleComplaintTableBoundary boundary = loader.getController();
-//				synchronized (boundary) {
-//					boundary.setPage();
-//					while (!boundary.pageIsSet) {
-//						System.out.println("Waiting for page to be set");
-//						boundary.wait();
-//					}
-//				}
-//				Platform.runLater(() -> {
-//					try {
-//						App.setContent(complaintsPageRoot);
-//					} catch (IOException e) {
-//						throw new RuntimeException(e);
-//					}});
-//			} catch (IOException | InterruptedException e) {
-//				e.printStackTrace();
-//				Thread.currentThread().interrupt();}
-//		}).start();
+		new Thread(() -> {
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("HandleCompTablePage.fxml"));
+				Parent complaintsPageRoot = loader.load();
+				HandleComplaintTableBoundary boundary = loader.getController();
+				synchronized (boundary) {
+					boundary.setPage();
+					while (!boundary.pageIsSet) {
+						System.out.println("Waiting for page to be set");
+						boundary.wait();
+					}
+				}
+				Platform.runLater(() -> {
+					try {
+						App.setContent(complaintsPageRoot);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}});
+			} catch (IOException | InterruptedException e) {
+				e.printStackTrace();
+				Thread.currentThread().interrupt();}
+		}).start();
 	}
 
 }

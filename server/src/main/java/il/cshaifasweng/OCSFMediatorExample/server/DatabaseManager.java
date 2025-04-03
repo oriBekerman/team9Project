@@ -271,14 +271,12 @@ private static void initialize(String password) {
             reservation2.setStatus(APPROVED);
             List tableIds1=List.of(table1.getId());
             haifaBranch.addReservation(reservation2, Set.of(table1), tableIds1);
-
             resInfoController.PopulateResSInfo(List.of(reservation1, reservation2));
             // Create a Complaint instance without a Branch
             Complaint complaint = new Complaint( "Delayed order delivery",NEW);
             complaint.setBranch(telAvivBranch);
             complaint.setCustomer(customer1);
             complaintController.populateComplaints(List.of(complaint));
-
         }
     }
 

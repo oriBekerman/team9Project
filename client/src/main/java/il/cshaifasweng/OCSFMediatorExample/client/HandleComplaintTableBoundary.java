@@ -55,8 +55,6 @@ public class HandleComplaintTableBoundary {
         }
 
         setColumns();
-
-
         try {
             SimpleClient.getClient().getAllComplaints();
         } catch (Exception e) {
@@ -67,8 +65,6 @@ public class HandleComplaintTableBoundary {
 
         complaintTable.setOnMouseClicked(this::openComplaintPage);
     }
-
-
     public void setPage() {
         System.out.println("Page is being set...");
         synchronized (this) {
@@ -231,6 +227,7 @@ public class HandleComplaintTableBoundary {
 
     @FXML
     void OnBackAct(ActionEvent event) {
+        EventBus.getDefault().unregister(this);
         switchScreen("Home Page");
     }
 }

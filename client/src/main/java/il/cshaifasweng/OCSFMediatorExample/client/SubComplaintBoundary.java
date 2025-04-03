@@ -1,24 +1,19 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.client.Events.BranchSentEvent;
-import il.cshaifasweng.OCSFMediatorExample.client.Events.ComplaintCustomerEvent;
+import il.cshaifasweng.OCSFMediatorExample.client.Events.ComplaintCreatedEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.InputMethodEvent;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
-import static il.cshaifasweng.OCSFMediatorExample.client.App.switchToSummeryDelivery;
 
 public class SubComplaintBoundary {
     @FXML

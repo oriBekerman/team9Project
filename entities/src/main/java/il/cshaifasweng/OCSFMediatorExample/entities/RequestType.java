@@ -6,6 +6,7 @@ public enum RequestType{
       REMOVE_DISH,
       UPDATE_INGREDIENTS,
       UPDATE_DISH_TYPE,
+
     //base menu related requests
       GET_BASE_MENU,//menuItems
       UPDATE_PRICE,//need two one for branch one for base

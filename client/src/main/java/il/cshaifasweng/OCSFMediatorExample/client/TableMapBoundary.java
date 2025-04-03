@@ -61,18 +61,12 @@ public class TableMapBoundary {
 
     public TableMapBoundary()
     {
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         mapIsSet=false;
     }
-    public void initialize() {
-        if (branch != null) {
-//            buttons=insideGridPane.getChildren();
-//           setMap(branch);
-        }
-//        if (!EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().register(this);
-//        }
-    }
+    public void initialize() {}
     // initialize the map before letting the map page be opened
     public void setMap(Branch branch) {
         if (branch == null) return;
@@ -127,7 +121,7 @@ public class TableMapBoundary {
             notifyAll();  // Wake up threads waiting for tables
         }
     }
-    private void initializeUIAfterTablesAreReady(Branch branch) {
+    private void initializeUIAfterTablesAreReady(Branch branch)  {
         System.out.println("Initializing UI with fetched tables...");
 
         List<RestTable> tableList = branch.getTablesSortedByID();
@@ -177,6 +171,7 @@ public class TableMapBoundary {
         setTimesBox();
         setupStyles();
         reservationLabel.setVisible(false);
+        doneBtn.setVisible(false);
         mapIsSet = true;
         System.out.println("UI initialized, map is set.");
         notifyAll();
@@ -424,16 +419,29 @@ public class TableMapBoundary {
     public void enableSelection(ActionEvent actionEvent) {
         selectedButtons.clear();
         selectionEnabled = true;
+        if(timesBox.getSelectionModel().isEmpty())
+        {
+            return;
+        }
+        int availableCount=0;
         for (Button button : tablesMap.values()) {
             Pair<Integer, String> pair = (Pair<Integer, String>) button.getUserData();
             if ("available".equals(pair.getValue())) {
+                availableCount++;
                 button.setDisable(false);
                 button.setOnAction(this::handleSelectionClick);  // attach listener
             } else {
                 button.setDisable(true); // prevent clicking unavailable tables
             }
         }
+        if(availableCount==0)
+        {
+            reservationLabel.setText("no available tables at the time.");
+            return;
+        }
         reservationLabel.setText("Selection mode enabled. Click tables to select.");
+        doneBtn.setDisable(false);
+        doneBtn.setVisible(true);
 
     }
     public void disableSelection() {
@@ -471,7 +479,6 @@ public class TableMapBoundary {
                 "    -fx-border-radius: 6px;\n" +
                 "    -fx-cursor: hand;");
     }
-
     public void sendSelection(ActionEvent actionEvent) {
         for(Button button: selectedButtons)
         {
@@ -506,6 +513,7 @@ public class TableMapBoundary {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        doneBtn.setVisible(false);
         updatePage(reservation);
     }
     private void setupStyles() {

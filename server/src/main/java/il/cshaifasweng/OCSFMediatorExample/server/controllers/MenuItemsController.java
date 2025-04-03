@@ -156,7 +156,6 @@ public class MenuItemsController {
         return menuItemsRepository.getAllItems();
     }
 
-
     // Handle update of dish type
     public Response handleUpdateDishTypeRequest(Request<MenuItem> request) {
         MenuItem dishToUpdate = request.getData();  // Retrieve the dish with updated dish type from the request

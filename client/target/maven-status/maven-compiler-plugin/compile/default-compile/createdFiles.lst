@@ -11,7 +11,6 @@ il\cshaifasweng\OCSFMediatorExample\client\Events\BranchSelectedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
 il\cshaifasweng\OCSFMediatorExample\client\UserLoginFailedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\AddDishEvent.class
-il\cshaifasweng\OCSFMediatorExample\client\ComplaintCreatedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliverySummeryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationPersonalInfoSet.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\TableIsReservedEvent.class
@@ -57,3 +56,4 @@ il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateIngredientsEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchTablesReceivedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\BranchPageBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\EnterEmailController.class
+il\cshaifasweng\OCSFMediatorExample\client\Events\ComplaintCreatedEvent.class

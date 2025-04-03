@@ -23,6 +23,7 @@ public class RestTable implements Serializable {
     @Column(nullable = false)
     private String area;
 
+
     // Many RestTables belong to one Branch
     @ManyToOne
     @JoinColumn(name = "branch_id", nullable = false)
@@ -91,7 +92,6 @@ private Set<LocalTime> unavailableFromTimes = new HashSet<>();
     public void addUnavailableFromTime(LocalTime unavailableFromTime) {
         unavailableFromTimes.add(unavailableFromTime);
     }
-
     public void removeUnavailableFromTime(LocalTime unavailableFromTime) {
         System.out.println("Trying to remove time: " + unavailableFromTime);
         System.out.println("Before removal: " + unavailableFromTimes);
@@ -115,9 +115,6 @@ private Set<LocalTime> unavailableFromTimes = new HashSet<>();
         }
         return true;
     }
-
-
-
     public List<LocalTime> getAvailableFromTimes() {
         String start= branch.getOpeningTime();
         String end= branch.getClosingTime();
