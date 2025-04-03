@@ -29,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
+import static il.cshaifasweng.OCSFMediatorExample.client.App.switchScreen;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.BRANCH;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.RESERVATION;
 import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.ADD_RESERVATION;
@@ -330,7 +331,8 @@ public class TableMapBoundary {
     }
     //when return is clicked
     public void BackToBranch(ActionEvent actionEvent) {
-        openBranchPage(branch);
+        switchScreen("Home Page");
+//        openBranchPage(branch);
 
     }
     //open  branch page after return
