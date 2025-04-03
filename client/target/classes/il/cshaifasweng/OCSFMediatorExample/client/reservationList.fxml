@@ -5,22 +5,26 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" minHeight="871.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ReservationListBoundary">
+<AnchorPane fx:id="root" minHeight="871.0" prefWidth="1225.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.ReservationListBoundary">
     <children>
-        <Label fx:id="pageTitle" layoutX="352.0" layoutY="14.0" prefHeight="89.0" prefWidth="464.0" style="-fx-font-size: 16px;" styleClass="main-title" text="Your Reservations:" />
+        <Label fx:id="pageTitle" layoutX="352.0" layoutY="14.0" prefHeight="89.0" prefWidth="464.0" style="-fx-font-size: 16px;" styleClass="menuPageTitle" text="Your Reservations:">
+         <font>
+            <Font size="22.0" />
+         </font></Label>
 
-        <TableView fx:id="reservationsTable" layoutX="65.0" layoutY="115.0" prefHeight="486.0" prefWidth="1002.0">
+        <TableView fx:id="reservationsTable" layoutX="138.0" layoutY="119.0" prefHeight="486.0" prefWidth="1002.0">
             <columns>
-                <TableColumn fx:id="idCol" prefWidth="247.0" text="Reservation ID" />
-                <TableColumn fx:id="branchCol" prefWidth="206.0" text="Branch" />
-                <TableColumn fx:id="timeCol" prefWidth="148.0" text="Time" />
-                <TableColumn fx:id="guestsCol" prefWidth="196.0" text="Guests" />
-                <TableColumn fx:id="statusCol" prefWidth="202.0" text="Status" />
+                <TableColumn fx:id="idCol" prefWidth="247.0" styleClass="column-header-background" text="Reservation ID" />
+                <TableColumn fx:id="branchCol" prefWidth="206.0" styleClass="column-header-background" text="Branch" />
+                <TableColumn fx:id="timeCol" prefWidth="148.0" styleClass="column-header-background" text="Time" />
+                <TableColumn fx:id="guestsCol" prefWidth="196.0" styleClass="column-header-background" text="Guests" />
+                <TableColumn fx:id="statusCol" prefWidth="202.0" styleClass="column-header-background" text="Status" />
             </columns>
         </TableView>
 
-        <Button layoutX="911.0" layoutY="747.0" onAction="#handleCancel" text="Cancel Selected Reservation" />
-        <Button layoutX="58.0" layoutY="747.0" onAction="#handleBack" text="Back" />
+        <Button layoutX="944.0" layoutY="768.0" onAction="#handleCancel" styleClass="return-btn" text="Cancel Selected Reservation" />
+        <Button layoutX="28.0" layoutY="775.0" onAction="#handleBack" prefHeight="49.0" prefWidth="166.0" styleClass="return-btn" text="Back" />
     </children>
 </AnchorPane>

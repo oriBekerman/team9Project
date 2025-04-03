@@ -6,16 +6,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.DeliverySummeryBoundary">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.DeliverySummeryBoundary">
    <children>
-      <Label fx:id="headline" layoutX="236.0" layoutY="21.0" prefHeight="43.0" prefWidth="143.0" text="Order Summary">
+      <Label fx:id="headline" layoutX="236.0" layoutY="16.0" prefHeight="43.0" prefWidth="143.0" text="Order Summary">
          <font>
             <Font size="19.0" />
          </font></Label>
       <!-- Wrap the Label inside a VBox for dynamic resizing -->
-      <VBox layoutX="83.0" layoutY="64.0" prefHeight="280.0" prefWidth="428.0">
+      <VBox layoutX="83.0" layoutY="57.0" prefHeight="271.0" prefWidth="433.0">
          <Label fx:id="orderText" maxHeight="300" wrapText="true" />
       </VBox>
-      <Button fx:id="BackToHPbtn" layoutX="235.0" layoutY="354.0" mnemonicParsing="false" onAction="#navToHP" styleClass="return-btn" text="Back to Home Page" />
+      <Button fx:id="BackToHPbtn" layoutX="216.0" layoutY="338.0" mnemonicParsing="false" onAction="#navToHP" styleClass="return-btn" text="Back to Home Page" />
    </children>
 </AnchorPane>

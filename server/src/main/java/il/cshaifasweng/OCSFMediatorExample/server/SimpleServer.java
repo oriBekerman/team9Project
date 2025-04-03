@@ -3,8 +3,14 @@ package il.cshaifasweng.OCSFMediatorExample.server;
 import il.cshaifasweng.OCSFMediatorExample.server.controllers.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
+import java.io.IOException;
+import java.util.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.SubscribedClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import il.cshaifasweng.OCSFMediatorExample.server.reports.Report;
+import il.cshaifasweng.OCSFMediatorExample.server.repositories.ComplaintRepository;
+import il.cshaifasweng.OCSFMediatorExample.server.repositories.DeliveryRepository;
+import il.cshaifasweng.OCSFMediatorExample.server.repositories.ResInfoRepository;
 import javafx.util.Pair;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -15,6 +21,14 @@ import java.net.UnknownHostException;
 import java.util.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.*;
 import static il.cshaifasweng.OCSFMediatorExample.entities.ReqCategory.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.SUCCESS;
+
+import il.cshaifasweng.OCSFMediatorExample.server.reports.ReportFactory;
+
+import il.cshaifasweng.OCSFMediatorExample.entities.Response;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response.Status;
+import il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient;
 
 public class SimpleServer extends AbstractServer {
     private static final List<SubscribedClient> SubscribersList = Collections.synchronizedList(new ArrayList<>());
@@ -31,7 +45,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "1234"; // Change database password here
+    public static String dataBasePassword = "282817SMAY"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) throws UnknownHostException {
@@ -50,6 +64,8 @@ public class SimpleServer extends AbstractServer {
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         System.out.println("Received request from client: " + msg);
 
+
+////////////////// //////////////// NEW FROM MANINN TO HANDELL
         if (msg instanceof String msgString && msgString.startsWith("add client"))
         {
             SubscribedClient connection = new SubscribedClient(client);
@@ -72,14 +88,12 @@ public class SimpleServer extends AbstractServer {
 
         Response response;
         try {
-
-            response = switch (request.getCategory())
-            {
-
+            response = switch (request.getCategory()) {
                 case BASE_MENU -> menuItemsController.handleRequest(request);
                 case BRANCH -> branchController.handleRequest(request);
                 case LOGIN -> logInController.handleRequest(request);
                 case DELIVERY -> deliveryController.handleRequest(request);
+                case REPORTS -> handleReportRequest(request);
                 case RESERVATION -> resInfoController.handleRequest(request);
                 case COMPLAINT -> complaintController.handleRequest(request);
                 case REMOVE_DISH -> menuItemsController.handleRequest(request);
@@ -111,7 +125,6 @@ public class SimpleServer extends AbstractServer {
             System.out.println("response msg =" + response.getMessage());
         }
     }
-
 
     private void sendResponseToClient(Response response, ConnectionToClient client) {
         try {
@@ -145,6 +158,11 @@ public class SimpleServer extends AbstractServer {
             System.err.println("Error sending response: " + e.getMessage());
         }
     }
+////////////////////////// NEW FROM MAIN  TO HANDELL
+
+
+
+
 
     public void sendToAllClients(Object message) {
         synchronized (SubscribersList) {
@@ -174,6 +192,7 @@ public class SimpleServer extends AbstractServer {
             }
         }
     }
+
     private Response handlePermitGranted(Request request)
     {
         Response response = new Response(Response.ResponseType.PERMIT_GRANTED_ACK,
@@ -182,6 +201,7 @@ public class SimpleServer extends AbstractServer {
                 Response.Recipient.ALL_CLIENTS);
         return response;
     }
+
 
     private Response addClient(Request request, ConnectionToClient client) {
         System.out.println("Handling add client request...");
@@ -267,5 +287,31 @@ public class SimpleServer extends AbstractServer {
         this.deliveryController = databaseManager.getDeliveryController();
         this.resInfoController = databaseManager.getResInfoController();
         this.complaintController = databaseManager.getComplaintController();
+    }
+
+
+    private Response handleReportRequest(Request request) {
+        String branchName = (String) request.getData();
+        Branch branch = (Branch) branchController.getByName(branchName).getData();
+
+        if (branch == null) {
+            return new Response(ResponseType.RETURN_REPORT, "Branch not found", Status.ERROR, Recipient.THIS_CLIENT);
+        }
+
+        int branchId = branch.getId();
+        Report report = ReportFactory.getReport(request.getRequestType(), branchId,
+                new ResInfoRepository(), new DeliveryRepository(), new ComplaintRepository());
+        report.fetchData();
+        Object reportData = report.generateReportData();
+
+        ResponseType responseType;
+        switch (request.getRequestType()) {
+            case GET_RES_REPORT -> responseType = ResponseType.RETURN_RES_REPORT;
+            case GET_DELIV_REPORT -> responseType = ResponseType.RETURN_DELIV_REPORT;
+            case GET_COMP_REPORT -> responseType = ResponseType.RETURN_COMP_REPORT;
+            default -> throw new IllegalArgumentException("[SimpleServer- handleReportRequest] Unsupported request type: " + request.getRequestType());
+        }
+
+        return new Response(responseType, reportData, Status.SUCCESS, Recipient.THIS_CLIENT);
     }
 }

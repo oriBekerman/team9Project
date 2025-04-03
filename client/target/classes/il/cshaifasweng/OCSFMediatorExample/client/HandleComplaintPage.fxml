@@ -4,24 +4,57 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="root" prefHeight="860.0" prefWidth="746.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.HandleComplaintBoundary">
+<AnchorPane fx:id="root" prefHeight="860.0" prefWidth="746.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.HandleComplaintBoundary">
    <children>
-      <Label fx:id="title" layoutX="320.0" layoutY="29.0" prefHeight="18.0" prefWidth="106.0" text="Complaint  #" />
-      <Label fx:id="statusLabel" layoutX="90.0" layoutY="213.0" text="status:" />
-      <Label fx:id="BranchLabel" layoutX="94.0" layoutY="264.0" text="Branch:" />
-      <Label fx:id="descriptionLabel" layoutX="94.0" layoutY="298.0" text="Description:" />
-      <Label fx:id="nameLabel" layoutX="86.0" layoutY="462.0" prefHeight="18.0" prefWidth="106.0" text="Customer name:" />
-      <Label fx:id="emailLabel" layoutX="93.0" layoutY="503.0" text="Customer's email:" />
-      <Label layoutX="87.0" layoutY="165.0" text="Date:" />
-      <Label fx:id="responseDetailsLabel" layoutX="101.0" layoutY="578.0" prefHeight="18.0" prefWidth="120.0" text="response details:" />
-      <Label fx:id="compansationLabel" layoutX="103.0" layoutY="609.0" prefHeight="18.0" prefWidth="94.0" text="compansation:" />
-      <Label fx:id="handledByLabel" layoutX="101.0" layoutY="637.0" prefHeight="18.0" prefWidth="71.0" text="handled by:" />
-      <Label fx:id="notesLabel" layoutX="103.0" layoutY="673.0" prefHeight="18.0" prefWidth="46.0" text="notes:" />
-      <TextField fx:id="notesText" layoutX="150.0" layoutY="705.0" prefHeight="113.0" prefWidth="315.0" />
-      <TextField fx:id="descriptionText" layoutX="161.0" layoutY="324.0" prefHeight="128.0" prefWidth="434.0" />
-      <Button fx:id="handleComplaintBtn" layoutX="583.0" layoutY="772.0" mnemonicParsing="false" text="handle compalint" />
-      <Button fx:id="markHandledBtn" layoutX="583.0" layoutY="806.0" mnemonicParsing="false" text="mark as handled" />
+      <Label fx:id="title" layoutX="278.0" layoutY="15.0" prefHeight="68.0" prefWidth="191.0" styleClass="main-title" text="Complaint  #">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="statusLabel" layoutX="62.0" layoutY="132.0" text="status:">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="BranchLabel" layoutX="62.0" layoutY="186.0" text="Branch:">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="descriptionLabel" layoutX="62.0" layoutY="241.0" text="Description:">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="nameLabel" layoutX="62.0" layoutY="398.0" prefHeight="30.0" prefWidth="157.0" text="Customer name:">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="emailLabel" layoutX="62.0" layoutY="449.0" text="Customer's email:">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label layoutX="62.0" layoutY="83.0" text="Date:">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="responseDetailsLabel" layoutX="62.0" layoutY="500.0" prefHeight="30.0" prefWidth="156.0" text="response details:">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="compansationLabel" layoutX="62.0" layoutY="555.0" prefHeight="30.0" prefWidth="141.0" text="compansation:">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="handledByLabel" layoutX="62.0" layoutY="613.0" prefHeight="18.0" prefWidth="116.0" text="handled by:">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="notesLabel" layoutX="62.0" layoutY="681.0" prefHeight="30.0" prefWidth="72.0" text="notes:">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <TextField fx:id="notesText" layoutX="137.0" layoutY="688.0" prefHeight="113.0" prefWidth="315.0" />
+      <TextField fx:id="descriptionText" layoutX="178.0" layoutY="241.0" prefHeight="124.0" prefWidth="434.0" />
+      <Button fx:id="handleComplaintBtn" layoutX="558.0" layoutY="721.0" mnemonicParsing="false" styleClass="menu-btn" text="handle compalint" />
+      <Button fx:id="markHandledBtn" layoutX="558.0" layoutY="784.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="168.0" styleClass="menu-btn" text="mark as handled" />
    </children>
 </AnchorPane>

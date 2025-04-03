@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.server.repositories;
 
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -122,6 +123,20 @@ public class ComplaintRepository extends BaseRepository<Complaint>
 
         return updatedComplaints;
     }
+
+    public List<Complaint> getComplaintsForReport(int branchId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            List<Complaint> complaints = session.createQuery("FROM Complaint WHERE branch.id = :branchId", Complaint.class)
+                    .setParameter("branchId", branchId)
+                    .getResultList();
+
+            // Explicitly initialize branch to avoid lazy initialization
+            complaints.forEach(c -> Hibernate.initialize(c.getBranch()));
+
+            return complaints;
+        }
+    }
+
 
 
 }

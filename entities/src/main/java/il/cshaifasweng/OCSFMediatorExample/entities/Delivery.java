@@ -12,6 +12,8 @@ import java.util.List;
 @Entity
 @Table(name = "Deliveries")
 public class Delivery implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderNumber", unique = true)

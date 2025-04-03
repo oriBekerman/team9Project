@@ -5,6 +5,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
 import il.cshaifasweng.OCSFMediatorExample.entities.OrderItem;
 import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
 import il.cshaifasweng.OCSFMediatorExample.server.HibernateUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -189,4 +190,31 @@ public class DeliveryRepository extends BaseRepository<Delivery> {
         }
     }
 
+    public List<Delivery> getDeliveriesForReport(int branchId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT DISTINCT d FROM Delivery d " +
+                    "LEFT JOIN FETCH d.customer " +
+                    "LEFT JOIN FETCH d.branch " +
+                    "LEFT JOIN FETCH d.orderItems " +
+                    "WHERE d.branch.id = :branchId";
+            List<Delivery> deliveries = session.createQuery(hql, Delivery.class)
+                    .setParameter("branchId", branchId)
+                    .getResultList();
+
+            // Initialize lazy relationships if needed
+            deliveries.forEach(delivery -> {
+                Hibernate.initialize(delivery.getCustomer());
+                Hibernate.initialize(delivery.getBranch());
+                Hibernate.initialize(delivery.getOrderItems());
+            });
+
+            return deliveries;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
 }
+
+

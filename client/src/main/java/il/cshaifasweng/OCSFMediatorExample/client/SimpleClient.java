@@ -28,6 +28,7 @@ public class SimpleClient extends AbstractClient {
 	private static ActiveUser activeUser = null;
 	public Map <String, String> mapReservation=new HashMap<String, String>();
 	public ResInfo resInfo=new ResInfo();
+	public boolean rebookReservation=false;
 	public  boolean tableAvailable=true;
 	public String userEmail;
 	private Response<?> lastResponse;
@@ -36,7 +37,6 @@ public class SimpleClient extends AbstractClient {
 	}
 	private SimpleClient(String host, int port) {
 		super(host, port);
-
 	}
 
 	public static SimpleClient getClient() {
@@ -52,11 +52,7 @@ public class SimpleClient extends AbstractClient {
 		if (msg instanceof Response)
 		{
 			Response response = (Response) msg;
-
-			// Print the response type
 			System.out.println("ResponseType: " + response.getResponseType());
-
-			// Print the status
 			System.out.println("Status: " + response.getStatus());
 
 			if (response.getResponseType() == Response.ResponseType.PERMIT_GRANTED_ACK
@@ -328,7 +324,27 @@ public class SimpleClient extends AbstractClient {
 				ReservationCancelledEvent event = new ReservationCancelledEvent(message);
 				EventBus.getDefault().post(event);
 			}
+            // Insert this specific debug print for RETURN_REPORT responses:
+            if (response.getResponseType().equals(RETURN_REPORT)) {
+                System.out.println("[Client] Report data received: " + response.getData());
+            }
+            switch (response.getResponseType()) {
+                case RETURN_COMP_REPORT -> {
+                    System.out.println("[SimpleClient] Complaints report received, posting event...");
+                    EventBus.getDefault().post(new ReportReceivedEvent(response.getData(), "Complaints"));
+                }
 
+                case RETURN_RES_REPORT -> {
+                    List<ResInfo> reservations = (List<ResInfo>) response.getData();
+                    System.out.println("[SimpleClient] Reservations deserialized: " + reservations);
+                    System.out.println("[SimpleClient] Reservations report received, posting event...");
+                    EventBus.getDefault().post(new ReportReceivedEvent(response.getData(), "Reservations"));
+                }
+                case RETURN_DELIV_REPORT -> {
+                    System.out.println("[SimpleClient] Deliveries report received, posting event...");
+                    EventBus.getDefault().post(new ReportReceivedEvent(response.getData(), "Deliveries"));
+                }
+            }
 		} else {
 			System.out.println("Received message is not of type Response");
 			System.out.println("msg="+ msg);
@@ -361,16 +377,12 @@ public class SimpleClient extends AbstractClient {
 			throw new RuntimeException(e);
 		}
 	}
+    public void updateBranchSpecialItem(int branchId, int menuItemId) throws IOException {
 
-	public void updateBranchSpecialItem(int branchId, int menuItemId) throws IOException
-	{
-		System.out.println("sending---------------");
-		UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(branchId, menuItemId);
-		Request<UpdateBranchSpecialItemRequest> request = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_SPECIAL_ITEM, data);
-		client.sendToServer(request);
-
-	}
-
+        UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(branchId, menuItemId);
+        Request<UpdateBranchSpecialItemRequest> request = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_SPECIAL_ITEM, data);
+        client.sendToServer(request);
+    }
 
 	public void displayNetworkMenu() throws IOException {
 		Request<Object> request = new Request<>(BASE_MENU, GET_BASE_MENU, null);
@@ -439,7 +451,6 @@ public class SimpleClient extends AbstractClient {
 		} catch (IOException e) {
 			System.err.println("Error adding dish to database: " + e.getMessage());
 		}
-
 	}
 
 	public void updateDishIngredients(MenuItem item)
@@ -482,5 +493,19 @@ public class SimpleClient extends AbstractClient {
 		}
 	}
 
-}
+    //Methods to request reports from the server
+    public void requestReservationsReport(String branchName) throws IOException {
+        sendToServer(new Request<>(ReqCategory.REPORTS, RequestType.GET_RES_REPORT, branchName));
+    }
 
+    public void requestDeliveriesReport(String branchName) throws IOException {
+        sendToServer(new Request<>(ReqCategory.REPORTS, RequestType.GET_DELIV_REPORT, branchName));
+        System.out.println("deliveries sent to server");
+    }
+
+    public void requestComplaintsReport(String branchName) throws IOException {
+        System.out.println("[SimpleClient] Sending complaints report request for branch: " + branchName);
+        sendToServer(new Request<>(ReqCategory.REPORTS, RequestType.GET_COMP_REPORT, branchName));
+    }
+
+}

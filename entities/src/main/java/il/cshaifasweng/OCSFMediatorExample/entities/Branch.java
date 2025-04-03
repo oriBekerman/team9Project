@@ -11,6 +11,7 @@ import java.util.*;
 @Table(name = "branch", uniqueConstraints = {
         @UniqueConstraint(columnNames = "ID")})
 public class Branch implements Serializable  {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,15 +108,19 @@ public class Branch implements Serializable  {
     public int getBranchID() {
         return branchID;
     }
+
     public String getOpeningTime() {
         return openingTime;
     }
+
     public void setOpeningTime(String openingTime) {
         this.openingTime = openingTime;
     }
+
     public String getClosingTime() {
         return closingTime;
     }
+
     public void setClosingTime(String closingTime) {
         this.closingTime = closingTime;
     }
