@@ -181,16 +181,13 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
-            // Retrieve the menu item by its ID
-            MenuItem menuItem = session.get(MenuItem.class, itemId); // Retrieve by ID
+            MenuItem menuItem = session.get(MenuItem.class, itemId);
             if (menuItem != null) {
-                // Update ingredients of the menu item
+
                 menuItem.setIngredients(newIngredients);
 
-                // Merge the updated menu item into the session
-                session.merge(menuItem); // Use merge to apply updates
+                session.merge(menuItem);
 
-                // Commit the transaction
                 session.getTransaction().commit();
                 System.out.println("Ingredients updated successfully for: " + menuItem.getName());  // Logging
                 return true;
@@ -199,7 +196,7 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Log the error
+            e.printStackTrace();
             return false;
         }
     }
@@ -208,49 +205,44 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
-            // Retrieve the menu item by its ID
-            MenuItem menuItem = session.get(MenuItem.class, itemId); // Retrieve by ID
+            MenuItem menuItem = session.get(MenuItem.class, itemId);
             if (menuItem != null) {
-                // Update dish type of the menu item
+
                 menuItem.setDishType(newDishType);
 
-                // Merge the updated menu item into the session
-                session.merge(menuItem); // Use merge to apply updates
+                session.merge(menuItem);
 
-                // Commit the transaction
                 session.getTransaction().commit();
-                System.out.println("Dish type updated successfully for: " + menuItem.getName());  // Logging
+                System.out.println("Dish type updated successfully for: " + menuItem.getName());
                 return true;
             } else {
                 System.out.println("MenuItem with ID " + itemId + " not found.");
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Log the error
+            e.printStackTrace();
             return false;
         }
     }
-    // Add a new MenuItem (Dish) to the database
+
     public boolean addMenuItem(MenuItem newDish) {
-        Transaction transaction = null;  // Declare a transaction object
+        Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Start the transaction
+
             transaction = session.beginTransaction();
 
-            // Save the new dish to the database
             session.save(newDish);
 
-            // Commit the transaction
             transaction.commit();
 
-            System.out.println("Dish added successfully: " + newDish.getName());  // Optional logging
+            System.out.println("Dish added successfully: " + newDish.getName());
             return true;
         } catch (Exception e) {
-            // Rollback if there was an error and the transaction is not null
+
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();  // Log the error
+            e.printStackTrace();
             return false;
         }
     }

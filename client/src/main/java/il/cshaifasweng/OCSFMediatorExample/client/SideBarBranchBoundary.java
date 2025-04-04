@@ -50,7 +50,6 @@ public class SideBarBranchBoundary {
         }
     }
 
-
     @FXML
     private ResourceBundle resources;
 
@@ -80,7 +79,6 @@ public class SideBarBranchBoundary {
 
     @FXML
     private Button tableBtn;
-
 
     @FXML
     private Button toggleButtonBranch;
@@ -133,8 +131,6 @@ public class SideBarBranchBoundary {
         assert toggleButtonBranch != null : "fx:id=\"toggleButtonBranch\" was not injected: check your FXML file 'sideBarBranch.fxml'.";
         assert toggleButtonReports != null : "fx:id=\"toggleReportsButton\" was not injected: check your FXML file 'sideBarBranch.fxml'.";
 
-
-        // Set the button action here
         EventBus.getDefault().register(this);
         SimpleClient.getClient().getBranchList(); // Request branch list from server
         updateReportsButtonVisibility();
@@ -145,13 +141,10 @@ public class SideBarBranchBoundary {
             GetBranchListPopup();
         });
 
-
-        // This section display the image of mamasKitchen
         String imagePath = "il/cshaifasweng/OCSFMediatorExample/client/mamasKitchen.jpg";
         Image image = new Image(imagePath);
         MOMSImage.setImage(image);
     }
-
 
     public void loadBranchMap(ActionEvent actionEvent){
         openBranchMap();
@@ -189,7 +182,6 @@ public class SideBarBranchBoundary {
         }
     }
 
-
     public void checkTablesList()
     {
         if(branch.getTables() != null)
@@ -201,7 +193,6 @@ public class SideBarBranchBoundary {
             System.out.println("branch tables empty");
         }
     }
-
 
     @Subscribe
     public void onBranchTablesEvent(BranchTablesReceivedEvent event) {
@@ -220,9 +211,6 @@ public class SideBarBranchBoundary {
         }
     }
 
-
-
-    //get list of brunches pop up
     private void GetBranchListPopup() {
         synchronized (lock) {
             if (!branchListInit) {
@@ -277,8 +265,6 @@ public class SideBarBranchBoundary {
         updateReportsButtonVisibility();
     }
 
-
-    //open selected branch page
     private void openBranchPage(Branch branch) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Branch.fxml"));
@@ -315,8 +301,6 @@ public class SideBarBranchBoundary {
         }
     }
 
-
-    //handle branch list sent
     @Subscribe
     public void onBranchListSentEvent(BranchListSentEvent event) {
         synchronized (lock) {
@@ -327,20 +311,17 @@ public class SideBarBranchBoundary {
         }
     }
 
-
-
     @Subscribe
-    public void onLoginSuccess(UserLoginSuccessEvent event) {
-        // Assuming that the role is part of the authorization or similar mapping
-//        EmployeeType userRole = SessionManager.getInstance().getEmployeeType(); // Implement this method in SessionManager
+    public void onLoginSuccess(UserLoginSuccessEvent event)
+    {
         EmployeeType userRole = SimpleClient.getClient().getActiveUser().getEmployeeType();
         toggleButtonReports.setVisible(userRole == EmployeeType.COMPANY_MANAGER);
         toggleButtonReports.setVisible(userRole == EmployeeType.BRANCH_MANAGER);
     }
 
-
     @FXML
-    void showReportOptions(ActionEvent event) {
+    void showReportOptions(ActionEvent event)
+    {
         if (branch == null) {
             System.out.println("[SideBarBranchBoundary] ERROR: Branch is not set when Reports button clicked.");
             return;
@@ -359,8 +340,6 @@ public class SideBarBranchBoundary {
         contextMenu.show(toggleButtonReports, Side.RIGHT, 0, 0);
     }
 
-
-    // Opens the report page and sets the required data
     private void openReportPage(String reportType) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("report.fxml"));
@@ -374,7 +353,6 @@ public class SideBarBranchBoundary {
             e.printStackTrace();
         }
     }
-
 
     private void updateReportsButtonVisibility() {
         ActiveUser currentUser = SimpleClient.getClient().getActiveUser();

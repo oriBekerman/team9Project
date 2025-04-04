@@ -68,19 +68,17 @@ public class MenuItemsController
 
         if (success)
         {
-            List<Branch> branchesToUpdate = menuItemsRepository.getBranchesWithDish(newDish);
-
-            for (Branch branch : branchesToUpdate)
-            {
-                branch.addMenuItem(newDish);
-                menuItemsRepository.updateBranchMenu(branch);
-                UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(branch.getId(), newDish.getItemID());
-
-
-            }
-
+//            List<Branch> branchesToUpdate = menuItemsRepository.getBranchesWithDish(newDish);
+//            for (Branch branch : branchesToUpdate)
+//            {
+//                branch.addMenuItem(newDish);
+//                menuItemsRepository.updateBranchMenu(branch);
+//                UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(branch.getId(), newDish.getItemID());
+//            }
             return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully and branches updated", Status.SUCCESS, ALL_CLIENTS);
-        } else {
+        }
+        else
+        {
             return new Response<>(ResponseType.ADD_DISH, null, "Failed to add dish", Status.ERROR, ALL_CLIENTS);
         }
     }
