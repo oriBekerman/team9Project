@@ -140,7 +140,7 @@ public class ReservationCntBoundary {
         for (int i = 0; availableTimes.size()<=4 ; i += 15) {
 
             time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm")).plusMinutes(i);
-            if(LocalTime.parse(branch.getClosingTime()).minusMinutes(90).isBefore(time)
+            if(LocalTime.parse(branch.getClosingTime()).minusMinutes(59).isBefore(time)
             )
                 break;
             availableTables = this.branch.getAvailableTablesWithNumPeople(Integer.parseInt(numPeople), time,area);
