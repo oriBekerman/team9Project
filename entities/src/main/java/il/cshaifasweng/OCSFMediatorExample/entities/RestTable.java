@@ -96,18 +96,40 @@ private Set<LocalTime> unavailableFromTimes = new HashSet<>();
             System.out.println("Failed to remove " + unavailableFromTime);
         }
     }
-    public boolean isAvailableAt(LocalTime time)
-    {
-        List<LocalTime> times=getTimeRange(time);
-        for(LocalTime t:times)
-        {
-            if(unavailableFromTimes.contains(t))
-            {
-                return false;
+    public boolean isAvailableAt(LocalTime time) {
+        // Parse the branch's closing time
+        LocalTime closingTime = LocalTime.parse(branch.getClosingTime());
+
+        // Check if the provided time is either one hour before closing
+        // or one hour and fifteen minutes before closing
+        if (time.equals(closingTime.minusHours(1)) || time.equals(closingTime.minusHours(1).minusMinutes(15))) {
+            // Define a 90-minute range ending at the given time
+            List<LocalTime> timesToCheck = new ArrayList<>();
+            LocalTime t = time.minusMinutes(90);
+            // Add time slots in 15-minute increments up to (and including) the provided time
+            while (!t.isAfter(time)) {
+                timesToCheck.add(t);
+                t = t.plusMinutes(15);
             }
+            // Check if any time slot in this 90-minute window is unavailable
+            for (LocalTime slot : timesToCheck) {
+                if (unavailableFromTimes.contains(slot)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            // Otherwise, use the default time range check (e.g., 1 hour 15 minutes before and after the time)
+            List<LocalTime> times = getTimeRange(time);
+            for (LocalTime t : times) {
+                if (unavailableFromTimes.contains(t)) {
+                    return false;
+                }
+            }
+            return true;
         }
-        return true;
     }
+
 
     public List<LocalTime> getAvailableFromTimes() {
         String start= branch.getOpeningTime();
