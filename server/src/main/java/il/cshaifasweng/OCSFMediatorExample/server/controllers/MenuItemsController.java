@@ -224,11 +224,11 @@ public class MenuItemsController
 
         if (success)
         {
-            return new Response<>(ResponseType.UPDATE_DISH_TYPE, dishToUpdate, "Dish type updated successfully", Status.SUCCESS, ALL_CLIENTS);
+            return new Response<>(ResponseType.UPDATE_DISH_TYPE_RES, dishToUpdate, "Dish type updated successfully", Status.SUCCESS, ALL_CLIENTS);
         }
         else
         {
-            return new Response<>(ResponseType.UPDATE_DISH_TYPE, null, "Failed to update dish type", Status.ERROR, ALL_CLIENTS);
+            return new Response<>(ResponseType.UPDATE_DISH_TYPE_RES, null, "Failed to update dish type", Status.ERROR, ALL_CLIENTS);
         }
     }
 }

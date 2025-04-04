@@ -164,7 +164,6 @@ public class SecondaryBoundary
                         {
                             allMenuItems.add(newDish);
                             menuTableView.getItems().add(newDish);
-
                         });
                     }
                     catch (NumberFormatException e)
@@ -172,8 +171,6 @@ public class SecondaryBoundary
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid price format.");
                         alert.showAndWait();
                     }
-
-
                 }
 
             }
@@ -181,17 +178,12 @@ public class SecondaryBoundary
         try
         {
             SimpleClient.getClient().getLatestMenuItemId();
-
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
-
     }
-
-
-
     @Subscribe
     public void onBranchListSentEvent(BranchListSentEvent event)
     {
@@ -204,12 +196,8 @@ public class SecondaryBoundary
         Platform.runLater(() ->
         {
             MenuItem addedItem = event.getAddedMenuItem();
-            if (!allMenuItems.contains(addedItem))
-            {
-                allMenuItems.add(addedItem);
-                menuTableView.getItems().add(addedItem);
-            }
-
+            allMenuItems.add(addedItem);
+            menuTableView.getItems().add(addedItem);
         });
     }
 
@@ -447,8 +435,8 @@ public class SecondaryBoundary
         Platform.runLater(() ->
         {
             MenuItem updatedItem = event.getUpdatedMenuItem();
-
-            for (MenuItem item : allMenuItems) {
+            for (MenuItem item : allMenuItems)
+            {
                 if (item.getItemID() == updatedItem.getItemID())
                 {
                     item.setDishType(updatedItem.getDishType());

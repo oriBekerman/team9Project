@@ -7,7 +7,8 @@ import javafx.application.Platform;
 import javafx.util.Pair;
 import org.greenrobot.eventbus.EventBus;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
-
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.RequestType.*;
 import java.io.IOException;
 import java.util.*;
 
@@ -270,6 +271,12 @@ public class SimpleClient extends AbstractClient {
 				System.out.println("in updateBRANCH_TABLES");
 				UpdateBranchTablesEvent event = new UpdateBranchTablesEvent((ResInfo) response.getData());
 				EventBus.getDefault().post(event);
+			}
+			if (response.getResponseType().equals(Response.ResponseType.UPDATE_DISH_TYPE_RES))
+			{
+				MenuItem menuItem = (MenuItem) response.getData();
+				updateDishEvent updateEvent = new updateDishEvent(menuItem);
+				EventBus.getDefault().post(updateEvent);
 			}
 
 			if (response.getResponseType().equals(RETURN_ALL_COMPLAINTS)) {

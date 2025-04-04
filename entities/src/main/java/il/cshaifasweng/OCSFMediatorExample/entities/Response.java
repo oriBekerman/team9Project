@@ -87,7 +87,7 @@ public class Response<T> implements Serializable {
         ADD_DISH,
         UPDATE_INGREDIENTS,
         GET_LATEST_MENU_ITEM_ID,
-        UPDATE_DISH_TYPE,
+        UPDATE_DISH_TYPE_RES,
         PERMIT_GRANTED_ACK,
         UPDATE_BRANCH_MENU,
         UPDATE_BRANCH_SPECIAL_ITEM,
