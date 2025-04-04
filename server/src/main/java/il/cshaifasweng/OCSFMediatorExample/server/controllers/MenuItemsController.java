@@ -41,7 +41,6 @@ public class MenuItemsController
         };
     }
 
-
     public Response handleGetLatestMenuItemId(Request request) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Integer latestId = session.createQuery(
