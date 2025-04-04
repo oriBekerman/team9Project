@@ -43,5 +43,6 @@
          </font>
       </Label>
       <Button layoutX="14.0" layoutY="631.0" onAction="#cancelReservation" prefHeight="49.0" prefWidth="194.0" styleClass="menu-btn" text="Cancel Reservation" />
+      <Label layoutX="518.0" layoutY="94.0" prefHeight="68.0" prefWidth="312.0" text="Note: one hour before closing time &#10; you can sit for one hour only" />
    </children>
 </AnchorPane>

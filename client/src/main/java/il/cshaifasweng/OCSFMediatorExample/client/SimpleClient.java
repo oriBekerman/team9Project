@@ -249,20 +249,7 @@ public class SimpleClient extends AbstractClient {
 				EventBus.getDefault().post(new UpdateBranchResEvent(branch));
 			}
 
-			// Handle ADDED_RESERVATION response
-			if (response.getResponseType().equals(ADDED_RESERVATION)) {
-				if (response.getStatus().equals(SUCCESS)) {
-					ReservationAddedEvent event = new ReservationAddedEvent((ResInfo) response.getData(), response.getMessage());
-					EventBus.getDefault().post(event);
-				}
-				if (response.getStatus().equals(ERROR)) {
-					System.out.println("in error res");
-					TableIsReservedEvent event = new TableIsReservedEvent((List<ResInfo>) response.getData());
-					System.out.println("event created");
-					EventBus.getDefault().post(event);
-					System.out.println("event posted");
-				}
-			}
+
 			if (response.getResponseType().equals(COMPLAINT_CREATED)) {
 				System.out.println("in complaint created");
 
