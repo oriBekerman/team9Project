@@ -377,12 +377,20 @@ public class SimpleClient extends AbstractClient {
 			throw new RuntimeException(e);
 		}
 	}
+
     public void updateBranchSpecialItem(int branchId, int menuItemId) throws IOException {
 
         UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(branchId, menuItemId);
         Request<UpdateBranchSpecialItemRequest> request = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_SPECIAL_ITEM, data);
         client.sendToServer(request);
     }
+
+	public void updateBranchBaseItem(int branchId, int menuItemId) throws IOException {
+
+		UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(branchId, menuItemId);
+		Request<UpdateBranchSpecialItemRequest> request = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_BASE_ITEM, data);
+		client.sendToServer(request);
+	}
 
 	public void displayNetworkMenu() throws IOException {
 		Request<Object> request = new Request<>(BASE_MENU, GET_BASE_MENU, null);

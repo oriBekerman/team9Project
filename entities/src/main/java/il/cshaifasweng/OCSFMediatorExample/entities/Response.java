@@ -90,6 +90,7 @@ public class Response<T> implements Serializable {
         PERMIT_GRANTED_ACK,
         UPDATE_BRANCH_MENU,
         UPDATE_BRANCH_SPECIAL_ITEM,
+        UPDATE_BRANCH_BASE_ITEM,
 
         RETURN_BRANCH_MENU,
         BRANCHES_SENT,

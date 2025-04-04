@@ -45,7 +45,7 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "282817SMAY"; // Change database password here
+    public static String dataBasePassword = "1234"; // Change database password here
     private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
 
     public SimpleServer(int port) throws UnknownHostException {
@@ -238,14 +238,14 @@ public class SimpleServer extends AbstractServer {
             clientHost = "127.0.0.1";
         }
 
-        if (!clientHost.equals(this.host) || clientPort != this.port) {
-            return new Response(
-                    Response.ResponseType.CLIENT_ADDED,
-                    "Connection rejected: Incorrect host or port.",
-                    Response.Status.ERROR,
-                    Response.Recipient.THIS_CLIENT
-            );
-        }
+//        if (!clientHost.equals(this.host) || clientPort != this.port) {
+//            return new Response(
+//                    Response.ResponseType.CLIENT_ADDED,
+//                    "Connection rejected: Incorrect host or port.",
+//                    Response.Status.ERROR,
+//                    Response.Recipient.THIS_CLIENT
+//            );
+//        }
 
         // Add the client to the SubscribersList
         SubscribedClient connection = new SubscribedClient(client);
