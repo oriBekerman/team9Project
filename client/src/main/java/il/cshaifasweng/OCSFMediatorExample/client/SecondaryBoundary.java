@@ -114,6 +114,7 @@ public class SecondaryBoundary
             menuTableView.refresh();
         });
     }
+
     @FXML
     void addDish(ActionEvent event)
     {
@@ -147,24 +148,16 @@ public class SecondaryBoundary
                 priceDialog.setHeaderText("Enter the price for: " + dishName);
                 Optional<String> priceResult = priceDialog.showAndWait();
 
-                if (priceResult.isPresent() && !priceResult.get().trim().isEmpty()) {
-                    try {
+                if (priceResult.isPresent() && !priceResult.get().trim().isEmpty())
+                {
+                    try
+                    {
                         double price = Double.parseDouble(priceResult.get());
-
                         List<Branch> branchesToUpdate = new ArrayList<>(branchList);
-
                         byte[] defaultPicture = new byte[0];
                         DishType dishType = DishType.BASE;
-
                         newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, dishType);
-
                         SimpleClient.getClient().addDishToDatabase(newDish, branchesToUpdate);
-
-                        Platform.runLater(() ->
-                        {
-                            allMenuItems.add(newDish);
-                            menuTableView.getItems().add(newDish);
-                        });
                     }
                     catch (NumberFormatException e)
                     {
@@ -172,7 +165,6 @@ public class SecondaryBoundary
                         alert.showAndWait();
                     }
                 }
-
             }
         }
         try
@@ -184,11 +176,13 @@ public class SecondaryBoundary
             e.printStackTrace();
         }
     }
+
     @Subscribe
     public void onBranchListSentEvent(BranchListSentEvent event)
     {
         this.branchList = event.branches;
     }
+
 
     @Subscribe
     public void onAddDishEvent(AddDishEvent event)

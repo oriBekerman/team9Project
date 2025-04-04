@@ -60,19 +60,19 @@ public class SimpleClient extends AbstractClient {
 					&& response.getStatus() == Response.Status.SUCCESS) {
 				EventBus.getDefault().post(new AcknowledgmentEvent());
 			}
-			//handle add client
-			// Check if the message indicates that a client was added successfully
-			if (response.getResponseType().equals(Response.ResponseType.CLIENT_ADDED)) {
-				if (response.getStatus() == Response.Status.SUCCESS) {
-					// Successfully added client, handle accordingly
+
+			if (response.getResponseType().equals(Response.ResponseType.CLIENT_ADDED))
+			{
+				if (response.getStatus() == Response.Status.SUCCESS)
+				{
+
 					System.out.println("Client added successfully.");
 
-					// You can post an event to the EventBus to notify other parts of the application
 					EventBus.getDefault().post(new ClientAddedEvent("Client added successfully"));
 
-					// Optionally, you could log or perform additional actions based on the success
-				} else {
-					// Handle failure case if needed
+				}
+				else
+				{
 					String errorMessage = response.getMessage();
 					System.out.println("Failed to add client: " + errorMessage);
 					EventBus.getDefault().post(new ClientAddedEvent(errorMessage != null ? errorMessage : "Unknown error"));
@@ -83,12 +83,11 @@ public class SimpleClient extends AbstractClient {
 			{
 				Integer latestId = (Integer) response.getData();
 
-				if (latestId != null) {
-
-
-					try {
+				if (latestId != null)
+				{
+					try
+					{
 						SimpleClient.getClient().updateBranchBaseItem(1, latestId);
-
 					} catch (IOException e)
 					{
 						e.printStackTrace();
@@ -96,50 +95,50 @@ public class SimpleClient extends AbstractClient {
 				}
 			}
 
-			if (response.getResponseType().equals(Response.ResponseType.REMOVE_DISH)) {
+			if (response.getResponseType().equals(Response.ResponseType.REMOVE_DISH))
+			{
 				MenuItem removedMenuItem = (MenuItem) response.getData();
 				updateDishEvent removeEvent = new updateDishEvent(removedMenuItem);
 				EventBus.getDefault().post(removeEvent);
 			}
-			if (response.getResponseType().equals(Response.ResponseType.UPDATE_INGREDIENTS)) {
+
+			if (response.getResponseType().equals(Response.ResponseType.UPDATE_INGREDIENTS))
+			{
 				MenuItem updatedMenuItem = (MenuItem) response.getData();
 				updateDishEvent updateIngredientsEvent = new updateDishEvent(updatedMenuItem);
 				EventBus.getDefault().post(updateIngredientsEvent);
 			}
 
-			if (msg.getClass().equals(Warning.class)) {
+			if (msg.getClass().equals(Warning.class))
+			{
 				String message = msg.toString();
 				System.out.println(message);
 				EventBus.getDefault().post(new WarningEvent((Warning) msg));
 			}
 
-			if (response.getResponseType().equals(RETURN_MENU)) {
+			if (response.getResponseType().equals(RETURN_MENU))
+			{
 				Menu menu = (Menu) response.getData();
 				MenuEvent menuEvent = new MenuEvent(menu);
 				EventBus.getDefault().post(menuEvent);
-
 			}
-			if (response.getResponseType().equals(RETURN_BRANCH_MENU)) {
+			if (response.getResponseType().equals(RETURN_BRANCH_MENU))
+			{
 				System.out.println("Menu received, storing event...");
 				Menu menu = (Menu) response.getData();
 				MenuEvent menuEvent = new MenuEvent(menu);
 				EventBus.getDefault().post(menuEvent);
 			}
-			if (response.getResponseType().equals(UPDATED_PRICE)) {
+
+			if (response.getResponseType().equals(UPDATED_PRICE))
+			{
 				MenuItem menuItem = (MenuItem) response.getData();
 				updateDishEvent updateEvent = new updateDishEvent(menuItem);
 				EventBus.getDefault().post(updateEvent);
 			}
 
-			// Handle UPDATED_PRICE response
-			if (response.getResponseType().equals(UPDATED_PRICE)) {
-				MenuItem menuItem = (MenuItem) response.getData();
-				// Post immediately if SecondaryController is ready
-				updateDishEvent updateEvent = new updateDishEvent(menuItem);
-				EventBus.getDefault().post(updateEvent);
-			}
-
-			if (response.getResponseType().equals(BRANCHES_SENT)) {
+			if (response.getResponseType().equals(BRANCHES_SENT))
+			{
 				try {
 					List<Branch> branches = (List<Branch>) response.getData();
 					BranchListSentEvent branchSentEvent = new BranchListSentEvent(branches);
@@ -162,9 +161,13 @@ public class SimpleClient extends AbstractClient {
 
 			if (response.getResponseType().equals(Response.ResponseType.ADD_DISH)) {
 				MenuItem addedMenuItem = (MenuItem) response.getData();
-				updateDishEvent addEvent = new updateDishEvent(addedMenuItem);
+				AddDishEvent addEvent = new AddDishEvent(addedMenuItem);
+				System.out.println("[Client] Posting AddDishEvent for item: " + addedMenuItem.getName());
+
+				// Only post once
 				EventBus.getDefault().post(addEvent);
 			}
+
 
 			if (response.getResponseType().equals(RETURN_BRANCH_TABLES)) {
 				Set<RestTable> tables = new HashSet<>((Collection) response.getData());
@@ -410,9 +413,8 @@ public class SimpleClient extends AbstractClient {
 		client.sendToServer(request);
 	}
 
-
 	public void removeDishFromDatabase(MenuItem dishToRemove) {
-		// Create a request to remove the dish
+
 		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.REMOVE_DISH, dishToRemove);
 		try {
 			SimpleClient.getClient().sendToServer(request);
@@ -422,23 +424,26 @@ public class SimpleClient extends AbstractClient {
 			System.out.println("Error sending dish removal request: " + e.getMessage());
 		}
 	}
-	public void addDishToDatabase(MenuItem newDish, List<Branch> branchesToUpdate) {
+	public void addDishToDatabase(MenuItem newDish, List<Branch> allBranches)
+	{
 		Request<MenuItem> request = new Request<>(ReqCategory.BASE_MENU, RequestType.ADD_DISH, newDish);
-		try {
+		try
+		{
 			SimpleClient.getClient().sendToServer(request);
-
-			// After adding the dish, update selected branches
-			for (Branch branch : branchesToUpdate) {
-				branch.addMenuItem(newDish); // Add the dish to the branch locally
-				// Send an update request for each branch
-				Request<Branch> updateRequest = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_MENU, branch);
-				SimpleClient.getClient().sendToServer(updateRequest);
-			}
-
-		} catch (IOException e) {
+//
+//			for (Branch branch : allBranches)
+//			{
+//				branch.addMenuItem(newDish);
+//				Request<Branch> updateRequest = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_MENU, branch);
+//				SimpleClient.getClient().sendToServer(updateRequest);
+//			}
+		}
+		catch (IOException e)
+		{
 			System.err.println("Error adding dish to database: " + e.getMessage());
 		}
 	}
+
 
 	public void updateDishIngredients(MenuItem item)
 	{
