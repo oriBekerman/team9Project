@@ -418,7 +418,7 @@ public class SecondaryBoundary
                 branch.addMenuItem(selectedItem);
                 try {
 
-                    SimpleClient.getClient().updateBranchSpecialItem(branch.getId(), selectedItem.getItemID());
+                    SimpleClient.getClient().updateBranchBaseItem(branch.getId(), selectedItem.getItemID());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

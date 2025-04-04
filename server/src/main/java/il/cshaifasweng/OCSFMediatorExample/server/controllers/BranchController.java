@@ -9,6 +9,7 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.AL
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Recipient.ALL_CLIENTS_EXCEPT_SENDER;
 
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.*;
+import static il.cshaifasweng.OCSFMediatorExample.entities.Response.ResponseType.UPDATE_BRANCH_BASE_ITEM;
 import static il.cshaifasweng.OCSFMediatorExample.entities.Response.Status.*;
 
 import org.hibernate.Session;
@@ -40,6 +41,8 @@ public class BranchController {
             case GET_DELIVERABLES -> getDeliverableItems(request);
             case FETCH_BRANCH_TABLES -> getRestTables(request);
             case UPDATE_BRANCH -> updateBranch(request);
+            case UPDATE_BRANCH_BASE_ITEM -> handleUpdateBranchBaseItem(request);
+
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
 
         };
@@ -70,6 +73,48 @@ public class BranchController {
     }
 
 
+    public Response handleUpdateBranchBaseItem(Request request)
+    {
+        UpdateBranchSpecialItemRequest baseItemRequest = (UpdateBranchSpecialItemRequest) request.getData();
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession())
+        {
+            Transaction transaction = session.beginTransaction();
+
+            MenuItem menuItem = session.get(MenuItem.class, baseItemRequest.getMenuItemId());
+
+            if (menuItem != null)
+            {
+                // Get all branches
+                List<Branch> allBranches = session.createQuery("from Branch", Branch.class).list();
+
+                for (Branch branch : allBranches)
+                {
+                    // Add the dish if not already there
+                    if (!branch.getBranchMenuItems().contains(menuItem))
+                    {
+                        branch.getBranchMenuItems().add(menuItem);
+                        session.merge(branch);
+                    }
+                }
+
+                transaction.commit();
+
+                return new Response<>(Response.ResponseType.UPDATE_BRANCH_BASE_ITEM, null, "Base item added to all branches", Response.Status.SUCCESS, ALL_CLIENTS);
+            }
+
+            transaction.rollback();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return new Response<>(Response.ResponseType.UPDATE_BRANCH_BASE_ITEM, null, "Failed to update base item", Response.Status.ERROR, ALL_CLIENTS);
+    }
+
+
+
     public Response handleUpdateBranchSpecialItem(Request request)
     {
         UpdateBranchSpecialItemRequest specialItemRequest = (UpdateBranchSpecialItemRequest) request.getData();
@@ -78,16 +123,32 @@ public class BranchController {
         {
             Transaction transaction = session.beginTransaction();
 
-            Branch branch = session.get(Branch.class, specialItemRequest.getBranchId());
+            Branch selectedBranch = session.get(Branch.class, specialItemRequest.getBranchId());
             MenuItem menuItem = session.get(MenuItem.class, specialItemRequest.getMenuItemId());
 
-            if (branch != null && menuItem != null)
+            if (selectedBranch != null && menuItem != null)
             {
-                branch.getBranchMenuItems().add(menuItem);
-                session.merge(branch);
+                // Get all branches
+                List<Branch> allBranches = session.createQuery("from Branch", Branch.class).list();
+
+                for (Branch branch : allBranches)
+                {
+                    // Remove the menuItem from all branches
+                    if (branch.getBranchMenuItems().contains(menuItem)) {
+                        branch.getBranchMenuItems().remove(menuItem);
+                        session.merge(branch);
+                    }
+                }
+
+                // Add the menuItem to the selected branch
+                selectedBranch.getBranchMenuItems().add(menuItem);
+                session.merge(selectedBranch);
+
                 transaction.commit();
-                return new Response<>(Response.ResponseType.UPDATE_BRANCH_SPECIAL_ITEM, branch, "Special item updated successfully", Response.Status.SUCCESS, ALL_CLIENTS);
+
+                return new Response<>(Response.ResponseType.UPDATE_BRANCH_SPECIAL_ITEM, selectedBranch, "Special item updated successfully", Response.Status.SUCCESS, ALL_CLIENTS);
             }
+
             transaction.rollback();
         }
         catch (Exception e)
@@ -97,6 +158,7 @@ public class BranchController {
 
         return new Response<>(Response.ResponseType.UPDATE_BRANCH_SPECIAL_ITEM, null, "Failed to update special item", Response.Status.ERROR, ALL_CLIENTS);
     }
+
 
     public Response getALLBranches()
     {
