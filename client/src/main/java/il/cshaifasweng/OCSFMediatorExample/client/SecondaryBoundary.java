@@ -165,24 +165,7 @@ public class SecondaryBoundary
                             allMenuItems.add(newDish);
                             menuTableView.getItems().add(newDish);
 
-
                         });
-//                        System.out.println("try1");
-//                        for (Branch branch : branchList)
-//                        {
-//                            branch.addMenuItem(newDish);
-//                            try
-//                            {
-//                                System.out.println("try2");
-//                                SimpleClient.getClient().updateBranchSpecialItem(branch.getId(), newDish.getItemID());
-//                                System.out.println("try3");
-//                            }
-//                            catch (IOException e)
-//                            {
-//                                e.printStackTrace();
-//                            }
-//                            System.out.println("Added base dish " + newDish.getName() + " to branch " + branch.getName());
-//                        }
                     }
                     catch (NumberFormatException e)
                     {
@@ -439,31 +422,35 @@ public class SecondaryBoundary
         }
 
         SimpleClient.getClient().updateDishType(selectedItem);
-
         EventBus.getDefault().post(new UpdateDishTypeEvent(selectedItem));
+        try {
+
+            if(currentbranch == null)
+            {
+                SimpleClient.getClient().displayNetworkMenu();
+            }
+            else
+            {
+                SimpleClient.getClient().displayBranchMenu(currentbranch);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         menuTableView.refresh();
     }
-   //    SimpleClient.getClient().getLatestMenuItemId();
-
-
-//    public void updateBranchSpecialItem(int branchId, int menuItemId)
-//    {
-//        try {
-//            SimpleClient.getClient().sendToServer(new UpdateBranchSpecialItemRequest(branchId, menuItemId));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
 
     @Subscribe
-    public void onUpdateDishTypeEvent(UpdateDishTypeEvent event) {
-        Platform.runLater(() -> {
+    public void onUpdateDishTypeEvent(UpdateDishTypeEvent event)
+    {
+        Platform.runLater(() ->
+        {
             MenuItem updatedItem = event.getUpdatedMenuItem();
 
             for (MenuItem item : allMenuItems) {
-                if (item.getItemID() == updatedItem.getItemID()) {
+                if (item.getItemID() == updatedItem.getItemID())
+                {
                     item.setDishType(updatedItem.getDishType());
                     break;
                 }
@@ -527,13 +514,10 @@ public class SecondaryBoundary
         {
             if(currentbranch == null)
             {
-                System.out.println("HERE1");
                 SimpleClient.getClient().displayNetworkMenu();
-
             }
             else
             {
-                System.out.println("HERE2");
                 SimpleClient.getClient().displayBranchMenu(currentbranch);
             }
 

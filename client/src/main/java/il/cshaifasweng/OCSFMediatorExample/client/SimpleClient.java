@@ -116,6 +116,7 @@ public class SimpleClient extends AbstractClient {
 				Menu menu = (Menu) response.getData();
 				MenuEvent menuEvent = new MenuEvent(menu);
 				EventBus.getDefault().post(menuEvent);
+
 			}
 			if (response.getResponseType().equals(RETURN_BRANCH_MENU)) {
 				System.out.println("Menu received, storing event...");
@@ -357,17 +358,6 @@ public class SimpleClient extends AbstractClient {
 		Request<UpdateBranchSpecialItemRequest> request = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_BASE_ITEM, data);
 		client.sendToServer(request);
 	}
-
-
-//	public void handleLatestBaseItemUpdate() {
-//		Integer latestId = getLatestMenuItemId();
-//		if (latestId != null) {
-//			UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(1, latestId);
-//			Request<UpdateBranchSpecialItemRequest> request = new Request<>(ReqCategory.BRANCH, RequestType.UPDATE_BRANCH_BASE_ITEM, data);
-//			client.sendToServer(request);
-//       }
-//	}
-
 
 	public void getLatestMenuItemId() throws IOException {
 		Request request = new Request<>(BASE_MENU,RequestType.GET_LATEST_MENU_ITEM_ID, null);

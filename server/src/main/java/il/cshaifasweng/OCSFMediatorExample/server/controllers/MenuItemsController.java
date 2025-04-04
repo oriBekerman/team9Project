@@ -41,7 +41,6 @@ public class MenuItemsController
         };
     }
 
-
     public Response handleGetLatestMenuItemId(Request request) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Integer latestId = session.createQuery(
@@ -126,7 +125,7 @@ public class MenuItemsController
 
     public Response getBaseItems()
     {
-        Response response = new Response(RETURN_MENU, null, null, ALL_CLIENTS);
+        Response response = new Response(RETURN_MENU, null, null, THIS_CLIENT);
         System.out.println("getBaseItems control");
         List<MenuItem> menuItems = menuItemsRepository.getBaseItems();
         if (menuItems.isEmpty())
@@ -144,6 +143,7 @@ public class MenuItemsController
         }
         return response;
     }
+
     public List<MenuItem> searchMenuItems(String keyword, Double maxPrice, DishType type)
     {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -213,6 +213,7 @@ public class MenuItemsController
     public List<MenuItem> getAllItems() {
         return menuItemsRepository.getAllItems();
     }
+
 
     public Response handleUpdateDishTypeRequest(Request<MenuItem> request)
     {
