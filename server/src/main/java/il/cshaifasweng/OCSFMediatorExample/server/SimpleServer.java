@@ -98,7 +98,6 @@ public class SimpleServer extends AbstractServer {
                 case COMPLAINT -> complaintController.handleRequest(request);
                 case REMOVE_DISH -> menuItemsController.handleRequest(request);
                 case UPDATE_INGREDIENTS -> menuItemsController.handleRequest(request);
-                case UPDATE_DISH_TYPE -> menuItemsController.handleRequest(request);
                 case PERMIT_GRANTED ->
                 {
                     System.out.println("Permit granted request received.");

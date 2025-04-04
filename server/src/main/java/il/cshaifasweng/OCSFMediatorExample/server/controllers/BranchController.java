@@ -100,7 +100,7 @@ public class BranchController {
 
                 transaction.commit();
 
-                return new Response<>(Response.ResponseType.UPDATE_BRANCH_BASE_ITEM, null, "Base item added to all branches", Response.Status.SUCCESS, ALL_CLIENTS);
+                return new Response<>(Response.ResponseType.UPDATE_BRANCH_BASE_ITEM, null, "Base item added to all branches", Response.Status.SUCCESS, THIS_CLIENT);
             }
 
             transaction.rollback();
@@ -110,7 +110,7 @@ public class BranchController {
             e.printStackTrace();
         }
 
-        return new Response<>(Response.ResponseType.UPDATE_BRANCH_BASE_ITEM, null, "Failed to update base item", Response.Status.ERROR, ALL_CLIENTS);
+        return new Response<>(Response.ResponseType.UPDATE_BRANCH_BASE_ITEM, null, "Failed to update base item", Response.Status.ERROR, THIS_CLIENT);
     }
 
 
@@ -146,7 +146,7 @@ public class BranchController {
 
                 transaction.commit();
 
-                return new Response<>(Response.ResponseType.UPDATE_BRANCH_SPECIAL_ITEM, selectedBranch, "Special item updated successfully", Response.Status.SUCCESS, ALL_CLIENTS);
+                return new Response<>(Response.ResponseType.UPDATE_BRANCH_SPECIAL_ITEM, selectedBranch, "Special item updated successfully", Response.Status.SUCCESS, THIS_CLIENT);
             }
 
             transaction.rollback();
@@ -156,7 +156,7 @@ public class BranchController {
             e.printStackTrace();
         }
 
-        return new Response<>(Response.ResponseType.UPDATE_BRANCH_SPECIAL_ITEM, null, "Failed to update special item", Response.Status.ERROR, ALL_CLIENTS);
+        return new Response<>(Response.ResponseType.UPDATE_BRANCH_SPECIAL_ITEM, null, "Failed to update special item", Response.Status.ERROR, THIS_CLIENT);
     }
 
 
