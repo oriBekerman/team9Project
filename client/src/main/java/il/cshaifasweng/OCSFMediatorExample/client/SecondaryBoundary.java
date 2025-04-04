@@ -30,6 +30,7 @@ import java.lang.Thread;
 
 public class SecondaryBoundary
 {
+    private MenuItem newDish=null;
     public List<Branch> branchList = null;
     public Label menuLabel;
     public AnchorPane root;
@@ -116,7 +117,6 @@ public class SecondaryBoundary
     @FXML
     void addDish(ActionEvent event)
     {
-        // Step 1: Get the name of the new dish
         TextInputDialog nameDialog = new TextInputDialog();
         nameDialog.setTitle("Add New Dish");
         nameDialog.setHeaderText("Enter the name of the new dish:");
@@ -126,7 +126,6 @@ public class SecondaryBoundary
         {
             String dishName = nameResult.get();
 
-            // Step 2: Get the ingredients of the dish
             TextInputDialog ingredientsDialog = new TextInputDialog();
             ingredientsDialog.setTitle("Add Ingredients");
             ingredientsDialog.setHeaderText("Enter the ingredients for: " + dishName);
@@ -136,7 +135,6 @@ public class SecondaryBoundary
             {
                 String dishIngredients = ingredientsResult.get();
 
-                // Step 3: Get any preference for the dish
                 TextInputDialog preferenceDialog = new TextInputDialog();
                 preferenceDialog.setTitle("Add Preference");
                 preferenceDialog.setHeaderText("Enter any preference for: " + dishName);
@@ -144,137 +142,71 @@ public class SecondaryBoundary
 
                 String dishPreference = preferenceResult.orElse("");
 
-                // Step 4: Get the price of the dish
                 TextInputDialog priceDialog = new TextInputDialog("0.0");
                 priceDialog.setTitle("Add Price");
                 priceDialog.setHeaderText("Enter the price for: " + dishName);
                 Optional<String> priceResult = priceDialog.showAndWait();
 
-                if (priceResult.isPresent() && !priceResult.get().trim().isEmpty())
-                {
-                    try
-                    {
+                if (priceResult.isPresent() && !priceResult.get().trim().isEmpty()) {
+                    try {
                         double price = Double.parseDouble(priceResult.get());
 
-                        // Step 5: Get the type of the dish (BASE or SPECIAL)
-                        ChoiceDialog<DishType> typeDialog = new ChoiceDialog<>(DishType.BASE, DishType.BASE, DishType.SPECIAL);
-                        typeDialog.setTitle("Dish Type");
-                        typeDialog.setHeaderText("Select the type of the dish:");
-                        Optional<DishType> typeResult = typeDialog.showAndWait();
-
-                        DishType dishType = typeResult.orElse(DishType.BASE);
-
-                        // Step 6: If the dish is SPECIAL, select a branch
-                        final Branch[] finalSelectedBranch = {null};
-                        List<Branch> branchesToUpdate = new ArrayList<>();
-
-                        if (dishType == DishType.SPECIAL)
-                        {
-                            List<String> branchNames = branchList.stream().map(Branch::getName).toList();
-                            if (branchNames.isEmpty())
-                            {
-                                Alert alert = new Alert(Alert.AlertType.WARNING, "No branches available.");
-                                alert.showAndWait();
-                                return;
-                            }
-                            ChoiceDialog<String> branchDialog = new ChoiceDialog<>(branchNames.get(0), branchNames);
-                            branchDialog.setTitle("Select Branch");
-                            branchDialog.setHeaderText("Select a branch:");
-                            branchDialog.setContentText("Choose a branch:");
-
-                            Optional<String> branchResult = branchDialog.showAndWait();
-                            if (branchResult.isPresent())
-                            {
-                                String selectedBranchName = branchResult.get();
-                                finalSelectedBranch[0] = branchList.stream()
-                                        .filter(branch -> branch.getName().equals(selectedBranchName))
-                                        .findFirst()
-                                        .orElse(null);
-
-                                if (finalSelectedBranch[0] == null) {
-                                    Alert alert = new Alert(Alert.AlertType.ERROR, "Selected branch not found.");
-                                    alert.showAndWait();
-                                    return;
-                                }
-                                branchesToUpdate.add(finalSelectedBranch[0]);
-                            }
-                            else
-                            {
-                                return;
-                            }
-                        }
-
+                        List<Branch> branchesToUpdate = new ArrayList<>(branchList);
 
                         byte[] defaultPicture = new byte[0];
-                        final String finalDishName = dishName;
-                        final double finalPrice = price;
-                        final String finalDishIngredients = dishIngredients;
-                        final String finalDishPreference = dishPreference;
-                        final DishType finalDishType = dishType;
+                        DishType dishType = DishType.BASE;
 
+                        newDish = new MenuItem(dishName, price, dishIngredients, dishPreference, defaultPicture, dishType);
 
-                        SimpleClient.getClient().addDishToDatabase(
-                                new MenuItem(finalDishName, finalPrice, finalDishIngredients, finalDishPreference, defaultPicture, finalDishType),
-                                branchesToUpdate
-                        );
-
+                        SimpleClient.getClient().addDishToDatabase(newDish, branchesToUpdate);
 
                         Platform.runLater(() ->
                         {
-                            MenuItem newDish = new MenuItem(
-
-                                    finalDishName,
-                                    finalPrice,
-                                    finalDishIngredients,
-                                    finalDishPreference,
-                                    defaultPicture,
-                                    finalDishType
-                            );
-
                             allMenuItems.add(newDish);
                             menuTableView.getItems().add(newDish);
 
-                            if (finalDishType == DishType.SPECIAL )
-                            {
-                                System.out.println("Dish ID:---------------- " + newDish.getItemID());
-                              try
-                              {
 
-                                  SimpleClient.getClient().updateBranchSpecialItem(finalSelectedBranch[0].getId(), newDish.getItemID());
-                              }
-                              catch (Exception e)
-                              {
-                                  e.printStackTrace();
-                              }
-                            }
-                            else if (finalDishType == DishType.BASE )
-                            {
-                                System.out.println("Dish ID:---------------- " + newDish.getItemID());
-                                for (Branch branch : branchList)
-                                {
-                                    branch.addMenuItem(newDish);
-                                    try
-                                    {
-                                        SimpleClient.getClient().updateBranchSpecialItem(branch.getId(), newDish.getItemID());
-                                    }
-                                    catch (IOException e)
-                                    {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
                         });
+//                        System.out.println("try1");
+//                        for (Branch branch : branchList)
+//                        {
+//                            branch.addMenuItem(newDish);
+//                            try
+//                            {
+//                                System.out.println("try2");
+//                                SimpleClient.getClient().updateBranchSpecialItem(branch.getId(), newDish.getItemID());
+//                                System.out.println("try3");
+//                            }
+//                            catch (IOException e)
+//                            {
+//                                e.printStackTrace();
+//                            }
+//                            System.out.println("Added base dish " + newDish.getName() + " to branch " + branch.getName());
+//                        }
                     }
                     catch (NumberFormatException e)
                     {
-
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid price format.");
                         alert.showAndWait();
                     }
+
+
                 }
+
             }
         }
+        try
+        {
+            SimpleClient.getClient().getLatestMenuItemId();
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
     }
+
 
 
     @Subscribe
@@ -294,6 +226,7 @@ public class SecondaryBoundary
                 allMenuItems.add(addedItem);
                 menuTableView.getItems().add(addedItem);
             }
+
         });
     }
 
@@ -497,7 +430,7 @@ public class SecondaryBoundary
                 branch.addMenuItem(selectedItem);
                 try {
 
-                    SimpleClient.getClient().updateBranchSpecialItem(branch.getId(), selectedItem.getItemID());
+                    SimpleClient.getClient().updateBranchBaseItem(branch.getId(), selectedItem.getItemID());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -510,16 +443,19 @@ public class SecondaryBoundary
         EventBus.getDefault().post(new UpdateDishTypeEvent(selectedItem));
         menuTableView.refresh();
     }
+   //    SimpleClient.getClient().getLatestMenuItemId();
 
 
-    public void updateBranchSpecialItem(int branchId, int menuItemId)
-    {
-        try {
-            SimpleClient.getClient().sendToServer(new UpdateBranchSpecialItemRequest(branchId, menuItemId));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void updateBranchSpecialItem(int branchId, int menuItemId)
+//    {
+//        try {
+//            SimpleClient.getClient().sendToServer(new UpdateBranchSpecialItemRequest(branchId, menuItemId));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+
 
     @Subscribe
     public void onUpdateDishTypeEvent(UpdateDishTypeEvent event) {
@@ -591,9 +527,13 @@ public class SecondaryBoundary
         {
             if(currentbranch == null)
             {
+                System.out.println("HERE1");
                 SimpleClient.getClient().displayNetworkMenu();
+
             }
-            else{
+            else
+            {
+                System.out.println("HERE2");
                 SimpleClient.getClient().displayBranchMenu(currentbranch);
             }
 

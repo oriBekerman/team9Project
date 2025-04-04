@@ -35,11 +35,31 @@ public class MenuItemsController
             case UPDATE_INGREDIENTS -> handleUpdateDishIngredientsRequest(request);
             case UPDATE_DISH_TYPE -> handleUpdateDishTypeRequest(request);
             case UPDATE_BRANCH_MENU -> handleUpdateBranchMenuRequest(request);
+            case GET_LATEST_MENU_ITEM_ID -> handleGetLatestMenuItemId(request);
+
             default -> throw new IllegalArgumentException("Invalid request type: " + request.getRequestType());
         };
     }
 
 
+    public Response handleGetLatestMenuItemId(Request request) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Integer latestId = session.createQuery(
+                            "SELECT itemID FROM MenuItem ORDER BY itemID DESC", Integer.class)
+                    .setMaxResults(1)
+                    .uniqueResult();
+
+            if (latestId != null) {
+                return new Response<>(Response.ResponseType.GET_LATEST_MENU_ITEM_ID, latestId,
+                        "Fetched latest MenuItem ID", Response.Status.SUCCESS, THIS_CLIENT);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new Response<>(Response.ResponseType.GET_LATEST_MENU_ITEM_ID, null,
+                "Failed to fetch latest ID", Response.Status.ERROR, THIS_CLIENT);
+    }
 
 
     public Response handleAddDishRequest(Request<MenuItem> request)
@@ -55,6 +75,9 @@ public class MenuItemsController
             {
                 branch.addMenuItem(newDish);
                 menuItemsRepository.updateBranchMenu(branch);
+                UpdateBranchSpecialItemRequest data = new UpdateBranchSpecialItemRequest(branch.getId(), newDish.getItemID());
+
+
             }
 
             return new Response<>(ResponseType.ADD_DISH, newDish, "Dish added successfully and branches updated", Status.SUCCESS, ALL_CLIENTS);

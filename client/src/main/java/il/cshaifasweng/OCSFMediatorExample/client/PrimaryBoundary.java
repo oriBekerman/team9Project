@@ -35,7 +35,6 @@ public class PrimaryBoundary
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("sideBarPrimary.fxml"));
 			Parent sideBarPrimaryRoot = loader.load();
 			sidebarController = loader.getController();
-
 			sideBarPrimaryPlace.getChildren().clear();
 			sideBarPrimaryPlace.getChildren().add(sideBarPrimaryRoot);
 		} catch (IOException e) {
