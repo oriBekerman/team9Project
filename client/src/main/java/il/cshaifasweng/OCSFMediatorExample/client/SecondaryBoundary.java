@@ -190,10 +190,21 @@ public class SecondaryBoundary
                         alert.showAndWait();
                     }
 
+
                 }
 
             }
         }
+        try
+        {
+            SimpleClient.getClient().getLatestMenuItemId();
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -215,6 +226,7 @@ public class SecondaryBoundary
                 allMenuItems.add(addedItem);
                 menuTableView.getItems().add(addedItem);
             }
+
         });
     }
 
@@ -431,16 +443,19 @@ public class SecondaryBoundary
         EventBus.getDefault().post(new UpdateDishTypeEvent(selectedItem));
         menuTableView.refresh();
     }
+   //    SimpleClient.getClient().getLatestMenuItemId();
 
 
-    public void updateBranchSpecialItem(int branchId, int menuItemId)
-    {
-        try {
-            SimpleClient.getClient().sendToServer(new UpdateBranchSpecialItemRequest(branchId, menuItemId));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void updateBranchSpecialItem(int branchId, int menuItemId)
+//    {
+//        try {
+//            SimpleClient.getClient().sendToServer(new UpdateBranchSpecialItemRequest(branchId, menuItemId));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+
 
     @Subscribe
     public void onUpdateDishTypeEvent(UpdateDishTypeEvent event) {
