@@ -126,6 +126,26 @@ public class SimpleServer extends AbstractServer {
         }
     }
 
+
+
+
+    public Integer getLatestMenuItemId()
+    {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Integer latestId = session.createQuery(
+                            "SELECT itemID FROM MenuItem ORDER BY itemID DESC", Integer.class)
+                    .setMaxResults(1)
+                    .uniqueResult();
+            return latestId;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
     private void sendResponseToClient(Response response, ConnectionToClient client) {
         try {
             switch (response.getRecipient()) {
