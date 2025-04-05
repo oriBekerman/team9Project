@@ -67,5 +67,6 @@ il\cshaifasweng\OCSFMediatorExample\client\SimpleClient$1.class
 il\cshaifasweng\OCSFMediatorExample\client\SideBarBranchBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\RemoveDishEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\UpdateIngredientsEvent.class
+il\cshaifasweng\OCSFMediatorExample\client\BranchDataCache.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\BranchTablesReceivedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\SideBarPrimaryBoundary$1.class

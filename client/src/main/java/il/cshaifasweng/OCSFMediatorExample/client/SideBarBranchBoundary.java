@@ -41,6 +41,10 @@ public class SideBarBranchBoundary {
     private SecondaryBoundary secondaryBoundary;
     private TableView<il.cshaifasweng.OCSFMediatorExample.entities.MenuItem> menuTableView;
 
+    private static boolean branchListRequested = false;
+    private boolean registered = false;
+
+
 
     public void BranchPageBoundary()
     {
@@ -131,15 +135,37 @@ public class SideBarBranchBoundary {
         assert toggleButtonBranch != null : "fx:id=\"toggleButtonBranch\" was not injected: check your FXML file 'sideBarBranch.fxml'.";
         assert toggleButtonReports != null : "fx:id=\"toggleReportsButton\" was not injected: check your FXML file 'sideBarBranch.fxml'.";
 
-        EventBus.getDefault().register(this);
-        SimpleClient.getClient().getBranchList(); // Request branch list from server
-        updateReportsButtonVisibility();
-        toggleButtonReports.setOnAction(this::showReportOptions);
+//        EventBus.getDefault().register(this);
+//        SimpleClient.getClient().getBranchList(); // Request branch list from server
+//        updateReportsButtonVisibility();
+//        toggleButtonReports.setOnAction(this::showReportOptions);
+
+        if (!registered) {
+            EventBus.getDefault().register(this);
+            registered = true;
+
+            if (!branchListInit) {
+                List<Branch> cached = BranchDataCache.getBranchList();
+                if (cached != null) {
+                    this.branchList = cached;
+                    branchListInit = true;
+                } else if (!branchListRequested) {
+                    branchListRequested = true;
+                    SimpleClient.getClient().getBranchList();
+                }
+            }
+        }
 
         toggleButtonBranch.setOnAction(e -> {
             System.out.println("[SideBarBranchBoundary- initialize] Button clicked - showing branch list popup");
             GetBranchListPopup();
         });
+
+
+        updateReportsButtonVisibility();
+        toggleButtonReports.setOnAction(this::showReportOptions);
+
+
 
         String imagePath = "il/cshaifasweng/OCSFMediatorExample/client/mamasKitchen.jpg";
         Image image = new Image(imagePath);
@@ -211,32 +237,77 @@ public class SideBarBranchBoundary {
         }
     }
 
+//    private void GetBranchListPopup() {
+//        synchronized (lock) {
+//            if (!branchListInit) {
+//                try {
+//                    SimpleClient.getClient().getBranchList();
+//                    while (!branchListInit) {
+//                        lock.wait();
+//                    }
+//                } catch (InterruptedException e) {
+//                    Thread.currentThread().interrupt();
+//                    System.out.println("Thread interrupted while waiting for branch list.");
+//                    return;
+//                }
+//            }
+//        }
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("BranchList.fxml"));
+//            Parent popupContent = loader.load();
+//            // Get BranchListController instance and set branches
+//            BranchListBoundary controller = loader.getController();
+//            controller.setBranches(branchList);
+//
+//            popup.getContent().clear();
+//            popup.getContent().add(popupContent);
+//            popup.setAutoHide(true);
+//            // Ensure popup shows correctly
+//            if (toggleButtonBranch.getScene() != null) {
+//                popup.show(toggleButtonBranch.getScene().getWindow(),
+//                        toggleButtonBranch.localToScreen(0, 0).getX(),
+//                        toggleButtonBranch.localToScreen(0, 0).getY() + toggleButtonBranch.getHeight());
+//            } else {
+//                System.out.println("toggleButtonBranch scene is NULL - cannot display popup");
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     private void GetBranchListPopup() {
         synchronized (lock) {
             if (!branchListInit) {
-                try {
-                    SimpleClient.getClient().getBranchList();
-                    while (!branchListInit) {
-                        lock.wait();
+                List<Branch> cached = BranchDataCache.getBranchList();
+                if (cached != null) {
+                    this.branchList = cached;
+                    branchListInit = true;
+                } else {
+                    try {
+                        SimpleClient.getClient().getBranchList();
+                        while (!branchListInit) {
+                            lock.wait();
+                        }
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        System.out.println("Thread interrupted while waiting for branch list.");
+                        return;
                     }
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    System.out.println("Thread interrupted while waiting for branch list.");
-                    return;
                 }
             }
         }
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("BranchList.fxml"));
             Parent popupContent = loader.load();
-            // Get BranchListController instance and set branches
             BranchListBoundary controller = loader.getController();
             controller.setBranches(branchList);
 
             popup.getContent().clear();
             popup.getContent().add(popupContent);
             popup.setAutoHide(true);
-            // Ensure popup shows correctly
+
             if (toggleButtonBranch.getScene() != null) {
                 popup.show(toggleButtonBranch.getScene().getWindow(),
                         toggleButtonBranch.localToScreen(0, 0).getX(),
@@ -244,11 +315,12 @@ public class SideBarBranchBoundary {
             } else {
                 System.out.println("toggleButtonBranch scene is NULL - cannot display popup");
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 
     @FXML
     public void getPopup(ActionEvent actionEvent) {
@@ -306,6 +378,8 @@ public class SideBarBranchBoundary {
         synchronized (lock) {
             this.branchList = event.branches;
             this.branchListInit = true;
+            BranchDataCache.setBranchList(branchList); // ✅ store globally
+
             System.out.println("[SideBarBranchBoundary] onBranchesSentEvent");
             lock.notifyAll(); // Notify waiting threads that branches are initialized
         }

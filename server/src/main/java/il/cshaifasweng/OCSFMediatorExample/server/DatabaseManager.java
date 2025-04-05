@@ -257,41 +257,6 @@ public class DatabaseManager {
                 deliveryController.populateDelivery(order1);
                 deliveryController.populateDelivery(order2);
 
-
-/// /////////////////////////// MINEEEE
-//            List<OrderItem> orderItems1 = List.of(
-//                    new OrderItem(item1, 2, "No dressing", null),
-//                    new OrderItem(item4, 1, "Extra ketchup", null)
-//            );
-//
-//            List<OrderItem> orderItems2 = List.of(
-//                    new OrderItem(item6, 3, "No salt", null),
-//                    new OrderItem(item7, 1, "Well done", null)
-//            );
-//
-//            List<OrderItem> orderItems3 = List.of(
-//                    new OrderItem(item3, 3, "Vegan", null),
-//                    new OrderItem(item5, 1, "No salt", null)
-//            );
-//
-//            // Create deliveries
-//            Delivery order1 = new Delivery("2025-03-05", new ArrayList<>(orderItems1), customer1, DeliveryMethod.DELIVERY, telAvivBranch);
-//            Delivery order2 = new Delivery("2025-03-05", new ArrayList<>(orderItems2), customer2, DeliveryMethod.SELF_PICKUP, haifaBranch);
-//            Delivery order3 = new Delivery("2025-05-10", new ArrayList<>(orderItems3), customer1, DeliveryMethod.SELF_PICKUP, haifaBranch);
-//
-//
-//            orderItems1.forEach(item -> item.setDelivery(order1));
-//            orderItems2.forEach(item -> item.setDelivery(order2));
-//            orderItems3.forEach(item -> item.setDelivery(order3));
-//
-//
-//            // Populate delivery orders
-//            deliveryController.populateDelivery(order1);
-//            deliveryController.populateDelivery(order2);
-//            deliveryController.populateDelivery(order3);
-/// /////////////////////////// MINEEEE
-
-
                 //create reservations and setting them in branches
                 LocalTime time1 = LocalTime.of(19, 30);
                 LocalTime time2 = LocalTime.of(10, 30);
@@ -312,29 +277,6 @@ public class DatabaseManager {
 
                 resInfoController.PopulateResSInfo(List.of(reservation1, reservation2));
 
-
-////////////////////////////////// ////////////////////// MINE
-//            System.out.println("Adding new reservations:");
-//            ResInfo reservation1 = new ResInfo(LocalDate.of(2025, 3, 15), LocalTime.of(19, 30), 4, "inside");
-//            reservation1.setBranch(haifaBranch);
-//            reservation1.setCustomer(customer1);
-//            reservation1.setStatus(APPROVED);
-//
-//            ResInfo reservation2 = new ResInfo(LocalDate.of(2025, 5, 15), LocalTime.of(20, 30), 2, "inside");
-//            reservation2.setBranch(telAvivBranch);
-//            reservation2.setCustomer(customer2);
-//            reservation2.setStatus(APPROVED);
-//
-//            ResInfo reservation3 = new ResInfo(LocalDate.of(2025, 5, 25), LocalTime.of(20, 30), 5, "outside");
-//            reservation3.setBranch(telAvivBranch);
-//            reservation3.setCustomer(customer1);
-//            reservation3.setStatus(APPROVED);
-//
-//            resInfoController.PopulateResSInfo(List.of(reservation1, reservation2, reservation3));
-
-
-                // Create a Complaint instance without a Branch
-/////////////////////////////// ////////////////////// MINE
                 Complaint complaint1 = new Complaint("Delayed order delivery", NEW);
                 complaint1.setBranch(telAvivBranch);
                 complaint1.setCustomer(customer1);
