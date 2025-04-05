@@ -4,6 +4,7 @@ import il.cshaifasweng.OCSFMediatorExample.entities.Complaint;
 import il.cshaifasweng.OCSFMediatorExample.entities.Delivery;
 import il.cshaifasweng.OCSFMediatorExample.entities.ResInfo;
 
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 public class ReportDetail {
@@ -36,7 +37,7 @@ public class ReportDetail {
         try {
             this.fullNameRES = resInfo.getCustomer() != null ? resInfo.getCustomer().getName() : "N/A";
             this.numOfGuests = String.valueOf(resInfo.getNumOfGuests());
-//            this.reservationDate = resInfo.getResDate().toString();
+            this.reservationDate = resInfo.getResDate().toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             this.hours = resInfo.getHours().toString();
             this.inOrOut = resInfo.getInOrOut();
         } catch (Exception e) {

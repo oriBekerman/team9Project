@@ -2,9 +2,11 @@ il\cshaifasweng\OCSFMediatorExample\client\Events\BranchListSentEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationAddedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliveryBoundary$1.class
 il\cshaifasweng\OCSFMediatorExample\client\Main.class
+il\cshaifasweng\OCSFMediatorExample\client\NavigationHelper.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\AddDishEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\DeliverySummeryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\ReservationPersonalInfoSet.class
+il\cshaifasweng\OCSFMediatorExample\client\BranchListManager.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\TableIsReservedEvent.class
 il\cshaifasweng\OCSFMediatorExample\client\PrimaryBoundary.class
 il\cshaifasweng\OCSFMediatorExample\client\Events\updateDishEvent.class

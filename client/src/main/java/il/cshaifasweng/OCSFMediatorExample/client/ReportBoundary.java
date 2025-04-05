@@ -200,7 +200,7 @@ public class ReportBoundary {
             reportTableView.getColumns().addAll(
                     createColumn("Full Name", "fullNameRES"),
                     createColumn("Number of Guests", "numOfGuests"),
-//                    createColumn("Reservation Date", "reservationDate"),
+                    createColumn("Reservation Date", "reservationDate"),
                     createColumn("Hours", "hours"),
                     createColumn("In/Out", "inOrOut")
             );

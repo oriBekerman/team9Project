@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,10 +13,13 @@ import java.util.Set;
 public class ResInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer resID;
+
+    @Column(nullable = false)
+    private LocalDateTime resDate;
+//name = "resDate",
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     private Branch branch;
@@ -72,6 +76,7 @@ public class ResInfo implements Serializable {
 
     public ResInfo(Branch branch, Customer customer,LocalTime hours, int numOfGuests, String inOrOut, Set<RestTable> table) {
         this.branch = branch;
+        this.resDate = LocalDateTime.now();
         this.customer = customer;
         this.hours = hours;
         this.numOfGuests = numOfGuests;
@@ -97,6 +102,14 @@ public class ResInfo implements Serializable {
     }
     public void setResID(Integer resID) {
         this.resID = resID;
+    }
+
+    public LocalDateTime getResDate() {
+        return resDate;
+    }
+
+    public void setResDate(LocalDateTime resDate) {
+        this.resDate = resDate;
     }
 
     public Branch getBranch() {

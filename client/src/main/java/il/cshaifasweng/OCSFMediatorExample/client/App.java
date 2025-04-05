@@ -29,14 +29,13 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-
         appStage = stage;
         if (!EventBus.getDefault().isRegistered(this))
         {
             EventBus.getDefault().register(this);
         }
-        client = SimpleClient.getClient();
 
+        client = SimpleClient.getClient();
         stage.setTitle("Client Connection");
         scene = new Scene(loadFXML("clientConnecting"));
         stage.setScene(scene);
@@ -109,9 +108,12 @@ public class App extends Application {
         appStage.show();
     }
     public static void setContent(Parent parent) throws IOException {
+        System.out.println("[App] Setting root scene content...");
         scene = new Scene(parent);
         appStage.setScene(scene);
         appStage.show();
+        System.out.println("[App] Scene content set successfully!");
+
     }
     public static void switchScreen (String screenName) {
         switch (screenName) {

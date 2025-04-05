@@ -30,6 +30,7 @@ public class SimpleClient extends AbstractClient {
 	public ResInfo resInfo=new ResInfo();
 	public boolean rebookReservation=false;
 	public  boolean tableAvailable=true;
+	private boolean isBranchListFetched = false;
 	public String userEmail;
 	private Response<?> lastResponse;
 	public Response<?> getResponse() {
@@ -131,9 +132,12 @@ public class SimpleClient extends AbstractClient {
 				try
 				{
 					List<Branch> branches = (List<Branch>) response.getData();
-					BranchListSentEvent branchSentEvent = new BranchListSentEvent(branches);
+//					BranchListSentEvent branchSentEvent = new BranchListSentEvent(branches);
+					BranchListSentEvent BranchListSentEvent = new BranchListSentEvent(branches);
+
 					Platform.runLater(() -> {
-						EventBus.getDefault().post(branchSentEvent);
+//						EventBus.getDefault().post(branchSentEvent);
+						EventBus.getDefault().post(BranchListSentEvent);
 					});
 				}
 				catch (ClassCastException e)
@@ -370,6 +374,10 @@ public class SimpleClient extends AbstractClient {
 	}
 
 	public void getBranchList() {
+
+		if (isBranchListFetched) return;
+		isBranchListFetched = true;
+
 		Request request = new Request(BRANCH, GET_BRANCHES, null);
 		try {
 			client.sendToServer(request);

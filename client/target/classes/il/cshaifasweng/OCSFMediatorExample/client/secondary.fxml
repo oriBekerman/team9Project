@@ -25,10 +25,10 @@
         <TableView fx:id="menuTableView" layoutX="250.0" layoutY="127.0" prefHeight="725.0" prefWidth="941.0">
             <columns>
                 <TableColumn fx:id="nameColumn" prefWidth="114.0" styleClass="column-header-background" text="Name" />
-                <TableColumn fx:id="ingredientsColumn" prefWidth="224.0" styleClass="column-header-background" text="Ingredients" />
-                <TableColumn fx:id="preferenceColumn" prefWidth="143.0" styleClass="column-header-background" text="Preference" />
-                <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="120.0" styleClass="column-header-background" text="Price" />
-            <TableColumn fx:id="dishTypeColumn" prefWidth="129.0" styleClass="column-header-background" text="Branch dish" />
+                <TableColumn fx:id="ingredientsColumn" prefWidth="238.0" styleClass="column-header-background" text="Ingredients" />
+                <TableColumn fx:id="preferenceColumn" prefWidth="147.0" styleClass="column-header-background" text="Preference" />
+                <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="127.0" styleClass="column-header-background" text="Price" />
+            <TableColumn fx:id="dishTypeColumn" prefWidth="104.0" styleClass="column-header-background" text="Branch dish" />
                 <TableColumn fx:id="imageColum" minWidth="0.0" prefWidth="208.0" styleClass="column-header-background" text="image" />
             </columns>
         </TableView>

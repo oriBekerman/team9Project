@@ -3,7 +3,10 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import il.cshaifasweng.OCSFMediatorExample.client.Events.MenuEvent;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import static il.cshaifasweng.OCSFMediatorExample.client.App.*;
 
 public class BranchPageBoundary
@@ -63,7 +68,8 @@ public class BranchPageBoundary
     @FXML
     void navToHP(ActionEvent event)
     {
-        onExit();
+//        onExit();
+        sidebarController.onExit();  // ← ADD THIS LINE
         switchScreen("Home Page");
     }
 
@@ -78,16 +84,37 @@ public class BranchPageBoundary
         assert openingHoursLabel != null : "fx:id=\"openingHoursLabel\" was not injected: check your FXML file 'Branch.fxml'.";
         assert sideBarPlace != null : "fx:id=\"sideBarPlace\" was not injected: check your FXML file 'Branch.fxml'.";
 
+//        if (!EventBus.getDefault().isRegistered(this)) {
+//            EventBus.getDefault().register(this);
+//        }
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("sideBarBranch.fxml"));
             Parent sideBarBranchRoot = loader.load();
-            sidebarController = loader.getController();
+//            sidebarController = loader.getController();
+            sidebarController = SideBarBranchBoundary.getInstance();
+
 
             sideBarPlace.getChildren().clear();
             sideBarPlace.getChildren().add(sideBarBranchRoot);
+
+            Platform.runLater(() -> {
+                if (!EventBus.getDefault().isRegistered(sidebarController)) {
+                    EventBus.getDefault().register(sidebarController);
+                    System.out.println("✅ [BranchPageBoundary] Sidebar registered to EventBus");
+                }
+
+                SimpleClient.getClient().getBranchList();
+            });
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Subscribe
+    public void onMenuEvent(MenuEvent event) {
+        System.out.println("[BranchPageBoundary] Menu received for branch: " + branch.getName());
     }
 
 
@@ -99,6 +126,8 @@ public class BranchPageBoundary
         }
 
         this.branch = branch;
+        System.out.println("[BranchPageBoundary] Branch explicitly set: " + branch.getName());
+
         branchTitle.setText("Branch: " + branch.getName());
         openHour.setText(branch.getOpeningTime());
         closeHour.setText(branch.getClosingTime());
@@ -106,13 +135,12 @@ public class BranchPageBoundary
 
         updateUI();
 
-        try {
-            SimpleClient.getClient().displayBranchMenu(branch);
-            System.out.println("Menu requested for branch: " + branch.getName());
-        } catch (IOException e) {
-            System.err.println("Error displaying branch menu: " + e.getMessage());
-        }
-
+//        try {
+//            SimpleClient.getClient().displayBranchMenu(branch);
+//            System.out.println("Menu requested for branch: " + branch.getName());
+//        } catch (IOException e) {
+//            System.err.println("Error displaying branch menu: " + e.getMessage());
+//        }
         branchIsSet = true;
 
         if (sidebarController != null) {
@@ -136,6 +164,10 @@ public class BranchPageBoundary
 
     public void onExit()
     {
+        if (sidebarController != null) {
+            sidebarController.onExit(); // Add this!
+        }
+
         if (EventBus.getDefault().isRegistered(this))
         {
             EventBus.getDefault().unregister(this);

@@ -73,19 +73,49 @@ public class TableMapBoundary {
         {
         }
     }
-    // initialize the map before letting the map page be opened
+//    // initialize the map before letting the map page be opened
+//    public void setMap(Branch branch) {
+//        if (branch == null) return;
+//
+//        synchronized (this) {
+//            System.out.println("in setMap() - starting setup for branch: " + branch.getName());
+//            this.branch = branch;
+//            this.branch.tablesAreSet = false;
+//
+//            waitForTables(branch);
+//            initializeUIAfterTablesAreReady(branch);
+//        }
+//    }
+
     public void setMap(Branch branch) {
         if (branch == null) return;
+        System.out.println("in setMap() - starting setup for branch: " + branch.getName());
 
-        synchronized (this) {
-            System.out.println("in setMap() - starting setup for branch: " + branch.getName());
-            this.branch = branch;
-            this.branch.tablesAreSet = false;
+        this.branch = branch;
+        this.branch.tablesAreSet = false;
 
-            waitForTables(branch);
-            initializeUIAfterTablesAreReady(branch);
-        }
+        // Load tables immediately (FX thread)
+        loadBranchTables();
+
+        // Wait for data in background
+        new Thread(() -> {
+            synchronized (this) {
+                while (!branch.tablesAreSet) {
+                    try {
+                        System.out.println("Waiting for tables to be fetched...");
+                        wait();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+                }
+            }
+
+            // Once data ready → back to FX thread
+            Platform.runLater(() -> initializeUIAfterTablesAreReady(branch));
+        }).start();
     }
+
     //call loadBranch but wait until the tables are set in the branch to init the data in TableMap
     private void waitForTables(Branch branch) {
         System.out.println("Waiting for tables to be fetched...");

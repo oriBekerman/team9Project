@@ -12,9 +12,9 @@
         </font>
     </Label>
     <Button fx:id="backToHPBtn" layoutX="1017.0" layoutY="14.0" mnemonicParsing="false" onAction="#navToHP" prefHeight="49.0" prefWidth="194.0" styleClass="menu-btn" text="Back To Home Page" />
-    <Label fx:id="openingHoursLabel" layoutX="469.0" layoutY="136.0" prefHeight="41.0" prefWidth="136.0" styleClass="subtitle" stylesheets="@style.css" text="opening hours:" />
-    <Label fx:id="openHour" layoutX="590.0" layoutY="137.0" prefHeight="17.0" prefWidth="65.0" styleClass="subtitle" text="open" />
-    <Label fx:id="closeHour" layoutX="638.0" layoutY="137.0" prefHeight="17.0" prefWidth="65.0" styleClass="subtitle" text="close" />
-    <Label layoutX="632.0" layoutY="137.0" styleClass="subtitle" text="-" />
+    <Label fx:id="openingHoursLabel" layoutX="469.0" layoutY="137.0" prefHeight="40.0" prefWidth="123.0" styleClass="subtitle" stylesheets="@style.css" text="opening hours:" />
+    <Label fx:id="openHour" layoutX="603.0" layoutY="137.0" prefHeight="17.0" prefWidth="65.0" styleClass="subtitle" text="open" />
+    <Label fx:id="closeHour" layoutX="675.0" layoutY="137.0" prefHeight="17.0" prefWidth="65.0" styleClass="subtitle" text="close" />
+    <Label layoutX="653.0" layoutY="137.0" styleClass="subtitle" text="-" />
     <AnchorPane fx:id="sideBarPlace" prefHeight="117.0" prefWidth="140.0" />
 </AnchorPane>

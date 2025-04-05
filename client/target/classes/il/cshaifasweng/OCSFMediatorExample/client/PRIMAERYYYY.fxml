@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="782.0" prefWidth="1295.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryBoundary">
+    <children>
+        <Label fx:id="HomePageLabel" layoutX="639.0" layoutY="348.0" />
+        <Label fx:id="WelcomeLabel" layoutX="503.0" layoutY="31.0" text="Welcome to Mama's Kitchen">
+            <font>
+                <Font size="19.0" />
+            </font>
+        </Label>
+        <ToolBar layoutX="440.0" layoutY="111.0" prefHeight="28.0" prefWidth="413.0">
+            <items>
+                <Button mnemonicParsing="false" onAction="#navToHP" text="Home Page" />
+                <Pane fx:id="MenuBarPane" prefHeight="35.0" prefWidth="149.0">
+                    <children>
+                        <Button layoutX="66.0" layoutY="12.0" mnemonicParsing="false" onAction="#navToDeliv" text="Make a Delivery" />
+                        <Button layoutX="122.0" layoutY="12.0" mnemonicParsing="false" onAction="#navToReservation" text="Make a Reservation" />
+                        <Button layoutX="259.0" layoutY="11.0" mnemonicParsing="false" onAction="#navToBranches" text="Our Branches" />
+                    </children>
+                </Pane>
+            </items>
+        </ToolBar>
+        <VBox layoutX="-4.0" layoutY="-2.0" prefHeight="782.0" prefWidth="239.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1056.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <ImageView fx:id="MOMSImage" fitHeight="178.0" fitWidth="184.0" pickOnBounds="true" preserveRatio="true" />
+                <VBox prefHeight="200.0" prefWidth="100.0">
+                    <children>
+                        <VBox prefHeight="231.0" prefWidth="190.0" styleClass="sidebar">
+                            <children>
+                                <Button fx:id="MenuBtn" mnemonicParsing="false" onAction="#displayMenuFunc" prefHeight="44.0" prefWidth="136.0" styleClass="menu-btn" stylesheets="@style.css" text="Menu" />
+                                <Button fx:id="toggleButtonBranch" onAction="#getPopup" prefHeight="44.0" prefWidth="142.0" styleClass="menu-btn" stylesheets="@style.css" text="our branches" />
+                                <Button fx:id="subCompBtn" mnemonicParsing="false" onAction="#goToSubCompPage" text="submit a complaint" />
+                                <Button fx:id="UpdateMenuBtn" mnemonicParsing="false" onAction="#displayMenuFunc" text="Update Menu" />
+                                <Button fx:id="loginBttn" mnemonicParsing="false" onAction="#navToLoginP" text="Login" />
+                                <Button fx:id="logoutBttn" mnemonicParsing="false" onAction="#LogOut" text="Logout" />
+                                <Button fx:id="cancelDelivery" mnemonicParsing="false" onAction="#cancelDel" text="cancel delivery" />
+                                <Button fx:id="givePermitBtn" mnemonicParsing="false" onAction="#givePermit" text="give permitions" />
+                                <Button fx:id="complaintsTableBtn" mnemonicParsing="false" onAction="#viewComplaints" text="view complaints" />
+                                <Button fx:id="reservationBtn" mnemonicParsing="false" onAction="#navToReservation" text="make a reservation" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+                <VBox prefHeight="32.0" prefWidth="190.0" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
