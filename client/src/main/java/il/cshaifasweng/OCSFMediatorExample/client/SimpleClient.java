@@ -347,6 +347,8 @@ public class SimpleClient extends AbstractClient {
 	}
 
 	public void getBranchList() {
+		System.out.println("[SimpleClient - getBranchList] Requesting branch list from server...");
+
 		Request request = new Request(BRANCH, GET_BRANCHES, null);
 		try {
 			client.sendToServer(request);
