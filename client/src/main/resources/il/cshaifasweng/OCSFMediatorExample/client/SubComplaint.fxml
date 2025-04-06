@@ -27,7 +27,7 @@
          <font>
             <Font size="20.0" />
          </font></Label>
-      <Button fx:id="continueBtn" layoutX="1007.0" layoutY="779.0" mnemonicParsing="false" onAction="#onContinue" prefHeight="49.0" prefWidth="194.0" styleClass="menu-btn" text="Continue" />
+      <Button fx:id="continueBtn" layoutX="930.0" layoutY="551.0" mnemonicParsing="false" onAction="#onContinue" prefHeight="50.0" prefWidth="119.0" styleClass="menu-btn" text="Continue" />
       <ComboBox fx:id="branchComboBox" layoutX="539.0" layoutY="308.0" prefHeight="30.0" prefWidth="229.0" />
       <Label layoutX="377.0" layoutY="120.0" prefHeight="25.0" prefWidth="103.0" text="Full name:">
          <font>
