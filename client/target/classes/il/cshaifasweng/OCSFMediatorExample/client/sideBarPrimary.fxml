@@ -17,10 +17,6 @@
                <font>
                   <Font size="10.0" />
                </font></Button>
-                <Button layoutX="10.0" layoutY="305.0" mnemonicParsing="false" onAction="#navToDeliv" prefHeight="49.0" prefWidth="190.0" text="Make a Delivery">
-               <font>
-                  <Font size="10.0" />
-               </font></Button>
                 <Button fx:id="subCompBtn" layoutX="10.0" layoutY="292.0" mnemonicParsing="false" onAction="#goToSubCompPage" prefHeight="49.0" prefWidth="190.0" text="Submit a Complaint">
                <font>
                   <Font size="10.0" />
