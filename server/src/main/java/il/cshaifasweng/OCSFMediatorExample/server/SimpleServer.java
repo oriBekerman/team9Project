@@ -45,18 +45,20 @@ public class SimpleServer extends AbstractServer {
     private DeliveryController deliveryController;
     private ResInfoController resInfoController;
     private ComplaintController complaintController;
-    public static String dataBasePassword = "Bekitnt26@"; // Change database password here
-    private final DatabaseManager databaseManager = new DatabaseManager(dataBasePassword);
+    public static String dataBasePassword = ""; // Change database password here
+    private final DatabaseManager databaseManager;
 
     public SimpleServer(int port) throws UnknownHostException {
         super(port);
         //set host and port
         this.host = InetAddress.getLocalHost().getHostAddress(); //get the server host
-//        //FOR NOW ONLY USE LOCAL HOST---------REMOVE IN PRESENTATION
-//        this.host = "127.0.0.1";
         this.port = port;
-
         System.out.println("connected on host "+ this.host+" and port "+ this.port);
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter the database password: ");
+        this.dataBasePassword = scanner.nextLine();
+        this.databaseManager = new DatabaseManager(this.dataBasePassword);
         getControllers();
     }
 

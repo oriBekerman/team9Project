@@ -26,7 +26,7 @@ import static il.cshaifasweng.OCSFMediatorExample.entities.ResInfo.Status.APPROV
 
 //configures database,handles opening and closing sessions
 public class DatabaseManager {
-    private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private static SessionFactory sessionFactory;
     private MenuItemsController menuItemsController;
     private BranchController branchController;
     private LogInController logInController;
@@ -37,6 +37,7 @@ public class DatabaseManager {
     private CustomerController customerController;
 
     public DatabaseManager(String password) {
+        sessionFactory = HibernateUtil.getSessionFactory();
         initialize(password);
         initControllers();
         checkAndPopulateTables();

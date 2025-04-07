@@ -15,15 +15,15 @@ public class HibernateUtil {
     private static SessionFactory sessionFactory;
     private static final ThreadLocal<Session> threadLocalSession = new ThreadLocal<>();
 
-    static {
-        try {
-            // Load hibernate.cfg.xml
-            sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
-        } catch (Throwable ex) {
-            System.err.println("Initial SessionFactory creation failed." + ex);
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
+//    static {
+//        try {
+//            // Load hibernate.cfg.xml
+//            sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+//        } catch (Throwable ex) {
+//            System.err.println("Initial SessionFactory creation failed." + ex);
+//            throw new ExceptionInInitializerError(ex);
+//        }
+//    }
 
     //private Constructor (Singleton)
     private HibernateUtil() {
