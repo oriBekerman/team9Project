@@ -140,38 +140,46 @@ public class MenuItemsRepository extends BaseRepository<MenuItem>
             save(menuItem);
         }
     }
-    public boolean removeDish(MenuItem dishToRemove)
-    {
+    public boolean removeDish(MenuItem dishToRemove) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Start the transaction
             transaction = session.beginTransaction();
 
-            // Retrieve the dish from the database using its ID
-            MenuItem item = session.get(MenuItem.class, dishToRemove.getItemID());  // Assuming ItemID is the ID of MenuItem
+            // Retrieve the dish from the database
+            MenuItem item = session.get(MenuItem.class, dishToRemove.getItemID());
             if (item != null) {
-                // If the dish exists, delete it
+
+                // Remove from branches (menuItems and deliverableItems)
+                for (Branch branch : item.getBranches()) {
+                    branch.getBranchMenuItems().remove(item);
+                }
+                for (Branch branch : item.getDeliverableBranches()) {
+                    branch.getDeliverableItems().remove(item);
+                }
+
+                // Optionally, delete associated OrderItems first (if cascade is not defined)
+                Query<?> orderItemDeleteQuery = session.createQuery("DELETE FROM OrderItem WHERE menuItem = :menuItem");
+                orderItemDeleteQuery.setParameter("menuItem", item);
+                orderItemDeleteQuery.executeUpdate();
+
+                // Remove the dish itself
                 session.delete(item);
 
-                // Commit the transaction
                 transaction.commit();
-                System.out.println("Dish removed successfully: " + item.getName());  // Optional logging
+                System.out.println("Dish removed successfully: " + item.getName());
                 return true;
             } else {
-                // If the dish is not found, return false
                 System.out.println("Dish not found: " + dishToRemove.getName());
                 return false;
             }
         } catch (Exception e) {
-            // Rollback if there was an error and the transaction is not null
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();  // Log the error
+            e.printStackTrace();
             return false;
         }
     }
-
 
 
 
