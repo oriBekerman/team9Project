@@ -14,6 +14,7 @@ il\cshaifasweng\OCSFMediatorExample\server\repositories\MenuItemsRepository.clas
 il\cshaifasweng\OCSFMediatorExample\server\EmailSender$1.class
 il\cshaifasweng\OCSFMediatorExample\server\EmailSender.class
 il\cshaifasweng\OCSFMediatorExample\server\repositories\EmployeeRepository.class
+il\cshaifasweng\OCSFMediatorExample\server\Main.class
 il\cshaifasweng\OCSFMediatorExample\server\controllers\ComplaintController$1.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractServer.class
 il\cshaifasweng\OCSFMediatorExample\server\ocsf\AbstractConnectionFactory.class

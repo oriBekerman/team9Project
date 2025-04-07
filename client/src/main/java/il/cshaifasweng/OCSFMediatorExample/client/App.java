@@ -190,7 +190,7 @@ public class App extends Application {
                 Platform.runLater(() -> {
                     setWindowTitle("Reservation");
                     try {
-                        setContent("reservationCnt");
+                        setContent("ReservationCnt");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

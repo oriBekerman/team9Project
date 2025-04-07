@@ -28,12 +28,12 @@
         <HBox layoutX="150.0" layoutY="630.0" spacing="10.0" />
 
         <!-- Total Price -->
-        <Label fx:id="totalPriceLabel" layoutX="524.0" layoutY="724.0" prefHeight="35.0" prefWidth="147.0" text="Total Price: 0.0">
+        <Label fx:id="totalPriceLabel" layoutX="523.0" layoutY="682.0" prefHeight="35.0" prefWidth="147.0" text="Total Price: 0.0">
          <font>
             <Font size="17.0" />
          </font></Label>
 
-        <Button fx:id="Continue" layoutX="995.0" layoutY="783.0" mnemonicParsing="false" onAction="#navToPD" prefHeight="58.0" prefWidth="170.0" styleClass="menu-btn" text="Continue" />
+        <Button fx:id="Continue" layoutX="929.0" layoutY="624.0" mnemonicParsing="false" onAction="#navToPD" prefHeight="58.0" prefWidth="170.0" styleClass="menu-btn" text="Continue" />
          <Label layoutX="453.0" layoutY="632.0" text="Delivery Method:">
          <font>
             <Font size="15.0" />
